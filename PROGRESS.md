@@ -23,7 +23,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 11 | Phase 0 message catalogs (EN + ES) | ✅ | EN + ES catalogs filled with `home`/`reminderSignup`/`closure`/`nav` namespaces. Build compiles (6 static pages, `/en` + `/es`). Pre-launch blockers captured in `docs/TODO.md` (native-Spanish review, lawyer-drafted COPPA/privacy/ToS, Resend domain verification). |
 | 12 | LanguageToggle component | ✅ | `src/components/LanguageToggle.tsx` + `tests/components/LanguageToggle.test.tsx` (2/2 passing). Server component using `next/link` with `aria-current="page"` on the active locale. Links go to `/${loc}` (root of locale subtree). |
 | 13 | Countdown utility + badge | ✅ | `src/lib/countdown.ts` + `tests/lib/countdown.test.ts` (2/2 passing). `daysUntil` normalizes `now` to UTC midnight and parses string dates as `YYYY-MM-DDT00:00:00Z` for timezone-stable integer deltas; `countdownColor` returns `'emerald' \| 'amber' \| 'gray'` bucketed at ≤7 / ≤30 / >30 days. |
-| 14 | ClosureCard component | ⏳ | |
+| 14 | ClosureCard component | ✅ | `src/components/ClosureCard.tsx` + `tests/components/ClosureCard.test.tsx` (2/2 passing). Renders emoji, name, date range, countdown chip (color-bucketed via `countdownColor`), and break-type badge (3-day/long/summer) based on inclusive span length. |
 | 15 | Closures query + types | ⏳ | |
 | 16 | Home page | ⏳ | |
 | 17 | ReminderSignup component | ⏳ | |
@@ -147,6 +147,13 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **UTC-midnight normalization**: `daysUntil` builds `today` via `Date.UTC(...getUTCFullYear/Month/Date)` so any wall-clock `now` collapses to UTC midnight before the delta. String dates are parsed as `YYYY-MM-DDT00:00:00Z` so `'2026-04-28'` vs a noon-UTC `now` still yields an integer 7 (not 6.5 → `Math.round`). Deltas are integer via `Math.round(ms / 86_400_000)`.
 - **Color buckets**: `countdownColor` returns the discriminated string union `'emerald' | 'amber' | 'gray'` — boundaries match the plan exactly (0–7 → emerald, 8–30 → amber, 31+ → gray). Task 14 (`ClosureCard`) is expected to consume both exports.
 - **Full suite**: 8 passed + 3 skipped (5 files) with Supabase parent-shell env stripped. No regression.
+
+### Task 14
+- **Verbatim implementation**: `src/components/ClosureCard.tsx` + `tests/components/ClosureCard.test.tsx` copied from the plan. TDD cycle confirmed — red (module not found) → green (2/2 passing).
+- **Break-badge thresholds**: `breakBadge(start, end)` computes `daysUntil(end, start) + 1` (inclusive span). Plan's sample closure is 2026-04-28 → 2026-05-02, which is 5 days inclusive → `longBreak` — matches the test's `/Long Break/i` assertion. Thresholds: ≥30 → `summer`, ≥5 → `longBreak`, ≥3 → `threeDayWeekend`, else null.
+- **Tailwind `amber-400/200`**: v3.4.1 ships the default `amber` palette, so `bg-amber-400/20 text-amber-200` works without a token extension. No fallback to `yellow-*` needed.
+- **Full suite**: 10 passed + 3 skipped (6 files) with Supabase parent-shell env stripped.
+- **Build**: `pnpm run build` — compiled, 6 static pages, middleware 117 kB (unchanged). Component not yet wired into any page; Task 16 will render it inside the home page.
 
 ## Final summary
 
