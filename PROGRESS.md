@@ -24,7 +24,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 12 | LanguageToggle component | ✅ | `src/components/LanguageToggle.tsx` + `tests/components/LanguageToggle.test.tsx` (2/2 passing). Server component using `next/link` with `aria-current="page"` on the active locale. Links go to `/${loc}` (root of locale subtree). |
 | 13 | Countdown utility + badge | ✅ | `src/lib/countdown.ts` + `tests/lib/countdown.test.ts` (2/2 passing). `daysUntil` normalizes `now` to UTC midnight and parses string dates as `YYYY-MM-DDT00:00:00Z` for timezone-stable integer deltas; `countdownColor` returns `'emerald' \| 'amber' \| 'gray'` bucketed at ≤7 / ≤30 / >30 days. |
 | 14 | ClosureCard component | ✅ | `src/components/ClosureCard.tsx` + `tests/components/ClosureCard.test.tsx` (2/2 passing). Renders emoji, name, date range, countdown chip (color-bucketed via `countdownColor`), and break-type badge (3-day/long/summer) based on inclusive span length. |
-| 15 | Closures query + types | ⏳ | |
+| 15 | Closures query + types | ✅ | `src/lib/closures.ts` exports `Closure` type + `getUpcomingClosures(schoolId, today?)`; verified-only, `start_date >= today`, ascending. Test skips cleanly when `NEXT_PUBLIC_SUPABASE_URL` unset (no-DB contract). Build: 6 static pages, middleware 117 kB. |
 | 16 | Home page | ⏳ | |
 | 17 | ReminderSignup component | ⏳ | |
 | 18 | `/api/reminders/subscribe` route | ⏳ | |
@@ -43,7 +43,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 |------------|------------------------|
 | 5          | — |
 | 10         | ✅ — compiled; `/en` and `/es` statically generated; middleware 117 kB |
-| 15         | — |
+| 15         | ✅ — compiled; 6 static pages (`/en`, `/es`); middleware 117 kB |
 | 20         | — |
 | 25         | — |
 | Final      | — |
@@ -154,6 +154,12 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Tailwind `amber-400/200`**: v3.4.1 ships the default `amber` palette, so `bg-amber-400/20 text-amber-200` works without a token extension. No fallback to `yellow-*` needed.
 - **Full suite**: 10 passed + 3 skipped (6 files) with Supabase parent-shell env stripped.
 - **Build**: `pnpm run build` — compiled, 6 static pages, middleware 117 kB (unchanged). Component not yet wired into any page; Task 16 will render it inside the home page.
+
+### Task 15
+- **Verbatim implementation**: `src/lib/closures.ts` + `tests/lib/closures.test.ts` copied from the plan. `Closure` type exported, `getUpcomingClosures(schoolId, today = new Date())` returns verified rows with `start_date >= today` ordered ascending. `today.toISOString().slice(0, 10)` yields the `YYYY-MM-DD` form that Postgres `date` columns compare cleanly.
+- **Test skips as designed**: with `NEXT_PUBLIC_SUPABASE_URL` unset the test suite is skipped (the spec's `.skipIf(!process.env.NEXT_PUBLIC_SUPABASE_URL)` pattern). When the parent shell leaks hosted-Supabase env vars the test is collected and `beforeAll` initialises `createServiceSupabase()`, which goes through `@/lib/env` and errors on any missing schema key (e.g. `CRON_SECRET`, `APP_URL`) — same env-leak pattern documented for Task 6/9/11/12. Not a Task 15 regression.
+- **Task 16 note**: plan warns that wiring `getUpcomingClosures` into the home page at render time will break `pnpm run build` when no DB is reachable. This task ships the query function only; Task 16 will add `export const dynamic = 'force-dynamic'` (or an empty-array graceful fallback) to the home page.
+- **Build**: `pnpm run build` — compiled, 6 static pages (`/en` + `/es`), middleware 117 kB (unchanged). Query module not yet imported by any page/route/middleware, so Next.js doesn't trace it at build time.
 
 ## Final summary
 
