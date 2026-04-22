@@ -1,41 +1,56 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import {
+  KidsManagementSection,
+  type School,
+} from './KidsManagementSection';
+import {
+  blankKid,
+  gradeToAge,
+  type KidState,
+} from './KidForm';
 
 // DECISION: COPPA-aligned. Kid NAME and exact GRADE are kept in localStorage
 // only; the server only sees {school_id, age_range, ordinal}. The form maps
 // grade input ("K", "3", "9") to one of the four server-side age buckets.
-export type School = { id: string; name: string };
+// The full draft (including the hidden kids past kidCount) is persisted
+// under `so-onboarding-draft` so refreshing mid-flow doesn't wipe work.
+export type { School };
 
-type KidState = {
-  name: string;         // localStorage only
-  grade: string;        // localStorage only
-  school_id: string | null;
-  school_other: boolean;
+const DRAFT_KEY = 'so-onboarding-draft';
+const KIDS_LS_KEY = 'so-kids';
+
+type Draft = {
+  parentName: string;
+  kidCount: number;
+  kids: KidState[];
 };
 
-const AGE_BY_GRADE: Array<{ match: RegExp; age: '4-6' | '7-9' | '10-12' | '13+' }> = [
-  // PreK / K / 1 / 2 → 4-6
-  { match: /^(prek|pre-?k|k|0|1|2)$/i, age: '4-6' },
-  // 3 / 4 / 5 → 7-9
-  { match: /^(3|4|5)$/i, age: '7-9' },
-  // 6 / 7 / 8 → 10-12
-  { match: /^(6|7|8)$/i, age: '10-12' },
-];
-
-function gradeToAge(grade: string): '4-6' | '7-9' | '10-12' | '13+' {
-  const g = grade.trim();
-  for (const r of AGE_BY_GRADE) if (r.match.test(g)) return r.age;
-  const n = Number(g);
-  if (Number.isFinite(n) && n >= 9) return '13+';
-  // DECISION: safe default is 7-9 (the most common family age band in our
-  // target audience) — user can change by entering a recognised grade.
-  return '7-9';
+function loadDraft(): Draft | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      typeof parsed.parentName !== 'string' ||
+      typeof parsed.kidCount !== 'number' ||
+      !Array.isArray(parsed.kids)
+    ) {
+      return null;
+    }
+    // DECISION: clamp kidCount to [1,5] so a malformed/old draft can't explode
+    // the UI. Trust the shape from there.
+    const kidCount = Math.max(1, Math.min(5, Math.round(parsed.kidCount)));
+    return { parentName: parsed.parentName, kidCount, kids: parsed.kids as KidState[] };
+  } catch {
+    return null;
+  }
 }
-
-const KIDS_LS_KEY = 'so-kids';
 
 function saveKidsLocal(kids: KidState[]) {
   try {
@@ -63,10 +78,40 @@ export function OnboardingForm({
   const [kids, setKids] = useState<KidState[]>(() => [blankKid()]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+  const dirtyRef = useRef(false);
 
-  // DECISION: First three schools (the seeded "founding" set) surface as
-  // suggested pills. The "Other" button reveals a full dropdown populated
-  // from the schools prop.
+  // Hydrate on mount from localStorage draft.
+  useEffect(() => {
+    const draft = loadDraft();
+    if (draft) {
+      if (draft.parentName) setParentName(draft.parentName);
+      setKidCount(draft.kidCount);
+      setKids(
+        draft.kids.length
+          ? draft.kids.map((k) => ({ ...blankKid(), ...k }))
+          : [blankKid()],
+      );
+    }
+    setHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // DECISION: debounced persistence. Writes at most every 300ms so fast typing
+  // doesn't thrash localStorage. The draft survives refresh + device restart.
+  useEffect(() => {
+    if (!hydrated) return;
+    const id = window.setTimeout(() => {
+      try {
+        const payload: Draft = { parentName, kidCount, kids };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+      } catch {
+        /* ignore */
+      }
+    }, 300);
+    return () => window.clearTimeout(id);
+  }, [hydrated, parentName, kidCount, kids]);
+
   const suggestedIds = useMemo(
     () => [
       '00000000-0000-0000-0000-000000000001', // The Growing Place
@@ -75,25 +120,25 @@ export function OnboardingForm({
     ],
     [],
   );
-  const suggestedSchools = suggestedIds
-    .map((id) => schools.find((s) => s.id === id))
-    .filter((s): s is School => Boolean(s));
 
-  function blankKid(): KidState {
-    return { name: '', grade: '', school_id: null, school_other: false };
-  }
-
-  const setKidCountAndResize = (next: number) => {
+  const setKidCountAndGrow = (next: number) => {
+    dirtyRef.current = true;
     setKidCount(next);
     setKids((prev) => {
-      const out = [...prev];
-      while (out.length < next) out.push(blankKid());
-      out.length = next;
-      return out;
+      // DECISION: `kids` grows monotonically — increasing count appends empty
+      // slots; decreasing count leaves the trailing slots in place so their
+      // data survives if the user bumps the count back up.
+      if (next > prev.length) {
+        const out = prev.slice();
+        while (out.length < next) out.push(blankKid());
+        return out;
+      }
+      return prev;
     });
   };
 
   const updateKid = (idx: number, patch: Partial<KidState>) => {
+    dirtyRef.current = true;
     setKids((prev) => {
       const out = [...prev];
       out[idx] = { ...out[idx]!, ...patch };
@@ -101,9 +146,15 @@ export function OnboardingForm({
     });
   };
 
+  const addAnotherKid = () => {
+    const next = Math.min(5, kidCount + 1);
+    setKidCountAndGrow(next);
+  };
+
+  const visibleKids = kids.slice(0, kidCount);
   const canSubmit =
     parentName.trim().length > 0 &&
-    kids.slice(0, kidCount).every((k) => Boolean(k.school_id));
+    visibleKids.every((k) => Boolean(k.school_id));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,9 +162,9 @@ export function OnboardingForm({
     setSaving(true);
     setError(null);
     try {
-      saveKidsLocal(kids.slice(0, kidCount));
+      saveKidsLocal(visibleKids);
 
-      const profiles = kids.slice(0, kidCount).map((k, i) => ({
+      const profiles = visibleKids.map((k, i) => ({
         school_id: k.school_id!,
         age_range: gradeToAge(k.grade),
         ordinal: i + 1,
@@ -138,6 +189,12 @@ export function OnboardingForm({
         return;
       }
 
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        /* ignore */
+      }
+
       router.push(`/${locale}/app`);
       router.refresh();
     } catch {
@@ -146,8 +203,24 @@ export function OnboardingForm({
     }
   };
 
+  const onBackClick = (e: React.MouseEvent) => {
+    if (!dirtyRef.current) return;
+    const ok = window.confirm(t('backConfirm'));
+    if (!ok) e.preventDefault();
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-8">
+      <div className="flex items-center justify-between">
+        <Link
+          href={`/${locale}`}
+          onClick={onBackClick}
+          className="inline-flex items-center gap-1 text-xs font-bold text-muted hover:text-ink"
+        >
+          {t('back')}
+        </Link>
+      </div>
+
       <section>
         <label className="block text-xs font-black uppercase tracking-wider text-muted">
           {t('labels.name')}
@@ -155,136 +228,26 @@ export function OnboardingForm({
         <input
           type="text"
           value={parentName}
-          onChange={(e) => setParentName(e.target.value)}
+          onChange={(e) => {
+            dirtyRef.current = true;
+            setParentName(e.target.value);
+          }}
           placeholder={t('placeholders.name')}
           className="mt-2 w-full rounded-2xl border border-cream-border bg-white px-4 py-3 text-base text-ink placeholder:text-muted focus:border-brand-purple focus:outline-none"
           required
         />
       </section>
 
-      <section>
-        <label className="block text-xs font-black uppercase tracking-wider text-muted">
-          {t('labels.kidCount')}
-        </label>
-        <div className="mt-2 flex gap-2">
-          {[1, 2, 3, 4, 5].map((n) => {
-            const active = n === kidCount;
-            return (
-              <button
-                key={n}
-                type="button"
-                aria-pressed={active}
-                onClick={() => setKidCountAndResize(n)}
-                className={
-                  'h-10 w-10 rounded-full text-sm font-black transition-colors ' +
-                  (active
-                    ? 'bg-brand-purple text-white'
-                    : 'bg-white border border-cream-border text-ink hover:border-brand-purple/40')
-                }
-              >
-                {n}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <div className="space-y-5">
-        {kids.slice(0, kidCount).map((kid, idx) => (
-          <fieldset
-            key={idx}
-            className="rounded-3xl border border-cream-border bg-white p-5"
-          >
-            <legend className="text-[11px] font-black uppercase tracking-wider text-brand-purple">
-              Kid {idx + 1}
-            </legend>
-            <div className="mt-3 grid gap-3 md:grid-cols-2">
-              <label className="block">
-                <span className="text-xs font-bold text-muted">
-                  {t('labels.name')}
-                </span>
-                <input
-                  type="text"
-                  value={kid.name}
-                  onChange={(e) => updateKid(idx, { name: e.target.value })}
-                  placeholder={t('placeholders.kidName')}
-                  className="mt-1 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-brand-purple focus:outline-none"
-                />
-              </label>
-              <label className="block">
-                <span className="text-xs font-bold text-muted">
-                  {t('labels.grade')}
-                </span>
-                <input
-                  type="text"
-                  value={kid.grade}
-                  onChange={(e) => updateKid(idx, { grade: e.target.value })}
-                  placeholder={t('placeholders.grade')}
-                  className="mt-1 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-brand-purple focus:outline-none"
-                />
-              </label>
-            </div>
-
-            <div className="mt-4">
-              <span className="text-xs font-bold text-muted">
-                {t('labels.school')}
-              </span>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {suggestedSchools.map((s) => {
-                  const active = !kid.school_other && kid.school_id === s.id;
-                  return (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() =>
-                        updateKid(idx, { school_id: s.id, school_other: false })
-                      }
-                      aria-pressed={active}
-                      className={
-                        'rounded-full px-3 py-1.5 text-xs font-bold transition-colors ' +
-                        (active
-                          ? 'bg-ink text-white'
-                          : 'border border-cream-border bg-white text-ink hover:border-brand-purple/40')
-                      }
-                    >
-                      {s.name}
-                    </button>
-                  );
-                })}
-                <button
-                  type="button"
-                  onClick={() =>
-                    updateKid(idx, { school_other: true, school_id: null })
-                  }
-                  aria-pressed={kid.school_other}
-                  className={
-                    'rounded-full px-3 py-1.5 text-xs font-bold transition-colors ' +
-                    (kid.school_other
-                      ? 'bg-ink text-white'
-                      : 'border border-cream-border bg-white text-ink hover:border-brand-purple/40')
-                  }
-                >
-                  {t('schools.other')}
-                </button>
-              </div>
-              {kid.school_other ? (
-                <select
-                  value={kid.school_id ?? ''}
-                  onChange={(e) => updateKid(idx, { school_id: e.target.value || null })}
-                  className="mt-3 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink focus:border-brand-purple focus:outline-none"
-                >
-                  <option value="">—</option>
-                  {schools.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              ) : null}
-            </div>
-          </fieldset>
-        ))}
-      </div>
+      <KidsManagementSection
+        kids={kids}
+        kidCount={kidCount}
+        onCountChange={setKidCountAndGrow}
+        onKidChange={updateKid}
+        onAddKid={addAnotherKid}
+        schools={schools}
+        suggestedIds={suggestedIds}
+        privacyNamespace="app.onboarding.privacy"
+      />
 
       {error ? (
         <p role="alert" className="text-sm font-bold text-red-600">

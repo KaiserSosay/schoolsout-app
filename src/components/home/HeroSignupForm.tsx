@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeContext';
@@ -97,6 +98,24 @@ export function HeroSignupForm({
         }
       >
         {t('trust')}
+      </p>
+
+      <p
+        className={
+          'text-xs text-center editorial-body ' +
+          (mode === 'parents' ? 'text-muted' : 'text-white/60')
+        }
+      >
+        🔒 {t('privacyNote')}{' '}
+        <Link
+          href={`/${locale}/privacy`}
+          className={
+            'font-bold hover:underline ' +
+            (mode === 'parents' ? 'text-brand-purple' : 'text-cta-yellow')
+          }
+        >
+          {t('privacyNoteLink')}
+        </Link>
       </p>
 
       {status === 'success' && (

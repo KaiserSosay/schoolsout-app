@@ -131,6 +131,8 @@
       "submitting": "Sending…",
       "consent": "I'm a parent or legal guardian.",
       "trust": "No credit card. No spam. Free forever for families.",
+      "privacyNote": "Privacy-first by design — kids' info stays on your device.",
+      "privacyNoteLink": "Learn how",
       "success": "Check your email to confirm.",
       "error": "Something went wrong. Please try again."
     },
@@ -392,7 +394,9 @@
       "signedIn": "Signed in",
       "installApp": "📱 Get App",
       "parentMode": "Parent Mode →",
-      "kidMode": "Kid Mode →"
+      "kidMode": "Kid Mode →",
+      "settings": "Settings",
+      "changeLanguage": "Change language"
     },
     "bottomNav": {
       "calendar": "Calendar",
@@ -402,7 +406,13 @@
     },
     "onboarding": {
       "title": "Tell us about your family",
-      "subtitle": "We'll tailor every closure, camp, and countdown to your kids. Kid names stay on this device.",
+      "subtitle": "We'll tailor every closure, camp, and countdown to your kids.",
+      "back": "← Back",
+      "backConfirm": "Leave onboarding? Your in-progress kid details are saved on this device.",
+      "privacy": {
+        "title": "Your kids' privacy comes first",
+        "body": "We never send your kids' names or ages to our servers. They live only on this device — so even we can't see them. If you switch phones, you'll re-enter them here (takes 30 seconds)."
+      },
       "labels": {
         "name": "Your name",
         "kidCount": "How many kids?",
@@ -412,7 +422,7 @@
       "placeholders": {
         "name": "Rasheid",
         "kidName": "Noah (stays on your device)",
-        "grade": "K, 3, 8…"
+        "grade": "Select a grade"
       },
       "schools": {
         "growingPlace": "The Growing Place",
@@ -420,9 +430,69 @@
         "mdcps": "Miami-Dade Public",
         "other": "Other"
       },
+      "grades": {
+        "PreK": "PreK",
+        "K": "K",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "11": "11",
+        "12": "12"
+      },
       "submit": "Finish setup →",
       "saving": "Saving…",
       "error": "Something went wrong. Please try again."
+    },
+    "settings": {
+      "title": "Settings",
+      "eyebrow": "ACCOUNT",
+      "sections": {
+        "name": {
+          "title": "Your name",
+          "save": "Save",
+          "saving": "Saving…",
+          "saved": "Saved",
+          "error": "Something went wrong. Please try again."
+        },
+        "kids": {
+          "title": "Your kids",
+          "addAnother": "+ Add another kid",
+          "delete": "Delete",
+          "edit": "Edit",
+          "confirmDelete": "Delete Kid {n}? Their saved state stays on this device.",
+          "saveAll": "Save changes",
+          "saving": "Saving…",
+          "saved": "Saved",
+          "error": "Something went wrong. Please try again."
+        },
+        "language": {
+          "title": "Your language",
+          "body": "Switch between English and Spanish.",
+          "en": "English",
+          "es": "Español"
+        },
+        "schools": {
+          "title": "Your schools",
+          "body": "Derived from your kids above. Edit a kid to change their school.",
+          "empty": "Add a kid above to see their school here."
+        },
+        "signOut": {
+          "title": "Sign out",
+          "body": "You can sign back in any time with the same email.",
+          "button": "Sign out"
+        }
+      },
+      "privacy": {
+        "title": "Your kids' privacy comes first",
+        "body": "We never send your kids' names or ages to our servers. They live only on this device — so even we can't see them. If you switch phones, you'll re-enter them here (takes 30 seconds)."
+      }
     },
     "dashboard": {
       "greeting": {
@@ -460,11 +530,10 @@
       "quickActions": {
         "manage": {
           "label": "Manage",
-          "action": "+ Add a school",
-          "soon": "Adding schools — coming soon."
+          "action": "Family & schools →"
         },
         "family": {
-          "label": "Family",
+          "label": "Coming soon",
           "action": "Invite co-parent",
           "soon": "Co-parent invites — coming soon."
         },
@@ -479,8 +548,8 @@
       },
       "activity": {
         "title": "Kid activity",
-        "empty": "No activity yet. Ask your kid to open Kid Mode!",
-        "emptyCta": "Flip to Kid Mode →",
+        "empty": "Nothing yet. Open Kid Mode on this device to start planning with your kid",
+        "emptyCta": "Open Kid Mode →",
         "savedCamp": "⭐ Saved {name}",
         "unsavedCamp": "🚫 Removed {name}",
         "viewedCamp": "👀 Viewed {name}",

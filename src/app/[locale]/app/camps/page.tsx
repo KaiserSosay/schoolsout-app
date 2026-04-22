@@ -1,9 +1,11 @@
-import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { CampCard, type CampCardCamp } from '@/components/app/CampCard';
 import { CampFilters } from '@/components/app/CampFilters';
+import { AppPageHeader } from '@/components/app/AppPageHeader';
+import { CampsBackLink } from '@/components/app/CampsBackLink';
+import { CampsEmpty } from '@/components/app/CampsEmpty';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,35 +65,21 @@ export default async function CampsPage({
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:px-6 md:py-10">
       <div className="mb-4 flex items-center justify-between gap-3">
-        <Link
-          href={`/${locale}/app`}
-          className="inline-flex items-center gap-1 rounded-full border border-cream-border bg-white px-3 py-1.5 text-xs font-bold text-ink hover:border-brand-purple/40"
-        >
-          ← {t('back')}
-        </Link>
+        <CampsBackLink href={`/${locale}/app`} label={t('back')} />
       </div>
 
-      <header className="mb-5">
-        <div className="text-[11px] font-black uppercase tracking-wider text-brand-purple">
-          PLAN
-        </div>
-        <h1
-          className="mt-1 text-3xl font-black text-ink md:text-4xl"
-          style={{ letterSpacing: '-0.02em' }}
-        >
-          {t('title')}
-        </h1>
-        <p className="mt-1 text-sm text-muted">{t('subtitle')}</p>
-      </header>
+      <AppPageHeader
+        eyebrow="PLAN"
+        title={t('title')}
+        subtitle={t('subtitle')}
+      />
 
       <div className="mb-5">
         <CampFilters active={categoriesFilter} />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-cream-border bg-white/60 p-8 text-center">
-          <p className="text-sm text-muted">{t('empty')}</p>
-        </div>
+        <CampsEmpty text={t('empty')} />
       ) : (
         <ul className="space-y-3">
           {filtered.map((camp) => (

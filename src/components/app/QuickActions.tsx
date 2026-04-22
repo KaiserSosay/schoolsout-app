@@ -4,24 +4,24 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-// DECISION: Manage (+ Add a school) and Family (Invite co-parent) aren't built
-// yet — a lightweight "coming soon" toast keeps the buttons discoverable
-// without fabricating functionality. Sync + Plan link to real routes today.
+// DECISION: MANAGE now links to /{locale}/app/settings — real UX, not a toast.
+// INVITE CO-PARENT is still Phase 2, so we keep the toast but restyle it as
+// "COMING SOON" so users don't expect it to do anything yet. Sync + Plan link
+// to real routes as before.
 export function QuickActions({ locale }: { locale: string }) {
   const t = useTranslations('app.dashboard.quickActions');
   const [toast, setToast] = useState<string | null>(null);
 
-  const showSoon = (key: 'manage' | 'family') => {
-    setToast(t(`${key}.soon`));
+  const showSoon = () => {
+    setToast(t('family.soon'));
     setTimeout(() => setToast(null), 2200);
   };
 
   return (
     <section className="relative">
       <div className="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={() => showSoon('manage')}
+        <Link
+          href={`/${locale}/app/settings`}
           className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40"
         >
           <div className="text-[11px] font-black uppercase tracking-wider text-muted">
@@ -30,17 +30,17 @@ export function QuickActions({ locale }: { locale: string }) {
           <div className="mt-1 text-sm font-black text-ink">
             {t('manage.action')}
           </div>
-        </button>
+        </Link>
 
         <button
           type="button"
-          onClick={() => showSoon('family')}
-          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40"
+          onClick={showSoon}
+          className="rounded-2xl border border-dashed border-cream-border bg-white/60 p-4 text-left transition-colors hover:border-brand-purple/40"
         >
-          <div className="text-[11px] font-black uppercase tracking-wider text-muted">
+          <div className="text-[11px] font-black uppercase tracking-wider text-brand-purple/70">
             {t('family.label')}
           </div>
-          <div className="mt-1 text-sm font-black text-ink">
+          <div className="mt-1 text-sm font-black text-ink/70">
             {t('family.action')}
           </div>
         </button>

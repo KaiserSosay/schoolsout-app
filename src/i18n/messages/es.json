@@ -131,6 +131,8 @@
       "submitting": "Enviando…",
       "consent": "Soy madre, padre o tutor legal.",
       "trust": "Sin tarjeta de crédito. Sin spam. Gratis para siempre para las familias.",
+      "privacyNote": "Privacidad ante todo — la información de los niños se queda en tu dispositivo.",
+      "privacyNoteLink": "Cómo funciona",
       "success": "Revisa tu correo para confirmar.",
       "error": "Algo salió mal. Intenta de nuevo."
     },
@@ -392,7 +394,9 @@
       "signedIn": "Sesión iniciada",
       "installApp": "📱 Instalar",
       "parentMode": "Modo Padres →",
-      "kidMode": "Modo Niños →"
+      "kidMode": "Modo Niños →",
+      "settings": "Ajustes",
+      "changeLanguage": "Cambiar idioma"
     },
     "bottomNav": {
       "calendar": "Calendario",
@@ -402,7 +406,13 @@
     },
     "onboarding": {
       "title": "Cuéntanos de tu familia",
-      "subtitle": "Adaptaremos cada cierre, campamento y cuenta regresiva a tus hijos. Los nombres se quedan en este dispositivo.",
+      "subtitle": "Adaptaremos cada cierre, campamento y cuenta regresiva a tus hijos.",
+      "back": "← Volver",
+      "backConfirm": "¿Salir del registro? Los datos de tus hijos se guardan en este dispositivo.",
+      "privacy": {
+        "title": "La privacidad de tus hijos es lo primero",
+        "body": "Nunca enviamos los nombres ni edades de tus hijos a nuestros servidores. Viven solo en este dispositivo — ni siquiera nosotros podemos verlos. Si cambias de teléfono, los volverás a ingresar aquí (tarda 30 segundos)."
+      },
       "labels": {
         "name": "Tu nombre",
         "kidCount": "¿Cuántos niños?",
@@ -412,7 +422,7 @@
       "placeholders": {
         "name": "Rasheid",
         "kidName": "Noah (se queda en tu dispositivo)",
-        "grade": "K, 3, 8…"
+        "grade": "Elige un grado"
       },
       "schools": {
         "growingPlace": "The Growing Place",
@@ -420,9 +430,69 @@
         "mdcps": "Miami-Dade Public",
         "other": "Otra"
       },
+      "grades": {
+        "PreK": "PreK",
+        "K": "K",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "11": "11",
+        "12": "12"
+      },
       "submit": "Terminar →",
       "saving": "Guardando…",
       "error": "Algo salió mal. Intenta de nuevo."
+    },
+    "settings": {
+      "title": "Ajustes",
+      "eyebrow": "CUENTA",
+      "sections": {
+        "name": {
+          "title": "Tu nombre",
+          "save": "Guardar",
+          "saving": "Guardando…",
+          "saved": "Guardado",
+          "error": "Algo salió mal. Intenta de nuevo."
+        },
+        "kids": {
+          "title": "Tus hijos",
+          "addAnother": "+ Agregar otro hijo",
+          "delete": "Eliminar",
+          "edit": "Editar",
+          "confirmDelete": "¿Eliminar al Hijo {n}? Sus guardados se quedan en este dispositivo.",
+          "saveAll": "Guardar cambios",
+          "saving": "Guardando…",
+          "saved": "Guardado",
+          "error": "Algo salió mal. Intenta de nuevo."
+        },
+        "language": {
+          "title": "Tu idioma",
+          "body": "Cambia entre inglés y español.",
+          "en": "English",
+          "es": "Español"
+        },
+        "schools": {
+          "title": "Tus escuelas",
+          "body": "Vienen de los hijos de arriba. Edita un hijo para cambiar su escuela.",
+          "empty": "Agrega un hijo arriba para ver su escuela aquí."
+        },
+        "signOut": {
+          "title": "Cerrar sesión",
+          "body": "Puedes volver a entrar cuando quieras con el mismo correo.",
+          "button": "Cerrar sesión"
+        }
+      },
+      "privacy": {
+        "title": "La privacidad de tus hijos es lo primero",
+        "body": "Nunca enviamos los nombres ni edades de tus hijos a nuestros servidores. Viven solo en este dispositivo — ni siquiera nosotros podemos verlos. Si cambias de teléfono, los volverás a ingresar aquí (tarda 30 segundos)."
+      }
     },
     "dashboard": {
       "greeting": {
@@ -460,11 +530,10 @@
       "quickActions": {
         "manage": {
           "label": "Administrar",
-          "action": "+ Agregar escuela",
-          "soon": "Agregar escuelas — próximamente."
+          "action": "Familia y escuelas →"
         },
         "family": {
-          "label": "Familia",
+          "label": "Próximamente",
           "action": "Invitar al co-padre",
           "soon": "Invitaciones a co-padres — próximamente."
         },
@@ -479,8 +548,8 @@
       },
       "activity": {
         "title": "Actividad de los niños",
-        "empty": "Aún no hay actividad. ¡Pídele a tu hijo que abra el Modo Niños!",
-        "emptyCta": "Cambiar a Modo Niños →",
+        "empty": "Nada aún. Abre el Modo Niños en este dispositivo para empezar a planear con tu hijo",
+        "emptyCta": "Abrir Modo Niños →",
         "savedCamp": "⭐ Guardó {name}",
         "unsavedCamp": "🚫 Quitó {name}",
         "viewedCamp": "👀 Vio {name}",

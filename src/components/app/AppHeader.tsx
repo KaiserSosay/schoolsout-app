@@ -7,10 +7,12 @@ import { useTranslations } from 'next-intl';
 import { createBrowserSupabase } from '@/lib/supabase/browser';
 import { useMode } from './ModeProvider';
 import { PwaInstallButton } from './PwaInstallButton';
+import { LanguageToggleMobile } from '@/components/LanguageToggleMobile';
+import type { Locale } from '@/i18n/config';
 
-// DECISION: AppHeader is chrome only — logo, mode toggle, language, user menu.
-// The per-page greeting ("Welcome back, Rasheid") lives inside the dashboard
-// itself so it can paint immediately from server-fetched data.
+// DECISION: AppHeader is chrome only — logo, mode toggle, language, gear,
+// user menu. The per-page greeting ("Welcome back, Rasheid") lives inside the
+// dashboard itself so it can paint immediately from server-fetched data.
 export function AppHeader({
   locale,
   email,
@@ -92,6 +94,7 @@ export function AppHeader({
             {toggleLabel}
           </button>
 
+          {/* Desktop (md+): compact EN/ES text link (path-preserving) */}
           <Link
             href={localePath}
             className={
@@ -105,7 +108,28 @@ export function AppHeader({
             {otherLocale.toUpperCase()}
           </Link>
 
+          {/* Mobile: globe dropdown */}
+          <div className="md:hidden">
+            <LanguageToggleMobile
+              currentLocale={locale as Locale}
+              darkMode={mode === 'kids'}
+            />
+          </div>
+
           <PwaInstallButton label={t('installApp')} />
+
+          <Link
+            href={`/${locale}/app/settings`}
+            aria-label={t('settings')}
+            className={
+              'hidden sm:flex h-9 w-9 items-center justify-center rounded-full text-base transition-colors ' +
+              (mode === 'parents'
+                ? 'bg-white border border-cream-border hover:border-brand-purple/40 text-ink'
+                : 'bg-white/10 border border-white/10 hover:bg-white/20 text-white')
+            }
+          >
+            ⚙️
+          </Link>
 
           <div className="relative" ref={menuRef}>
             <button
@@ -134,6 +158,14 @@ export function AppHeader({
                   </div>
                   <div className="truncate text-[11px] text-muted">{email}</div>
                 </div>
+                <Link
+                  href={`/${locale}/app/settings`}
+                  role="menuitem"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full px-3 py-2.5 text-left text-sm font-semibold text-ink hover:bg-cream sm:hidden"
+                >
+                  ⚙️ {t('settings')}
+                </Link>
                 <button
                   type="button"
                   onClick={signOut}

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { Locale } from '@/i18n/config';
 import { useMode } from './ModeContext';
 import { ModeToggle } from './ModeToggle';
+import { LanguageToggleMobile } from '@/components/LanguageToggleMobile';
 
 export function Header({
   locale,
@@ -40,7 +41,20 @@ export function Header({
 
         <div className="flex items-center gap-2 md:gap-3">
           <ModeToggle mode={mode} onChange={setMode} />
-          <LocaleSwitch currentLocale={locale as Locale} mode={mode} />
+
+          {/* Desktop (sm+): EN / ES pills */}
+          <div className="hidden sm:block">
+            <LocaleSwitch currentLocale={locale as Locale} mode={mode} />
+          </div>
+
+          {/* Mobile: globe dropdown */}
+          <div className="sm:hidden">
+            <LanguageToggleMobile
+              currentLocale={locale as Locale}
+              darkMode={mode === 'kids'}
+            />
+          </div>
+
           {loggedIn ? (
             <Link
               href={`/${locale}/app`}
@@ -86,7 +100,7 @@ export function Header({
 function LocaleSwitch({ currentLocale, mode }: { currentLocale: Locale; mode: 'parents' | 'kids' }) {
   const locales: Locale[] = ['en', 'es'];
   return (
-    <div className="hidden md:flex items-center gap-0.5 text-xs font-bold">
+    <div className="flex items-center gap-0.5 text-xs font-bold">
       {locales.map((loc) => {
         const active = loc === currentLocale;
         return (

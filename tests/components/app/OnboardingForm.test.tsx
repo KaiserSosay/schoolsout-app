@@ -76,7 +76,7 @@ describe('OnboardingForm', () => {
     });
 
     // Grade → age bucket (PreK/K/1/2 → 4-6)
-    fireEvent.change(screen.getByPlaceholderText(/K, 3, 8/i), {
+    fireEvent.change(screen.getByTestId('kid-grade-1'), {
       target: { value: 'K' },
     });
 
@@ -123,5 +123,63 @@ describe('OnboardingForm', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /The Growing Place/ }));
     expect(submit).toBeEnabled();
+  });
+
+  it('going from 2 → 4 → 2 preserves kid 1+2 school selections, and submits only visible kids', async () => {
+    wrap();
+
+    // Parent name
+    fireEvent.change(screen.getByPlaceholderText(/Rasheid/i), {
+      target: { value: 'Rasheid' },
+    });
+
+    // Go to 2 kids.
+    fireEvent.click(screen.getByRole('button', { name: '2', pressed: false }));
+
+    // Kid 1: Growing Place (suggested), Kid 2: Coral Gables Prep (suggested).
+    const growingPlaceButtons = screen.getAllByRole('button', {
+      name: /The Growing Place/,
+    });
+    fireEvent.click(growingPlaceButtons[0]!);
+    const coralButtons = screen.getAllByRole('button', {
+      name: /Coral Gables Preparatory Academy/,
+    });
+    fireEvent.click(coralButtons[1]!);
+
+    // Bump to 4.
+    fireEvent.click(screen.getByRole('button', { name: '4', pressed: false }));
+    expect(screen.getAllByText(/^Kid \d+$/i)).toHaveLength(4);
+
+    // Verify kid 1 + kid 2 selections still pressed.
+    const stillGrowing = screen.getAllByRole('button', {
+      name: /The Growing Place/,
+    });
+    expect(stillGrowing[0]!.getAttribute('aria-pressed')).toBe('true');
+    const stillCoral = screen.getAllByRole('button', {
+      name: /Coral Gables Preparatory Academy/,
+    });
+    expect(stillCoral[1]!.getAttribute('aria-pressed')).toBe('true');
+
+    // Back to 2.
+    fireEvent.click(screen.getByRole('button', { name: '2', pressed: false }));
+    expect(screen.getAllByText(/^Kid \d+$/i)).toHaveLength(2);
+
+    // Submit.
+    fireEvent.click(screen.getByRole('button', { name: /Finish setup/ }));
+
+    await waitFor(() => {
+      const calls = (global.fetch as unknown as { mock: { calls: [string, RequestInit][] } }).mock
+        .calls;
+      const paths = calls.map((c) => c[0]);
+      expect(paths).toContain('/api/kid-profiles');
+    });
+
+    const calls = (global.fetch as unknown as { mock: { calls: [string, RequestInit][] } }).mock
+      .calls;
+    const kidCall = calls.find((c) => c[0] === '/api/kid-profiles')!;
+    const body = JSON.parse(kidCall[1].body as string);
+    expect(body.profiles).toHaveLength(2);
+    expect(body.profiles[0].school_id).toBe('00000000-0000-0000-0000-000000000001');
+    expect(body.profiles[1].school_id).toBe('00000000-0000-0000-0000-000000000002');
   });
 });
