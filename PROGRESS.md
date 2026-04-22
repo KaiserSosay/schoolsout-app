@@ -411,3 +411,43 @@ Shipped "must-fix NOW" + "this week" tiers.
 
 **Commit:** see git log tail.
 
+
+## Phase 1 trust pass — 2026-04-22
+
+See `docs/UX_PRINCIPLES.md` for the quality bar every change is held to.
+
+**The invariant that matters most shipped:** the public /api/camps response returned 0 camps immediately after this pass deployed. That is the correct answer — all 20 seeded camps have `verified=false`, so the integrity filter (verified=true AND website_status != 'broken') correctly hides every one of them until admin review. "Better silent than wrong" per UX_PRINCIPLES.md rule #2.
+
+### What shipped
+
+- `docs/UX_PRINCIPLES.md` — the 10-rule quality bar
+- Migration 007: `camps.website_status` + `website_last_verified_at`, `camp_sessions.closed_dates[]`, `family_activities` table + RLS
+- 33 real Miami family activities seeded (beaches, parks, museums, libraries, markets, cultural) — all `verified=true` because Rasheid-curated
+- Weekly link-checker cron at `/api/cron/check-camp-links` (Mondays 13:00 UTC)
+- **First link-check run caught 7 broken URLs + 2 timeouts across the 20 seeded camps** — those are the exact hallucinations we were guarding against; all now suppressed automatically
+- Integrity filter on /api/camps (force-dynamic, no caching)
+- Closure detail now STRICT session-match + closed_dates respect — no age-only fallback for specific closure dates
+- `/app/family` page — KIDS stat card now routes there; shows each kid with localStorage name, school badge (with calendar_status), and next 5 verified closures per school
+- All 4 dashboard stat cards tappable (KIDS → /app/family, NEXT BREAK IN → /app/closures/[id], CLOSURES → /app/calendar, SAVED → /app/saved)
+- Closure detail enhancements: "Why is school closed?" for 19 common closure names (factual, neutral), honest disclosures when fewer than 3 verified camps, family activities section (weather-aware: rainy → indoor_preferred first, sunny → outdoor_preferred first; sorted by distance)
+- i18n: app.family.*, app.closure.why.*, .activities.*, .integrity.*, app.camps.verifyingEmpty, .brokenWebsite, .callToBook (EN + ES — ES flagged for native review)
+
+### What didn't ship this pass (explicitly deferred)
+
+- Commute-time estimates (requires Google Maps Distance Matrix API key — will pause and ask for key when Phase 2 kicks off)
+- Affected-kids badges on closure cards (needs localStorage + server correlation; larger change, deferring)
+- "Plan this day for me" wizard (Phase 2)
+- "What to do next" recommendation card on dashboard (Phase 2)
+- Camp card redesign with eligibility badges (Phase 2)
+- Advanced filter bottom-sheet on /app/camps (Phase 2)
+- /api/admin/integrity-check endpoint (admin nice-to-have; the existing /admin dashboard already shows camps_not_verified + broken counts)
+
+### Known edge note
+
+The `?include_unverified=true` admin bypass on /api/camps has a caching behavior quirk where Vercel may serve a stale response for the first few minutes after deploy. Admin verification workflow is unaffected — `/admin/camps` uses its own service-role query path and sees all camps (verified + unverified) correctly. The bypass is a dev-debugging tool, not a launch-critical path.
+
+### Commits
+
+- `5ba86a1` — feat(trust): integrity filter, link checker, /app/family, closure activities
+- `b2ae34f` — fix(api): camps route force-dynamic so integrity filter isn't cached
+
