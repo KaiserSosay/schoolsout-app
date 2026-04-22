@@ -1,138 +1,60 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { Mode } from './ModeToggle';
-import { NextClosureHighlight } from './NextClosureHighlight';
-import type { Closure } from '@/lib/closures';
+import { useMode } from './ModeContext';
+import { HeroSignupForm } from './HeroSignupForm';
 
 export function Hero({
-  mode,
   schoolId,
   locale,
-  nextClosure,
 }: {
-  mode: Mode;
   schoolId: string;
   locale: string;
-  nextClosure: Closure | null;
 }) {
-  const t = useTranslations('home.hero');
-  const [email, setEmail] = useState('');
-  const [consent, setConsent] = useState(true); // DECISION: default to consent checked; the label makes it clear, reduces friction and matches spec "above-the-fold signup."
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const t = useTranslations('landing.hero');
+  const { mode } = useMode();
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!consent || !email) return;
-    setStatus('submitting');
-    try {
-      const res = await fetch('/api/reminders/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, school_id: schoolId, age_range: 'all', locale }),
-      });
-      setStatus(res.ok ? 'success' : 'error');
-    } catch {
-      setStatus('error');
-    }
-  }
-
-  const titleGradient =
-    'bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-red-500 to-blue-500 animate-gradient-pan';
+  const badgeParents =
+    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-purple-soft text-brand-purple';
+  const badgeKids =
+    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-white/10 border border-white/10 text-white/90';
 
   return (
-    <section className="pt-6 pb-10 md:pt-10 md:pb-14 text-center">
-      <h1
-        className={
-          'font-display font-extrabold tracking-tight text-6xl sm:text-7xl md:text-8xl leading-[0.95] animate-fade-up ' +
-          titleGradient
-        }
-      >
-        {t('title')}
-      </h1>
+    <section className="pt-12 md:pt-16 pb-8 md:pb-10">
+      <div className="max-w-3xl mx-auto text-center px-4">
+        <span className={'animate-fade-up ' + (mode === 'parents' ? badgeParents : badgeKids)}>
+          {t('badge')}
+        </span>
 
-      <p
-        className={
-          'mt-4 text-lg md:text-xl max-w-xl mx-auto animate-fade-up [animation-delay:100ms] ' +
-          (mode === 'kids' ? 'text-white/90' : 'text-slate-700')
-        }
-      >
-        {t('subtitle')}
-      </p>
-
-      {nextClosure && (
-        <div className="mt-5 flex justify-center animate-fade-up [animation-delay:200ms]">
-          <NextClosureHighlight closure={nextClosure} mode={mode} />
-        </div>
-      )}
-
-      <form
-        onSubmit={submit}
-        className="mt-6 max-w-xl mx-auto flex flex-col gap-2 animate-fade-up [animation-delay:300ms]"
-      >
-        <div className="flex flex-col sm:flex-row gap-2">
-          <label className="sr-only" htmlFor="hero-email">
-            Email
-          </label>
-          <input
-            id="hero-email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder={t('signupPlaceholder')}
-            className={
-              'flex-1 rounded-2xl px-4 py-3 text-base outline-none focus:ring-2 focus:ring-cta-yellow ' +
-              (mode === 'kids'
-                ? 'bg-white text-slate-900 placeholder:text-slate-400'
-                : 'bg-white text-slate-900 border border-slate-300 placeholder:text-slate-400')
-            }
-          />
-          <button
-            type="submit"
-            disabled={!consent || !email || status === 'submitting'}
-            className="rounded-2xl bg-cta-yellow text-purple-deep font-bold px-5 py-3 text-base transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {status === 'submitting' ? t('submitting') : t('signupCTA')}
-          </button>
-        </div>
-
-        <label
+        <h1
           className={
-            'flex items-start gap-2 text-xs justify-center text-center ' +
-            (mode === 'kids' ? 'text-white/70' : 'text-slate-600')
+            'editorial-h1 mt-6 text-5xl sm:text-6xl md:text-7xl lg:text-[5.25rem] text-balance animate-fade-up [animation-delay:100ms] ' +
+            (mode === 'parents' ? 'text-ink' : 'text-white')
           }
         >
-          <input
-            type="checkbox"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-            className="mt-0.5"
-          />
-          <span>{t('consentLabel')}</span>
-        </label>
+          <span className="block">{t('titleLine1')}</span>{' '}
+          {mode === 'parents' ? (
+            <span className="inline-block bg-gold text-ink px-3 md:px-4 rounded-2xl leading-[1.15] mt-1 md:mt-2">
+              {t('titleLine2')}
+            </span>
+          ) : (
+            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-red-400 to-blue-400 animate-gradient-pan mt-1 md:mt-2">
+              {t('titleLine2')}
+            </span>
+          )}
+        </h1>
 
-        {status === 'success' && (
-          <p className="mt-2 rounded-xl bg-success/20 text-success px-4 py-2 text-sm font-semibold">
-            {t('success')}
-          </p>
-        )}
-        {status === 'error' && (
-          <p className="mt-2 rounded-xl bg-red-500/20 text-red-200 px-4 py-2 text-sm font-semibold">
-            {t('error')}
-          </p>
-        )}
-      </form>
+        <p
+          className={
+            'editorial-body mt-6 text-lg md:text-xl max-w-2xl mx-auto animate-fade-up [animation-delay:200ms] ' +
+            (mode === 'parents' ? 'text-muted' : 'text-white/80')
+          }
+        >
+          {t('subtitle')}
+        </p>
 
-      <p
-        className={
-          'mt-5 text-sm animate-fade-up [animation-delay:400ms] ' +
-          (mode === 'kids' ? 'text-white/70' : 'text-slate-500')
-        }
-      >
-        {t('socialProof')}
-      </p>
+        <HeroSignupForm schoolId={schoolId} locale={locale} />
+      </div>
     </section>
   );
 }

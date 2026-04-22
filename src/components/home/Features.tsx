@@ -4,11 +4,12 @@ import { useTranslations } from 'next-intl';
 import { useMode } from './ModeContext';
 import { SectionLabel } from './SectionLabel';
 
-export function HowItWorks() {
-  const t = useTranslations('landing.how');
-  const { mode } = useMode();
+const KEYS = ['schools', 'countdowns', 'camps', 'weather', 'ai', 'export'] as const;
+const BADGED = new Set(['camps', 'ai', 'export']);
 
-  const steps = ['1', '2', '3'] as const;
+export function Features() {
+  const t = useTranslations('landing.features');
+  const { mode } = useMode();
 
   return (
     <section className="py-16 md:py-20 px-4">
@@ -23,59 +24,61 @@ export function HowItWorks() {
           {t('title')}
         </h2>
 
-        <div className="mt-10 grid md:grid-cols-3 gap-4">
-          {steps.map((n, i) => {
-            const hasBadge = n === '3';
+        <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          {KEYS.map((key) => {
+            const showBadge = BADGED.has(key);
+            let badgeText: string | null = null;
+            if (showBadge) {
+              try {
+                badgeText = t(`items.${key}.badge`);
+              } catch {
+                badgeText = null;
+              }
+            }
             return (
               <article
-                key={n}
+                key={key}
                 className={
-                  'rounded-2xl p-6 md:p-7 transition-all hover:-translate-y-1 ' +
+                  'rounded-2xl p-6 transition-all hover:-translate-y-1 ' +
                   (mode === 'parents'
                     ? 'bg-white border border-cream-border'
                     : 'bg-white/10 backdrop-blur border border-white/10')
                 }
-                style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div
-                  className={
-                    'w-10 h-10 rounded-full flex items-center justify-center font-bold text-base ' +
-                    (mode === 'parents'
-                      ? 'bg-ink text-white'
-                      : 'bg-cta-yellow text-purple-deep')
-                  }
-                >
-                  {n}
+                <div className="text-3xl" aria-hidden="true">
+                  {t(`items.${key}.emoji`)}
                 </div>
-                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <h3
                     className={
-                      'font-bold text-lg md:text-xl ' +
+                      'font-bold text-lg ' +
                       (mode === 'parents' ? 'text-ink' : 'text-white')
                     }
                   >
-                    {t(`steps.${n}.title`)}
+                    {t(`items.${key}.title`)}
                   </h3>
-                  {hasBadge && (
+                  {badgeText && (
                     <span
                       className={
                         'text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full ' +
                         (mode === 'parents'
-                          ? 'bg-gold/25 text-ink'
+                          ? key === 'camps'
+                            ? 'bg-success/15 text-success'
+                            : 'bg-gold/25 text-ink'
                           : 'bg-white/20 text-white')
                       }
                     >
-                      {t('steps.3.badge')}
+                      {badgeText}
                     </span>
                   )}
                 </div>
                 <p
                   className={
-                    'mt-2 editorial-body ' +
+                    'mt-2 editorial-body text-sm ' +
                     (mode === 'parents' ? 'text-muted' : 'text-white/70')
                   }
                 >
-                  {t(`steps.${n}.body`)}
+                  {t(`items.${key}.body`)}
                 </p>
               </article>
             );
