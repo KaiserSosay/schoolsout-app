@@ -16,7 +16,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 4 | `.env.example` + env loader | ✅ | Zod 4 schema in `src/lib/env.ts`; tests stub env via `vi.stubEnv` + dynamic import (pattern required because `parse` runs at module load); `.env.local` already covered by `.env*.local` in `.gitignore` |
 | 5 | Initialize Supabase locally | ⏭️ | `supabase init` succeeded (config.toml generated). `supabase start` attempted: Docker daemon available, but image pulls too slow and `public.ecr.aws/supabase/logflare:1.37.1` returned 429 Too Many Requests. Killed at 2-min cap per plan; ran `supabase stop --no-backup` to clean partial containers. Local DB will be wired to hosted Supabase in Task 25. |
 | 6 | Write initial schema migration | ✅ | Migration SQL copied verbatim from plan. `supabase db reset` skipped (local stack not running — Task 5 ECR rate-limit; migration will apply to hosted Supabase in Task 25). `tests/db/schema.test.ts` skips cleanly (3/3) when env vars unset. Minor deviation: added `??` fallback on `createClient(url, key)` args because `describe.skipIf` still evaluates the describe body at collection time and the Supabase client throws on missing URL. |
-| 7 | Seed Noah's school + closures | ⏳ | |
+| 7 | Seed Noah's school + closures | ✅ | `supabase/seed.sql` written verbatim from plan (1 school, 8 verified closures: Memorial Day 2026-05-25 → Spring Break 2027-03-26). `supabase db reset` and row-count verification skipped — local stack still down from Task 5 ECR rate limit. Seed will apply to hosted Supabase in Task 25. |
 | 8 | Supabase client helpers (browser + server + service) | ⏳ | |
 | 9 | Auth-session middleware | ⏳ | |
 | 10 | `next-intl` with `[locale]` routing | ⏳ | |
@@ -93,6 +93,11 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Test result, env unset**: `Test Files 1 skipped (1), Tests 3 skipped (3)` — desired outcome. Verified by running with `env -u NEXT_PUBLIC_SUPABASE_URL -u SUPABASE_SERVICE_ROLE_KEY`.
 - **Test result, env set (hosted Supabase)**: ran against the hosted project URL exported in the parent shell; all 3 fail with PGRST205 "Could not find the table" — expected, since Task 25 hasn't yet pushed the migration to the hosted project. Once Task 25 runs `supabase db push`, these will pass.
 - **Build**: `pnpm run build` still compiles (5 static pages, no env prompts).
+
+### Task 7
+- **Seed SQL**: copied verbatim from the plan — 1 school (The Growing Place, UUID `00000000-0000-0000-0000-000000000001`, Miami-Dade Private, Coral Gables FL, type `private`) and 8 verified closures spanning 2026-05-25 (Memorial Day) through 2027-03-26 (Spring Break end). All use `status='verified'` and `source='manual'`, with `on conflict do nothing` for idempotency.
+- **Apply deferred**: `supabase db reset` skipped (local stack still down from Task 5 ECR rate limit, see Task 6 notes). Row-count verification via `supabase db execute` also skipped for the same reason. Both the migration and the seed will apply to the hosted Supabase project in Task 25.
+- **Build**: `pnpm run build` still compiles cleanly (5 static pages, no env prompts) — the seed file is pure SQL and not traced by Next.js.
 
 ## Final summary
 
