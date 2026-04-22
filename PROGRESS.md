@@ -34,7 +34,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 22 | Resend webhook handler | ✅ | `src/app/api/webhooks/resend/route.ts` + `tests/api/resend-webhook.test.ts` (3/3 passing). POST handler reads the `send_id` tag from `data.tags`, flips `reminder_sends.opened_at` on `email.opened` and `reminder_sends.clicked_at` on `email.clicked`, ignores other event types (returns 200). Missing `type` → 400; missing `send_id` tag → 200 no-op (for non-reminder Resend sends). |
 | 23 | Privacy policy + ToS placeholder pages | ✅ | `src/app/[locale]/privacy/page.tsx` + `src/app/[locale]/terms/page.tsx` (server components using `getTranslations()` for `nav.privacyPolicy` / `nav.terms` labels, `TODO` placeholder copy pending lawyer draft). Layout (`src/app/[locale]/layout.tsx`) now renders a centered footer with localized `<Link>` entries to `/${locale}/privacy` and `/${locale}/terms`. Build: 16 static pages (+`/en/privacy`, `/es/privacy`, `/en/terms`, `/es/terms`), middleware 117 kB (unchanged). |
 | 24 | Vercel Cron config | ✅ | `vercel.json` declares a single daily cron at `0 12 * * *` (12:00 UTC ≈ 07:00 ET) hitting `/api/cron/send-reminders`; README "Scheduled jobs" section documents the `Authorization: Bearer $CRON_SECRET` requirement and points to Vercel's cron auth-header docs. No build impact (config-only). |
-| 25 | Link Supabase project + deploy to Vercel | ⏳ | Expected to partially skip — requires human login |
+| 25 | Link Supabase project + deploy to Vercel | ⏭️ | requires human login (Supabase, Resend, Vercel); see `docs/DEPLOY.md` for tomorrow morning's checklist. |
 | 26 | Final Phase 0 verification | ⏳ | |
 
 ## Build checkpoints
