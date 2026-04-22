@@ -13,7 +13,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 1 | Scaffold Next.js + TypeScript + Tailwind | ✅ | Next.js 14.2.35; scaffolded via temp subdir to avoid create-next-app conflict checks; renamed package to `schoolsout-app` |
 | 2 | Install runtime + dev dependencies | ✅ | Vitest 4.1.5 config added; `pnpm test` exits 0 with `--passWithNoTests` |
 | 3 | Configure Tailwind design tokens | ✅ | Tailwind v3.4.1 (classic `tailwind.config.ts` route); Plus Jakarta Sans via `next/font/google`; scrubbed scaffold CSS overrides |
-| 4 | `.env.example` + env loader | ⏳ | |
+| 4 | `.env.example` + env loader | ✅ | Zod 4 schema in `src/lib/env.ts`; tests stub env via `vi.stubEnv` + dynamic import (pattern required because `parse` runs at module load); `.env.local` already covered by `.env*.local` in `.gitignore` |
 | 5 | Initialize Supabase locally | ⏳ | |
 | 6 | Write initial schema migration | ⏳ | |
 | 7 | Seed Noah's school + closures | ⏳ | |
@@ -71,6 +71,13 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **`globals.css` scrub**: removed the scaffold's `:root` light/dark custom properties and the `body { color/background/font-family }` ruleset, since those would otherwise override the `bg-gradient-to-br … text-white font-display` classes applied in `layout.tsx`. Kept the `@tailwind` directives and the `.text-balance` utility. The old `background`/`foreground` colors in `tailwind.config.ts` (which referenced the removed CSS vars) are gone as part of the full replacement.
 - **`page.tsx` left untouched**: the scaffolded home page still references `var(--font-geist-sans)` / `var(--font-geist-mono)` in `font-[family-name:…]` utilities. Those variables no longer exist, so the browser silently falls back — this is not a compile error and Task 16 will replace `page.tsx` wholesale anyway.
 - **Build**: `pnpm run build` succeeded — compiled, typed, and statically rendered all pages.
+
+### Task 4
+- **Zod 4 syntax**: used `z.string().url()` and `z.string().min(1)` — unchanged from Zod 3, so no migration notes required. `zod` 4.3.6 is the installed version.
+- **Module-level `parse` left in place**: kept `export const env = schema.parse(process.env)` (no lazy getter). Rationale: none of `src/**` imports `@/lib/env` yet, so `pnpm run build` does not evaluate it and does not need a `.env.local`. Tests pass because `vi.resetModules()` + dynamic `await import('@/lib/env')` delays evaluation until after `vi.stubEnv` has populated `process.env`. If a future task imports env.ts into code that Next.js traces at build time (route handlers, server components), a `.env.local` with dummy values will be required — we'll cross that bridge in Task 5/8.
+- **`.gitignore` untouched**: `.env*.local` on line 29 already matches `.env.local` (verified with `git check-ignore -v`). No append needed.
+- **Test location**: placed at `tests/lib/env.test.ts` (matching the plan). This is the first file in `tests/`; the directory was created fresh. Vitest picks it up automatically with the default glob.
+- **Build**: `pnpm run build` still succeeds (compiled, 5 static pages generated, no env var prompts).
 
 ## Final summary
 
