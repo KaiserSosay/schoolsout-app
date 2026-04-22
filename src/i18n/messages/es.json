@@ -1,13 +1,86 @@
 {
   "home": {
-    "title": "¿Cuándo no hay escuela?",
-    "subtitle": "Planea algo increíble para cada día libre.",
+    "title": "School's Out!",
+    "subtitle": "Nunca más improvises cuando no haya escuela.",
     "next3": "Próximos 3 días sin escuela",
     "restOfYear": "Resto del año escolar",
     "countdown": {
       "today": "Hoy",
       "tomorrow": "Mañana",
       "days": "en {days} días"
+    },
+    "hero": {
+      "title": "School's Out!",
+      "subtitle": "Nunca más improvises cuando no haya escuela.",
+      "signupCTA": "Recuérdame antes de cada vacación →",
+      "signupPlaceholder": "padre@ejemplo.com",
+      "consentLabel": "Soy madre, padre o tutor legal.",
+      "submitting": "Enviando…",
+      "success": "¡Revisa tu correo para confirmar!",
+      "error": "Algo salió mal. Intenta de nuevo.",
+      "socialProof": "Hecho en Coral Gables para padres de Coral Gables 🌴",
+      "foundingMember": "Gratis para siempre para miembros fundadores",
+      "nextClosureBadge": "⚡ ¡{name} en {days} días!",
+      "nextClosureToday": "⚡ ¡{name} es hoy!",
+      "nextClosureTomorrow": "⚡ ¡{name} es mañana!"
+    },
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "step1": {
+        "title": "Elige tu escuela",
+        "desc": "Coral Gables Preparatory Academy — pronto más escuelas."
+      },
+      "step2": {
+        "title": "Recibe avisos",
+        "desc": "Te escribimos 2 semanas, 1 semana y 3 días antes de cada vacación."
+      },
+      "step3": {
+        "title": "Descubre campamentos",
+        "desc": "Encuentra campamentos y actividades para cada día libre.",
+        "badge": "Próximamente"
+      }
+    },
+    "ageFilter": {
+      "label": "¿Quiénes hay en tu familia?",
+      "all": "Todos",
+      "4-6": "👶 4 a 6 años",
+      "7-9": "🧒 7 a 9 años"
+    },
+    "closures": {
+      "title": "Tus próximos días libres",
+      "empty": "Aún no hay vacaciones próximas. ¡Vuelve pronto!",
+      "ctaShare": "Compartir este día",
+      "ctaSignup": "Recuérdame"
+    },
+    "campsPreview": {
+      "title": "Campamentos locales",
+      "empty": "¡Campamentos próximamente!",
+      "emptyBody": "Estamos sumando campamentos de Coral Gables como Socios de Lanzamiento. ¿Quieres aparecer? Toca aquí.",
+      "cta": "Cuéntanos sobre tu campamento →"
+    },
+    "operatorCTA": {
+      "title": "¿Tienes un campamento?",
+      "body": "Anúncialo gratis como Socio de Lanzamiento — los primeros 10 campamentos reciben destacado por 90 días.",
+      "button": "Escríbenos →"
+    },
+    "coParent": {
+      "title": "¿Custodia compartida?",
+      "body": "Envíale este calendario a tu co-padre — con un toque.",
+      "button": "Compartir →",
+      "copied": "¡Enlace copiado!",
+      "shareTitle": "School's Out! Calendario escolar de Coral Gables",
+      "shareText": "Estos son todos los días libres de la escuela este año."
+    },
+    "footer": {
+      "credit": "Hecho por Noah (8 años) y Papá en Coral Gables 🌴"
+    },
+    "mode": {
+      "kids": "Niños",
+      "parents": "Padres",
+      "label": "Modo de visualización"
+    },
+    "weather": {
+      "forecast": "Clima típico"
     }
   },
   "reminderSignup": {

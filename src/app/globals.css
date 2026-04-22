@@ -6,4 +6,46 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .animate-fade-up {
+    opacity: 0;
+    animation: fadeUp 500ms ease-out forwards;
+  }
+
+  .animate-gradient-pan {
+    background-size: 200% 200%;
+    animation: gradient-pan 8s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-gradient-pan {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

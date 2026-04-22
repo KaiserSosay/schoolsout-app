@@ -1,13 +1,86 @@
 {
   "home": {
-    "title": "When is school out?",
-    "subtitle": "Plan something awesome for every day off.",
+    "title": "School's Out!",
+    "subtitle": "Never scramble for a plan on school days off again.",
     "next3": "Next 3 closures",
     "restOfYear": "Rest of school year",
     "countdown": {
       "today": "Today",
       "tomorrow": "Tomorrow",
       "days": "in {days} days"
+    },
+    "hero": {
+      "title": "School's Out!",
+      "subtitle": "Never scramble for a plan on school days off again.",
+      "signupCTA": "Get reminded before every break →",
+      "signupPlaceholder": "parent@example.com",
+      "consentLabel": "I'm a parent or legal guardian.",
+      "submitting": "Sending…",
+      "success": "Check your email to confirm!",
+      "error": "Something went wrong. Please try again.",
+      "socialProof": "Built in Coral Gables for Coral Gables parents 🌴",
+      "foundingMember": "Free forever for founding members",
+      "nextClosureBadge": "⚡ {name} in {days} days!",
+      "nextClosureToday": "⚡ {name} is today!",
+      "nextClosureTomorrow": "⚡ {name} is tomorrow!"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Pick your school",
+        "desc": "Coral Gables Preparatory Academy — more schools coming soon."
+      },
+      "step2": {
+        "title": "Get reminders",
+        "desc": "We email you 2 weeks, 1 week, and 3 days before every break."
+      },
+      "step3": {
+        "title": "Discover camps",
+        "desc": "Find local camps and activities for every day off.",
+        "badge": "Coming soon"
+      }
+    },
+    "ageFilter": {
+      "label": "Who's in your family?",
+      "all": "Everyone",
+      "4-6": "👶 Ages 4–6",
+      "7-9": "🧒 Ages 7–9"
+    },
+    "closures": {
+      "title": "Your next days off",
+      "empty": "No upcoming closures yet. Check back soon!",
+      "ctaShare": "Share this day",
+      "ctaSignup": "Get reminded"
+    },
+    "campsPreview": {
+      "title": "Local camps",
+      "empty": "Camps coming soon!",
+      "emptyBody": "We're signing up Coral Gables camps as Launch Partners. Want yours listed? Tap below.",
+      "cta": "Tell us about your camp →"
+    },
+    "operatorCTA": {
+      "title": "Run a camp?",
+      "body": "List it free as a Launch Partner — first 10 camps get Featured placement for 90 days.",
+      "button": "Email us →"
+    },
+    "coParent": {
+      "title": "Sharing custody?",
+      "body": "Send this calendar to your co-parent — one tap.",
+      "button": "Share →",
+      "copied": "Link copied!",
+      "shareTitle": "School's Out! Coral Gables school calendar",
+      "shareText": "Here's every day off at our kid's school this year."
+    },
+    "footer": {
+      "credit": "Built by Noah (age 8) & Dad in Coral Gables 🌴"
+    },
+    "mode": {
+      "kids": "Kids",
+      "parents": "Parents",
+      "label": "Display mode"
+    },
+    "weather": {
+      "forecast": "Typical weather"
     }
   },
   "reminderSignup": {
