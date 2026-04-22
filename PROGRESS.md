@@ -26,7 +26,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 14 | ClosureCard component | ✅ | `src/components/ClosureCard.tsx` + `tests/components/ClosureCard.test.tsx` (2/2 passing). Renders emoji, name, date range, countdown chip (color-bucketed via `countdownColor`), and break-type badge (3-day/long/summer) based on inclusive span length. |
 | 15 | Closures query + types | ✅ | `src/lib/closures.ts` exports `Closure` type + `getUpcomingClosures(schoolId, today?)`; verified-only, `start_date >= today`, ascending. Test skips cleanly when `NEXT_PUBLIC_SUPABASE_URL` unset (no-DB contract). Build: 6 static pages, middleware 117 kB. |
 | 16 | Home page | ✅ | Replaced scaffold `page.tsx` with anonymous home (hero + ReminderSignup stub + next-3 grid + `<details>` accordion for the rest); added header with `LanguageToggle` to `[locale]/layout.tsx`; graceful empty-array fallback around `getUpcomingClosures` + `export const dynamic = 'force-dynamic'`; stubbed `ReminderSignup` (Task 17 fills it). Build passes without DB. |
-| 17 | ReminderSignup component | ⏳ | |
+| 17 | ReminderSignup component | ✅ | `src/components/ReminderSignup.tsx` + `tests/components/ReminderSignup.test.tsx` (2/2 passing). Client form with email input, age-range select, COPPA consent checkbox; submits JSON `{email, school_id, age_range, locale}` to `/api/reminders/subscribe`; swaps to success pane on `res.ok`. |
 | 18 | `/api/reminders/subscribe` route | ⏳ | |
 | 19 | Confirm + unsubscribe routes | ⏳ | |
 | 20 | Bilingual React Email reminder template | ⏳ | |
@@ -160,6 +160,13 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Test skips as designed**: with `NEXT_PUBLIC_SUPABASE_URL` unset the test suite is skipped (the spec's `.skipIf(!process.env.NEXT_PUBLIC_SUPABASE_URL)` pattern). When the parent shell leaks hosted-Supabase env vars the test is collected and `beforeAll` initialises `createServiceSupabase()`, which goes through `@/lib/env` and errors on any missing schema key (e.g. `CRON_SECRET`, `APP_URL`) — same env-leak pattern documented for Task 6/9/11/12. Not a Task 15 regression.
 - **Task 16 note**: plan warns that wiring `getUpcomingClosures` into the home page at render time will break `pnpm run build` when no DB is reachable. This task ships the query function only; Task 16 will add `export const dynamic = 'force-dynamic'` (or an empty-array graceful fallback) to the home page.
 - **Build**: `pnpm run build` — compiled, 6 static pages (`/en` + `/es`), middleware 117 kB (unchanged). Query module not yet imported by any page/route/middleware, so Next.js doesn't trace it at build time.
+
+### Task 17
+- **Verbatim implementation**: component body and test file copied from the plan. TDD cycle confirmed — initial test run failed (stub had no form); after replacing the stub, 2/2 passed.
+- **`getByLabelText` vs wrapping `<label>`**: the test uses `screen.getByLabelText(/I'm a parent/i)` to click the COPPA checkbox. The component wraps `<input type="checkbox">` + `<span>{t('coppaConsent')}</span>` in a `<label>`, and Testing Library's `getByLabelText` resolves via the wrapping-label pattern (the checkbox is the labeled control; the `<span>`'s text becomes the accessible label). No `htmlFor`/`id` wiring needed.
+- **Lint**: the apostrophe in `"I'm a parent…"` lives in the EN message JSON (not in JSX text), so `react/no-unescaped-entities` doesn't fire — plan's preemptive note was accurate.
+- **Build**: `pnpm run build` compiled; 6 static pages, middleware 117 kB (unchanged). Bundle grew slightly for `/[locale]` (1.04 kB page / 100 kB first-load) now that the stub is a real client component with state.
+- **Tests**: `ReminderSignup.test.tsx` 2/2 passing. Full suite has the same pre-existing 3 DB-dependent failures (hosted-Supabase PGRST205 + closures test) when env leaks — unrelated to this task.
 
 ### Task 16
 - **Layout header**: added `LanguageToggle` import to `[locale]/layout.tsx` and injected a `<header>` (flex justify-between, p-4) above `{children}` with the brand wordmark `School's Out! 🎒` and the toggle wired to `locale as Locale`. Apostrophe escaped as `&apos;` to satisfy `react/no-unescaped-entities` during build lint.
