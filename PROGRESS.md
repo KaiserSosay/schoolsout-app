@@ -35,7 +35,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 23 | Privacy policy + ToS placeholder pages | ✅ | `src/app/[locale]/privacy/page.tsx` + `src/app/[locale]/terms/page.tsx` (server components using `getTranslations()` for `nav.privacyPolicy` / `nav.terms` labels, `TODO` placeholder copy pending lawyer draft). Layout (`src/app/[locale]/layout.tsx`) now renders a centered footer with localized `<Link>` entries to `/${locale}/privacy` and `/${locale}/terms`. Build: 16 static pages (+`/en/privacy`, `/es/privacy`, `/en/terms`, `/es/terms`), middleware 117 kB (unchanged). |
 | 24 | Vercel Cron config | ✅ | `vercel.json` declares a single daily cron at `0 12 * * *` (12:00 UTC ≈ 07:00 ET) hitting `/api/cron/send-reminders`; README "Scheduled jobs" section documents the `Authorization: Bearer $CRON_SECRET` requirement and points to Vercel's cron auth-header docs. No build impact (config-only). |
 | 25 | Link Supabase project + deploy to Vercel | ⏭️ | requires human login (Supabase, Resend, Vercel); see `docs/DEPLOY.md` for tomorrow morning's checklist. |
-| 26 | Final Phase 0 verification | ⏳ | |
+| 26 | Final Phase 0 verification | ✅ | Tests (env stripped): 23 passed / 4 skipped / 0 failed across 13 files. Lint: clean. `tsc --noEmit`: clean. Build: 16 static pages + 4 dynamic routes, middleware 117 kB. Tag `phase-0-mvp` created on commit after this one. |
 
 ## Build checkpoints
 
@@ -49,7 +49,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 22         | ✅ — compiled; 12 routes; new dynamic `ƒ /api/webhooks/resend`; middleware 117 kB (unchanged) |
 | 23         | ✅ — compiled; 16 static pages (`/en/privacy`, `/es/privacy`, `/en/terms`, `/es/terms` added as SSG); middleware 117 kB (unchanged) |
 | 25         | — |
-| Final      | — |
+| Final      | ✅ — compiled; 16 static pages (`/en`, `/es`, `/en/privacy`, `/es/privacy`, `/en/terms`, `/es/terms`, `/en/reminders/confirm`, `/es/reminders/confirm`, `/_not-found`); 4 dynamic API routes (`/api/cron/send-reminders`, `/api/reminders/subscribe`, `/api/reminders/unsubscribe`, `/api/webhooks/resend`); middleware 117 kB; first-load shared 87.2 kB |
 
 ## Decisions log
 
@@ -215,4 +215,81 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 
 ## Final summary
 
-(Written at the end of the run.)
+**Run completed:** 2026-04-21, overnight autonomous execution. 25/26 tasks ✅, 1 ⏭️ (Task 25 — requires human login). Tag `phase-0-mvp` marks the final commit. Latest commit before tag: `e3d1cbf` (Task 25 deploy checklist). This summary commit adds the tag + docs updates.
+
+### What's working
+
+**Build & tooling**
+- Next.js 14.2.35 (App Router) + TypeScript + Tailwind v3.4.1 with Plus Jakarta Sans via `next/font/google`
+- Vitest 4.1.5 unit tests: 23 passing / 4 skipping (env-gated DB tests) / 0 failing across 13 files when run with `.env` stripped
+- `pnpm lint` and `pnpm exec tsc --noEmit` both clean
+- `pnpm run build` compiles 16 static pages + 4 dynamic API routes; middleware bundle 117 kB; shared first-load JS 87.2 kB
+- pnpm workspace; repo cleanly committed on `main`
+
+**Bilingual calendar UX**
+- next-intl v4 with `[locale]` routing — `/en` and `/es` both prerender as SSG
+- Middleware handles locale detection + Supabase session refresh (combined intl+auth) with `getAll`/`setAll` cookie API
+- `LanguageToggle` component with `aria-current="page"` for a11y
+- Full EN + ES message catalogs for `home`, `reminderSignup`, `closure`, `nav` namespaces (curly quotes + en-dashes preserved)
+- `ClosureCard` renders emoji + date range + color-bucketed countdown chip (`emerald` ≤7d / `amber` ≤30d / `gray` >30d) + break-type badge (3-day / long break / summer)
+- Home page: hero → `ReminderSignup` form → next-3 closures grid → `<details>` accordion for the rest; graceful empty-array fallback when DB is unreachable
+
+**Closures data**
+- `supabase/migrations/` migration creates 5 tables (`users`, `schools`, `closures`, `reminder_subscriptions`, `reminder_sends`), 5 enums, 3 indexes, full RLS policies, and the `handle_new_user` auth trigger
+- `supabase/seed.sql` seeds 1 school (The Growing Place, UUID `00000000-0000-0000-0000-000000000001`) and 8 verified closures from Memorial Day 2026-05-25 through Spring Break 2027-03-26
+- `getUpcomingClosures(schoolId, today)` selects verified rows with `start_date >= today`, ascending
+
+**Email reminders**
+- `ReminderSignup` client form: email + age range + COPPA consent checkbox → POSTs to `/api/reminders/subscribe`
+- `/api/reminders/subscribe`: Zod validation → `auth.admin.inviteUserByEmail` (magic link) → `users.preferred_language` update → `reminder_subscriptions` upsert → gated Resend confirmation email
+- `/[locale]/reminders/confirm`: server-rendered magic-link landing reading `auth.getUser()`
+- `/api/reminders/unsubscribe?sub=&sig=`: HMAC-verified disable + redirect
+- React Email `ReminderEmail` template: EN/ES heading/intro/CTA/unsubscribe copy with emoji-per-days-before (🗓️/⏳/🚨), locale-aware `toLocaleDateString`, HMAC-signed unsubscribe link
+- `/api/cron/send-reminders`: bearer-auth'd → computes d3/d7/d14 window → filters verified closures → joins enabled subscriptions with `users!inner(email, preferred_language)` → insert-first dedupe against `reminder_sends` (`UNIQUE(subscription_id, closure_id, days_before)`) → gated Resend send with `List-Unsubscribe` header + HMAC-signed URL + `send_id` tag
+- `/api/webhooks/resend`: reads `send_id` tag → flips `reminder_sends.opened_at` / `clicked_at` on `email.opened` / `email.clicked`
+- `vercel.json` declares daily cron at `0 12 * * *` UTC (~07:00 ET)
+
+**Legal placeholders**
+- `/[locale]/privacy` and `/[locale]/terms` pages (4 SSG routes) with `TODO` placeholder copy pending lawyer draft
+- Localized footer links in `[locale]/layout.tsx`
+
+### What's stubbed
+
+- **Resend sends gated by `if (process.env.RESEND_API_KEY)`**: `/api/reminders/subscribe`, `/api/cron/send-reminders` — in local dev without the key, routes skip the send and still return `ok:true`; dedupe row still lands so future runs stay idempotent
+- **DB tests skip when Supabase env is unset**: `tests/db/schema.test.ts` (skips on missing `NEXT_PUBLIC_SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`) and `tests/lib/closures.test.ts` (skips on missing `NEXT_PUBLIC_SUPABASE_URL`) — this is the documented "no local Supabase" posture (Task 5 local stack blocked by ECR `logflare:1.37.1` 429)
+- **Local Supabase never booted**: all migrations + seed will apply directly to hosted Supabase in Task 25 via `supabase db push` / `db execute`
+- **Privacy + terms copy is placeholder `TODO:` text** pending lawyer draft (tracked in `docs/TODO.md`)
+- **Spanish catalog not yet reviewed by a native speaker** (tracked in `docs/TODO.md`)
+- **Resend domain `schoolsout.net` not yet SPF/DKIM verified** — until then, use Resend's `onboarding@resend.dev` test sender (tracked in `docs/TODO.md`)
+- **Task 25 (hosted-Supabase link + Vercel deploy) deferred** — requires human credentials for Supabase, Resend, Vercel. Full checklist in `docs/DEPLOY.md`.
+- **Live-deploy smoke test (`docs/phase-0-smoke-test.md`) deferred** until Task 25 completes
+
+### What Rasheid needs to do tomorrow morning
+
+**Critical path to first live signup** (full checklist in `docs/DEPLOY.md`, estimated ~30–45 min, plus DNS propagation):
+
+1. **Create hosted Supabase project** (`schoolsout-prod`, Free tier, `us-east-1`). Copy URL + anon + service_role keys.
+2. **Push migrations + seed**:
+   ```bash
+   pnpm exec supabase login && pnpm exec supabase link --project-ref YOUR_REF
+   pnpm exec supabase db push
+   pnpm exec supabase db execute --file supabase/seed.sql
+   ```
+   Verify: 1 school + 8 closures in Supabase Studio.
+3. **Resend**: add `schoolsout.net` domain, configure SPF/DKIM DNS (up to 1 hr propagation), generate API key. Until DNS verifies, the `onboarding@resend.dev` test sender works for smoke testing.
+4. **Vercel**: `pnpm dlx vercel login && vercel link`, then add env vars for production:
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `APP_URL=https://schoolsout.net`
+   - `CRON_SECRET` — generate with `openssl rand -base64 32`
+5. **Deploy**: `pnpm dlx vercel --prod`
+6. **DNS**: point `schoolsout.net` → Vercel
+7. **Supabase redirect URLs**: Authentication → URL Configuration → add `https://schoolsout.net/*`
+8. **Resend webhook**: dashboard → point `email.opened` + `email.clicked` events at `https://schoolsout.net/api/webhooks/resend`
+9. **Smoke test** per `docs/phase-0-smoke-test.md`:
+   - Visit `/en` and `/es` — closures render
+   - Submit reminder signup — check `reminder_subscriptions` row lands
+   - Magic-link confirm — `/[locale]/reminders/confirm` shows success
+   - Manually trigger cron: `curl -H "Authorization: Bearer $CRON_SECRET" https://schoolsout.net/api/cron/send-reminders`
+   - Open email → `reminder_sends.opened_at` updates
+   - Click unsubscribe → subscription disabled + redirected to `/en`
+
+After smoke test passes: distribute to Noah's school community (PTO email, NextDoor, WhatsApp — tracked in `docs/TODO.md` Post-Phase-0). Phase 1 gate: 50 signups + any open rate.
