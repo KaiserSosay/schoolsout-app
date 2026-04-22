@@ -10,7 +10,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 
 | # | Task | Status | Notes |
 |---|------|--------|-------|
-| 1 | Scaffold Next.js + TypeScript + Tailwind | ⏳ | |
+| 1 | Scaffold Next.js + TypeScript + Tailwind | ✅ | Next.js 14.2.35; scaffolded via temp subdir to avoid create-next-app conflict checks; renamed package to `schoolsout-app` |
 | 2 | Install runtime + dev dependencies | ⏳ | |
 | 3 | Configure Tailwind design tokens | ⏳ | |
 | 4 | `.env.example` + env loader | ⏳ | |
@@ -51,6 +51,11 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 ## Decisions log
 
 Any `// DECISION:` comments added by implementers will be summarized here at the end.
+
+### Task 1
+- **Scaffold approach**: `create-next-app` refuses to run when the target directory contains unexpected files (even with `--yes`). Rather than deleting/stashing tracked files out-of-repo, ran the generator inside a temporary `scaffold-tmp/` subdirectory, then moved its output up to the repo root. Pre-existing files (`PROGRESS.md`, `SCHOOLSOUT-*.md`, `docs/`) were left untouched.
+- **Package name**: renamed `package.json` `name` from the temp-dir-derived `scaffold-tmp` to `schoolsout-app`.
+- **Next.js version**: pinned to 14.x per plan (`create-next-app@14` resolved to 14.2.35).
 
 ## Final summary
 
