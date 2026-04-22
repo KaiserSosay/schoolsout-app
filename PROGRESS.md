@@ -19,7 +19,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 7 | Seed Noah's school + closures | ✅ | `supabase/seed.sql` written verbatim from plan (1 school, 8 verified closures: Memorial Day 2026-05-25 → Spring Break 2027-03-26). `supabase db reset` and row-count verification skipped — local stack still down from Task 5 ECR rate limit. Seed will apply to hosted Supabase in Task 25. |
 | 8 | Supabase client helpers (browser + server + service) | ✅ | Three factories under `src/lib/supabase/`: `createBrowserSupabase` (`@supabase/ssr` browser client), `createServerSupabase` (`@supabase/ssr` server client with Next `cookies()` get/set/remove, try/catch around set for readonly route-handler contexts), `createServiceSupabase` (`@supabase/supabase-js` with `SUPABASE_SERVICE_ROLE_KEY`, `persistSession: false`). `tests/lib/supabase.test.ts` stubs all six env vars + `vi.resetModules()` + dynamic import (same pattern as Task 4). Module-level `env` parse kept — build still compiles because no server-entry file imports these yet; will reassess when Tasks 9/16/18 wire them in. |
 | 9 | Auth-session middleware | ✅ | `src/middleware.ts` wired to `createServerClient` + `supabase.auth.getUser()` for transparent session refresh. Matcher excludes `_next/static`, `_next/image`, `favicon.ico`, and static image extensions. `env.ts` converted to a lazy `Proxy` so `process.env` only parses on first property access — middleware bundle traces `@/lib/env` at build time, and without lazy init `pnpm run build` would have required a real `.env.local`. Task 10 will replace this file with a combined intl+auth middleware. |
-| 10 | `next-intl` with `[locale]` routing | ⏳ | |
+| 10 | `next-intl` with `[locale]` routing | ✅ | v4 API (`requestLocale` Promise; `locale` returned from `getRequestConfig`; `params` awaited in layout). Combined intl+auth middleware (next-intl v4 + `@supabase/ssr` `getAll`/`setAll`). Root `layout.tsx` and `page.tsx` moved to `src/app/[locale]/`. `next.config.mjs` wraps with `createNextIntlPlugin` (Next 14 rejects `next.config.ts`). Build generates `/en` and `/es` static routes; middleware bundle ~117 kB. Empty message stubs in place (filled by Task 11). |
 | 11 | Phase 0 message catalogs (EN + ES) | ⏳ | |
 | 12 | LanguageToggle component | ⏳ | |
 | 13 | Countdown utility + badge | ⏳ | |
@@ -42,7 +42,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | After task | `npm run build` result |
 |------------|------------------------|
 | 5          | — |
-| 10         | — |
+| 10         | ✅ — compiled; `/en` and `/es` statically generated; middleware 117 kB |
 | 15         | — |
 | 20         | — |
 | 25         | — |
@@ -113,6 +113,23 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Matcher**: verbatim from plan — excludes `_next/static`, `_next/image`, `favicon.ico`, and static image extensions (`svg/png/jpg/jpeg/gif/webp`).
 - **Parent-shell env leak**: running `pnpm test` without unsetting the hosted Supabase credentials still produces 3 PGRST205 failures from `tests/db/schema.test.ts` (expected — Task 25 hasn't pushed the migration). Same behavior documented in Task 6 notes. CI/agent runs will need to either drop the leaked vars or wait for Task 25.
 - **Task 10 note**: per plan, Task 10 REPLACES this middleware with a combined `next-intl` + auth version. This is the single-purpose first pass.
+
+### Task 10
+- **next-intl v4 API adaptations** (plan was written for v3):
+  - `getRequestConfig` in v4 passes `{ requestLocale }` (a `Promise<string | undefined>`), not `{ locale }`. Awaited it, validated against `locales`, fell back to `defaultLocale` on unknown/invalid values.
+  - v4 requires returning `locale` explicitly from `getRequestConfig` (not inferred from segment). Included in the returned config object alongside `messages`.
+  - `params` in layouts/pages is a `Promise` in v4 (matching Next 15-style typing). Typed `params: Promise<{ locale: string }>` and awaited before destructuring in `[locale]/layout.tsx`.
+  - Removed the `notFound` import from `request.ts` because we fall back to the default locale rather than 404 on invalid values (matches the plan's validation shape but uses `defaultLocale` fallback, which is the next-intl v4 recommendation for requests the middleware didn't match).
+- **`next.config.ts` → `next.config.mjs`**: Next 14.2.35 rejects TS config files (`Configuring Next.js via 'next.config.ts' is not supported`). Used `.mjs` with a JSDoc `@type` annotation for editor hints. Plan snippet assumed Next 15 TS-config support.
+- **Middleware cookie API**: kept the Task 9 `getAll`/`setAll` shape (plan snippet used the same in its updated example). `NextResponse.next()` fallback retained for the rare case where `createIntlMiddleware` returns a plain `Response` — in practice v4 always returns a `NextResponse` so the ternary is defensive.
+- **Matcher**: added `api|` to the exclusion group per plan (vs. Task 9's matcher which didn't exclude `/api`). Combined intl middleware runs on every non-API request; Supabase session refresh piggybacks on the same response so cookies propagate to both rewritten and non-rewritten responses.
+- **Root `layout.tsx` NOT re-created**: Next 14 App Router tolerates a missing root layout as long as every route segment has one. With all routes under `[locale]`, the `[locale]/layout.tsx` IS the outermost layout (owns `<html>`/`<body>`) and the build succeeds. If a route is ever added outside `[locale]` (e.g. `/api` — already excluded from middleware), it won't need a layout.
+- **`generateStaticParams`**: pre-renders `/en` and `/es` at build time (verified in the build output — both show as `●  (SSG)`). Middleware still handles locale detection + rewriting for incoming requests with no locale segment.
+- **Font stays on the layout**: `Plus_Jakarta_Sans` + `--font-jakarta` wiring moved intact from the old root layout.
+- **`metadata` preserved**: re-exported from `[locale]/layout.tsx` (title + description). Static — doesn't need translation yet; Task 11+ can swap to `generateMetadata` if we want localized titles.
+- **`src/app/page.tsx` intentionally left at scaffolded default inside `[locale]/`**: per plan Step 7, Task 16 will replace it. Compiles clean.
+- **Build**: `pnpm run build` — 6 static pages (`/en`, `/es`, `/_not-found`, plus their prerenders). Middleware 117 kB (up from 105 kB in Task 9; +12 kB for the intl matcher + locale detection).
+- **Tests**: `pnpm test` (parent shell env stripped) — 4 passed + 3 skipped (same baseline as Tasks 6/8/9). The 3 failures seen when hosted Supabase env vars leak from the parent shell are still the Task 6 PGRST205 expected-failures (migration not yet pushed to hosted — Task 25).
 
 ## Final summary
 

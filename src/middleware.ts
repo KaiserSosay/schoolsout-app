@@ -1,16 +1,26 @@
+import createIntlMiddleware from 'next-intl/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { env } from '@/lib/env';
+import { locales, defaultLocale } from '@/i18n/config';
+
+const intlMiddleware = createIntlMiddleware({
+  locales: [...locales],
+  defaultLocale,
+  localeDetection: true,
+});
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next({ request: { headers: req.headers } });
+  const intlRes = intlMiddleware(req);
+  const res = intlRes instanceof NextResponse ? intlRes : NextResponse.next();
 
   const supabase = createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
-        getAll: () => req.cookies.getAll().map(({ name, value }) => ({ name, value })),
+        getAll: () =>
+          req.cookies.getAll().map(({ name, value }) => ({ name, value })),
         setAll: (cookies) => {
           for (const { name, value, options } of cookies) {
             res.cookies.set({ name, value, ...options });
@@ -25,5 +35,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
