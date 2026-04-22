@@ -12,7 +12,18 @@ type Profile = {
   school_id: string;
   age_range: string;
   ordinal: number;
-  schools?: { id: string; name: string } | null;
+  schools?: {
+    id: string;
+    name: string;
+    district?: string | null;
+    type?: string | null;
+    calendar_status?:
+      | 'verified_multi_year'
+      | 'verified_current'
+      | 'ai_draft'
+      | 'needs_research'
+      | 'unavailable';
+  } | null;
 };
 
 type Camp = {

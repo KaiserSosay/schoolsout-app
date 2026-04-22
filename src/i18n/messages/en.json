@@ -459,7 +459,25 @@
       },
       "submit": "Finish setup →",
       "saving": "Saving…",
-      "error": "Something went wrong. Please try again."
+      "error": "Something went wrong. Please try again.",
+      "step4": {
+        "title": "Where should we measure distance from?",
+        "subtitle": "Optional — we use this to sort camps by distance from home.",
+        "privacyNote": "Your address stays on your device. We only save coordinates server-side to sort by distance.",
+        "addressLabel": "Address",
+        "addressPlaceholder": "1234 Main St, Coral Gables, FL",
+        "labelLabel": "Label",
+        "labelDefault": "Home",
+        "findButton": "Find",
+        "finding": "Finding…",
+        "pickResult": "Pick this",
+        "skip": "Skip",
+        "saveAndFinish": "Save & finish",
+        "next": "Next →",
+        "back": "← Back",
+        "findError": "Couldn't find that address. Try adding the city and state.",
+        "noResults": "No matches found. Try a more specific address."
+      }
     },
     "settings": {
       "title": "Settings",
@@ -498,6 +516,30 @@
           "title": "Sign out",
           "body": "You can sign back in any time with the same email.",
           "button": "Sign out"
+        },
+        "locations": {
+          "title": "Distance from",
+          "body": "Camps are sorted by distance from the location you choose. Primary is the default.",
+          "privacyNote": "Your address stays on your device. We only save coordinates server-side to sort by distance.",
+          "addLabel": "Label",
+          "addPlaceholder": "Home",
+          "addressLabel": "Address",
+          "addressPlaceholder": "1234 Main St, Coral Gables, FL",
+          "findButton": "Find",
+          "finding": "Finding…",
+          "pickResult": "Pick this",
+          "cancel": "Cancel",
+          "add": "+ Add location",
+          "saving": "Saving…",
+          "save": "Save",
+          "primaryBadge": "Primary",
+          "makePrimary": "Make primary",
+          "delete": "Delete",
+          "deleteConfirm": "Delete this saved location?",
+          "empty": "No saved locations yet. Add one below so we can sort camps by distance.",
+          "firstIsPrimary": "Your first location becomes primary automatically.",
+          "findError": "Couldn't find that address. Try adding the city and state.",
+          "noResults": "No matches found. Try a more specific address."
         }
       },
       "kidAccess": {
@@ -581,6 +623,10 @@
       },
       "exitKidLock": {
         "label": "🔓 Exit Kid Mode"
+      },
+      "verifying": {
+        "singleSchool": "We're confirming {name}'s calendar. You'll see closures here once verified — usually within 24 hours.",
+        "multipleSchools": "We're confirming {names}. You'll see closures here once verified — usually within 24 hours."
       }
     },
     "kidShare": {
@@ -686,7 +732,15 @@
       "otherSchools": "Other schools",
       "export": "Export to Calendar (.ics)",
       "draft": "AI draft — pending review",
-      "closureDuration": "{count, plural, one {# day} other {# days}}"
+      "closureDuration": "{count, plural, one {# day} other {# days}}",
+      "status": {
+        "verifiedMultiYear": "Verified through 2027",
+        "verifiedCurrent": "Verified for 2026–27",
+        "aiDraft": "Verifying…",
+        "needsResearch": "Researching calendar",
+        "unavailable": "Couldn't confirm — contact us",
+        "contactUs": "Email us"
+      }
     },
     "saved": {
       "title": "Saved Camps",

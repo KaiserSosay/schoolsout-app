@@ -330,3 +330,15 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
    - Click unsubscribe → subscription disabled + redirected to `/en`
 
 After smoke test passes: distribute to Noah's school community (PTO email, NextDoor, WhatsApp — tracked in `docs/TODO.md` Post-Phase-0). Phase 1 gate: 50 signups + any open rate.
+
+## Logistics + honest status pass — 2026-04-22
+
+**Summary:** The closure-to-camp loop is real. Tapping a closure surfaces matching camps (session overlap or age-only fallback with "call to confirm"), sorted by distance from the kid's school by default. Distance is computed via haversine against neighborhood-center coordinates for all 10 schools and 20 camps. Hours + before/after-care are displayed honestly — NULL + "Call camp to confirm" for unknown fields, nothing fabricated.
+
+**New user controls:** optional address input on onboarding step 4 and in `/app/settings` → Distance from. Multiple saved locations with exactly one marked primary; `unique (user_id) where is_primary=true` partial index enforces the invariant.
+
+**Honest calendar status:** only TGP + CGP are `verified_current`. The other 8 schools show "Researching calendar" until an admin reviews drafts. The dashboard surfaces a verifying-card listing pending schools. The calendar page only lists `status='verified'` closures — the `ai_draft`/`needs_research` invariant is now enforced at query time.
+
+**Admin:** `/admin/calendar-review` and `/admin/camp-review` gated by `ADMIN_EMAILS` env var (comma-separated allowlist, matched case-insensitively). Approve / reject / bulk-approve / manual-add for closures; inline fill for camp logistics. No AI enrichment pipeline yet — manual admin entry is the honest path until we build review tooling around a scraper. School `calendar_status` auto-recomputes after every verify/bulk-verify/manual create based on school-year coverage (Aug→Jul windows).
+
+**Commits:** Subagent F `1aeb719`, Subagent G `<insert>`.

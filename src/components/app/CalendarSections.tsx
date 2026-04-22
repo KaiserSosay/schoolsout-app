@@ -3,6 +3,12 @@
 import { useTranslations } from 'next-intl';
 import { daysUntil } from '@/lib/countdown';
 import { schoolCode } from '@/lib/school-codes';
+import {
+  statusBadge,
+  statusTranslationKey,
+  isSchoolVerified,
+  type SchoolStatus,
+} from '@/lib/school-status';
 import { useMode } from './ModeProvider';
 
 type ClosureRow = {
@@ -11,12 +17,13 @@ type ClosureRow = {
   start_date: string;
   end_date: string;
   emoji: string;
-  status: 'verified' | 'ai_draft' | 'rejected' | 'archived';
+  status: 'verified' | 'ai_draft' | 'rejected';
 };
 
 type Section = {
   schoolId: string;
   schoolName: string;
+  calendarStatus: SchoolStatus;
   isUserSchool: boolean;
   closures: ClosureRow[];
 };
@@ -58,8 +65,15 @@ export function CalendarSections({
     : 'bg-white/20 text-white';
   const sectionLabelCls = isParents ? 'text-muted' : 'text-white/60';
 
-  const renderSection = (s: Section) => (
-    <details key={s.schoolId} className={containerCls} open={s.isUserSchool}>
+  const renderSection = (s: Section) => {
+    const badge = statusBadge(s.calendarStatus);
+    const statusLabel = t(
+      `status.${statusTranslationKey(s.calendarStatus)}` as 'status.verifiedCurrent',
+    );
+    const isVerified = isSchoolVerified(s.calendarStatus);
+
+    return (
+    <details key={s.schoolId} className={containerCls} open={s.isUserSchool && isVerified}>
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
         <div className="flex min-w-0 items-center gap-2">
           {s.isUserSchool ? (
@@ -81,6 +95,13 @@ export function CalendarSections({
           >
             {s.schoolName}
           </span>
+          <span
+            title={statusLabel}
+            aria-label={statusLabel}
+            className={'shrink-0 text-xs ' + mutedCls}
+          >
+            {badge.emoji}
+          </span>
         </div>
         <span className={'shrink-0 text-xs ' + mutedCls}>
           {s.closures.length}
@@ -91,7 +112,18 @@ export function CalendarSections({
       </summary>
       {s.closures.length === 0 ? (
         <div className={'border-t px-4 py-4 text-xs ' + borderCls + ' ' + mutedCls}>
-          —
+          {isVerified ? '—' : statusLabel}
+          {s.calendarStatus === 'unavailable' ? (
+            <>
+              {' '}
+              <a
+                href="mailto:hi@schoolsout.net"
+                className="font-bold underline hover:opacity-80"
+              >
+                {t('status.contactUs')}
+              </a>
+            </>
+          ) : null}
         </div>
       ) : (
         <ul className={'divide-y border-t ' + dividerCls + ' ' + borderCls}>
@@ -148,7 +180,8 @@ export function CalendarSections({
         </ul>
       )}
     </details>
-  );
+    );
+  };
 
   return (
     <div className="space-y-6">

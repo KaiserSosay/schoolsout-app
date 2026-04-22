@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { createBrowserSupabase } from '@/lib/supabase/browser';
 import { KidsManagementSection } from './KidsManagementSection';
+import { SavedLocationsSection } from './SavedLocationsSection';
 import { blankKid, gradeToAge, type KidState, type School } from './KidForm';
 
 // DECISION: Mirrors the onboarding form but lives post-onboarding. Kid name
@@ -307,6 +308,9 @@ export function SettingsClient({
           </button>
         </div>
       </section>
+
+      {/* Distance-from / saved locations */}
+      <SavedLocationsSection />
 
       {/* Language section */}
       <section

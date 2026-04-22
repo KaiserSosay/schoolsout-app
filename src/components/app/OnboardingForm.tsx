@@ -13,12 +13,17 @@ import {
   gradeToAge,
   type KidState,
 } from './KidForm';
+import { AddressPicker, type GeoResult } from './AddressPicker';
 
 // DECISION: COPPA-aligned. Kid NAME and exact GRADE are kept in localStorage
 // only; the server only sees {school_id, age_range, ordinal}. The form maps
 // grade input ("K", "3", "9") to one of the four server-side age buckets.
 // The full draft (including the hidden kids past kidCount) is persisted
 // under `so-onboarding-draft` so refreshing mid-flow doesn't wipe work.
+//
+// Step 4 added: optional address → coordinates via /api/geocode → saved to
+// /api/saved-locations as the user's primary "Home" location. Draft persists
+// the label + chosen coordinates so refreshing mid-flow doesn't lose them.
 export type { School };
 
 const DRAFT_KEY = 'so-onboarding-draft';
@@ -28,6 +33,8 @@ type Draft = {
   parentName: string;
   kidCount: number;
   kids: KidState[];
+  locationLabel?: string;
+  location?: GeoResult | null;
 };
 
 function loadDraft(): Draft | null {
@@ -43,10 +50,22 @@ function loadDraft(): Draft | null {
     ) {
       return null;
     }
-    // DECISION: clamp kidCount to [1,5] so a malformed/old draft can't explode
-    // the UI. Trust the shape from there.
     const kidCount = Math.max(1, Math.min(5, Math.round(parsed.kidCount)));
-    return { parentName: parsed.parentName, kidCount, kids: parsed.kids as KidState[] };
+    const out: Draft = {
+      parentName: parsed.parentName,
+      kidCount,
+      kids: parsed.kids as KidState[],
+    };
+    if (typeof parsed.locationLabel === 'string') out.locationLabel = parsed.locationLabel;
+    if (
+      parsed.location &&
+      typeof parsed.location === 'object' &&
+      typeof parsed.location.latitude === 'number' &&
+      typeof parsed.location.longitude === 'number'
+    ) {
+      out.location = parsed.location as GeoResult;
+    }
+    return out;
   } catch {
     return null;
   }
@@ -71,11 +90,15 @@ export function OnboardingForm({
   initialName: string | null;
 }) {
   const t = useTranslations('app.onboarding');
+  const tStep4 = useTranslations('app.onboarding.step4');
   const router = useRouter();
 
   const [parentName, setParentName] = useState(initialName ?? '');
   const [kidCount, setKidCount] = useState(1);
   const [kids, setKids] = useState<KidState[]>(() => [blankKid()]);
+  const [step, setStep] = useState<'kids' | 'address'>('kids');
+  const [locationLabel, setLocationLabel] = useState('');
+  const [pickedLocation, setPickedLocation] = useState<GeoResult | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -92,25 +115,31 @@ export function OnboardingForm({
           ? draft.kids.map((k) => ({ ...blankKid(), ...k }))
           : [blankKid()],
       );
+      if (draft.locationLabel) setLocationLabel(draft.locationLabel);
+      if (draft.location) setPickedLocation(draft.location);
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // DECISION: debounced persistence. Writes at most every 300ms so fast typing
-  // doesn't thrash localStorage. The draft survives refresh + device restart.
   useEffect(() => {
     if (!hydrated) return;
     const id = window.setTimeout(() => {
       try {
-        const payload: Draft = { parentName, kidCount, kids };
+        const payload: Draft = {
+          parentName,
+          kidCount,
+          kids,
+          locationLabel,
+          location: pickedLocation,
+        };
         localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
       } catch {
         /* ignore */
       }
     }, 300);
     return () => window.clearTimeout(id);
-  }, [hydrated, parentName, kidCount, kids]);
+  }, [hydrated, parentName, kidCount, kids, locationLabel, pickedLocation]);
 
   const suggestedIds = useMemo(
     () => [
@@ -125,9 +154,6 @@ export function OnboardingForm({
     dirtyRef.current = true;
     setKidCount(next);
     setKids((prev) => {
-      // DECISION: `kids` grows monotonically — increasing count appends empty
-      // slots; decreasing count leaves the trailing slots in place so their
-      // data survives if the user bumps the count back up.
       if (next > prev.length) {
         const out = prev.slice();
         while (out.length < next) out.push(blankKid());
@@ -152,13 +178,12 @@ export function OnboardingForm({
   };
 
   const visibleKids = kids.slice(0, kidCount);
-  const canSubmit =
+  const canAdvanceToAddress =
     parentName.trim().length > 0 &&
     visibleKids.every((k) => Boolean(k.school_id));
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canSubmit || saving) return;
+  const finishOnboarding = async (withAddress: boolean) => {
+    if (saving) return;
     setSaving(true);
     setError(null);
     try {
@@ -189,6 +214,26 @@ export function OnboardingForm({
         return;
       }
 
+      // DECISION: address POST is best-effort. If it fails we still move on —
+      // user can always add a location in Settings later. A hard failure here
+      // would be worse UX than a silent skip.
+      if (withAddress && pickedLocation) {
+        try {
+          await fetch('/api/saved-locations', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              label: (locationLabel.trim() || tStep4('labelDefault')).slice(0, 80),
+              latitude: pickedLocation.latitude,
+              longitude: pickedLocation.longitude,
+              is_primary: true,
+            }),
+          });
+        } catch {
+          /* ignore — continue */
+        }
+      }
+
       try {
         localStorage.removeItem(DRAFT_KEY);
       } catch {
@@ -203,14 +248,105 @@ export function OnboardingForm({
     }
   };
 
+  const onKidsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canAdvanceToAddress) return;
+    setStep('address');
+  };
+
   const onBackClick = (e: React.MouseEvent) => {
     if (!dirtyRef.current) return;
     const ok = window.confirm(t('backConfirm'));
     if (!ok) e.preventDefault();
   };
 
+  if (step === 'address') {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setStep('kids')}
+            className="text-xs font-bold text-muted hover:text-ink"
+          >
+            {tStep4('back')}
+          </button>
+          <button
+            type="button"
+            onClick={() => finishOnboarding(false)}
+            className="text-xs font-bold text-muted hover:text-ink"
+            disabled={saving}
+          >
+            {tStep4('skip')}
+          </button>
+        </div>
+
+        <header>
+          <h2
+            className="text-2xl font-black text-ink md:text-3xl"
+            style={{ letterSpacing: '-0.02em' }}
+          >
+            {tStep4('title')}
+          </h2>
+          <p className="mt-2 text-sm text-muted">{tStep4('subtitle')}</p>
+          <p className="mt-2 text-[11px] italic text-muted">
+            {tStep4('privacyNote')}
+          </p>
+        </header>
+
+        <section>
+          <label className="block text-xs font-black uppercase tracking-wider text-muted">
+            {tStep4('labelLabel')}
+          </label>
+          <input
+            type="text"
+            value={locationLabel}
+            onChange={(e) => setLocationLabel(e.target.value)}
+            placeholder={tStep4('labelDefault')}
+            className="mt-2 w-full rounded-2xl border border-cream-border bg-white px-4 py-3 text-base text-ink placeholder:text-muted focus:border-brand-purple focus:outline-none"
+          />
+        </section>
+
+        <section>
+          <AddressPicker
+            labels={{
+              addressLabel: tStep4('addressLabel'),
+              addressPlaceholder: tStep4('addressPlaceholder'),
+              findButton: tStep4('findButton'),
+              finding: tStep4('finding'),
+              pickResult: tStep4('pickResult'),
+              findError: tStep4('findError'),
+              noResults: tStep4('noResults'),
+            }}
+            onPick={(r) => setPickedLocation(r)}
+          />
+          {pickedLocation ? (
+            <p className="mt-2 rounded-xl border border-cream-border bg-cream px-3 py-2 text-xs text-ink">
+              ✅ {pickedLocation.display_name}
+            </p>
+          ) : null}
+        </section>
+
+        {error ? (
+          <p role="alert" className="text-sm font-bold text-red-600">
+            {error}
+          </p>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => finishOnboarding(true)}
+          disabled={saving}
+          className="w-full rounded-full bg-ink px-6 py-4 text-base font-black text-cream transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {saving ? t('saving') : tStep4('saveAndFinish')}
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={onSubmit} className="space-y-8">
+    <form onSubmit={onKidsSubmit} className="space-y-8">
       <div className="flex items-center justify-between">
         <Link
           href={`/${locale}`}
@@ -257,10 +393,10 @@ export function OnboardingForm({
 
       <button
         type="submit"
-        disabled={!canSubmit || saving}
+        disabled={!canAdvanceToAddress || saving}
         className="w-full rounded-full bg-ink px-6 py-4 text-base font-black text-cream transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {saving ? t('saving') : t('submit')}
+        {tStep4('next')}
       </button>
     </form>
   );

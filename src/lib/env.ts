@@ -7,6 +7,7 @@ const schema = z.object({
   RESEND_API_KEY: z.string().min(1),
   CRON_SECRET: z.string().min(1),
   APP_URL: z.string().url(),
+  ADMIN_EMAILS: z.string().default(''),
 });
 
 type Env = z.infer<typeof schema>;

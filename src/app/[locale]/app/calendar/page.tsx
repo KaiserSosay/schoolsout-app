@@ -7,7 +7,13 @@ import { AppPageHeader } from '@/components/app/AppPageHeader';
 
 export const dynamic = 'force-dynamic';
 
-type SchoolRow = { id: string; name: string };
+import type { SchoolStatus } from '@/lib/school-status';
+
+type SchoolRow = {
+  id: string;
+  name: string;
+  calendar_status: SchoolStatus;
+};
 type ClosureRow = {
   id: string;
   school_id: string;
@@ -15,7 +21,7 @@ type ClosureRow = {
   start_date: string;
   end_date: string;
   emoji: string;
-  status: 'verified' | 'ai_draft' | 'rejected' | 'archived';
+  status: 'verified' | 'ai_draft' | 'rejected';
 };
 
 export default async function CalendarPage({
@@ -46,11 +52,14 @@ export default async function CalendarPage({
   // All schools + closures (service role: public reads)
   const svc = createServiceSupabase();
   const [schoolsResp, closuresResp] = await Promise.all([
-    svc.from('schools').select('id, name').order('name'),
+    svc.from('schools').select('id, name, calendar_status').order('name'),
+    // DECISION: Calendar page never exposes ai_draft rows to users. Honest
+    // status invariant — a parent only sees verified closures. The badge on
+    // the school row tells them whether we're still researching.
     svc
       .from('closures')
       .select('id, school_id, name, start_date, end_date, emoji, status')
-      .in('status', ['verified', 'ai_draft'])
+      .eq('status', 'verified')
       .gte('start_date', new Date().toISOString().slice(0, 10))
       .order('start_date'),
   ]);
@@ -68,6 +77,7 @@ export default async function CalendarPage({
   const sections = schools.map((s) => ({
     schoolId: s.id,
     schoolName: s.name,
+    calendarStatus: s.calendar_status,
     isUserSchool: userSchoolIds.has(s.id),
     closures: bySchool.get(s.id) ?? [],
   }));

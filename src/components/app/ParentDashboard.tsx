@@ -9,6 +9,8 @@ import { ReminderBanner } from './ReminderBanner';
 import { WishlistSection } from './WishlistSection';
 import { QuickActions } from './QuickActions';
 import { KidActivityFeed } from './KidActivityFeed';
+import { VerifyingCalendarsCard } from './VerifyingCalendarsCard';
+import type { SchoolStatus } from '@/lib/school-status';
 
 type ClosureWithSchool = Closure & { schoolName: string | null };
 
@@ -17,7 +19,18 @@ type Profile = {
   school_id: string;
   age_range: string;
   ordinal: number;
-  schools?: { id: string; name: string } | null;
+  schools?: {
+    id: string;
+    name: string;
+    district?: string | null;
+    type?: string | null;
+    calendar_status?:
+      | 'verified_multi_year'
+      | 'verified_current'
+      | 'ai_draft'
+      | 'needs_research'
+      | 'unavailable';
+  } | null;
 };
 
 type Camp = {
@@ -78,6 +91,11 @@ export function ParentDashboard({
         <p className="mt-1 text-sm text-muted">{t('subtitle')}</p>
       </header>
 
+      <VerifyingCalendarsCard
+        locale={locale}
+        schools={dedupeSchools(profiles)}
+      />
+
       <StatsGrid
         kidCount={profiles.length}
         closures={closures}
@@ -104,4 +122,22 @@ export function ParentDashboard({
       <KidActivityFeed initial={activity} locale={locale} />
     </div>
   );
+}
+
+function dedupeSchools(
+  profiles: Profile[],
+): Array<{ id: string; name: string; calendar_status: SchoolStatus }> {
+  const seen = new Map<string, { id: string; name: string; calendar_status: SchoolStatus }>();
+  for (const p of profiles) {
+    const s = p.schools;
+    if (!s || !s.calendar_status) continue;
+    if (!seen.has(s.id)) {
+      seen.set(s.id, {
+        id: s.id,
+        name: s.name,
+        calendar_status: s.calendar_status as SchoolStatus,
+      });
+    }
+  }
+  return Array.from(seen.values());
 }

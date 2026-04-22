@@ -83,7 +83,10 @@ describe('OnboardingForm', () => {
     // Pick the first suggested school pill
     fireEvent.click(screen.getByRole('button', { name: /The Growing Place/ }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Finish setup/ }));
+    // Step 1 → step 2 (address, optional).
+    fireEvent.click(screen.getByRole('button', { name: /^Next/i }));
+    // Skip address step.
+    fireEvent.click(screen.getByRole('button', { name: /^Skip$/i }));
 
     await waitFor(() => {
       const calls = (global.fetch as unknown as { mock: { calls: [string, RequestInit][] } }).mock
@@ -113,7 +116,8 @@ describe('OnboardingForm', () => {
 
   it('keeps the submit button disabled until parent name + each school is chosen', () => {
     wrap();
-    const submit = screen.getByRole('button', { name: /Finish setup/ });
+    // "Next →" on step 1 takes the place of what used to be "Finish setup".
+    const submit = screen.getByRole('button', { name: /^Next/i });
     expect(submit).toBeDisabled();
 
     fireEvent.change(screen.getByPlaceholderText(/Rasheid/i), {
@@ -164,8 +168,9 @@ describe('OnboardingForm', () => {
     fireEvent.click(screen.getByRole('button', { name: '2', pressed: false }));
     expect(screen.getAllByText(/^Kid \d+$/i)).toHaveLength(2);
 
-    // Submit.
-    fireEvent.click(screen.getByRole('button', { name: /Finish setup/ }));
+    // Advance to step 2 then skip the optional address step.
+    fireEvent.click(screen.getByRole('button', { name: /^Next/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^Skip$/i }));
 
     await waitFor(() => {
       const calls = (global.fetch as unknown as { mock: { calls: [string, RequestInit][] } }).mock

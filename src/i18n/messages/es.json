@@ -459,7 +459,25 @@
       },
       "submit": "Terminar →",
       "saving": "Guardando…",
-      "error": "Algo salió mal. Intenta de nuevo."
+      "error": "Algo salió mal. Intenta de nuevo.",
+      "step4": {
+        "title": "¿Desde dónde medimos la distancia?",
+        "subtitle": "Opcional — lo usamos para ordenar los campamentos por distancia desde casa.",
+        "privacyNote": "Tu dirección se queda en tu dispositivo. Solo guardamos las coordenadas en el servidor para ordenar por distancia.",
+        "addressLabel": "Dirección",
+        "addressPlaceholder": "Calle 1234, Coral Gables, FL",
+        "labelLabel": "Etiqueta",
+        "labelDefault": "Casa",
+        "findButton": "Buscar",
+        "finding": "Buscando…",
+        "pickResult": "Elegir esta",
+        "skip": "Saltar",
+        "saveAndFinish": "Guardar y terminar",
+        "next": "Siguiente →",
+        "back": "← Atrás",
+        "findError": "No encontramos esa dirección. Prueba agregando la ciudad y el estado.",
+        "noResults": "Sin coincidencias. Prueba con una dirección más específica."
+      }
     },
     "settings": {
       "title": "Ajustes",
@@ -498,6 +516,30 @@
           "title": "Cerrar sesión",
           "body": "Puedes volver a entrar cuando quieras con el mismo correo.",
           "button": "Cerrar sesión"
+        },
+        "locations": {
+          "title": "Distancia desde",
+          "body": "Los campamentos se ordenan por distancia desde la ubicación que elijas. La principal es la predeterminada.",
+          "privacyNote": "Tu dirección se queda en tu dispositivo. Solo guardamos las coordenadas en el servidor para ordenar por distancia.",
+          "addLabel": "Etiqueta",
+          "addPlaceholder": "Casa",
+          "addressLabel": "Dirección",
+          "addressPlaceholder": "Calle 1234, Coral Gables, FL",
+          "findButton": "Buscar",
+          "finding": "Buscando…",
+          "pickResult": "Elegir esta",
+          "cancel": "Cancelar",
+          "add": "+ Agregar ubicación",
+          "saving": "Guardando…",
+          "save": "Guardar",
+          "primaryBadge": "Principal",
+          "makePrimary": "Marcar como principal",
+          "delete": "Eliminar",
+          "deleteConfirm": "¿Eliminar esta ubicación guardada?",
+          "empty": "Aún no hay ubicaciones guardadas. Agrega una abajo para ordenar los campamentos por distancia.",
+          "firstIsPrimary": "Tu primera ubicación se marca como principal automáticamente.",
+          "findError": "No encontramos esa dirección. Prueba agregando la ciudad y el estado.",
+          "noResults": "Sin coincidencias. Prueba con una dirección más específica."
         }
       },
       "kidAccess": {
@@ -581,6 +623,10 @@
       },
       "exitKidLock": {
         "label": "🔓 Salir del Modo Niños"
+      },
+      "verifying": {
+        "singleSchool": "Estamos confirmando el calendario de {name}. Verás los cierres aquí en cuanto quede verificado — normalmente en 24 horas.",
+        "multipleSchools": "Estamos confirmando {names}. Verás los cierres aquí en cuanto queden verificados — normalmente en 24 horas."
       }
     },
     "kidShare": {
@@ -686,7 +732,15 @@
       "otherSchools": "Otras escuelas",
       "export": "Exportar al calendario (.ics)",
       "draft": "Borrador AI — pendiente de revisión",
-      "closureDuration": "{count, plural, one {# día} other {# días}}"
+      "closureDuration": "{count, plural, one {# día} other {# días}}",
+      "status": {
+        "verifiedMultiYear": "Verificado hasta 2027",
+        "verifiedCurrent": "Verificado para 2026–27",
+        "aiDraft": "Verificando…",
+        "needsResearch": "Investigando calendario",
+        "unavailable": "No pudimos confirmar — escríbenos",
+        "contactUs": "Escríbenos"
+      }
     },
     "saved": {
       "title": "Campamentos guardados",

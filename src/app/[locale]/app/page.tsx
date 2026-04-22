@@ -46,7 +46,7 @@ export default async function AppPage({
   const [profilesResp, savesResp, activityResp, userResp] = await Promise.all([
     sb
       .from('kid_profiles')
-      .select('id, school_id, age_range, ordinal, schools(id, name)')
+      .select('id, school_id, age_range, ordinal, schools(id, name, district, type, calendar_status)')
       .eq('user_id', user.id)
       .order('ordinal'),
     sb
@@ -66,13 +66,25 @@ export default async function AppPage({
     sb.from('users').select('display_name').eq('id', user.id).maybeSingle(),
   ]);
 
+  type JoinedSchool = {
+    id: string;
+    name: string;
+    district: string | null;
+    type: string | null;
+    calendar_status:
+      | 'verified_multi_year'
+      | 'verified_current'
+      | 'ai_draft'
+      | 'needs_research'
+      | 'unavailable';
+  };
   const profilesRaw = (profilesResp.data ?? []) as Array<{
     id: string;
     school_id: string;
     age_range: string;
     ordinal: number;
     // supabase returns joined row as object OR array depending on relation inference
-    schools: { id: string; name: string } | { id: string; name: string }[] | null;
+    schools: JoinedSchool | JoinedSchool[] | null;
   }>;
   const profiles = profilesRaw.map((p) => ({
     id: p.id,
