@@ -106,5 +106,272 @@
     "language": "Idioma",
     "privacyPolicy": "Política de Privacidad",
     "terms": "Términos del Servicio"
+  },
+  "landing": {
+    "meta": {
+      "title": "School's Out! — Cada cierre escolar y campamento de Miami, en una app gratis",
+      "description": "Cada cierre escolar de Miami, cuenta regresiva y campamento — en una sola app gratis. Hecho por Noah (8 años) y Papá en Coral Gables."
+    },
+    "header": {
+      "signIn": "Entrar",
+      "startFree": "Empezar gratis",
+      "mode": {
+        "label": "Modo de visualización",
+        "parents": "Padres",
+        "kids": "Niños"
+      }
+    },
+    "hero": {
+      "badge": "⚡ Hecho por un niño de 8 años en Coral Gables",
+      "titleLine1": "No hay escuela.",
+      "titleLine2": "Te cubrimos.",
+      "subtitle": "La app gratis que avisa a los padres de Miami de cada cierre escolar, da a los niños cosas divertidas que hacer y ayuda a las familias a planear el año en minutos — no horas.",
+      "emailPlaceholder": "padre@ejemplo.com",
+      "submit": "Empezar gratis →",
+      "submitting": "Enviando…",
+      "consent": "Soy madre, padre o tutor legal.",
+      "trust": "Sin tarjeta de crédito. Sin spam. Gratis para siempre para las familias.",
+      "success": "Revisa tu correo para confirmar.",
+      "error": "Algo salió mal. Intenta de nuevo."
+    },
+    "dashboard": {
+      "stats": {
+        "kids": "Niños",
+        "nextBreakIn": "Próxima vacación en",
+        "nextBreakUnit": "días",
+        "closures": "Cierres",
+        "savedCamps": "Campamentos guardados"
+      },
+      "upNextLabel": "A continuación",
+      "inDays": "en {days} días",
+      "today": "hoy",
+      "tomorrow": "mañana",
+      "empty": "Aún no se han cargado cierres. Vuelve pronto."
+    },
+    "problems": {
+      "label": "¿Te suena familiar?",
+      "title": "Planear el tiempo de los niños no debería ser tan difícil.",
+      "items": {
+        "panic": {
+          "emoji": "🤔",
+          "title": "Pánico del viernes por la mañana",
+          "body": "Espera… ¿hoy hay escuela?"
+        },
+        "twoKids": {
+          "emoji": "📅",
+          "title": "Dos niños, dos escuelas",
+          "body": "Calendarios distintos, vacaciones distintas, mismo caos."
+        },
+        "soldOut": {
+          "emoji": "🏕️",
+          "title": "Campamentos agotados",
+          "body": "Spring break es en dos semanas y ya no queda cupo en ningún lado."
+        },
+        "teacherDay": {
+          "emoji": "💼",
+          "title": "La reunión de las 10 am",
+          "body": "Día de maestros hoy. Nadie te avisó."
+        }
+      }
+    },
+    "how": {
+      "label": "Cómo funciona",
+      "title": "Tres pasos. Un año más tranquilo.",
+      "steps": {
+        "1": { "title": "Entra una vez", "body": "Cuéntanos de tu familia. Toma 30 segundos." },
+        "2": { "title": "Ve cada día libre", "body": "Cada cierre. Cada cuenta regresiva. Ambas escuelas. Una sola pantalla." },
+        "3": {
+          "title": "Planea en un toque",
+          "body": "Recomendaciones de campamentos según la edad de tu hijo y la vacación.",
+          "badge": "Próximamente"
+        }
+      }
+    },
+    "doors": {
+      "label": "Dos modos",
+      "title": "Una familia. Dos modos.",
+      "subtitle": "Los padres planean. Los niños se emocionan. La misma información, dos experiencias.",
+      "parent": {
+        "tag": "Modo Padres",
+        "title": "Tranquilo. Ordenado. Rápido.",
+        "body": "Un panel enfocado con cada cierre, cada campamento y cada cuenta regresiva.",
+        "cta": "Abrir Modo Padres →"
+      },
+      "kid": {
+        "tag": "Modo Niños",
+        "title": "Fuerte. Colorido. Divertido.",
+        "body": "Degradados que rotan, cuentas regresivas que parecen un juego, cosas chulas que hacer.",
+        "cta": "Abrir Modo Niños →"
+      },
+      "urlLabel": "schoolsout.net/app",
+      "soon": "pronto"
+    },
+    "features": {
+      "label": "Lo que recibes",
+      "title": "Todo lo que una familia de Miami necesita en un día libre.",
+      "items": {
+        "schools": {
+          "emoji": "🗓️",
+          "title": "Todas las escuelas de Miami",
+          "body": "Todas las escuelas importantes de Miami-Dade. ¿No está la tuya? Pídela abajo."
+        },
+        "countdowns": {
+          "emoji": "⚡",
+          "title": "Cuentas regresivas inteligentes",
+          "body": "Sabe exactamente cuándo llega el próximo día libre."
+        },
+        "camps": {
+          "emoji": "🏕️",
+          "title": "Campamentos locales",
+          "body": "Las aplicaciones de campamentos están abiertas. Los primeros 10 operadores de Coral Gables reciben Destacado gratis por 90 días.",
+          "badge": "Aplicaciones abiertas"
+        },
+        "weather": {
+          "emoji": "🌤️",
+          "title": "Clima en vivo",
+          "body": "Pronósticos reales a 16 días vía Open-Meteo. Promedios mensuales de Miami después de ese rango."
+        },
+        "ai": {
+          "emoji": "✨",
+          "title": "Asistente con IA",
+          "body": "Pregunta lo que quieras. Respuestas reales.",
+          "badge": "Próximamente"
+        },
+        "export": {
+          "emoji": "📱",
+          "title": "Exportar al calendario",
+          "body": "Google, Apple, Outlook. Con un toque.",
+          "badge": "Próximamente"
+        }
+      }
+    },
+    "nextDaysOff": {
+      "label": "Tus próximos días libres",
+      "title": "Lo que viene.",
+      "subtitle": "Cierres reales. Pronóstico real. Sin adivinar.",
+      "empty": "Aún no hay vacaciones próximas. Vuelve pronto.",
+      "loadingWeather": "Cargando clima…",
+      "weatherLabel": {
+        "average": "{label} (prom.)"
+      }
+    },
+    "restOfYear": {
+      "title": "Resto del año escolar"
+    },
+    "coverage": {
+      "label": "Cobertura",
+      "title": "Empezando en Miami. Creado para llegar a todo el país.",
+      "phases": {
+        "1": { "emoji": "✅", "label": "Fase 1: Coral Gables (en vivo)" },
+        "2": { "emoji": "🔜", "label": "Fase 2: Todo Miami-Dade (2026)" },
+        "3": { "emoji": "📍", "label": "Fase 3: Toda la Florida (2026)" },
+        "4": { "emoji": "🌎", "label": "Fase 4: Estados Unidos (2027)" }
+      },
+      "request": {
+        "title": "¿No estás en Miami? Cuéntanos dónde estás.",
+        "subtitle": "Te escribiremos apenas lancemos en tu ciudad.",
+        "emailPlaceholder": "padre@ejemplo.com",
+        "cityPlaceholder": "Ciudad (ej. Orlando)",
+        "statePlaceholder": "Estado",
+        "submit": "Pedir mi ciudad →",
+        "submitting": "Enviando…",
+        "success": "Anotado. Te escribiremos cuando lancemos allá.",
+        "error": "Algo salió mal. Intenta de nuevo."
+      }
+    },
+    "camps": {
+      "label": "Para dueños de campamentos",
+      "title": "Los padres de Miami están buscando campamentos. Pon el tuyo frente a ellos.",
+      "subtitle": "School's Out! es la app gratis que cada padre de Coral Gables está por descargar. Sé parte del primer grupo.",
+      "benefits": {
+        "featured": { "emoji": "⭐", "title": "Destacado", "body": "Arriba de la lista cuando los padres planean la próxima vacación." },
+        "profile":  { "emoji": "📝", "title": "Perfil completo", "body": "Edades, precios, fotos, barrio — los padres pueden decir que sí en un scroll." },
+        "dashboard":{ "emoji": "📊", "title": "Panel mensual", "body": "Ve vistas, clics y alcance. Sabe qué funciona." },
+        "bookings": { "emoji": "🔗", "title": "100% de las inscripciones", "body": "Los padres se inscriben en tu sitio. Nosotros nunca tocamos la transacción." },
+        "boost":    { "emoji": "🎯", "title": "Impulso por temporada", "body": "Destacado durante las vacaciones que más importan." },
+        "commissions": { "emoji": "🚫", "title": "Sin comisiones", "body": "Somos directorio, no intermediario. Quédate con lo que ganas." }
+      },
+      "price": {
+        "big": "$0",
+        "per": "primeros 90 días como Socio de Lanzamiento",
+        "disclaimer": "Después solo $29/mes — y solo cuando lleguemos a 1,000 padres. Los primeros 10 campamentos reciben esta oferta.",
+        "perks": {
+          "1": "Destacado en búsqueda y listado",
+          "2": "Perfil completo del campamento (fotos, edades, precios)",
+          "3": "Analíticas mensuales de alcance y clics",
+          "4": "Inscripciones directas — cero comisión",
+          "5": "Foco destacado durante las vacaciones escolares"
+        }
+      },
+      "form": {
+        "title": "Aplica como Socio de Lanzamiento",
+        "subtitle": "Revisamos cada aplicación en 48 horas.",
+        "name":         { "label": "Nombre del campamento", "placeholder": "Sunshine Adventure Camp" },
+        "website":      { "label": "Sitio web", "placeholder": "https://tucampamento.com" },
+        "ages":         { "label": "Edades", "placeholder": "ej. 6–10" },
+        "neighborhood": { "label": "Barrio", "placeholder": "Coral Gables" },
+        "email":        { "label": "Correo", "placeholder": "dueno@tucampamento.com" },
+        "submit": "Aplicar →",
+        "submitting": "Enviando…",
+        "success": "Anotado. Revisamos cada aplicación en 48 horas.",
+        "error": "Algo salió mal. Intenta de nuevo.",
+        "validation": {
+          "name": "El nombre del campamento es obligatorio.",
+          "website": "Ingresa una URL válida (incluye https://).",
+          "ages": "Dinos el rango de edades.",
+          "neighborhood": "El barrio es obligatorio.",
+          "email": "Ingresa un correo válido."
+        }
+      }
+    },
+    "faq": {
+      "label": "Preguntas frecuentes",
+      "title": "Preguntas que nos han hecho los padres.",
+      "items": {
+        "1": {
+          "q": "¿School's Out! es gratis para los padres?",
+          "a": "Sí. Siempre gratis para los padres. Sin tarjeta de crédito, sin muro de pago. Eventualmente podríamos cobrarle a los campamentos por Destacado — nunca a las familias."
+        },
+        "2": {
+          "q": "¿Cómo eligen qué campamentos listar?",
+          "a": "Revisamos cada campamento a mano. Verificamos el sitio, confirmamos edades y ubicación, y solo listamos operadores con programas reales en los barrios donde cubrimos."
+        },
+        "3": {
+          "q": "¿School's Out! se queda con parte de las inscripciones?",
+          "a": "No. Somos directorio, no intermediario. Los padres se inscriben directo en el sitio del campamento. Los operadores se quedan con el 100% de cada inscripción."
+        },
+        "4": {
+          "q": "¿Compartirán los datos de mi familia?",
+          "a": "No. Los datos de los niños se quedan en tu dispositivo según nuestro diseño alineado con COPPA. Lo único que guardamos en nuestro servidor es el correo que nos das para los recordatorios de cierres — y puedes cancelar cuando quieras."
+        },
+        "5": {
+          "q": "¿Qué pasa si la escuela de mi hijo no está listada?",
+          "a": "Usa el formulario de arriba. Dinos la ciudad (y tu correo) y te escribiremos apenas agreguemos tu escuela o expandamos la cobertura."
+        },
+        "6": {
+          "q": "¿Quién creó School's Out!?",
+          "a": "Noah (8 años) y su papá Rasheid, en Coral Gables. Noah hizo el primer boceto en una servilleta durante Spring Break 2025 — cuando cada campamento ya estaba lleno."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Tu próxima vacación escolar está más cerca de lo que crees.",
+      "body": "Regístrate gratis. Recibe avisos. Planea el año en minutos.",
+      "buttons": {
+        "parent": "Empezar gratis",
+        "camp": "Tengo un campamento",
+        "city": "Pedir mi ciudad"
+      }
+    },
+    "footer": {
+      "nav": {
+        "privacy": "Privacidad",
+        "terms": "Términos",
+        "contact": "Contacto"
+      },
+      "credit": "Hecho por Noah (8 años) y Papá en Coral Gables 🌴",
+      "copyright": "© 2026 School's Out!",
+      "domain": "schoolsout.net"
+    }
   }
 }

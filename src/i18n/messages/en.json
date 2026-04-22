@@ -106,5 +106,272 @@
     "language": "Language",
     "privacyPolicy": "Privacy Policy",
     "terms": "Terms of Service"
+  },
+  "landing": {
+    "meta": {
+      "title": "School's Out! — Every Miami school closure + camp, one free app",
+      "description": "Every Miami school closure, countdown, and camp — in one free app. Built by Noah (age 8) and Dad in Coral Gables."
+    },
+    "header": {
+      "signIn": "Sign in",
+      "startFree": "Start free",
+      "mode": {
+        "label": "Display mode",
+        "parents": "Parents",
+        "kids": "Kids"
+      }
+    },
+    "hero": {
+      "badge": "⚡ Built by an 8-year-old from Coral Gables",
+      "titleLine1": "School's Out.",
+      "titleLine2": "We've got you covered.",
+      "subtitle": "The free app that tells Miami parents every school closure, gives kids cool things to do, and helps families plan the year in minutes — not hours.",
+      "emailPlaceholder": "parent@example.com",
+      "submit": "Start free →",
+      "submitting": "Sending…",
+      "consent": "I'm a parent or legal guardian.",
+      "trust": "No credit card. No spam. Free forever for families.",
+      "success": "Check your email to confirm.",
+      "error": "Something went wrong. Please try again."
+    },
+    "dashboard": {
+      "stats": {
+        "kids": "Kids",
+        "nextBreakIn": "Next break in",
+        "nextBreakUnit": "days",
+        "closures": "Closures",
+        "savedCamps": "Saved camps"
+      },
+      "upNextLabel": "Up next",
+      "inDays": "in {days} days",
+      "today": "today",
+      "tomorrow": "tomorrow",
+      "empty": "No closures loaded yet. Check back soon."
+    },
+    "problems": {
+      "label": "Sound familiar?",
+      "title": "Planning kid time shouldn't be this hard.",
+      "items": {
+        "panic": {
+          "emoji": "🤔",
+          "title": "Friday morning panic",
+          "body": "Wait… is there school today?"
+        },
+        "twoKids": {
+          "emoji": "📅",
+          "title": "Two kids, two schools",
+          "body": "Different calendars, different breaks, same chaos."
+        },
+        "soldOut": {
+          "emoji": "🏕️",
+          "title": "Sold-out camps",
+          "body": "Spring break is two weeks out and every good spot is gone."
+        },
+        "teacherDay": {
+          "emoji": "💼",
+          "title": "The 10am meeting",
+          "body": "Teacher workday today. Nobody told you."
+        }
+      }
+    },
+    "how": {
+      "label": "How it works",
+      "title": "Three steps. One calmer year.",
+      "steps": {
+        "1": { "title": "Sign in once", "body": "Tell us your family. Takes 30 seconds." },
+        "2": { "title": "See every day off", "body": "Every closure. Every countdown. Both schools. One screen." },
+        "3": {
+          "title": "Plan in one tap",
+          "body": "Smart camp picks matched to your kid's age and the break.",
+          "badge": "Coming soon"
+        }
+      }
+    },
+    "doors": {
+      "label": "Two modes",
+      "title": "One family. Two modes.",
+      "subtitle": "Parents plan. Kids get hyped. Same data, two experiences.",
+      "parent": {
+        "tag": "Parent Mode",
+        "title": "Quiet. Organized. Fast.",
+        "body": "A focused dashboard with every closure, every camp, every countdown.",
+        "cta": "Open Parent Mode →"
+      },
+      "kid": {
+        "tag": "Kid Mode",
+        "title": "Loud. Colorful. Fun.",
+        "body": "Rotating gradients, countdowns that feel like a game, cool things to do.",
+        "cta": "Open Kid Mode →"
+      },
+      "urlLabel": "schoolsout.net/app",
+      "soon": "soon"
+    },
+    "features": {
+      "label": "What you get",
+      "title": "Everything a Miami family needs on a day off.",
+      "items": {
+        "schools": {
+          "emoji": "🗓️",
+          "title": "Every Miami school",
+          "body": "All major Miami-Dade schools. Your school missing? Request it below."
+        },
+        "countdowns": {
+          "emoji": "⚡",
+          "title": "Smart countdowns",
+          "body": "Know exactly when the next day off hits."
+        },
+        "camps": {
+          "emoji": "🏕️",
+          "title": "Local camps",
+          "body": "Camp applications are open. First 10 Coral Gables operators get Featured free for 90 days.",
+          "badge": "Applications open"
+        },
+        "weather": {
+          "emoji": "🌤️",
+          "title": "Live weather",
+          "body": "Real 16-day forecasts via Open-Meteo. Miami monthly averages beyond that window."
+        },
+        "ai": {
+          "emoji": "✨",
+          "title": "AI planner",
+          "body": "Ask anything. Get real answers.",
+          "badge": "Coming soon"
+        },
+        "export": {
+          "emoji": "📱",
+          "title": "Calendar export",
+          "body": "Google, Apple, Outlook. One tap.",
+          "badge": "Coming soon"
+        }
+      }
+    },
+    "nextDaysOff": {
+      "label": "Your next days off",
+      "title": "What's coming up.",
+      "subtitle": "Real closures. Real forecasts. No guesswork.",
+      "empty": "No upcoming closures yet. Check back soon.",
+      "loadingWeather": "Loading weather…",
+      "weatherLabel": {
+        "average": "{label} (avg)"
+      }
+    },
+    "restOfYear": {
+      "title": "Rest of the school year"
+    },
+    "coverage": {
+      "label": "Coverage",
+      "title": "Starting in Miami. Built to go national.",
+      "phases": {
+        "1": { "emoji": "✅", "label": "Phase 1: Coral Gables (live)" },
+        "2": { "emoji": "🔜", "label": "Phase 2: All Miami-Dade (2026)" },
+        "3": { "emoji": "📍", "label": "Phase 3: All Florida (2026)" },
+        "4": { "emoji": "🌎", "label": "Phase 4: United States (2027)" }
+      },
+      "request": {
+        "title": "Not in Miami? Tell us where you are.",
+        "subtitle": "We'll email you the moment we launch in your city.",
+        "emailPlaceholder": "parent@example.com",
+        "cityPlaceholder": "City (e.g. Orlando)",
+        "statePlaceholder": "State",
+        "submit": "Request my city →",
+        "submitting": "Sending…",
+        "success": "Got it. We'll email you when we launch there.",
+        "error": "Something went wrong. Please try again."
+      }
+    },
+    "camps": {
+      "label": "For camp owners",
+      "title": "Miami parents are looking for camps. Get yours in front of them.",
+      "subtitle": "School's Out! is the free app every Coral Gables parent is about to download. Be in the first batch.",
+      "benefits": {
+        "featured": { "emoji": "⭐", "title": "Featured placement", "body": "Top of the list when parents plan the next break." },
+        "profile":  { "emoji": "📝", "title": "Full profile", "body": "Ages, pricing, photos, neighborhood — parents can say yes in one scroll." },
+        "dashboard":{ "emoji": "📊", "title": "Monthly dashboard", "body": "See views, clicks, and reach. Know what's working." },
+        "bookings": { "emoji": "🔗", "title": "100% of bookings", "body": "Parents book on your site. We never touch the transaction." },
+        "boost":    { "emoji": "🎯", "title": "Seasonal boost", "body": "Featured during the break windows that matter most." },
+        "commissions": { "emoji": "🚫", "title": "No commissions", "body": "We're a directory, not a broker. Keep what you earn." }
+      },
+      "price": {
+        "big": "$0",
+        "per": "first 90 days as a Launch Partner",
+        "disclaimer": "Only $29/mo after — and only when we hit 1,000 parents. First 10 camps get this deal.",
+        "perks": {
+          "1": "Featured placement in search + listings",
+          "2": "Full camp profile (photos, ages, pricing)",
+          "3": "Monthly reach + click analytics",
+          "4": "Direct bookings — zero commission",
+          "5": "Seasonal spotlight during school breaks"
+        }
+      },
+      "form": {
+        "title": "Apply to be a Launch Partner",
+        "subtitle": "We review every application within 48 hours.",
+        "name":         { "label": "Camp name", "placeholder": "Sunshine Adventure Camp" },
+        "website":      { "label": "Website", "placeholder": "https://yourcamp.com" },
+        "ages":         { "label": "Ages served", "placeholder": "e.g. 6–10" },
+        "neighborhood": { "label": "Neighborhood", "placeholder": "Coral Gables" },
+        "email":        { "label": "Email", "placeholder": "owner@yourcamp.com" },
+        "submit": "Apply →",
+        "submitting": "Sending…",
+        "success": "Got it. We review every application within 48 hours.",
+        "error": "Something went wrong. Please try again.",
+        "validation": {
+          "name": "Camp name is required.",
+          "website": "Please enter a valid website URL (include https://).",
+          "ages": "Tell us the age range.",
+          "neighborhood": "Neighborhood is required.",
+          "email": "Please enter a valid email."
+        }
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "title": "Questions parents have asked.",
+      "items": {
+        "1": {
+          "q": "Is School's Out! free for parents?",
+          "a": "Yes. Always free for parents. No credit card, no paywall. We may eventually charge camps for Featured placement — never families."
+        },
+        "2": {
+          "q": "How do you pick which camps to list?",
+          "a": "Every camp is manually reviewed. We check the website, confirm the ages and location, and only list operators running real programs in the neighborhoods we cover."
+        },
+        "3": {
+          "q": "Does School's Out! take a cut of camp bookings?",
+          "a": "No. We're a directory, not a broker. Parents book directly on the camp's website. Camp operators keep 100% of every booking."
+        },
+        "4": {
+          "q": "Will my family data be shared?",
+          "a": "No. Kid data stays on your device per our COPPA-aligned design. The only data we store on our server is the email you give us for closure reminders — and you can unsubscribe any time."
+        },
+        "5": {
+          "q": "What if my kid's school isn't listed?",
+          "a": "Use the city request form above. Tell us the city (and your email) and we'll email you the moment we add your school or expand coverage."
+        },
+        "6": {
+          "q": "Who built School's Out!?",
+          "a": "Noah (age 8) and his dad Rasheid, in Coral Gables. Noah sketched the first version on a napkin during Spring Break 2025 — when every camp was already sold out."
+        }
+      }
+    },
+    "finalCta": {
+      "title": "Your next school break is closer than you think.",
+      "body": "Sign up free. Get reminders. Plan the year in minutes.",
+      "buttons": {
+        "parent": "Start free",
+        "camp": "Run a camp",
+        "city": "Request your city"
+      }
+    },
+    "footer": {
+      "nav": {
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "contact": "Contact"
+      },
+      "credit": "Built by Noah (age 8) & Dad in Coral Gables 🌴",
+      "copyright": "© 2026 School's Out!",
+      "domain": "schoolsout.net"
+    }
   }
 }

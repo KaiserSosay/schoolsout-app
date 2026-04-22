@@ -16,6 +16,23 @@
     background-size: 200% 200%;
     animation: gradient-pan 8s ease-in-out infinite;
   }
+
+  /* Editorial headline tracking + leading per spec */
+  .editorial-h1 {
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+  .editorial-body {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* Smooth 300ms cross-fade between Parents and Kids modes */
+  [data-mode] {
+    transition: background-color 300ms ease, color 300ms ease,
+      background-image 300ms ease;
+  }
 }
 
 @keyframes fadeUp {
@@ -47,5 +64,8 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+  [data-mode] {
+    transition: none;
   }
 }
