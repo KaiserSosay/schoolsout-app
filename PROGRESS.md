@@ -248,7 +248,7 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 
 **Data:** 10 Miami schools, 20 camps (all `verified=false` pending manual review), real Open-Meteo weather for closures ≤16 days out.
 
-**Commits:** Subagent A `3a7312c`, Subagent B `67bcf8c`, Subagent C `<pending>`.
+**Commits:** Subagent A `3a7312c`, Subagent B `67bcf8c`, Subagent C `f3abd61`.
 
 ## Final summary
 
