@@ -1,1 +1,37 @@
-{}
+{
+  "home": {
+    "title": "¿Cuándo no hay escuela?",
+    "subtitle": "Planea algo increíble para cada día libre.",
+    "next3": "Próximos 3 días sin escuela",
+    "restOfYear": "Resto del año escolar",
+    "countdown": {
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "days": "en {days} días"
+    }
+  },
+  "reminderSignup": {
+    "headline": "Recibe un aviso antes de cada día sin escuela",
+    "body": "Te escribiremos 2 semanas, 1 semana y 3 días antes de cada vacación. Sin spam, cancela cuando quieras.",
+    "emailLabel": "Tu correo",
+    "emailPlaceholder": "padre@ejemplo.com",
+    "ageRangeLabel": "Rango de edad en tu familia",
+    "ageRange": { "4-6": "4 a 6 años", "7-9": "7 a 9 años", "all": "Todas las edades" },
+    "coppaConsent": "Soy madre, padre o tutor legal y doy mi consentimiento para recibir estos correos.",
+    "submit": "Recuérdame antes de cada vacación",
+    "success": "Revisa tu correo para confirmar tu suscripción.",
+    "error": "Algo salió mal. Intenta de nuevo."
+  },
+  "closure": {
+    "badge": {
+      "threeDayWeekend": "Fin de semana de 3 días",
+      "longBreak": "Vacación larga",
+      "summer": "Verano"
+    }
+  },
+  "nav": {
+    "language": "Idioma",
+    "privacyPolicy": "Política de Privacidad",
+    "terms": "Términos del Servicio"
+  }
+}

@@ -1,1 +1,37 @@
-{}
+{
+  "home": {
+    "title": "When is school out?",
+    "subtitle": "Plan something awesome for every day off.",
+    "next3": "Next 3 closures",
+    "restOfYear": "Rest of school year",
+    "countdown": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "days": "in {days} days"
+    }
+  },
+  "reminderSignup": {
+    "headline": "Get reminded before every school closure",
+    "body": "We'll email you 2 weeks, 1 week, and 3 days before each break. No spam, unsubscribe anytime.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "parent@example.com",
+    "ageRangeLabel": "Age range in your family",
+    "ageRange": { "4-6": "Ages 4–6", "7-9": "Ages 7–9", "all": "All ages" },
+    "coppaConsent": "I'm a parent or legal guardian and consent to receive these emails.",
+    "submit": "Remind me before every break",
+    "success": "Check your email to confirm your subscription.",
+    "error": "Something went wrong. Please try again."
+  },
+  "closure": {
+    "badge": {
+      "threeDayWeekend": "3-Day Weekend",
+      "longBreak": "Long Break",
+      "summer": "Summer"
+    }
+  },
+  "nav": {
+    "language": "Language",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

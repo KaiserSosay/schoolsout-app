@@ -20,7 +20,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 8 | Supabase client helpers (browser + server + service) | ✅ | Three factories under `src/lib/supabase/`: `createBrowserSupabase` (`@supabase/ssr` browser client), `createServerSupabase` (`@supabase/ssr` server client with Next `cookies()` get/set/remove, try/catch around set for readonly route-handler contexts), `createServiceSupabase` (`@supabase/supabase-js` with `SUPABASE_SERVICE_ROLE_KEY`, `persistSession: false`). `tests/lib/supabase.test.ts` stubs all six env vars + `vi.resetModules()` + dynamic import (same pattern as Task 4). Module-level `env` parse kept — build still compiles because no server-entry file imports these yet; will reassess when Tasks 9/16/18 wire them in. |
 | 9 | Auth-session middleware | ✅ | `src/middleware.ts` wired to `createServerClient` + `supabase.auth.getUser()` for transparent session refresh. Matcher excludes `_next/static`, `_next/image`, `favicon.ico`, and static image extensions. `env.ts` converted to a lazy `Proxy` so `process.env` only parses on first property access — middleware bundle traces `@/lib/env` at build time, and without lazy init `pnpm run build` would have required a real `.env.local`. Task 10 will replace this file with a combined intl+auth middleware. |
 | 10 | `next-intl` with `[locale]` routing | ✅ | v4 API (`requestLocale` Promise; `locale` returned from `getRequestConfig`; `params` awaited in layout). Combined intl+auth middleware (next-intl v4 + `@supabase/ssr` `getAll`/`setAll`). Root `layout.tsx` and `page.tsx` moved to `src/app/[locale]/`. `next.config.mjs` wraps with `createNextIntlPlugin` (Next 14 rejects `next.config.ts`). Build generates `/en` and `/es` static routes; middleware bundle ~117 kB. Empty message stubs in place (filled by Task 11). |
-| 11 | Phase 0 message catalogs (EN + ES) | ⏳ | |
+| 11 | Phase 0 message catalogs (EN + ES) | ✅ | EN + ES catalogs filled with `home`/`reminderSignup`/`closure`/`nav` namespaces. Build compiles (6 static pages, `/en` + `/es`). Pre-launch blockers captured in `docs/TODO.md` (native-Spanish review, lawyer-drafted COPPA/privacy/ToS, Resend domain verification). |
 | 12 | LanguageToggle component | ⏳ | |
 | 13 | Countdown utility + badge | ⏳ | |
 | 14 | ClosureCard component | ⏳ | |
@@ -113,6 +113,12 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Matcher**: verbatim from plan — excludes `_next/static`, `_next/image`, `favicon.ico`, and static image extensions (`svg/png/jpg/jpeg/gif/webp`).
 - **Parent-shell env leak**: running `pnpm test` without unsetting the hosted Supabase credentials still produces 3 PGRST205 failures from `tests/db/schema.test.ts` (expected — Task 25 hasn't pushed the migration). Same behavior documented in Task 6 notes. CI/agent runs will need to either drop the leaked vars or wait for Task 25.
 - **Task 10 note**: per plan, Task 10 REPLACES this middleware with a combined `next-intl` + auth version. This is the single-purpose first pass.
+
+### Task 11
+- **Verbatim copy**: both `en.json` and `es.json` copied straight from the plan — `home` (title/subtitle/next3/restOfYear + countdown today/tomorrow/days ICU), `reminderSignup` (headline/body/email + ICU age ranges `4-6`/`7-9`/`all`/coppaConsent/submit/success/error), `closure.badge` (threeDayWeekend/longBreak/summer), `nav` (language/privacyPolicy/terms). Curly quotes + en-dashes preserved exactly (`Ages 4–6`, `¿…?`, `¡…!`).
+- **Pre-launch blockers**: created new `docs/TODO.md` (no existing file) with the three blockers from the plan. These are explicit human-required items the agent can't satisfy autonomously.
+- **Build**: `pnpm run build` — 6 static pages, `/en` + `/es` SSG, middleware 117 kB (unchanged from Task 10). next-intl picks up the filled catalogs at request time; no build-time errors from empty-message lookups.
+- **Tests**: same pre-existing PGRST205 failures in `tests/db/schema.test.ts` (hosted DB not yet migrated — Task 25) when parent-shell Supabase env leaks. Unrelated to this task; i18n-touched code has no test file yet.
 
 ### Task 10
 - **next-intl v4 API adaptations** (plan was written for v3):
