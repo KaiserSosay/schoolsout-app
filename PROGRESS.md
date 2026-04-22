@@ -27,7 +27,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 15 | Closures query + types | ✅ | `src/lib/closures.ts` exports `Closure` type + `getUpcomingClosures(schoolId, today?)`; verified-only, `start_date >= today`, ascending. Test skips cleanly when `NEXT_PUBLIC_SUPABASE_URL` unset (no-DB contract). Build: 6 static pages, middleware 117 kB. |
 | 16 | Home page | ✅ | Replaced scaffold `page.tsx` with anonymous home (hero + ReminderSignup stub + next-3 grid + `<details>` accordion for the rest); added header with `LanguageToggle` to `[locale]/layout.tsx`; graceful empty-array fallback around `getUpcomingClosures` + `export const dynamic = 'force-dynamic'`; stubbed `ReminderSignup` (Task 17 fills it). Build passes without DB. |
 | 17 | ReminderSignup component | ✅ | `src/components/ReminderSignup.tsx` + `tests/components/ReminderSignup.test.tsx` (2/2 passing). Client form with email input, age-range select, COPPA consent checkbox; submits JSON `{email, school_id, age_range, locale}` to `/api/reminders/subscribe`; swaps to success pane on `res.ok`. |
-| 18 | `/api/reminders/subscribe` route | ⏳ | |
+| 18 | `/api/reminders/subscribe` route | ✅ | `src/lib/tokens.ts` (HMAC-signed tokens) + `src/app/api/reminders/subscribe/route.ts` (Zod-validated POST → `auth.admin.inviteUserByEmail` → `users.preferred_language` update → `reminder_subscriptions` upsert → gated Resend confirmation). Test 2/2 passing. |
 | 19 | Confirm + unsubscribe routes | ⏳ | |
 | 20 | Bilingual React Email reminder template | ⏳ | |
 | 21 | `/api/cron/send-reminders` | ⏳ | |
@@ -176,6 +176,12 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **`ReminderSignup` stub**: `src/components/ReminderSignup.tsx` with `data-testid="reminder-signup-stub"` + `data-school`/`data-locale` attributes per plan. No behavior yet — Task 17 replaces with the real form.
 - **Tests**: `pnpm test` (parent-shell env stripped) — 10 passed + 4 skipped across 5 files (same baseline as Task 15; +1 closures-test skip because the test file is still gated on `NEXT_PUBLIC_SUPABASE_URL`). No regressions; no new tests added (home page has no dedicated test spec in Task 16).
 - **Build**: compiled successfully, 6 static pages, middleware 117 kB (unchanged).
+
+### Task 18
+- **Three files, verbatim from plan**: `src/lib/tokens.ts` (HMAC-SHA256 sign/verify with `env.CRON_SECRET`, 24-byte base64url random token), `src/app/api/reminders/subscribe/route.ts` (Zod validation → Supabase invite/lookup → `users.preferred_language` update → `reminder_subscriptions` upsert → gated Resend send), and `tests/api/reminders-subscribe.test.ts` (2/2 passing — 400 on missing fields, 200 + email sent on valid payload).
+- **Zod 4 `uuid()` vs `guid()` deviation**: Zod 4 tightened `z.string().uuid()` to RFC 9562 strict (requires version digit 1–8). The Phase-0 seed school UUID `00000000-0000-0000-0000-000000000001` uses version digit `0` (nil-variant) and fails that check, so the happy-path test returned 400 instead of 200. Swapped to `z.string().guid()` which accepts any UUID-shaped string. Left a `// DECISION:` comment in the route.
+- **Resend gate works as designed**: `if (process.env.RESEND_API_KEY)` guards the send; `vi.stubEnv('RESEND_API_KEY', 're_test')` at the top of the test keeps the guard passing under Vitest so `sendMock` is called. In local dev without the var, the route skips the send and still returns `{ok:true}`.
+- **Full suite**: 14 passed + 4 skipped across 9 files (same baseline; +2 new passing). Build: compiled, route appears as `ƒ /api/reminders/subscribe` (dynamic), middleware 117 kB (unchanged). Home page static pre-render still uses the empty-array fallback from Task 16.
 
 ## Final summary
 
