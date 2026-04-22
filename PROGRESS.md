@@ -22,7 +22,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 10 | `next-intl` with `[locale]` routing | ✅ | v4 API (`requestLocale` Promise; `locale` returned from `getRequestConfig`; `params` awaited in layout). Combined intl+auth middleware (next-intl v4 + `@supabase/ssr` `getAll`/`setAll`). Root `layout.tsx` and `page.tsx` moved to `src/app/[locale]/`. `next.config.mjs` wraps with `createNextIntlPlugin` (Next 14 rejects `next.config.ts`). Build generates `/en` and `/es` static routes; middleware bundle ~117 kB. Empty message stubs in place (filled by Task 11). |
 | 11 | Phase 0 message catalogs (EN + ES) | ✅ | EN + ES catalogs filled with `home`/`reminderSignup`/`closure`/`nav` namespaces. Build compiles (6 static pages, `/en` + `/es`). Pre-launch blockers captured in `docs/TODO.md` (native-Spanish review, lawyer-drafted COPPA/privacy/ToS, Resend domain verification). |
 | 12 | LanguageToggle component | ✅ | `src/components/LanguageToggle.tsx` + `tests/components/LanguageToggle.test.tsx` (2/2 passing). Server component using `next/link` with `aria-current="page"` on the active locale. Links go to `/${loc}` (root of locale subtree). |
-| 13 | Countdown utility + badge | ⏳ | |
+| 13 | Countdown utility + badge | ✅ | `src/lib/countdown.ts` + `tests/lib/countdown.test.ts` (2/2 passing). `daysUntil` normalizes `now` to UTC midnight and parses string dates as `YYYY-MM-DDT00:00:00Z` for timezone-stable integer deltas; `countdownColor` returns `'emerald' \| 'amber' \| 'gray'` bucketed at ≤7 / ≤30 / >30 days. |
 | 14 | ClosureCard component | ⏳ | |
 | 15 | Closures query + types | ⏳ | |
 | 16 | Home page | ⏳ | |
@@ -141,6 +141,12 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Verbatim implementation**: component and test copied from the plan with no structural changes. Links render as `/en` and `/es` (locale-root hrefs); `aria-current="page"` marks the active locale for screen readers.
 - **Test result**: `tests/components/LanguageToggle.test.tsx` — 2/2 passing (both locale options present; active locale flagged with `aria-current`). Full suite: same pre-existing 3 PGRST205 failures in `tests/db/schema.test.ts` when hosted Supabase env leaks in (Task 25 will push migration); new component adds 2 passing tests on top of the green baseline.
 - **Build**: `pnpm run build` — compiled, 6 static pages, `/en` + `/es` SSG, middleware 117 kB (unchanged). Component not yet wired into any page; Task 16 (home page) is expected to import it.
+
+### Task 13
+- **Verbatim implementation**: `src/lib/countdown.ts` and `tests/lib/countdown.test.ts` copied from the plan. TDD cycle confirmed — red (module not found) → green (2/2 passing).
+- **UTC-midnight normalization**: `daysUntil` builds `today` via `Date.UTC(...getUTCFullYear/Month/Date)` so any wall-clock `now` collapses to UTC midnight before the delta. String dates are parsed as `YYYY-MM-DDT00:00:00Z` so `'2026-04-28'` vs a noon-UTC `now` still yields an integer 7 (not 6.5 → `Math.round`). Deltas are integer via `Math.round(ms / 86_400_000)`.
+- **Color buckets**: `countdownColor` returns the discriminated string union `'emerald' | 'amber' | 'gray'` — boundaries match the plan exactly (0–7 → emerald, 8–30 → amber, 31+ → gray). Task 14 (`ClosureCard`) is expected to consume both exports.
+- **Full suite**: 8 passed + 3 skipped (5 files) with Supabase parent-shell env stripped. No regression.
 
 ## Final summary
 
