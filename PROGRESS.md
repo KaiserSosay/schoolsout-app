@@ -341,4 +341,4 @@ After smoke test passes: distribute to Noah's school community (PTO email, NextD
 
 **Admin:** `/admin/calendar-review` and `/admin/camp-review` gated by `ADMIN_EMAILS` env var (comma-separated allowlist, matched case-insensitively). Approve / reject / bulk-approve / manual-add for closures; inline fill for camp logistics. No AI enrichment pipeline yet — manual admin entry is the honest path until we build review tooling around a scraper. School `calendar_status` auto-recomputes after every verify/bulk-verify/manual create based on school-year coverage (Aug→Jul windows).
 
-**Commits:** Subagent F `1aeb719`, Subagent G `<insert>`.
+**Commits:** Subagent F `1aeb719`, Subagent G `06820ca`.
