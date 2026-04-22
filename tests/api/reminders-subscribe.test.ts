@@ -11,12 +11,11 @@ vi.stubEnv('APP_URL', 'http://localhost:3000');
 const sendMock = vi.fn().mockResolvedValue({ data: { id: 'x' }, error: null });
 vi.mock('resend', () => ({ Resend: class { emails = { send: sendMock }; } }));
 
-// Mock Supabase service client — generateLink handles both invite and magiclink
-// DECISION: No `&` in these fixture URLs — React Email escapes `&` to `&amp;`
-// in href attributes, so a literal substring match would fail. We only need a
-// unique, recognizable token to confirm the right link made it into the email.
-const INVITE_LINK = 'https://x.supabase.co/auth/v1/verify?invite-token-abc';
-const MAGIC_LINK = 'https://x.supabase.co/auth/v1/verify?magic-token-xyz';
+// Mock Supabase service client — generateLink returns hashed_token + verification_type
+// which the subscribe route embeds into a /auth/callback URL so the server can
+// call verifyOtp() to mint the session.
+const INVITE_TOKEN = 'invite-token-abc';
+const MAGIC_TOKEN = 'magic-token-xyz';
 
 const generateLinkMock = vi.fn();
 const updateMock = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) });
@@ -54,7 +53,11 @@ describe('POST /api/reminders/subscribe', () => {
     generateLinkMock.mockResolvedValueOnce({
       data: {
         user: { id: 'user-1', email: 'a@b.com' },
-        properties: { action_link: INVITE_LINK },
+        properties: {
+          hashed_token: INVITE_TOKEN,
+          verification_type: 'invite',
+          action_link: 'https://x.supabase.co/auth/v1/verify?token=raw',
+        },
       },
       error: null,
     });
@@ -78,9 +81,14 @@ describe('POST /api/reminders/subscribe', () => {
       expect.objectContaining({ type: 'invite', email: 'a@b.com' }),
     );
     expect(sendMock).toHaveBeenCalledOnce();
-    // The HTML body must contain the actual action_link so users can click it
+    // The HTML body must contain a link to our own /auth/callback with the
+    // token_hash embedded — NOT the raw Supabase /auth/v1/verify action_link.
     const sendArgs = sendMock.mock.calls[0][0];
-    expect(sendArgs.html).toContain(INVITE_LINK);
+    expect(sendArgs.html).toContain('/auth/callback');
+    expect(sendArgs.html).toContain(INVITE_TOKEN);
+    expect(sendArgs.html).toContain('type=invite');
+    // Confirm the raw Supabase verify URL does NOT leak into the email.
+    expect(sendArgs.html).not.toContain('/auth/v1/verify');
     expect(sendArgs.subject).toMatch(/Confirm your School's Out/);
   });
 
@@ -94,7 +102,11 @@ describe('POST /api/reminders/subscribe', () => {
     generateLinkMock.mockResolvedValueOnce({
       data: {
         user: { id: 'user-2', email: 'existing@b.com' },
-        properties: { action_link: MAGIC_LINK },
+        properties: {
+          hashed_token: MAGIC_TOKEN,
+          verification_type: 'magiclink',
+          action_link: 'https://x.supabase.co/auth/v1/verify?token=raw2',
+        },
       },
       error: null,
     });
@@ -117,7 +129,9 @@ describe('POST /api/reminders/subscribe', () => {
     expect(generateLinkMock.mock.calls[1][0]).toMatchObject({ type: 'magiclink' });
     expect(sendMock).toHaveBeenCalledOnce();
     const sendArgs = sendMock.mock.calls[0][0];
-    expect(sendArgs.html).toContain(MAGIC_LINK);
+    expect(sendArgs.html).toContain('/auth/callback');
+    expect(sendArgs.html).toContain(MAGIC_TOKEN);
+    expect(sendArgs.html).toContain('type=magiclink');
     expect(sendArgs.subject).toMatch(/Confirma tu suscripción/);
   });
 });

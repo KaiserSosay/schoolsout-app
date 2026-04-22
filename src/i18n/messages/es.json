@@ -363,6 +363,17 @@
         "city": "Pedir mi ciudad"
       }
     },
+    "confirmed": {
+      "title": "¡Estás listo!",
+      "body": "Te enviaremos un recordatorio 2 semanas, 1 semana y 3 días antes de cada vacación escolar.",
+      "back": "← Volver al inicio"
+    },
+    "confirmFailed": {
+      "title": "Error al confirmar",
+      "body": "Es posible que el enlace haya expirado o ya se haya usado. Por favor regístrate de nuevo.",
+      "reason": "Motivo",
+      "tryAgain": "← Intentar de nuevo"
+    },
     "footer": {
       "nav": {
         "privacy": "Privacidad",

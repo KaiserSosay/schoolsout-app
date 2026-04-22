@@ -363,6 +363,17 @@
         "city": "Request your city"
       }
     },
+    "confirmed": {
+      "title": "You're all set!",
+      "body": "We'll email you 2 weeks, 1 week, and 3 days before every school closure.",
+      "back": "← Back to home"
+    },
+    "confirmFailed": {
+      "title": "Confirmation failed",
+      "body": "The link may have expired or been used already. Please sign up again.",
+      "reason": "Reason",
+      "tryAgain": "← Try again"
+    },
     "footer": {
       "nav": {
         "privacy": "Privacy",

@@ -36,9 +36,10 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // DECISION: exclude manifest.webmanifest, opengraph-image, robots.txt,
-    // sitemap.xml, and PWA/SEO assets from the locale rewrite so Next.js can
-    // serve them at the root instead of redirecting to /en/*.
-    '/((?!api|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // DECISION: exclude /auth (Supabase callback route), manifest.webmanifest,
+    // opengraph-image, robots.txt, sitemap.xml, and PWA/SEO assets from the
+    // locale rewrite. next-intl would otherwise rewrite /auth/callback to
+    // /en/auth/callback and the route handler would never run.
+    '/((?!api|auth|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
