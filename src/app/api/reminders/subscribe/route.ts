@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServiceSupabase } from '@/lib/supabase/service';
 import { Resend } from 'resend';
+import { render } from '@react-email/render';
+import { createServiceSupabase } from '@/lib/supabase/service';
 import { env } from '@/lib/env';
+import { ConfirmEmail } from '@/lib/email/ConfirmEmail';
 
 const schema = z.object({
   email: z.string().email(),
@@ -22,16 +24,43 @@ export async function POST(req: Request) {
   const { email, school_id, age_range, locale } = parsed.data;
   const db = createServiceSupabase();
 
-  const { data: authRes, error: authErr } = await db.auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${env.APP_URL}/${locale}/reminders/confirm`,
-    data: { preferred_language: locale, coppa_consent_at: new Date().toISOString() },
+  // DECISION: Use generateLink() instead of inviteUserByEmail(). inviteUserByEmail
+  // sends Supabase's built-in English-only email from noreply@mail.app.supabase.io —
+  // which confused users (two emails, one without a link). generateLink RETURNS
+  // the action_link WITHOUT sending — we then embed it in our single branded
+  // bilingual Resend email.
+  let actionLink: string | undefined;
+  let userId: string | undefined;
+
+  const inviteResult = await db.auth.admin.generateLink({
+    type: 'invite',
+    email,
+    options: {
+      redirectTo: `${env.APP_URL}/${locale}/reminders/confirm`,
+      data: { preferred_language: locale, coppa_consent_at: new Date().toISOString() },
+    },
   });
-  let userId = authRes?.user?.id;
-  if (authErr || !userId) {
-    const { data: list } = await db.auth.admin.listUsers();
-    userId = list?.users?.find((u) => u.email === email)?.id;
+
+  if (inviteResult.data?.properties?.action_link && inviteResult.data.user) {
+    actionLink = inviteResult.data.properties.action_link;
+    userId = inviteResult.data.user.id;
+  } else {
+    // DECISION: Fall back to magiclink when invite fails (user likely already
+    // exists). magiclink works for existing users; invite only works for new.
+    const magicResult = await db.auth.admin.generateLink({
+      type: 'magiclink',
+      email,
+      options: { redirectTo: `${env.APP_URL}/${locale}/reminders/confirm` },
+    });
+    if (magicResult.data?.properties?.action_link && magicResult.data.user) {
+      actionLink = magicResult.data.properties.action_link;
+      userId = magicResult.data.user.id;
+    }
   }
-  if (!userId) return NextResponse.json({ error: 'user_creation_failed' }, { status: 500 });
+
+  if (!actionLink || !userId) {
+    return NextResponse.json({ error: 'link_generation_failed' }, { status: 500 });
+  }
 
   await db.from('users').update({ preferred_language: locale }).eq('id', userId);
 
@@ -45,18 +74,24 @@ export async function POST(req: Request) {
 
   // DECISION: Gate the Resend send on env.RESEND_API_KEY existence for local dev.
   if (process.env.RESEND_API_KEY) {
-    const resend = new Resend(env.RESEND_API_KEY);
-    const subject = locale === 'es'
-      ? 'Confirma tu suscripción a School\'s Out!'
-      : "Confirm your School's Out! reminder subscription";
-    await resend.emails.send({
-      from: "School's Out! <hello@schoolsout.net>",
-      to: email,
-      subject,
-      html: locale === 'es'
-        ? `<p>Haz clic para confirmar tu correo. Ya casi: revisa tu bandeja por el enlace mágico.</p>`
-        : `<p>We sent a magic link to confirm your email. Check your inbox to finish signup.</p>`,
-    });
+    const subject =
+      locale === 'es'
+        ? "Confirma tu suscripción a School's Out!"
+        : "Confirm your School's Out! reminder subscription";
+    try {
+      const resend = new Resend(env.RESEND_API_KEY);
+      const html = await render(ConfirmEmail({ locale, confirmUrl: actionLink }));
+      await resend.emails.send({
+        from: "School's Out! <hello@schoolsout.net>",
+        to: email,
+        subject,
+        html,
+      });
+    } catch (err) {
+      // DECISION: If Resend send fails, log but don't fail the request — the
+      // user can request another link, and the subscription is already saved.
+      console.error('[subscribe] resend send failed', err);
+    }
   }
 
   return NextResponse.json({ ok: true });
