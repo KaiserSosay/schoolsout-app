@@ -21,7 +21,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 9 | Auth-session middleware | ✅ | `src/middleware.ts` wired to `createServerClient` + `supabase.auth.getUser()` for transparent session refresh. Matcher excludes `_next/static`, `_next/image`, `favicon.ico`, and static image extensions. `env.ts` converted to a lazy `Proxy` so `process.env` only parses on first property access — middleware bundle traces `@/lib/env` at build time, and without lazy init `pnpm run build` would have required a real `.env.local`. Task 10 will replace this file with a combined intl+auth middleware. |
 | 10 | `next-intl` with `[locale]` routing | ✅ | v4 API (`requestLocale` Promise; `locale` returned from `getRequestConfig`; `params` awaited in layout). Combined intl+auth middleware (next-intl v4 + `@supabase/ssr` `getAll`/`setAll`). Root `layout.tsx` and `page.tsx` moved to `src/app/[locale]/`. `next.config.mjs` wraps with `createNextIntlPlugin` (Next 14 rejects `next.config.ts`). Build generates `/en` and `/es` static routes; middleware bundle ~117 kB. Empty message stubs in place (filled by Task 11). |
 | 11 | Phase 0 message catalogs (EN + ES) | ✅ | EN + ES catalogs filled with `home`/`reminderSignup`/`closure`/`nav` namespaces. Build compiles (6 static pages, `/en` + `/es`). Pre-launch blockers captured in `docs/TODO.md` (native-Spanish review, lawyer-drafted COPPA/privacy/ToS, Resend domain verification). |
-| 12 | LanguageToggle component | ⏳ | |
+| 12 | LanguageToggle component | ✅ | `src/components/LanguageToggle.tsx` + `tests/components/LanguageToggle.test.tsx` (2/2 passing). Server component using `next/link` with `aria-current="page"` on the active locale. Links go to `/${loc}` (root of locale subtree). |
 | 13 | Countdown utility + badge | ⏳ | |
 | 14 | ClosureCard component | ⏳ | |
 | 15 | Closures query + types | ⏳ | |
@@ -136,6 +136,11 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **`src/app/page.tsx` intentionally left at scaffolded default inside `[locale]/`**: per plan Step 7, Task 16 will replace it. Compiles clean.
 - **Build**: `pnpm run build` — 6 static pages (`/en`, `/es`, `/_not-found`, plus their prerenders). Middleware 117 kB (up from 105 kB in Task 9; +12 kB for the intl matcher + locale detection).
 - **Tests**: `pnpm test` (parent shell env stripped) — 4 passed + 3 skipped (same baseline as Tasks 6/8/9). The 3 failures seen when hosted Supabase env vars leak from the parent shell are still the Task 6 PGRST205 expected-failures (migration not yet pushed to hosted — Task 25).
+
+### Task 12
+- **Verbatim implementation**: component and test copied from the plan with no structural changes. Links render as `/en` and `/es` (locale-root hrefs); `aria-current="page"` marks the active locale for screen readers.
+- **Test result**: `tests/components/LanguageToggle.test.tsx` — 2/2 passing (both locale options present; active locale flagged with `aria-current`). Full suite: same pre-existing 3 PGRST205 failures in `tests/db/schema.test.ts` when hosted Supabase env leaks in (Task 25 will push migration); new component adds 2 passing tests on top of the green baseline.
+- **Build**: `pnpm run build` — compiled, 6 static pages, `/en` + `/es` SSG, middleware 117 kB (unchanged). Component not yet wired into any page; Task 16 (home page) is expected to import it.
 
 ## Final summary
 
