@@ -1,5 +1,6 @@
 import { getUpcomingClosures } from '@/lib/closures';
 import { HomeClient } from '@/components/home/HomeClient';
+import { createServerSupabase } from '@/lib/supabase/server';
 
 const NOAH_SCHOOL_ID = '00000000-0000-0000-0000-000000000001';
 
@@ -23,5 +24,23 @@ export default async function Home({
     closures = [];
   }
 
-  return <HomeClient closures={closures} schoolId={NOAH_SCHOOL_ID} locale={locale} />;
+  // DECISION: cheap session check. When a returning user hits the marketing
+  // page we swap the Sign-in/Start-free CTAs for a single "Open app →" pill.
+  let loggedIn = false;
+  try {
+    const sb = createServerSupabase();
+    const { data } = await sb.auth.getUser();
+    loggedIn = Boolean(data.user);
+  } catch {
+    loggedIn = false;
+  }
+
+  return (
+    <HomeClient
+      closures={closures}
+      schoolId={NOAH_SCHOOL_ID}
+      locale={locale}
+      loggedIn={loggedIn}
+    />
+  );
 }

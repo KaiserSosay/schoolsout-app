@@ -41,16 +41,19 @@ export async function POST(req: Request) {
   let verificationType: string | undefined;
   let userId: string | undefined;
 
-  const confirmedPath = `/${locale}/reminders/confirmed`;
+  // DECISION: Post-confirm destination is now the logged-in app. The callback
+  // checks kid_profiles count and redirects to /app/onboarding on zero, which
+  // kills the old "You're all set" dead end.
+  const nextPath = `/${locale}/app`;
   const buildCallbackUrl = (hash: string, t: string) =>
     `${env.APP_URL}/auth/callback?token_hash=${encodeURIComponent(hash)}&type=${encodeURIComponent(
       t,
-    )}&next=${encodeURIComponent(confirmedPath)}`;
+    )}&next=${encodeURIComponent(nextPath)}`;
 
   // redirectTo is still passed for Supabase bookkeeping — it becomes the
   // `redirect_to` on the generated link, which we ignore when building our
   // own callback URL but keep as a fallback for any system that inspects it.
-  const inviteRedirect = `${env.APP_URL}/auth/callback?next=${encodeURIComponent(confirmedPath)}`;
+  const inviteRedirect = `${env.APP_URL}/auth/callback?next=${encodeURIComponent(nextPath)}`;
 
   const inviteResult = await db.auth.admin.generateLink({
     type: 'invite',
@@ -100,7 +103,7 @@ export async function POST(req: Request) {
     type: verificationType,
     hasLink: Boolean(actionLink),
     linkHost: new URL(actionLink).host,
-    next: confirmedPath,
+    next: nextPath,
   });
 
   await db.from('users').update({ preferred_language: locale }).eq('id', userId);

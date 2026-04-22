@@ -21,15 +21,17 @@ export function HomeClient({
   closures,
   schoolId,
   locale,
+  loggedIn = false,
 }: {
   closures: Closure[];
   schoolId: string;
   locale: string;
+  loggedIn?: boolean;
 }) {
   return (
     <ModeProvider>
       <ModeRoot>
-        <Header locale={locale} />
+        <Header locale={locale} loggedIn={loggedIn} />
         <main className="flex-1">
           <Hero schoolId={schoolId} locale={locale} />
           <DashboardPreview closures={closures} locale={locale} />

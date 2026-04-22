@@ -1,5 +1,5 @@
 ## Pre-launch blockers
-- [ ] Native Spanish-speaker review of src/i18n/messages/es.json (entire file, with focus on the NEW `landing.*` namespace — Claude-translated, never reviewed by a native speaker)
+- [ ] Native Spanish-speaker review of src/i18n/messages/es.json (entire file, with focus on the NEW `landing.*` AND `app.*` namespaces — Claude-translated, never reviewed by a native speaker)
 - [ ] Lawyer-drafted COPPA consent + privacy policy + ToS
 - [ ] Resend domain verification (schoolsout.net SPF/DKIM)
 

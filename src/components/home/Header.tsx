@@ -6,8 +6,15 @@ import type { Locale } from '@/i18n/config';
 import { useMode } from './ModeContext';
 import { ModeToggle } from './ModeToggle';
 
-export function Header({ locale }: { locale: string }) {
+export function Header({
+  locale,
+  loggedIn = false,
+}: {
+  locale: string;
+  loggedIn?: boolean;
+}) {
   const t = useTranslations('landing.header');
+  const tApp = useTranslations('app.header');
   const { mode, setMode } = useMode();
 
   const shellParents =
@@ -34,26 +41,42 @@ export function Header({ locale }: { locale: string }) {
         <div className="flex items-center gap-2 md:gap-3">
           <ModeToggle mode={mode} onChange={setMode} />
           <LocaleSwitch currentLocale={locale as Locale} mode={mode} />
-          <a
-            href="#signup"
-            className={
-              'hidden sm:inline-flex text-sm font-bold transition-colors ' +
-              (mode === 'parents' ? 'text-ink/70 hover:text-ink' : 'text-white/80 hover:text-white')
-            }
-          >
-            {t('signIn')}
-          </a>
-          <a
-            href="#signup"
-            className={
-              'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg ' +
-              (mode === 'parents'
-                ? 'bg-ink text-white'
-                : 'bg-cta-yellow text-purple-deep')
-            }
-          >
-            {t('startFree')}
-          </a>
+          {loggedIn ? (
+            <Link
+              href={`/${locale}/app`}
+              className={
+                'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg ' +
+                (mode === 'parents'
+                  ? 'bg-ink text-white'
+                  : 'bg-cta-yellow text-purple-deep')
+              }
+            >
+              {tApp('openApp')}
+            </Link>
+          ) : (
+            <>
+              <a
+                href="#signup"
+                className={
+                  'hidden sm:inline-flex text-sm font-bold transition-colors ' +
+                  (mode === 'parents' ? 'text-ink/70 hover:text-ink' : 'text-white/80 hover:text-white')
+                }
+              >
+                {t('signIn')}
+              </a>
+              <a
+                href="#signup"
+                className={
+                  'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg ' +
+                  (mode === 'parents'
+                    ? 'bg-ink text-white'
+                    : 'bg-cta-yellow text-purple-deep')
+                }
+              >
+                {t('startFree')}
+              </a>
+            </>
+          )}
         </div>
       </div>
     </header>

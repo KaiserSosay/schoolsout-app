@@ -384,5 +384,108 @@
       "copyright": "© 2026 School's Out!",
       "domain": "schoolsout.net"
     }
+  },
+  "app": {
+    "header": {
+      "openApp": "Open app →",
+      "signOut": "Sign out",
+      "signedIn": "Signed in",
+      "installApp": "📱 Get App",
+      "parentMode": "Parent Mode →",
+      "kidMode": "Kid Mode →"
+    },
+    "bottomNav": {
+      "calendar": "Calendar",
+      "camps": "Camps",
+      "saved": "Saved",
+      "inbox": "Inbox"
+    },
+    "onboarding": {
+      "title": "Tell us about your family",
+      "subtitle": "We'll tailor every closure, camp, and countdown to your kids. Kid names stay on this device.",
+      "labels": {
+        "name": "Your name",
+        "kidCount": "How many kids?",
+        "school": "School",
+        "grade": "Grade"
+      },
+      "placeholders": {
+        "name": "Rasheid",
+        "kidName": "Noah (stays on your device)",
+        "grade": "K, 3, 8…"
+      },
+      "schools": {
+        "growingPlace": "The Growing Place",
+        "coralGablesPrep": "Coral Gables Prep",
+        "mdcps": "Miami-Dade Public",
+        "other": "Other"
+      },
+      "submit": "Finish setup →",
+      "saving": "Saving…",
+      "error": "Something went wrong. Please try again."
+    },
+    "dashboard": {
+      "greeting": {
+        "returning": "Welcome back, {name}",
+        "parentMode": "Welcome to Parent Mode"
+      },
+      "subtitle": "Your family's plan at a glance — every closure, every camp, every countdown.",
+      "stats": {
+        "kids": "Kids",
+        "nextBreakIn": "Next break in",
+        "closures": "Closures",
+        "saved": "Saved"
+      },
+      "upNext": {
+        "label": "Up next",
+        "viewDetails": "View details →",
+        "dayOff": "{count, plural, one {# day off} other {# days off}}",
+        "daysOff": "{count, plural, one {# day off} other {# days off}}",
+        "daysAway": "{count, plural, =0 {today} one {# day away} other {# days away}}"
+      },
+      "calendarStrip": {
+        "title": "Family calendar"
+      },
+      "reminder": {
+        "label": "Reminder",
+        "weeksAway": "{name} is {count, plural, one {# week} other {# weeks}} away",
+        "body": "Camps fill up fast — book now to lock in spots.",
+        "cta": "Browse camps →"
+      },
+      "wishlist": {
+        "title": "Wishlist · {count}",
+        "empty": "No camps saved yet.",
+        "browse": "Browse camps →"
+      },
+      "quickActions": {
+        "manage": {
+          "label": "Manage",
+          "action": "+ Add a school",
+          "soon": "Adding schools — coming soon."
+        },
+        "family": {
+          "label": "Family",
+          "action": "Invite co-parent",
+          "soon": "Co-parent invites — coming soon."
+        },
+        "sync": {
+          "label": "Sync",
+          "action": "Export to Calendar"
+        },
+        "plan": {
+          "label": "Plan",
+          "action": "Browse camps"
+        }
+      },
+      "activity": {
+        "title": "Kid activity",
+        "empty": "No activity yet. Ask your kid to open Kid Mode!",
+        "emptyCta": "Flip to Kid Mode →",
+        "savedCamp": "⭐ Saved {name}",
+        "unsavedCamp": "🚫 Removed {name}",
+        "viewedCamp": "👀 Viewed {name}",
+        "viewedClosure": "📅 Checked {name}"
+      }
+    }
   }
 }

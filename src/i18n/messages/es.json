@@ -384,5 +384,108 @@
       "copyright": "© 2026 School's Out!",
       "domain": "schoolsout.net"
     }
+  },
+  "app": {
+    "header": {
+      "openApp": "Abrir app →",
+      "signOut": "Cerrar sesión",
+      "signedIn": "Sesión iniciada",
+      "installApp": "📱 Instalar",
+      "parentMode": "Modo Padres →",
+      "kidMode": "Modo Niños →"
+    },
+    "bottomNav": {
+      "calendar": "Calendario",
+      "camps": "Campamentos",
+      "saved": "Guardados",
+      "inbox": "Mensajes"
+    },
+    "onboarding": {
+      "title": "Cuéntanos de tu familia",
+      "subtitle": "Adaptaremos cada cierre, campamento y cuenta regresiva a tus hijos. Los nombres se quedan en este dispositivo.",
+      "labels": {
+        "name": "Tu nombre",
+        "kidCount": "¿Cuántos niños?",
+        "school": "Escuela",
+        "grade": "Grado"
+      },
+      "placeholders": {
+        "name": "Rasheid",
+        "kidName": "Noah (se queda en tu dispositivo)",
+        "grade": "K, 3, 8…"
+      },
+      "schools": {
+        "growingPlace": "The Growing Place",
+        "coralGablesPrep": "Coral Gables Prep",
+        "mdcps": "Miami-Dade Public",
+        "other": "Otra"
+      },
+      "submit": "Terminar →",
+      "saving": "Guardando…",
+      "error": "Algo salió mal. Intenta de nuevo."
+    },
+    "dashboard": {
+      "greeting": {
+        "returning": "Bienvenido de nuevo, {name}",
+        "parentMode": "Bienvenido al Modo Padres"
+      },
+      "subtitle": "El plan de tu familia de un vistazo — cada cierre, cada campamento, cada cuenta regresiva.",
+      "stats": {
+        "kids": "Niños",
+        "nextBreakIn": "Próxima vacación en",
+        "closures": "Cierres",
+        "saved": "Guardados"
+      },
+      "upNext": {
+        "label": "A continuación",
+        "viewDetails": "Ver detalles →",
+        "dayOff": "{count, plural, one {# día libre} other {# días libres}}",
+        "daysOff": "{count, plural, one {# día libre} other {# días libres}}",
+        "daysAway": "{count, plural, =0 {hoy} one {en # día} other {en # días}}"
+      },
+      "calendarStrip": {
+        "title": "Calendario familiar"
+      },
+      "reminder": {
+        "label": "Recordatorio",
+        "weeksAway": "{name} es en {count, plural, one {# semana} other {# semanas}}",
+        "body": "Los campamentos se llenan rápido — reserva ahora para asegurar el cupo.",
+        "cta": "Ver campamentos →"
+      },
+      "wishlist": {
+        "title": "Deseos · {count}",
+        "empty": "Aún no has guardado campamentos.",
+        "browse": "Ver campamentos →"
+      },
+      "quickActions": {
+        "manage": {
+          "label": "Administrar",
+          "action": "+ Agregar escuela",
+          "soon": "Agregar escuelas — próximamente."
+        },
+        "family": {
+          "label": "Familia",
+          "action": "Invitar al co-padre",
+          "soon": "Invitaciones a co-padres — próximamente."
+        },
+        "sync": {
+          "label": "Sincronizar",
+          "action": "Exportar al calendario"
+        },
+        "plan": {
+          "label": "Planear",
+          "action": "Ver campamentos"
+        }
+      },
+      "activity": {
+        "title": "Actividad de los niños",
+        "empty": "Aún no hay actividad. ¡Pídele a tu hijo que abra el Modo Niños!",
+        "emptyCta": "Cambiar a Modo Niños →",
+        "savedCamp": "⭐ Guardó {name}",
+        "unsavedCamp": "🚫 Quitó {name}",
+        "viewedCamp": "👀 Vio {name}",
+        "viewedClosure": "📅 Revisó {name}"
+      }
+    }
   }
 }

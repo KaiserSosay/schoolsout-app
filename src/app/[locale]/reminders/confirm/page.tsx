@@ -21,7 +21,7 @@ export default async function LegacyConfirmForwarder({
     if (typeof v === 'string') qs.set(k, v);
     else if (Array.isArray(v) && v.length > 0) qs.set(k, v[0]!);
   }
-  if (!qs.has('next')) qs.set('next', `/${locale}/reminders/confirmed`);
+  if (!qs.has('next')) qs.set('next', `/${locale}/app`);
 
   redirect(`/auth/callback?${qs.toString()}`);
 }
