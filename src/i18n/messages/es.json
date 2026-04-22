@@ -641,7 +641,43 @@
       "visitWebsite": "Visitar sitio web",
       "websiteComingSoon": "Sitio web próximamente",
       "backToCamps": "Volver a campamentos",
-      "viewCamp": "Ver {name}"
+      "viewCamp": "Ver {name}",
+      "distance": {
+        "setAddress": "Agrega una dirección en ajustes para ordenar por distancia",
+        "from": "Desde",
+        "fromSchool": "Desde la escuela",
+        "fromHome": "Desde casa"
+      },
+      "hours": {
+        "pending": "Horario pendiente",
+        "callToConfirm": "Llama al campamento"
+      },
+      "care": {
+        "before": "Cuidado matutino",
+        "after": "Cuidado vespertino hasta",
+        "none": "Sin cuidado extendido",
+        "pending": "Cuidado pendiente — llama para confirmar",
+        "fullWorkday": "Día laboral completo"
+      },
+      "sort": {
+        "label": "Ordenar",
+        "distance": "Distancia",
+        "price": "Precio",
+        "name": "Nombre"
+      },
+      "mustHave": {
+        "label": "Debe tener",
+        "beforeCare": "Cuidado matutino",
+        "afterCare": "Cuidado vespertino",
+        "fullWorkday": "Día completo"
+      },
+      "filter": {
+        "clear": "Limpiar filtros",
+        "showing": "Mostrando {count, plural, one {# campamento} other {# campamentos}}"
+      },
+      "closure": {
+        "sessionsPending": "Fechas de sesión pendientes — llama para confirmar"
+      }
     },
     "calendar": {
       "title": "Calendario escolar",

@@ -25,6 +25,14 @@ type Camp = {
   categories: string[];
   neighborhood: string | null;
   verified: boolean;
+  sessions_unknown?: boolean;
+  session_match?: boolean;
+  hours_start?: string | null;
+  hours_end?: string | null;
+  before_care_offered?: boolean;
+  after_care_offered?: boolean;
+  logistics_verified?: boolean;
+  phone?: string | null;
 };
 
 type WeatherResponse =
@@ -183,6 +191,14 @@ export function ClosureDetailView({
                         Ages {camp.ages_min}–{camp.ages_max} · {camp.price_tier}
                         {camp.neighborhood && ` · ${camp.neighborhood}`}
                       </p>
+                      {camp.sessions_unknown ? (
+                        <p
+                          className={'text-xs italic ' + (isKids ? 'text-white/60' : 'text-muted')}
+                          data-testid="closure-camp-sessions-unknown"
+                        >
+                          {t('app.camps.closure.sessionsPending')}
+                        </p>
+                      ) : null}
                     </div>
                     <span className={isKids ? 'text-white/70' : 'text-muted'}>→</span>
                   </div>

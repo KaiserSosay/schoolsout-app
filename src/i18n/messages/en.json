@@ -641,7 +641,43 @@
       "visitWebsite": "Visit website",
       "websiteComingSoon": "Website coming soon",
       "backToCamps": "Back to camps",
-      "viewCamp": "View {name}"
+      "viewCamp": "View {name}",
+      "distance": {
+        "setAddress": "Set an address in settings to enable distance sorting",
+        "from": "From",
+        "fromSchool": "From school",
+        "fromHome": "From home"
+      },
+      "hours": {
+        "pending": "Hours pending",
+        "callToConfirm": "Call camp"
+      },
+      "care": {
+        "before": "Before-care",
+        "after": "After-care until",
+        "none": "No extended care",
+        "pending": "Care info pending — call to confirm",
+        "fullWorkday": "Full workday"
+      },
+      "sort": {
+        "label": "Sort",
+        "distance": "Distance",
+        "price": "Price",
+        "name": "Name"
+      },
+      "mustHave": {
+        "label": "Must have",
+        "beforeCare": "Before-care",
+        "afterCare": "After-care",
+        "fullWorkday": "Full workday"
+      },
+      "filter": {
+        "clear": "Clear filters",
+        "showing": "Showing {count, plural, one {# camp} other {# camps}}"
+      },
+      "closure": {
+        "sessionsPending": "Session dates pending — call to confirm"
+      }
     },
     "calendar": {
       "title": "School Calendar",
