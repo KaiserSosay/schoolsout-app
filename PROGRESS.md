@@ -29,7 +29,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 17 | ReminderSignup component | ✅ | `src/components/ReminderSignup.tsx` + `tests/components/ReminderSignup.test.tsx` (2/2 passing). Client form with email input, age-range select, COPPA consent checkbox; submits JSON `{email, school_id, age_range, locale}` to `/api/reminders/subscribe`; swaps to success pane on `res.ok`. |
 | 18 | `/api/reminders/subscribe` route | ✅ | `src/lib/tokens.ts` (HMAC-signed tokens) + `src/app/api/reminders/subscribe/route.ts` (Zod-validated POST → `auth.admin.inviteUserByEmail` → `users.preferred_language` update → `reminder_subscriptions` upsert → gated Resend confirmation). Test 2/2 passing. |
 | 19 | Confirm + unsubscribe routes | ✅ | `src/app/[locale]/reminders/confirm/page.tsx` (server-rendered, reads session via `createServerSupabase`, shows success/error per `auth.getUser()`) + `src/app/api/reminders/unsubscribe/route.ts` (HMAC-verified `?sub=&sig=` → `reminder_subscriptions.update({enabled:false})` → redirect `/en`). Tests 3/3 passing; build adds `● /[locale]/reminders/confirm` (SSG, 137 B) and `ƒ /api/reminders/unsubscribe`. |
-| 20 | Bilingual React Email reminder template | ⏳ | |
+| 20 | Bilingual React Email reminder template | ✅ | `src/lib/email/ReminderEmail.tsx` + `tests/lib/email/ReminderEmail.test.tsx` (2/2 passing). EN/ES heading+intro+CTA+unsubscribe copy, emoji-per-days-before (🗓️/⏳/🚨), locale-aware `toLocaleDateString` range, HMAC-signed unsubscribe `<Link>`. Installed `@react-email/render@2.0.7` as a top-level dep (test imports it directly; previously only transitively available under `.pnpm/`). |
 | 21 | `/api/cron/send-reminders` | ⏳ | |
 | 22 | Resend webhook handler | ⏳ | |
 | 23 | Privacy policy + ToS placeholder pages | ⏳ | |
@@ -44,7 +44,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 5          | — |
 | 10         | ✅ — compiled; `/en` and `/es` statically generated; middleware 117 kB |
 | 15         | ✅ — compiled; 6 static pages (`/en`, `/es`); middleware 117 kB |
-| 20         | — |
+| 20         | ✅ — compiled; 10 static pages (`/en`, `/es`, `/en/reminders/confirm`, `/es/reminders/confirm`); dynamic `/api/reminders/{subscribe,unsubscribe}`; middleware 117 kB |
 | 25         | — |
 | Final      | — |
 
@@ -188,6 +188,11 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **Zod 4 `uuid()` vs `guid()` deviation**: Zod 4 tightened `z.string().uuid()` to RFC 9562 strict (requires version digit 1–8). The Phase-0 seed school UUID `00000000-0000-0000-0000-000000000001` uses version digit `0` (nil-variant) and fails that check, so the happy-path test returned 400 instead of 200. Swapped to `z.string().guid()` which accepts any UUID-shaped string. Left a `// DECISION:` comment in the route.
 - **Resend gate works as designed**: `if (process.env.RESEND_API_KEY)` guards the send; `vi.stubEnv('RESEND_API_KEY', 're_test')` at the top of the test keeps the guard passing under Vitest so `sendMock` is called. In local dev without the var, the route skips the send and still returns `{ok:true}`.
 - **Full suite**: 14 passed + 4 skipped across 9 files (same baseline; +2 new passing). Build: compiled, route appears as `ƒ /api/reminders/subscribe` (dynamic), middleware 117 kB (unchanged). Home page static pre-render still uses the empty-array fallback from Task 16.
+
+### Task 20
+- **Verbatim implementation**: `src/lib/email/ReminderEmail.tsx` + `tests/lib/email/ReminderEmail.test.tsx` copied from the plan — TDD cycle confirmed (red: "Failed to resolve import `@/lib/email/ReminderEmail`" → green: 2/2 passing). EN heading "School's out in 7 days" satisfies `/in 7 days/`; ES heading "No hay escuela en 7 días" satisfies `/en 7 días/`. Copy dictionary is `as const` so `copy[locale]` preserves literal types.
+- **`@react-email/render` install**: the plan's test imports `render` from `@react-email/render`, which was only transitively present under `node_modules/.pnpm/@react-email+render@2.0.7/` as a dep of `react-email` (the dev CLI). Vitest + Vite's module resolver can't walk `.pnpm/` via bare-specifier imports — added as a top-level dependency (`pnpm add @react-email/render` → `2.0.7`). pnpm logged the expected `@react-email/components@1.0.12` deprecated-package warning (unchanged from Task 2) and a benign `Failed to create bin at .bin/supabase` from Task 2's skipped postinstall — neither blocks tests or build.
+- **Full suite**: 19 passed + 4 skipped across 11 files (same baseline +2 passing from this task). Build: compiled, 10 static pages (unchanged topology), middleware 117 kB. Template not yet imported by any server file — Task 21 (`/api/cron/send-reminders`) will consume it via `@react-email/render`'s server-side `render()`.
 
 ## Final summary
 
