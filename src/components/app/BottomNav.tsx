@@ -35,7 +35,7 @@ export function BottomNav({ locale }: { locale: string }) {
                 href={targetHref}
                 aria-current={active ? 'page' : undefined}
                 className={
-                  'flex flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-colors ' +
+                  'flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-colors ' +
                   (active ? 'text-brand-purple' : 'text-muted hover:text-ink')
                 }
               >

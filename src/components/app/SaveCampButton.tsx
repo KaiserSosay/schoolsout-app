@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useTransition, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, useTransition, type MouseEvent } from 'react';
 import { useTranslations } from 'next-intl';
 
-// DECISION: Optimistic flip on click. /api/saved-camps already writes the
-// kid_activity entry server-side, so we don't need to double-post. On 401
-// (unauthenticated) we roll back the optimistic flip and show a toast — this
-// can only happen if the session expired mid-session because SaveCampButton
-// only renders inside the /app layout that already guards auth.
+// DECISION: Optimistic flip with retry-on-failure. /api/saved-camps writes
+// kid_activity server-side, so we don't double-post. On 401 we roll back and
+// warn via toast. On success (next=true only) we trigger a sparkle burst,
+// fire a haptic on supported devices, and dispatch a `so-activity` CustomEvent
+// so the KidActivityFeed can optimistically prepend a row without waiting
+// for the next 30s poll.
 export function SaveCampButton({
   campId,
+  campName,
   initiallySaved,
   size = 'md',
   fullWidth = false,
@@ -17,10 +19,6 @@ export function SaveCampButton({
   labelWhenUnsaved,
 }: {
   campId: string;
-  // DECISION: campName is accepted so the component's API matches parent
-  // expectations (CampCard, camp detail page), but we don't need it on the
-  // client — server-side /api/saved-camps looks up the name itself when
-  // writing kid_activity. Kept optional so callers don't have to thread it.
   campName?: string;
   initiallySaved: boolean;
   size?: 'sm' | 'md' | 'lg';
@@ -30,12 +28,25 @@ export function SaveCampButton({
 }) {
   const t = useTranslations('app.camps');
   const tSaved = useTranslations('app.saved');
+  const tToast = useTranslations('app.camps.toast');
   const [saved, setSaved] = useState(initiallySaved);
   const [pending, startTransition] = useTransition();
+  const [burstKey, setBurstKey] = useState(0);
+  const [popKey, setPopKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const popRef = useRef<HTMLSpanElement>(null);
+
+  // Retrigger the emoji "pop" whenever saved flips true.
+  useEffect(() => {
+    if (popKey === 0) return;
+    const el = popRef.current;
+    if (!el) return;
+    el.classList.remove('animate-save-pop');
+    void el.offsetWidth;
+    el.classList.add('animate-save-pop');
+  }, [popKey]);
 
   const onClick = (e: MouseEvent) => {
-    // Card is a <Link>; prevent navigation when clicking the star.
     e.preventDefault();
     e.stopPropagation();
     if (pending) return;
@@ -43,6 +54,18 @@ export function SaveCampButton({
     const next = !saved;
     setSaved(next);
     setError(null);
+
+    if (next) {
+      setBurstKey((k) => k + 1);
+      setPopKey((k) => k + 1);
+      try {
+        if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+          navigator.vibrate?.(10);
+        }
+      } catch {
+        /* iOS Safari ignores vibrate — noop */
+      }
+    }
 
     startTransition(async () => {
       try {
@@ -54,26 +77,48 @@ export function SaveCampButton({
         if (res.status === 401) {
           setSaved(!next);
           setError(tSaved('loginToSave'));
+          showToast(tSaved('loginToSave'), 'error');
           return;
         }
         if (!res.ok) {
           setSaved(!next);
           setError('error');
+          showToast(tToast('saveFailed'), 'error');
           return;
+        }
+        if (next && campName) {
+          showToast(tToast('saved', { name: campName }));
+          // Optimistic activity insert — picked up by KidActivityFeed.
+          try {
+            window.dispatchEvent(
+              new CustomEvent('so-activity', {
+                detail: {
+                  id: 'local-' + Date.now(),
+                  action: 'saved_camp',
+                  target_id: campId,
+                  target_name: campName,
+                  created_at: new Date().toISOString(),
+                },
+              }),
+            );
+          } catch {
+            /* CustomEvent unsupported — noop */
+          }
         }
       } catch {
         setSaved(!next);
         setError('error');
+        showToast(tToast('saveFailed'), 'error');
       }
     });
   };
 
   const sizeCls =
     size === 'sm'
-      ? 'h-8 w-8 text-base'
+      ? 'h-11 w-11 text-base'
       : size === 'lg'
         ? 'h-12 w-12 text-2xl'
-        : 'h-10 w-10 text-xl';
+        : 'h-11 w-11 text-xl';
 
   // Full-width button variant (used on camp detail page)
   if (fullWidth) {
@@ -88,13 +133,21 @@ export function SaveCampButton({
         aria-label={label}
         disabled={pending}
         className={
-          'flex w-full items-center justify-center gap-2 rounded-2xl border border-cream-border bg-white px-4 py-3 text-sm font-black text-ink transition-colors hover:border-brand-purple/40 disabled:opacity-60'
+          'relative flex w-full min-h-11 items-center justify-center gap-2 rounded-2xl border border-cream-border bg-white px-4 py-3 text-sm font-black text-ink transition-[transform,background,border] duration-[var(--duration-micro)] ease-[var(--ease-premium)] hover:border-brand-purple/40 active:scale-[0.98] disabled:opacity-60'
         }
       >
-        <span aria-hidden className={saved ? 'text-gold' : 'text-muted'}>
+        <span
+          ref={popRef}
+          aria-hidden
+          className={
+            'inline-block transition-transform ' +
+            (saved ? 'text-gold' : 'text-muted')
+          }
+        >
           {saved ? '⭐' : '☆'}
         </span>
         <span>{label}</span>
+        {burstKey > 0 && <SparkleBurst key={burstKey} />}
       </button>
     );
   }
@@ -108,7 +161,7 @@ export function SaveCampButton({
         aria-label={saved ? t('saved') : t('save')}
         disabled={pending}
         className={
-          'flex shrink-0 items-center justify-center rounded-full transition-colors disabled:opacity-60 ' +
+          'relative inline-flex shrink-0 items-center justify-center rounded-full transition-[transform,background] duration-[var(--duration-micro)] ease-[var(--ease-premium)] active:scale-[0.92] disabled:opacity-60 ' +
           sizeCls +
           ' ' +
           (saved
@@ -116,7 +169,10 @@ export function SaveCampButton({
             : 'text-muted hover:bg-ink/5 hover:text-ink')
         }
       >
-        <span aria-hidden>{saved ? '⭐' : '☆'}</span>
+        <span ref={popRef} aria-hidden className="inline-block">
+          {saved ? '⭐' : '☆'}
+        </span>
+        {burstKey > 0 && <SparkleBurst key={burstKey} />}
       </button>
       {error && error !== 'error' ? (
         <span role="status" className="sr-only">
@@ -125,4 +181,57 @@ export function SaveCampButton({
       ) : null}
     </>
   );
+}
+
+// 6 gold squares flung outward. Keyframe is .sparkle-fling in globals.css.
+function SparkleBurst() {
+  return (
+    <span aria-hidden className="pointer-events-none absolute inset-0">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <span
+          key={i}
+          className="sparkle-particle absolute left-1/2 top-1/2 h-1.5 w-1.5 rounded-sm bg-gold"
+          style={
+            {
+              '--angle': `${i * 60}deg`,
+              '--delay': `${i * 20}ms`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </span>
+  );
+}
+
+// Imperative toast. In-memory queue, no state, no portal — one shared host
+// div pinned to the bottom. Respects reduced-motion via CSS duration tokens.
+function showToast(msg: string, variant: 'success' | 'error' = 'success') {
+  if (typeof document === 'undefined') return;
+  const host = ensureToastHost();
+  const el = document.createElement('div');
+  el.className =
+    'rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-[var(--duration-standard)] translate-y-3 opacity-0 pointer-events-auto ' +
+    (variant === 'success' ? 'bg-ink text-white' : 'bg-red-600 text-white');
+  el.textContent = msg;
+  el.setAttribute('role', 'status');
+  host.appendChild(el);
+  requestAnimationFrame(() => {
+    el.classList.remove('translate-y-3', 'opacity-0');
+  });
+  setTimeout(() => {
+    el.classList.add('opacity-0');
+    setTimeout(() => el.remove(), 300);
+  }, 2000);
+}
+
+function ensureToastHost(): HTMLElement {
+  let host = document.getElementById('so-toast-host');
+  if (!host) {
+    host = document.createElement('div');
+    host.id = 'so-toast-host';
+    host.className =
+      'fixed bottom-24 left-0 right-0 z-[100] flex flex-col items-center gap-2 px-4 pointer-events-none';
+    document.body.appendChild(host);
+  }
+  return host;
 }

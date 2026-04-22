@@ -36,7 +36,7 @@ export function LanguageToggleMobile({
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className={
-          'h-9 w-9 flex items-center justify-center rounded-full text-base ' +
+          'h-11 w-11 flex items-center justify-center rounded-full text-base ' +
           (darkMode
             ? 'bg-white/10 text-white hover:bg-white/20'
             : 'bg-white border border-cream-border hover:border-ink')

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { focusSignup } from '@/lib/focus-signup';
 
 export function FinalCTA() {
   const t = useTranslations('landing.finalCta');
@@ -16,21 +17,22 @@ export function FinalCTA() {
         <p className="editorial-body mt-4 text-white/80 max-w-xl mx-auto">{t('body')}</p>
 
         <div className="mt-8 flex flex-wrap gap-3 justify-center">
-          <a
-            href="#signup"
-            className="rounded-full px-6 py-3 bg-cta-yellow text-purple-deep font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          <button
+            type="button"
+            onClick={focusSignup}
+            className="rounded-full px-6 py-3 bg-cta-yellow text-purple-deep font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg min-h-11"
           >
             {t('buttons.parent')}
-          </a>
+          </button>
           <a
             href="#for-camps"
-            className="rounded-full px-6 py-3 bg-white text-ink font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            className="rounded-full px-6 py-3 bg-white text-ink font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg min-h-11 inline-flex items-center"
           >
             {t('buttons.camp')}
           </a>
           <a
             href="#coverage"
-            className="rounded-full px-6 py-3 bg-white/10 border border-white/30 text-white font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            className="rounded-full px-6 py-3 bg-white/10 border border-white/30 text-white font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg min-h-11 inline-flex items-center"
           >
             {t('buttons.city')}
           </a>

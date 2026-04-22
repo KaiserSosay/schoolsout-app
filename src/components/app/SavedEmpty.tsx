@@ -23,6 +23,9 @@ export function SavedEmpty({
           : 'border border-dashed border-white/20 bg-white/5 backdrop-blur')
       }
     >
+      <div className="animate-gentle-bounce mb-2 text-5xl" aria-hidden>
+        ⭐
+      </div>
       <p className={'text-sm ' + (isParents ? 'text-muted' : 'text-white/70')}>
         {emptyText}
       </p>

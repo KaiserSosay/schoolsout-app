@@ -93,7 +93,16 @@
     "coppaConsent": "Soy madre, padre o tutor legal y doy mi consentimiento para recibir estos correos.",
     "submit": "Recuérdame antes de cada vacación",
     "success": "Revisa tu correo para confirmar tu suscripción.",
-    "error": "Algo salió mal. Intenta de nuevo."
+    "error": "Algo salió mal. Intenta de nuevo.",
+    "errorFriendly": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos."
+  },
+  "errors": {
+    "signupFailed": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos.",
+    "loadFailed": "Nuestro servicio anda lento hoy.",
+    "retry": "Reintentar",
+    "linkExpired": "Ese enlace tiene más de 1 hora, ya venció por seguridad.",
+    "resendLink": "Envíame uno nuevo",
+    "offline": "Parece que estás sin conexión. Reintentaremos cuando vuelvas."
   },
   "closure": {
     "badge": {
@@ -135,6 +144,8 @@
       "privacyNoteLink": "Cómo funciona",
       "success": "Revisa tu correo para confirmar.",
       "error": "Algo salió mal. Intenta de nuevo.",
+      "errorFriendly": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos.",
+      "enterEmail": "Ingresa tu correo para empezar.",
       "successCheckEmail": "Revisa tu correo en {email}",
       "successSubject": "Confirma tu suscripción a School's Out!",
       "successFrom": "School's Out! <hi@schoolsout.net>",
@@ -599,9 +610,12 @@
           "action": "Familia y escuelas →"
         },
         "family": {
-          "label": "Próximamente",
-          "action": "Invitar al co-padre",
-          "soon": "Invitaciones a co-padres — próximamente."
+          "label": "Familia",
+          "action": "Compartir con co-padre",
+          "shareTitle": "Calendario familiar de School's Out!",
+          "shareText": "Este es el calendario de cierres escolares de nuestra familia.",
+          "copied": "Enlace copiado — envíaselo al co-padre.",
+          "copyFailed": "No se pudo copiar. Mantén presionada la URL para copiar."
         },
         "sync": {
           "label": "Sincronizar",
@@ -723,6 +737,10 @@
       },
       "closure": {
         "sessionsPending": "Fechas de sesión pendientes — llama para confirmar"
+      },
+      "toast": {
+        "saved": "⭐ Guardado {name}",
+        "saveFailed": "No pudimos guardar ese campamento. ¿Intentamos de nuevo?"
       }
     },
     "calendar": {

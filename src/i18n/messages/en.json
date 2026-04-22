@@ -93,7 +93,16 @@
     "coppaConsent": "I'm a parent or legal guardian and consent to receive these emails.",
     "submit": "Remind me before every break",
     "success": "Check your email to confirm your subscription.",
-    "error": "Something went wrong. Please try again."
+    "error": "Something went wrong. Please try again.",
+    "errorFriendly": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help."
+  },
+  "errors": {
+    "signupFailed": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help.",
+    "loadFailed": "Our service is having a slow day.",
+    "retry": "Retry",
+    "linkExpired": "That link is older than 1 hour, so it's expired for security.",
+    "resendLink": "Send me a new one",
+    "offline": "Looks like you're offline. We'll auto-retry when you reconnect."
   },
   "closure": {
     "badge": {
@@ -135,6 +144,8 @@
       "privacyNoteLink": "Learn how",
       "success": "Check your email to confirm.",
       "error": "Something went wrong. Please try again.",
+      "errorFriendly": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help.",
+      "enterEmail": "Enter your email to get started.",
       "successCheckEmail": "Check your email at {email}",
       "successSubject": "Confirm your School's Out! reminder subscription",
       "successFrom": "School's Out! <hi@schoolsout.net>",
@@ -599,9 +610,12 @@
           "action": "Family & schools →"
         },
         "family": {
-          "label": "Coming soon",
-          "action": "Invite co-parent",
-          "soon": "Co-parent invites — coming soon."
+          "label": "Family",
+          "action": "Share with co-parent",
+          "shareTitle": "School's Out! family calendar",
+          "shareText": "Here's our school closure schedule.",
+          "copied": "Link copied — send to your co-parent.",
+          "copyFailed": "Couldn't copy. Long-press the URL to copy."
         },
         "sync": {
           "label": "Sync",
@@ -723,6 +737,10 @@
       },
       "closure": {
         "sessionsPending": "Session dates pending — call to confirm"
+      },
+      "toast": {
+        "saved": "⭐ Saved {name}",
+        "saveFailed": "Couldn't save that camp. Try again?"
       }
     },
     "calendar": {

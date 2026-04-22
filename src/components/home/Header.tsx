@@ -6,6 +6,7 @@ import type { Locale } from '@/i18n/config';
 import { useMode } from './ModeContext';
 import { ModeToggle } from './ModeToggle';
 import { LanguageToggleMobile } from '@/components/LanguageToggleMobile';
+import { focusSignup } from '@/lib/focus-signup';
 
 export function Header({
   locale,
@@ -59,7 +60,7 @@ export function Header({
             <Link
               href={`/${locale}/app`}
               className={
-                'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg ' +
+                'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg min-h-11 ' +
                 (mode === 'parents'
                   ? 'bg-ink text-white'
                   : 'bg-cta-yellow text-purple-deep')
@@ -69,26 +70,28 @@ export function Header({
             </Link>
           ) : (
             <>
-              <a
-                href="#signup"
+              <button
+                type="button"
+                onClick={focusSignup}
                 className={
-                  'hidden sm:inline-flex text-sm font-bold transition-colors ' +
+                  'hidden sm:inline-flex text-sm font-bold transition-colors min-h-11 items-center ' +
                   (mode === 'parents' ? 'text-ink/70 hover:text-ink' : 'text-white/80 hover:text-white')
                 }
               >
                 {t('signIn')}
-              </a>
-              <a
-                href="#signup"
+              </button>
+              <button
+                type="button"
+                onClick={focusSignup}
                 className={
-                  'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg ' +
+                  'inline-flex items-center whitespace-nowrap rounded-full px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg min-h-11 ' +
                   (mode === 'parents'
                     ? 'bg-ink text-white'
                     : 'bg-cta-yellow text-purple-deep')
                 }
               >
                 {t('startFree')}
-              </a>
+              </button>
             </>
           )}
         </div>

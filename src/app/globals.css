@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---- Timing tokens (UX polish pass) ----
+   Cross-component motion consistency. Use var(--ease-premium) + durations
+   instead of hard-coded numbers. Reduced-motion overrides below flatten all
+   to 0ms for users who opt out.
+*/
+:root {
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-micro: 150ms;
+  --duration-standard: 250ms;
+  --duration-reveal: 450ms;
+  --duration-grand: 650ms;
+  --brand-purple: #6B4FBB;
+}
+
+@layer base {
+  /* Visible brand-color focus ring by default; Kid Mode swaps to cta-yellow. */
+  *:focus-visible {
+    outline: 2px solid var(--brand-purple);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  [data-mode='kids'] *:focus-visible {
+    outline-color: #facc15;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -17,6 +43,14 @@
     animation: gradient-pan 8s ease-in-out infinite;
   }
 
+  .animate-page-in {
+    animation: page-in 300ms var(--ease-premium);
+  }
+
+  .animate-wordmark-bump {
+    animation: wordmark-bump 500ms var(--ease-premium);
+  }
+
   /* Editorial headline tracking + leading per spec */
   .editorial-h1 {
     font-weight: 900;
@@ -28,10 +62,60 @@
     letter-spacing: -0.01em;
   }
 
-  /* Smooth 300ms cross-fade between Parents and Kids modes */
+  /* Mode cross-fade — upgraded to use timing tokens */
   [data-mode] {
-    transition: background-color 300ms ease, color 300ms ease,
-      background-image 300ms ease;
+    transition:
+      background-color var(--duration-reveal) var(--ease-premium),
+      color var(--duration-reveal) var(--ease-premium),
+      background-image var(--duration-reveal) var(--ease-premium);
+  }
+
+  /* Signup CTA glow pulse */
+  .glow-pulse {
+    animation: signup-glow-pulse 1700ms var(--ease-premium);
+    border-radius: 1.25rem;
+  }
+
+  /* Save-sparkle burst particle */
+  .sparkle-particle {
+    animation: sparkle-fling 800ms var(--ease-premium) var(--delay, 0ms) forwards;
+  }
+
+  /* Emoji "pop" when the star flips saved=true */
+  .animate-save-pop {
+    animation: save-pop 500ms var(--ease-premium);
+  }
+
+  /* Empty-state bouncy emoji */
+  .animate-gentle-bounce {
+    animation: gentle-bounce 3s ease-in-out infinite;
+  }
+
+  /* Skeleton shimmer — dark variant (kids) and cream variant (parents) */
+  .skeleton-shine {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shine 1.5s var(--ease-premium) infinite;
+  }
+  .skeleton-shine-cream {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.04) 0%,
+      rgba(0, 0, 0, 0.08) 50%,
+      rgba(0, 0, 0, 0.04) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shine 1.5s var(--ease-premium) infinite;
+  }
+
+  /* Confetti piece (signup success) */
+  .confetti-piece {
+    animation: confetti-fall 900ms var(--ease-premium) forwards;
   }
 }
 
@@ -58,10 +142,130 @@
   }
 }
 
+@keyframes page-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wordmark-bump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+@keyframes signup-glow-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(107, 79, 187, 0),
+      0 0 0 rgba(245, 200, 66, 0);
+  }
+  30% {
+    box-shadow:
+      0 0 0 4px rgba(107, 79, 187, 0.28),
+      0 0 26px rgba(245, 200, 66, 0.45);
+  }
+  60% {
+    box-shadow:
+      0 0 0 4px rgba(107, 79, 187, 0.28),
+      0 0 26px rgba(245, 200, 66, 0.45);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(107, 79, 187, 0),
+      0 0 0 rgba(245, 200, 66, 0);
+  }
+}
+
+@keyframes sparkle-fling {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(32px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes save-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes gentle-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes skeleton-shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), 160px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-micro: 0ms;
+    --duration-standard: 0ms;
+    --duration-reveal: 0ms;
+    --duration-grand: 0ms;
+  }
+  .respect-motion,
+  .respect-motion *,
   .animate-fade-up,
-  .animate-gradient-pan {
-    animation: none;
+  .animate-gradient-pan,
+  .animate-page-in,
+  .animate-wordmark-bump,
+  .animate-save-pop,
+  .animate-gentle-bounce,
+  .glow-pulse,
+  .sparkle-particle,
+  .skeleton-shine,
+  .skeleton-shine-cream,
+  .confetti-piece {
+    animation: none !important;
+    transition: none !important;
+  }
+  .animate-fade-up {
     opacity: 1;
     transform: none;
   }

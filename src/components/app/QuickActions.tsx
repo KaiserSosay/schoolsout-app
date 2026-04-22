@@ -4,25 +4,63 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-// DECISION: MANAGE now links to /{locale}/app/settings — real UX, not a toast.
-// INVITE CO-PARENT is still Phase 2, so we keep the toast but restyle it as
-// "COMING SOON" so users don't expect it to do anything yet. Sync + Plan link
-// to real routes as before.
+// DECISION: MANAGE links to /{locale}/app/settings. FAMILY actually triggers
+// navigator.share() now — with a clipboard fallback — replacing the old "coming
+// soon" toast. SYNC downloads .ics. PLAN links to /camps. Nothing here is a
+// dead tap.
 export function QuickActions({ locale }: { locale: string }) {
   const t = useTranslations('app.dashboard.quickActions');
   const [toast, setToast] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const showSoon = () => {
-    setToast(t('family.soon'));
+  async function onFamilyClick() {
+    if (busy) return;
+    setBusy(true);
+    const url =
+      typeof window !== 'undefined'
+        ? `${window.location.origin}/${locale}/app`
+        : '';
+    const shareData = {
+      title: t('family.shareTitle'),
+      text: t('family.shareText'),
+      url,
+    };
+    try {
+      if (
+        typeof navigator !== 'undefined' &&
+        typeof navigator.share === 'function'
+      ) {
+        await navigator.share(shareData);
+        setBusy(false);
+        return;
+      }
+    } catch {
+      /* user cancelled native sheet — fall through to clipboard */
+    }
+    // Clipboard fallback
+    try {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.clipboard?.writeText
+      ) {
+        await navigator.clipboard.writeText(url);
+        setToast(t('family.copied'));
+      } else {
+        setToast(t('family.copyFailed'));
+      }
+    } catch {
+      setToast(t('family.copyFailed'));
+    }
     setTimeout(() => setToast(null), 2200);
-  };
+    setBusy(false);
+  }
 
   return (
     <section className="relative">
       <div className="grid grid-cols-2 gap-3">
         <Link
           href={`/${locale}/app/settings`}
-          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40"
+          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40 min-h-11"
         >
           <div className="text-[11px] font-black uppercase tracking-wider text-muted">
             {t('manage.label')}
@@ -34,13 +72,14 @@ export function QuickActions({ locale }: { locale: string }) {
 
         <button
           type="button"
-          onClick={showSoon}
-          className="rounded-2xl border border-dashed border-cream-border bg-white/60 p-4 text-left transition-colors hover:border-brand-purple/40"
+          onClick={onFamilyClick}
+          disabled={busy}
+          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40 min-h-11 disabled:opacity-60"
         >
-          <div className="text-[11px] font-black uppercase tracking-wider text-brand-purple/70">
+          <div className="text-[11px] font-black uppercase tracking-wider text-brand-purple/80">
             {t('family.label')}
           </div>
-          <div className="mt-1 text-sm font-black text-ink/70">
+          <div className="mt-1 text-sm font-black text-ink">
             {t('family.action')}
           </div>
         </button>
@@ -48,7 +87,7 @@ export function QuickActions({ locale }: { locale: string }) {
         <a
           href="/api/calendar.ics"
           download="schoolsout.ics"
-          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40"
+          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40 min-h-11"
         >
           <div className="text-[11px] font-black uppercase tracking-wider text-muted">
             {t('sync.label')}
@@ -60,7 +99,7 @@ export function QuickActions({ locale }: { locale: string }) {
 
         <Link
           href={`/${locale}/app/camps`}
-          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40"
+          className="rounded-2xl border border-cream-border bg-white p-4 text-left transition-colors hover:border-brand-purple/40 min-h-11"
         >
           <div className="text-[11px] font-black uppercase tracking-wider text-muted">
             {t('plan.label')}

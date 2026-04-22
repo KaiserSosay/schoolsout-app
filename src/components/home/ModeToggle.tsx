@@ -23,7 +23,7 @@ export function ModeToggle({
   const labelGroup = safeT(t, 'label') ?? tFallback('label');
 
   const baseBtn =
-    'rounded-full text-xs font-bold px-3 py-1.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70';
+    'rounded-full text-xs font-bold px-3 py-1.5 min-h-9 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/70';
 
   return (
     <div

@@ -59,7 +59,9 @@ export function ReminderSignup({ schoolId, locale }: { schoolId: string; locale:
         {t('submit')}
       </button>
 
-      {status === 'error' && <p className="text-red-400 text-sm">{t('error')}</p>}
+      {status === 'error' && (
+        <p className="text-red-400 text-sm">{t('errorFriendly')}</p>
+      )}
     </form>
   );
 }

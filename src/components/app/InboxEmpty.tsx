@@ -17,7 +17,7 @@ export function InboxEmpty() {
           : 'border border-white/10 bg-white/10 backdrop-blur')
       }
     >
-      <div className="text-5xl" aria-hidden>
+      <div className="animate-gentle-bounce text-5xl" aria-hidden>
         📥
       </div>
       <h2

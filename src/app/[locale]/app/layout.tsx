@@ -37,7 +37,7 @@ export default async function AppLayout({
         email={user.email ?? ''}
         displayName={userRow?.display_name ?? null}
       />
-      <main className="pb-24 md:pb-12">{children}</main>
+      <main className="animate-page-in pb-24 md:pb-12">{children}</main>
       <BottomNav locale={locale} />
     </ModeProvider>
   );

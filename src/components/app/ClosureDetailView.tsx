@@ -153,9 +153,21 @@ export function ClosureDetailView({
               </p>
             </>
           ) : (
-            <p className={'text-sm ' + (isKids ? 'text-white/70' : 'text-muted')}>
-              {t('app.closure.weather.loading')}
-            </p>
+            <div className="space-y-2" aria-label={t('app.closure.weather.loading')}>
+              <div
+                className={
+                  'h-8 w-32 rounded-lg ' +
+                  (isKids ? 'skeleton-shine' : 'skeleton-shine-cream')
+                }
+              />
+              <div
+                className={
+                  'h-4 w-20 rounded-lg ' +
+                  (isKids ? 'skeleton-shine' : 'skeleton-shine-cream')
+                }
+              />
+              <span className="sr-only">{t('app.closure.weather.loading')}</span>
+            </div>
           )}
         </section>
 

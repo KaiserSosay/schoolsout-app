@@ -367,3 +367,47 @@ Added real KPI dashboard at `/admin`. Honest baselines:
 **Migration 006:** `camp_clicks` table + `camps.is_launch_partner` + `camps.launch_partner_until`. Applied to hosted Supabase.
 
 **Commit:** `0b81664`.
+
+## UX polish pass — 2026-04-22
+
+Shipped "must-fix NOW" + "this week" tiers.
+
+**Timing tokens (`globals.css`):** `--ease-premium` + `--duration-{micro,standard,reveal,grand}` CSS vars; reduced-motion override flattens them all to 0ms and `animation: none !important` on every new keyframe class. Focus ring now brand-purple by default, `cta-yellow` under `[data-mode='kids']`.
+
+**New shared helpers:**
+- `src/lib/focus-signup.ts` — smooth-scrolls to `[data-signup-anchor]`, pulses a glow, focuses the email input. Uses setTimeout fallback because Safari < 17 lacks `scrollend`.
+- `src/components/CountUp.tsx` — rAF eased count-up with test/SSR/reduced-motion short-circuits (starts at `to`, only animates on real browsers).
+
+**Bugs fixed:**
+1. **Scroll-focus-glow on "Start free":** `HeroSignupForm` wraps its outer form with `data-signup-anchor` + email input with `data-signup-email`. Every "Start free" CTA across `Header`, `FinalCTA` now calls `focusSignup()` via `onClick` (converted from `<a href="#signup">` to `<button type="button">` where appropriate).
+2. **Hero CTA no longer visually disabled pre-submit:** Button stays `bg-ink text-white` whether email is empty or not. Empty-submit now triggers an inline error (`enterEmail` i18n key) rather than disabling. Submitting shows a spinner + text swap.
+3. **Dead "coming soon" toast removed:** `QuickActions` "Invite co-parent" → real `navigator.share()` with clipboard fallback. Honest "Coming soon" visual badges on the Features grid and Inbox empty state stay (those are truthful previews, not interactive promises). Admin `alert()` calls left alone — admin-only.
+4. **Save star sparkle + toast + haptic:** Rewrote `SaveCampButton` with sparkle burst (6 CSS-only gold particles flung on 60° arcs), emoji "save-pop" keyframe, `navigator.vibrate(10)`, imperative toast queue with in-memory host div, and a `so-activity` CustomEvent dispatch so `KidActivityFeed` prepends the row without waiting 30s.
+5. **Mode toggle cross-fade:** `[data-mode]` transition upgraded from hard-coded 300ms to `var(--duration-reveal) var(--ease-premium)`. Hero wordmark gets a `.animate-wordmark-bump` on mode flip (skipped on first mount + reduced-motion).
+6. **Dead-tap audit:** All QuickActions buttons verified. `BottomNav` tabs now `min-h-11`. Mobile globe toggle now `h-11 w-11` (was 36px). Header "Start free" / "Sign in" now `min-h-11`.
+
+**Loading + empty states:**
+- `KidActivityFeed` — 3 skeleton rows (`skeleton-shine-cream`) until first poll resolves; empty state gets a bouncy 👦.
+- `ClosureDetailView` weather — skeleton bars in parent/kid variants (was plain "Loading…" text).
+- `InboxEmpty` / `SavedEmpty` — bouncy emoji via `.animate-gentle-bounce`.
+- `StatsGrid` — 4-card 80ms stagger + `CountUp` on numeric values (kids/closures/saved/nextBreakIn).
+
+**Navigation:** `/app/*` layout's `<main>` wrapped with `.animate-page-in` — subtle fade-up on every route change, reduced-motion safe.
+
+**Error pages:** new `src/app/[locale]/error.tsx` and `src/app/[locale]/app/error.tsx` with human, branded copy + retry button. No stack traces surfaced. Added `errors.*` namespace to both message catalogs with PRD-approved copy (signupFailed, loadFailed, retry, linkExpired, resendLink, offline). `ReminderSignup` + `HeroSignupForm` error paths now use the friendlier `errorFriendly` string.
+
+**A11y:** brand-color focus ring via `*:focus-visible` in `@layer base`. Kid Mode swaps to `cta-yellow` via `[data-mode='kids']` selector. All icon-only controls defensively padded to 44px hit area. Test harness — `vitest.setup.ts` stubs `window.matchMedia` so new motion-aware components don't throw in jsdom.
+
+**i18n:** EN + ES both updated — `landing.hero.errorFriendly`, `landing.hero.enterEmail`, `reminderSignup.errorFriendly`, `errors.*`, `app.dashboard.quickActions.family.{shareTitle,shareText,copied,copyFailed}`, `app.camps.toast.{saved,saveFailed}`.
+
+**Deferred ("next week" tier) — documented as NOT shipped this pass:**
+- Pull-to-refresh on `/app/*`
+- Recently-viewed chip on camps page (requires new tracking + UI)
+- Keyboard shortcuts (`/`, `p`, `k`, `Esc`, `?`)
+- Smart reminder email subject lines (touches `/api/cron/send-reminders`)
+- Snooze on closures (new column + UI)
+
+**Tests:** 157/161 passing (3 pre-existing DB schema baseline failures — tables absent from test PGRST cache, unrelated to this change). **Build:** clean, 0 TS/lint errors.
+
+**Commit:** see git log tail.
+
