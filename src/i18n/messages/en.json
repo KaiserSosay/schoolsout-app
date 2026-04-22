@@ -486,6 +486,63 @@
         "viewedCamp": "👀 Viewed {name}",
         "viewedClosure": "📅 Checked {name}"
       }
+    },
+    "kid": {
+      "subtitle": "School's out soon! Let's plan something awesome.",
+      "tapHint": "Tap for camps, weather & ideas",
+      "restOfYear": "Rest of the year",
+      "longBreak": "Long break",
+      "empty": "No days off on the calendar yet — enjoy class!"
+    },
+    "camps": {
+      "title": "Browse Camps",
+      "subtitle": "Local camps sourced for Miami families. Every listing is pending manual review — we disclose that up front.",
+      "back": "Back",
+      "filterLabel": "Filter by category",
+      "categories": {
+        "Sports": "Sports",
+        "Soccer": "Soccer",
+        "Swim": "Swim",
+        "Tennis": "Tennis",
+        "Basketball": "Basketball",
+        "Art": "Art",
+        "Theater": "Theater",
+        "Music": "Music",
+        "Dance": "Dance",
+        "STEM": "STEM",
+        "Nature": "Nature"
+      },
+      "empty": "No camps match those filters yet.",
+      "ages": "Ages {min}–{max} · {price}",
+      "pendingVerification": "Pending verification",
+      "save": "Save",
+      "saved": "Saved",
+      "visitWebsite": "Visit website",
+      "websiteComingSoon": "Website coming soon",
+      "backToCamps": "Back to camps",
+      "viewCamp": "View {name}"
+    },
+    "calendar": {
+      "title": "School Calendar",
+      "eyebrow": "CALENDARS",
+      "yourSchoolsLabel": "Your schools",
+      "otherSchools": "Other schools",
+      "export": "Export to Calendar (.ics)",
+      "draft": "AI draft — pending review",
+      "closureDuration": "{count, plural, one {# day} other {# days}}"
+    },
+    "saved": {
+      "title": "Saved Camps",
+      "empty": "No saved camps yet.",
+      "browse": "Browse camps",
+      "loginToSave": "Sign in to save camps."
+    },
+    "inbox": {
+      "title": "Inbox",
+      "empty": {
+        "title": "Nothing here yet",
+        "body": "Coming soon: reminders, messages from camps, and activity updates."
+      }
     }
   }
 }

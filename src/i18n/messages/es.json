@@ -486,6 +486,63 @@
         "viewedCamp": "👀 Vio {name}",
         "viewedClosure": "📅 Revisó {name}"
       }
+    },
+    "kid": {
+      "subtitle": "¡Se acerca un día sin escuela! Vamos a planear algo genial.",
+      "tapHint": "Toca para ver campamentos, clima e ideas",
+      "restOfYear": "Resto del año",
+      "longBreak": "Vacaciones largas",
+      "empty": "Aún no hay días libres en el calendario — ¡disfruta la clase!"
+    },
+    "camps": {
+      "title": "Ver campamentos",
+      "subtitle": "Campamentos locales para familias de Miami. Cada listado está pendiente de revisión manual — lo decimos claro.",
+      "back": "Atrás",
+      "filterLabel": "Filtrar por categoría",
+      "categories": {
+        "Sports": "Deportes",
+        "Soccer": "Fútbol",
+        "Swim": "Natación",
+        "Tennis": "Tenis",
+        "Basketball": "Básquetbol",
+        "Art": "Arte",
+        "Theater": "Teatro",
+        "Music": "Música",
+        "Dance": "Baile",
+        "STEM": "STEM",
+        "Nature": "Naturaleza"
+      },
+      "empty": "Ningún campamento coincide con esos filtros.",
+      "ages": "Edades {min}–{max} · {price}",
+      "pendingVerification": "Pendiente de verificación",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "visitWebsite": "Visitar sitio web",
+      "websiteComingSoon": "Sitio web próximamente",
+      "backToCamps": "Volver a campamentos",
+      "viewCamp": "Ver {name}"
+    },
+    "calendar": {
+      "title": "Calendario escolar",
+      "eyebrow": "CALENDARIOS",
+      "yourSchoolsLabel": "Tus escuelas",
+      "otherSchools": "Otras escuelas",
+      "export": "Exportar al calendario (.ics)",
+      "draft": "Borrador AI — pendiente de revisión",
+      "closureDuration": "{count, plural, one {# día} other {# días}}"
+    },
+    "saved": {
+      "title": "Campamentos guardados",
+      "empty": "Aún no hay campamentos guardados.",
+      "browse": "Ver campamentos",
+      "loginToSave": "Inicia sesión para guardar campamentos."
+    },
+    "inbox": {
+      "title": "Bandeja",
+      "empty": {
+        "title": "Todavía nada aquí",
+        "body": "Próximamente: recordatorios, mensajes de campamentos y actualizaciones de actividad."
+      }
     }
   }
 }

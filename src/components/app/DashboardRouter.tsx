@@ -48,6 +48,6 @@ export function DashboardRouter(props: {
   activity: Activity[];
 }) {
   const { mode } = useMode();
-  if (mode === 'kids') return <KidDashboard />;
+  if (mode === 'kids') return <KidDashboard {...props} />;
   return <ParentDashboard {...props} />;
 }

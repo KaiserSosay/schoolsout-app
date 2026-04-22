@@ -230,6 +230,26 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 
 **Prevention:** When generating magic/invite links server-side, always route through a callback that mints the session via `verifyOtp({ token_hash, type })` (admin-generated links carry `hashed_token`) or `exchangeCodeForSession(code)` (PKCE) **before** rendering any page that reads `getUser()`. Never embed a Supabase `action_link` whose flow type you haven't verified — the hash-fragment implicit flow is invisible to Server Components.
 
+## Phase 1 — the logged-in app (2026-04-22)
+
+**Summary:** School's Out! is no longer a marketing site with a "you're all set" dead end. Signed-in users get a full app at `/{locale}/app` with:
+
+- First-time onboarding (`/app/onboarding`): parent name + kid profiles (school + age range server-side, names client-side for COPPA)
+- Parent Dashboard with stats grid, Up Next hero, Family Calendar strip, reminder banner, wishlist, quick actions (incl. working ICS export), and a polled activity feed
+- Kid Dashboard: animated gradient wordmark + rotating gradient closure cards + rest-of-year accordion; same data as Parent Mode, themed differently
+- Camps list with 11-category filter chips, camp cards with ☆/⭐ save toggle
+- Camp detail pages with save + visit-website buttons and verified/pending disclosure
+- School Calendar page per school with ICS export
+- Saved tab
+- Inbox placeholder (Phase 2)
+- PWA manifest + dynamic icons for home-screen install
+
+**Auth flow fix:** magic link now lands on `/app/onboarding` for new users and `/app` for returning users. The "🎉 You're all set" dead end is gone.
+
+**Data:** 10 Miami schools, 20 camps (all `verified=false` pending manual review), real Open-Meteo weather for closures ≤16 days out.
+
+**Commits:** Subagent A `3a7312c`, Subagent B `67bcf8c`, Subagent C `<pending>`.
+
 ## Final summary
 
 **Run completed:** 2026-04-21, overnight autonomous execution. 25/26 tasks ✅, 1 ⏭️ (Task 25 — requires human login). Tag `phase-0-mvp` marks the final commit. Latest commit before tag: `e3d1cbf` (Task 25 deploy checklist). This summary commit adds the tag + docs updates.
