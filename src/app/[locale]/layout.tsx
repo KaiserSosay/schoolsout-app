@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n/config';
 import { LanguageToggle } from '@/components/LanguageToggle';
@@ -31,6 +32,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!locales.includes(locale as Locale)) notFound();
   const messages = await getMessages();
+  const t = await getTranslations();
   return (
     <html lang={locale} className={jakarta.variable}>
       <body className="min-h-screen bg-gradient-to-br from-purple-deep via-purple-mid to-blue-deep text-white font-display">
@@ -40,6 +42,11 @@ export default async function LocaleLayout({
             <LanguageToggle currentLocale={locale as Locale} />
           </header>
           {children}
+          <footer className="text-center text-xs text-white/50 py-6">
+            <Link href={`/${locale}/privacy`} className="underline">{t('nav.privacyPolicy')}</Link>
+            {' · '}
+            <Link href={`/${locale}/terms`} className="underline">{t('nav.terms')}</Link>
+          </footer>
         </NextIntlClientProvider>
       </body>
     </html>
