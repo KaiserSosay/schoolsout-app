@@ -36,6 +36,9 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // DECISION: exclude manifest.webmanifest, opengraph-image, robots.txt,
+    // sitemap.xml, and PWA/SEO assets from the locale rewrite so Next.js can
+    // serve them at the root instead of redirecting to /en/*.
+    '/((?!api|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
