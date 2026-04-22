@@ -3,6 +3,12 @@ import { z } from 'zod';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { haversineMiles } from '@/lib/distance';
 
+// Opt out of Next.js route caching. This API reads live DB state + respects
+// query-string filters; if it gets cached we end up serving stale camp lists
+// to every client that hits the same URL.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // DECISION: Use service role for public GET so RLS isn't a blocker even though
 // the "anyone reads camps" policy would allow anon SELECT. Service role is
 // simpler and avoids needing cookies for unauthenticated browsing.
