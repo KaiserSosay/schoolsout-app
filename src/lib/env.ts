@@ -9,4 +9,12 @@ const schema = z.object({
   APP_URL: z.string().url(),
 });
 
-export const env = schema.parse(process.env);
+type Env = z.infer<typeof schema>;
+let parsed: Env | undefined;
+
+export const env = new Proxy({} as Env, {
+  get(_target, prop: string) {
+    parsed ??= schema.parse(process.env);
+    return parsed[prop as keyof Env];
+  },
+}) as Env;

@@ -5,7 +5,8 @@ describe('env', () => {
 
   it('throws on missing required var', async () => {
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_URL', '');
-    await expect(import('@/lib/env')).rejects.toThrow(/NEXT_PUBLIC_SUPABASE_URL/);
+    const { env } = await import('@/lib/env');
+    expect(() => env.NEXT_PUBLIC_SUPABASE_URL).toThrow(/NEXT_PUBLIC_SUPABASE_URL/);
   });
 
   it('returns parsed env when all present', async () => {
