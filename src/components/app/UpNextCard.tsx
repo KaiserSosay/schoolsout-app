@@ -64,7 +64,7 @@ export function UpNextCard({
         </span>
       </div>
       <Link
-        href={`/${locale}/app/calendar`}
+        href={`/${locale}/app/closures/${closure.id}`}
         className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-cta-yellow hover:underline"
       >
         {t('viewDetails')}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeContext';
 import { HeroSignupForm } from './HeroSignupForm';
@@ -15,16 +16,19 @@ export function Hero({
   const { mode } = useMode();
 
   const badgeParents =
-    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-purple-soft text-brand-purple';
+    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-purple-soft text-brand-purple hover:bg-brand-purple/20 transition';
   const badgeKids =
-    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-white/10 border border-white/10 text-white/90';
+    'inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold bg-white/10 border border-white/10 text-white/90 hover:bg-white/20 transition';
 
   return (
     <section className="pt-12 md:pt-16 pb-8 md:pb-10">
       <div className="max-w-3xl mx-auto text-center px-4">
-        <span className={'animate-fade-up ' + (mode === 'parents' ? badgeParents : badgeKids)}>
+        <Link
+          href={`/${locale}/about/noah`}
+          className={'animate-fade-up ' + (mode === 'parents' ? badgeParents : badgeKids)}
+        >
           {t('badge')}
-        </span>
+        </Link>
 
         <h1
           className={

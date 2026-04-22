@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
+import { KidShareCard } from './KidShareCard';
 
 type Activity = {
   id: string;
@@ -70,15 +71,18 @@ export function KidActivityFeed({ initial, locale }: { initial: Activity[]; loca
         {t('title')}
       </h3>
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-cream-border bg-white/60 p-6 text-center">
-          <p className="text-sm text-muted">{t('empty')}</p>
-          <button
-            type="button"
-            onClick={() => setMode('kids')}
-            className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-brand-purple hover:underline"
-          >
-            {t('emptyCta')}
-          </button>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-dashed border-cream-border bg-white/60 p-6 text-center">
+            <p className="text-sm text-muted">{t('empty')}</p>
+            <button
+              type="button"
+              onClick={() => setMode('kids')}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-brand-purple hover:underline"
+            >
+              {t('emptyCta')}
+            </button>
+          </div>
+          <KidShareCard />
         </div>
       ) : (
         <ul className="space-y-2">

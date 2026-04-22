@@ -23,7 +23,8 @@ export function AppHeader({
   displayName: string | null;
 }) {
   const t = useTranslations('app.header');
-  const { mode, setMode } = useMode();
+  const tExit = useTranslations('app.dashboard.exitKidLock');
+  const { mode, setMode, isKidLocked, exitKidLock } = useMode();
   const router = useRouter();
   const pathname = usePathname() ?? '';
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,8 +41,11 @@ export function AppHeader({
     return () => window.removeEventListener('mousedown', onClick);
   }, [menuOpen]);
 
+  // DECISION: Kid Mode header was previously washed out (70%). Bumped to 80%
+  // and kept the backdrop-blur; border-bottom stays white/10 for a clean
+  // separation against the gradient main surface.
   const shellParents = 'bg-cream/92 backdrop-blur-xl border-b border-cream-border';
-  const shellKids    = 'bg-purple-deep/70 backdrop-blur-xl border-b border-white/10';
+  const shellKids    = 'bg-purple-deep/80 backdrop-blur border-b border-white/10';
   const shell = mode === 'parents' ? shellParents : shellKids;
 
   // DECISION: the toggle label advertises the OTHER mode — i.e. in Parent mode
@@ -81,18 +85,28 @@ export function AppHeader({
         </Link>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <button
-            type="button"
-            onClick={() => setMode(mode === 'parents' ? 'kids' : 'parents')}
-            className={
-              'inline-flex items-center rounded-full px-3 py-1.5 text-xs font-bold transition-colors ' +
-              (mode === 'parents'
-                ? 'bg-ink/5 text-ink hover:bg-ink/10'
-                : 'bg-white/10 text-white hover:bg-white/20')
-            }
-          >
-            {toggleLabel}
-          </button>
+          {isKidLocked ? (
+            <button
+              type="button"
+              onClick={exitKidLock}
+              className="inline-flex items-center rounded-full border border-white/30 px-3 py-1.5 text-xs font-bold text-white hover:bg-white/10"
+            >
+              {tExit('label')}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setMode(mode === 'parents' ? 'kids' : 'parents')}
+              className={
+                'inline-flex items-center rounded-full px-3 py-1.5 text-xs font-bold transition-colors ' +
+                (mode === 'parents'
+                  ? 'bg-ink/5 text-ink hover:bg-ink/10'
+                  : 'border border-white/30 bg-white/10 text-white hover:bg-white/20')
+              }
+            >
+              {toggleLabel}
+            </button>
+          )}
 
           {/* Desktop (md+): compact EN/ES text link (path-preserving) */}
           <Link
@@ -118,65 +132,75 @@ export function AppHeader({
 
           <PwaInstallButton label={t('installApp')} />
 
-          <Link
-            href={`/${locale}/app/settings`}
-            aria-label={t('settings')}
-            className={
-              'hidden sm:flex h-9 w-9 items-center justify-center rounded-full text-base transition-colors ' +
-              (mode === 'parents'
-                ? 'bg-white border border-cream-border hover:border-brand-purple/40 text-ink'
-                : 'bg-white/10 border border-white/10 hover:bg-white/20 text-white')
-            }
-          >
-            ⚙️
-          </Link>
-
-          <div className="relative" ref={menuRef}>
-            <button
-              type="button"
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-haspopup="menu"
-              aria-expanded={menuOpen}
+          {isKidLocked ? null : (
+            <Link
+              href={`/${locale}/app/settings`}
+              aria-label={t('settings')}
               className={
-                'flex h-9 w-9 items-center justify-center rounded-full text-sm font-black transition-colors ' +
+                'hidden sm:flex h-9 w-9 items-center justify-center rounded-full text-base transition-colors ' +
                 (mode === 'parents'
-                  ? 'bg-brand-purple text-white hover:bg-brand-purple/90'
-                  : 'bg-cta-yellow text-purple-deep hover:brightness-105')
+                  ? 'bg-white border border-cream-border hover:border-brand-purple/40 text-ink'
+                  : 'border border-white/30 bg-white/10 hover:bg-white/20 text-white')
               }
+            >
+              ⚙️
+            </Link>
+          )}
+
+          {/* DECISION: Avatar is always the parent user's initial on brand-purple,
+              regardless of mode or kid-lock. The "you're the parent here" identity
+              is stable — swapping to yellow-on-purple in kid mode previously made
+              it read as if the kid had their own account. */}
+          {isKidLocked ? (
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-purple text-sm font-black text-white"
               aria-label={email}
             >
               {initial}
-            </button>
-            {menuOpen ? (
-              <div
-                role="menu"
-                className="absolute right-0 top-11 w-52 overflow-hidden rounded-2xl border border-cream-border bg-white shadow-xl"
+            </div>
+          ) : (
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-purple text-sm font-black text-white hover:bg-brand-purple/90"
+                aria-label={email}
               >
-                <div className="border-b border-cream-border px-3 py-2">
-                  <div className="truncate text-xs font-bold text-ink">
-                    {displayName ?? t('signedIn')}
+                {initial}
+              </button>
+              {menuOpen ? (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-11 w-52 overflow-hidden rounded-2xl border border-cream-border bg-white shadow-xl"
+                >
+                  <div className="border-b border-cream-border px-3 py-2">
+                    <div className="truncate text-xs font-bold text-ink">
+                      {displayName ?? t('signedIn')}
+                    </div>
+                    <div className="truncate text-[11px] text-muted">{email}</div>
                   </div>
-                  <div className="truncate text-[11px] text-muted">{email}</div>
+                  <Link
+                    href={`/${locale}/app/settings`}
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="block w-full px-3 py-2.5 text-left text-sm font-semibold text-ink hover:bg-cream sm:hidden"
+                  >
+                    ⚙️ {t('settings')}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={signOut}
+                    role="menuitem"
+                    className="block w-full px-3 py-2.5 text-left text-sm font-semibold text-ink hover:bg-cream"
+                  >
+                    {t('signOut')}
+                  </button>
                 </div>
-                <Link
-                  href={`/${locale}/app/settings`}
-                  role="menuitem"
-                  onClick={() => setMenuOpen(false)}
-                  className="block w-full px-3 py-2.5 text-left text-sm font-semibold text-ink hover:bg-cream sm:hidden"
-                >
-                  ⚙️ {t('settings')}
-                </Link>
-                <button
-                  type="button"
-                  onClick={signOut}
-                  role="menuitem"
-                  className="block w-full px-3 py-2.5 text-left text-sm font-semibold text-ink hover:bg-cream"
-                >
-                  {t('signOut')}
-                </button>
-              </div>
-            ) : null}
-          </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </header>

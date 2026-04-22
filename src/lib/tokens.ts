@@ -12,3 +12,17 @@ export function signToken(payload: string): string {
 export function verifyToken(payload: string, sig: string): boolean {
   return signToken(payload) === sig;
 }
+
+// URL-safe base32-ish charset for kid access tokens.
+// Excludes ambiguous characters: 0/O, 1/I/L. Matches the admin smoke-test script.
+const KID_CHARSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+export function generateKidAccessToken(length = 10): string {
+  const bytes = new Uint8Array(length);
+  crypto.getRandomValues(bytes);
+  let out = '';
+  for (let i = 0; i < length; i++) {
+    out += KID_CHARSET[bytes[i]! % KID_CHARSET.length];
+  }
+  return out;
+}

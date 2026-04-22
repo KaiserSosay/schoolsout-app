@@ -134,7 +134,14 @@
       "privacyNote": "Privacidad ante todo — la información de los niños se queda en tu dispositivo.",
       "privacyNoteLink": "Cómo funciona",
       "success": "Revisa tu correo para confirmar.",
-      "error": "Algo salió mal. Intenta de nuevo."
+      "error": "Algo salió mal. Intenta de nuevo.",
+      "successCheckEmail": "Revisa tu correo en {email}",
+      "successSubject": "Confirma tu suscripción a School's Out!",
+      "successFrom": "School's Out! <hi@schoolsout.net>",
+      "successHint": "¿No lo recibiste? Revisa spam, o",
+      "resendLink": "reenviar enlace",
+      "resending": "Enviando…",
+      "resent": "Enviado ✓"
     },
     "dashboard": {
       "stats": {
@@ -148,7 +155,11 @@
       "inDays": "en {days} días",
       "today": "hoy",
       "tomorrow": "mañana",
-      "empty": "Aún no se han cargado cierres. Vuelve pronto."
+      "empty": "Aún no se han cargado cierres. Vuelve pronto.",
+      "preview": {
+        "label": "👀 VISTA PREVIA: Así se verá tu panel después del registro",
+        "disclaimer": "Datos de muestra — tu panel real aparece tras registrarte."
+      }
     },
     "problems": {
       "label": "¿Te suena familiar?",
@@ -489,6 +500,19 @@
           "button": "Cerrar sesión"
         }
       },
+      "kidAccess": {
+        "title": "Enlaces de acceso para niños",
+        "help": "URLs cortas que dejan a un niño (o a la tablet familiar) abrir una sesión bloqueada en Modo Niños. Puedes revocarlas cuando quieras.",
+        "labelPlaceholder": "Etiqueta (ej. iPad familiar)",
+        "generate": "Generar enlace",
+        "generating": "Generando…",
+        "noTokens": "No hay enlaces activos. Genera uno para compartir con tu hijo.",
+        "revoke": "Revocar",
+        "revoked": "Revocado",
+        "lastUsed": "Usado por última vez {when}",
+        "neverUsed": "Nunca usado",
+        "createdOn": "Creado {when}"
+      },
       "privacy": {
         "title": "La privacidad de tus hijos es lo primero",
         "body": "Nunca enviamos los nombres ni edades de tus hijos a nuestros servidores. Viven solo en este dispositivo — ni siquiera nosotros podemos verlos. Si cambias de teléfono, los volverás a ingresar aquí (tarda 30 segundos)."
@@ -554,7 +578,35 @@
         "unsavedCamp": "🚫 Quitó {name}",
         "viewedCamp": "👀 Vio {name}",
         "viewedClosure": "📅 Revisó {name}"
+      },
+      "exitKidLock": {
+        "label": "🔓 Salir del Modo Niños"
       }
+    },
+    "kidShare": {
+      "title": "Dáselo a tu hijo",
+      "option1": "Opción A — pásale este dispositivo. Entrará al Modo Niños bloqueado; los controles de padres quedan ocultos.",
+      "option2": "Opción B — envía el enlace al iPad familiar o al teléfono de los abuelos.",
+      "generateLink": "Generar enlace",
+      "generating": "Generando…",
+      "copy": "Copiar",
+      "copied": "Copiado ✓"
+    },
+    "closure": {
+      "eyebrow": "CIERRE",
+      "back": "← Volver al calendario",
+      "daysAway": "{count, plural, =0 {hoy} one {en # día} other {en # días}}",
+      "duration": "{count, plural, one {# día libre} other {# días libres}}",
+      "weather": {
+        "title": "Clima",
+        "loading": "Cargando pronóstico…",
+        "empty": "Aún no hay pronóstico disponible."
+      },
+      "camps": {
+        "title": "Campamentos sugeridos para esta vacación",
+        "empty": "Aún no hay campamentos compatibles — vuelve pronto."
+      },
+      "addToCalendar": "📅 Agregar al calendario"
     },
     "kid": {
       "subtitle": "¡Se acerca un día sin escuela! Vamos a planear algo genial.",
@@ -612,6 +664,22 @@
         "title": "Todavía nada aquí",
         "body": "Próximamente: recordatorios, mensajes de campamentos y actualizaciones de actividad."
       }
+    }
+  },
+  "kidInvalid": {
+    "title": "Este enlace no es válido",
+    "body": "Es posible que haya expirado, que lo hayan revocado o que esté mal escrito. Pídele al adulto un enlace nuevo.",
+    "back": "← Volver al inicio"
+  },
+  "about": {
+    "noah": {
+      "title": "Conoce a Noah, nuestro fundador de 8 años",
+      "back": "← Volver al inicio",
+      "p1": "Noah tiene 8 años y está en 2º grado en Coral Gables. Cada vez que no había escuela, veía a sus padres enloquecer. Una noche levantó la mirada y preguntó: \"Papá, ¿por qué no hay una app para esto?\"",
+      "p2": "Su papá Rasheid es desarrollador. Construyeron la primera versión juntos. Noah escoge los emojis, les pone nombre a los cierres, escribe los resúmenes de campamentos y dirige las reuniones de revisión del producto.",
+      "quoteLabel": "Noah dice:",
+      "quote": "Hacer una app es como hacer un plan súper divertido, pero para todos.",
+      "photoTodo": "Foto próximamente — con permiso de sus padres."
     }
   }
 }

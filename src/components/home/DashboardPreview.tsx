@@ -28,7 +28,6 @@ export function DashboardPreview({
   const { mode } = useMode();
 
   const nextClosure = closures[0] ?? null;
-  const closureCount = closures.length;
   const daysToNext = nextClosure ? daysUntil(nextClosure.start_date) : null;
 
   const stat = (label: string, value: React.ReactNode) => (
@@ -59,43 +58,42 @@ export function DashboardPreview({
     </div>
   );
 
-  // DECISION: Kids/saved camps have no real data yet. Show "—" instead of a
-  // fake number. Once the dashboard (Phase 3) exists, these read from a real
-  // source. Honesty rule: no fabrication.
-  const kidsLabel = '—';
-  const savedCampsLabel = '—';
-
-  let nextBreakValue: React.ReactNode;
-  if (daysToNext == null) {
-    nextBreakValue = '—';
-  } else if (daysToNext <= 0) {
-    nextBreakValue = t('today');
-  } else if (daysToNext === 1) {
-    nextBreakValue = t('tomorrow');
-  } else {
-    nextBreakValue = (
-      <>
-        {daysToNext}
-        <span
-          className={
-            'editorial-body text-base md:text-lg font-semibold ml-2 ' +
-            (mode === 'parents' ? 'text-muted' : 'text-white/60')
-          }
-        >
-          {t('stats.nextBreakUnit')}
-        </span>
-      </>
-    );
-  }
+  // DECISION: This block is a signed-out preview, not a live dashboard. Show
+  // honest illustrative numbers with a purple eyebrow + disclaimer so there's
+  // no ambiguity. A signed-in user sees their real dashboard at /app.
+  const sampleKids = '2';
+  const sampleNextBreak = '25d';
+  const sampleClosures = '14';
+  const sampleSavedCamps = '3';
 
   return (
     <section className="max-w-4xl mx-auto px-4 -mt-2 md:-mt-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-        {stat(t('stats.kids'), kidsLabel)}
-        {stat(t('stats.nextBreakIn'), nextBreakValue)}
-        {stat(t('stats.closures'), closureCount || '—')}
-        {stat(t('stats.savedCamps'), savedCampsLabel)}
+      <div
+        className={
+          'mb-3 inline-flex items-center rounded-full px-3 py-1 text-[11px] font-black uppercase tracking-wider ' +
+          (mode === 'parents'
+            ? 'bg-brand-purple/10 text-brand-purple'
+            : 'bg-white/15 text-white')
+        }
+      >
+        {t('preview.label')}
       </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        {stat(t('stats.kids'), sampleKids)}
+        {stat(t('stats.nextBreakIn'), sampleNextBreak)}
+        {stat(t('stats.closures'), sampleClosures)}
+        {stat(t('stats.savedCamps'), sampleSavedCamps)}
+      </div>
+
+      <p
+        className={
+          'mt-2 text-center text-xs italic editorial-body ' +
+          (mode === 'parents' ? 'text-muted' : 'text-white/60')
+        }
+      >
+        {t('preview.disclaimer')}
+      </p>
 
       {/* Dark "Up next" panel — accent stays dark-gradient in BOTH modes */}
       <div className="mt-4 rounded-2xl p-5 md:p-6 bg-gradient-to-br from-purple-deep via-purple-mid to-blue-deep text-white flex flex-col md:flex-row md:items-center gap-3 md:gap-5">

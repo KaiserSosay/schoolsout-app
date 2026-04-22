@@ -134,7 +134,14 @@
       "privacyNote": "Privacy-first by design — kids' info stays on your device.",
       "privacyNoteLink": "Learn how",
       "success": "Check your email to confirm.",
-      "error": "Something went wrong. Please try again."
+      "error": "Something went wrong. Please try again.",
+      "successCheckEmail": "Check your email at {email}",
+      "successSubject": "Confirm your School's Out! reminder subscription",
+      "successFrom": "School's Out! <hi@schoolsout.net>",
+      "successHint": "Didn't get it? Check spam, or",
+      "resendLink": "resend link",
+      "resending": "Sending…",
+      "resent": "Sent ✓"
     },
     "dashboard": {
       "stats": {
@@ -148,7 +155,11 @@
       "inDays": "in {days} days",
       "today": "today",
       "tomorrow": "tomorrow",
-      "empty": "No closures loaded yet. Check back soon."
+      "empty": "No closures loaded yet. Check back soon.",
+      "preview": {
+        "label": "👀 PREVIEW: What your dashboard will look like after signup",
+        "disclaimer": "Sample data — your real dashboard appears after signup."
+      }
     },
     "problems": {
       "label": "Sound familiar?",
@@ -489,6 +500,19 @@
           "button": "Sign out"
         }
       },
+      "kidAccess": {
+        "title": "Kid Access Links",
+        "help": "Short URLs that let a kid (or a family tablet) open a session locked to Kid Mode. Revoke any time.",
+        "labelPlaceholder": "Label (e.g. Family iPad)",
+        "generate": "Generate link",
+        "generating": "Generating…",
+        "noTokens": "No active links. Generate one to share with your kid.",
+        "revoke": "Revoke",
+        "revoked": "Revoked",
+        "lastUsed": "Last used {when}",
+        "neverUsed": "Never used",
+        "createdOn": "Created {when}"
+      },
       "privacy": {
         "title": "Your kids' privacy comes first",
         "body": "We never send your kids' names or ages to our servers. They live only on this device — so even we can't see them. If you switch phones, you'll re-enter them here (takes 30 seconds)."
@@ -554,7 +578,35 @@
         "unsavedCamp": "🚫 Removed {name}",
         "viewedCamp": "👀 Viewed {name}",
         "viewedClosure": "📅 Checked {name}"
+      },
+      "exitKidLock": {
+        "label": "🔓 Exit Kid Mode"
       }
+    },
+    "kidShare": {
+      "title": "Give this to your kid",
+      "option1": "Option A — hand them this device. They'll land in Kid Mode locked; parent controls hidden.",
+      "option2": "Option B — text the link to the family iPad or grandparent's phone.",
+      "generateLink": "Generate link",
+      "generating": "Generating…",
+      "copy": "Copy",
+      "copied": "Copied ✓"
+    },
+    "closure": {
+      "eyebrow": "CLOSURE",
+      "back": "← Back to Calendar",
+      "daysAway": "{count, plural, =0 {today} one {# day away} other {# days away}}",
+      "duration": "{count, plural, one {# day off} other {# days off}}",
+      "weather": {
+        "title": "Weather",
+        "loading": "Loading forecast…",
+        "empty": "No forecast available yet."
+      },
+      "camps": {
+        "title": "Camp suggestions for this break",
+        "empty": "No matched camps yet — check back soon."
+      },
+      "addToCalendar": "📅 Add to calendar"
     },
     "kid": {
       "subtitle": "School's out soon! Let's plan something awesome.",
@@ -612,6 +664,22 @@
         "title": "Nothing here yet",
         "body": "Coming soon: reminders, messages from camps, and activity updates."
       }
+    }
+  },
+  "kidInvalid": {
+    "title": "This link isn't valid",
+    "body": "The link may have expired, been revoked, or typed incorrectly. Ask the parent for a fresh link.",
+    "back": "← Back to home"
+  },
+  "about": {
+    "noah": {
+      "title": "Meet Noah, our 8-year-old founder",
+      "back": "← Back to home",
+      "p1": "Noah is an 8-year-old 2nd grader in Coral Gables. Every time school was out, he watched his parents scramble. One night he looked up and asked, \"Dad, why isn't there just an app?\"",
+      "p2": "His dad Rasheid is a developer. They built the first version together. Noah picks the emojis, names the closures, writes camp blurbs, and runs the product review meetings.",
+      "quoteLabel": "Noah says:",
+      "quote": "Making an app is like making a super-fun plan, but for everyone.",
+      "photoTodo": "Photo coming soon — with a parent's permission."
     }
   }
 }

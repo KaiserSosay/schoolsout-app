@@ -41,6 +41,8 @@ export const config = {
     // and PWA/SEO assets from the locale rewrite. next-intl would otherwise
     // rewrite /auth/callback to /en/auth/callback and the route handler would
     // never run.
-    '/((?!api|auth|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|icon|apple-icon|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // DECISION: /k/* is excluded so /k/[token] (a server route that mints a
+    // kid-mode session) never gets rewritten by next-intl.
+    '/((?!api|auth|k|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|icon|apple-icon|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
