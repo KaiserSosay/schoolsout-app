@@ -89,7 +89,11 @@
     "emailLabel": "Tu correo",
     "emailPlaceholder": "padre@ejemplo.com",
     "ageRangeLabel": "Rango de edad en tu familia",
-    "ageRange": { "4-6": "4 a 6 años", "7-9": "7 a 9 años", "all": "Todas las edades" },
+    "ageRange": {
+      "4-6": "4 a 6 años",
+      "7-9": "7 a 9 años",
+      "all": "Todas las edades"
+    },
     "coppaConsent": "Soy madre, padre o tutor legal y doy mi consentimiento para recibir estos correos.",
     "submit": "Recuérdame antes de cada vacación",
     "success": "Revisa tu correo para confirmar tu suscripción.",
@@ -202,8 +206,14 @@
       "label": "Cómo funciona",
       "title": "Tres pasos. Un año más tranquilo.",
       "steps": {
-        "1": { "title": "Entra una vez", "body": "Cuéntanos de tu familia. Toma 30 segundos." },
-        "2": { "title": "Ve cada día libre", "body": "Cada cierre. Cada cuenta regresiva. Ambas escuelas. Una sola pantalla." },
+        "1": {
+          "title": "Entra una vez",
+          "body": "Cuéntanos de tu familia. Toma 30 segundos."
+        },
+        "2": {
+          "title": "Ve cada día libre",
+          "body": "Cada cierre. Cada cuenta regresiva. Ambas escuelas. Una sola pantalla."
+        },
         "3": {
           "title": "Planea en un toque",
           "body": "Recomendaciones de campamentos según la edad de tu hijo y la vacación.",
@@ -286,10 +296,22 @@
       "label": "Cobertura",
       "title": "Empezando en Miami. Creado para llegar a todo el país.",
       "phases": {
-        "1": { "emoji": "✅", "label": "Fase 1: Coral Gables (en vivo)" },
-        "2": { "emoji": "🔜", "label": "Fase 2: Todo Miami-Dade (2026)" },
-        "3": { "emoji": "📍", "label": "Fase 3: Toda la Florida (2026)" },
-        "4": { "emoji": "🌎", "label": "Fase 4: Estados Unidos (2027)" }
+        "1": {
+          "emoji": "✅",
+          "label": "Fase 1: Coral Gables (en vivo)"
+        },
+        "2": {
+          "emoji": "🔜",
+          "label": "Fase 2: Todo Miami-Dade (2026)"
+        },
+        "3": {
+          "emoji": "📍",
+          "label": "Fase 3: Toda la Florida (2026)"
+        },
+        "4": {
+          "emoji": "🌎",
+          "label": "Fase 4: Estados Unidos (2027)"
+        }
       },
       "request": {
         "title": "¿No estás en Miami? Cuéntanos dónde estás.",
@@ -308,12 +330,36 @@
       "title": "Los padres de Miami están buscando campamentos. Pon el tuyo frente a ellos.",
       "subtitle": "School's Out! es la app gratis que cada padre de Coral Gables está por descargar. Sé parte del primer grupo.",
       "benefits": {
-        "featured": { "emoji": "⭐", "title": "Destacado", "body": "Arriba de la lista cuando los padres planean la próxima vacación." },
-        "profile":  { "emoji": "📝", "title": "Perfil completo", "body": "Edades, precios, fotos, barrio — los padres pueden decir que sí en un scroll." },
-        "dashboard":{ "emoji": "📊", "title": "Panel mensual", "body": "Ve vistas, clics y alcance. Sabe qué funciona." },
-        "bookings": { "emoji": "🔗", "title": "100% de las inscripciones", "body": "Los padres se inscriben en tu sitio. Nosotros nunca tocamos la transacción." },
-        "boost":    { "emoji": "🎯", "title": "Impulso por temporada", "body": "Destacado durante las vacaciones que más importan." },
-        "commissions": { "emoji": "🚫", "title": "Sin comisiones", "body": "Somos directorio, no intermediario. Quédate con lo que ganas." }
+        "featured": {
+          "emoji": "⭐",
+          "title": "Destacado",
+          "body": "Arriba de la lista cuando los padres planean la próxima vacación."
+        },
+        "profile": {
+          "emoji": "📝",
+          "title": "Perfil completo",
+          "body": "Edades, precios, fotos, barrio — los padres pueden decir que sí en un scroll."
+        },
+        "dashboard": {
+          "emoji": "📊",
+          "title": "Panel mensual",
+          "body": "Ve vistas, clics y alcance. Sabe qué funciona."
+        },
+        "bookings": {
+          "emoji": "🔗",
+          "title": "100% de las inscripciones",
+          "body": "Los padres se inscriben en tu sitio. Nosotros nunca tocamos la transacción."
+        },
+        "boost": {
+          "emoji": "🎯",
+          "title": "Impulso por temporada",
+          "body": "Destacado durante las vacaciones que más importan."
+        },
+        "commissions": {
+          "emoji": "🚫",
+          "title": "Sin comisiones",
+          "body": "Somos directorio, no intermediario. Quédate con lo que ganas."
+        }
       },
       "price": {
         "big": "$0",
@@ -330,11 +376,26 @@
       "form": {
         "title": "Aplica como Socio de Lanzamiento",
         "subtitle": "Revisamos cada aplicación en 48 horas.",
-        "name":         { "label": "Nombre del campamento", "placeholder": "Sunshine Adventure Camp" },
-        "website":      { "label": "Sitio web", "placeholder": "https://tucampamento.com" },
-        "ages":         { "label": "Edades", "placeholder": "ej. 6–10" },
-        "neighborhood": { "label": "Barrio", "placeholder": "Coral Gables" },
-        "email":        { "label": "Correo", "placeholder": "dueno@tucampamento.com" },
+        "name": {
+          "label": "Nombre del campamento",
+          "placeholder": "Sunshine Adventure Camp"
+        },
+        "website": {
+          "label": "Sitio web",
+          "placeholder": "https://tucampamento.com"
+        },
+        "ages": {
+          "label": "Edades",
+          "placeholder": "ej. 6–10"
+        },
+        "neighborhood": {
+          "label": "Barrio",
+          "placeholder": "Coral Gables"
+        },
+        "email": {
+          "label": "Correo",
+          "placeholder": "dueno@tucampamento.com"
+        },
         "submit": "Aplicar →",
         "submitting": "Enviando…",
         "success": "Anotado. Revisamos cada aplicación en 48 horas.",
@@ -666,7 +727,30 @@
         "title": "Campamentos sugeridos para esta vacación",
         "empty": "Aún no hay campamentos compatibles — vuelve pronto."
       },
-      "addToCalendar": "📅 Agregar al calendario"
+      "addToCalendar": "📅 Agregar al calendario",
+      "why": {
+        "heading": "¿Por qué no hay escuela?"
+      },
+      "affected": {
+        "singular": "Afecta a {name}",
+        "plural": "Afecta a {names}",
+        "allKids": "Afecta a todos los hijos"
+      },
+      "activities": {
+        "heading": "Cosas para hacer sin campamento",
+        "indoorPreferred": "El clima no se ve ideal — estas son actividades bajo techo primero.",
+        "outdoorPreferred": "Excelente día para estar afuera.",
+        "empty": "Aún no hay actividades seleccionadas para esta fecha.",
+        "suggestYours": "Sugerir una actividad"
+      },
+      "integrity": {
+        "fewerThan": "Verificamos {count} campamentos para esta fecha. Seguimos investigando — revisa pronto.",
+        "none": "Aún no hay campamentos verificados para esta fecha.",
+        "browseActivities": "Explora actividades familiares →",
+        "shareDay": "Compartir este día",
+        "exportDay": "Exportar este día al calendario",
+        "linkCopied": "Enlace copiado al portapapeles"
+      }
     },
     "kid": {
       "subtitle": "¡Se acerca un día sin escuela! Vamos a planear algo genial.",
@@ -741,7 +825,14 @@
       "toast": {
         "saved": "⭐ Guardado {name}",
         "saveFailed": "No pudimos guardar ese campamento. ¿Intentamos de nuevo?"
-      }
+      },
+      "verifyingEmpty": {
+        "title": "Estamos verificando los campamentos",
+        "body": "Cada campamento que mostramos está revisado por un administrador y con sitio web funcionando. Más listados aparecerán conforme terminemos la revisión — usualmente en pocos días.",
+        "cta": "Mientras tanto, explora actividades familiares →"
+      },
+      "brokenWebsite": "Sitio web caído — llama al campamento",
+      "callToBook": "📞 Llamar al campamento"
     },
     "calendar": {
       "title": "Calendario escolar",
@@ -772,6 +863,28 @@
         "title": "Todavía nada aquí",
         "body": "Próximamente: recordatorios, mensajes de campamentos y actualizaciones de actividad."
       }
+    },
+    "family": {
+      "title": "Tu Familia",
+      "subtitle": "Tus hijos, sus escuelas y las próximas vacaciones que les afectan.",
+      "editFamily": "Editar familia",
+      "kidLabel": "Hijo {n}",
+      "kidNumber": "Hijo {n}",
+      "ageRange": {
+        "4-6": "4 a 6 años",
+        "7-9": "7 a 9 años",
+        "10-12": "10 a 12 años",
+        "13+": "13+ años"
+      },
+      "gradeLabel": "Grado {grade}",
+      "edit": "Editar",
+      "upcomingClosures": "Próximas vacaciones",
+      "noUpcomingClosures": "Aún no hay vacaciones programadas para esta escuela.",
+      "addAnotherKid": "+ Agregar otro hijo",
+      "addKid": "Agregar un hijo",
+      "emptyTitle": "Aún no has agregado hijos",
+      "emptyBody": "Agrega un hijo en Ajustes para ver las vacaciones de su escuela y encontrar campamentos.",
+      "inDays": "{count, plural, =0 {hoy} one {en # día} other {en # días}}"
     }
   },
   "kidInvalid": {

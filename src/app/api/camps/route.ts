@@ -22,6 +22,9 @@ const querySchema = z
     from_lat: z.coerce.number().gte(-90).lte(90).optional(),
     from_lng: z.coerce.number().gte(-180).lte(180).optional(),
     must_have: z.string().optional(),
+    // Admin bypass: include camps that haven't passed verification yet.
+    // See UX_PRINCIPLES.md rule #2 — never surfaced on public UI.
+    include_unverified: z.enum(['true', '1', 'yes']).optional(),
   })
   .refine(
     (d) =>
@@ -67,6 +70,8 @@ type CampRow = {
   closed_on_holidays: boolean;
   phone: string | null;
   logistics_verified: boolean;
+  website_status: 'unchecked' | 'ok' | 'broken' | 'timeout';
+  website_last_verified_at: string | null;
 };
 
 type CampSessionRow = {
@@ -113,6 +118,7 @@ export async function GET(req: Request) {
     from_lat,
     from_lng,
     must_have,
+    include_unverified,
   } = parsed.data;
 
   // Parse must_have CSV
@@ -129,11 +135,18 @@ export async function GET(req: Request) {
   let q = db
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, created_at, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified',
+      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, created_at, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at',
     )
     .order('is_featured', { ascending: false })
     .order('verified', { ascending: false })
     .order('created_at', { ascending: false });
+
+  // INTEGRITY FILTER — see UX_PRINCIPLES.md rule #2 ("no hallucinations").
+  // Public traffic must only see admin-reviewed camps whose website hasn't
+  // been flagged broken. Admin UIs pass include_unverified=true to bypass.
+  if (!include_unverified) {
+    q = q.eq('verified', true).neq('website_status', 'broken');
+  }
 
   if (categories) {
     const list = categories
@@ -233,9 +246,13 @@ export async function GET(req: Request) {
     return out;
   });
 
-  // If closure filter is active AND camp has sessions, keep only camps where
-  // either sessions overlap OR the camp has no sessions at all (fallback).
-  if (closure_id) {
+  // INTEGRITY: when a closure context is active, STRICT session-overlap only.
+  // Per UX_PRINCIPLES.md #2, we no longer pad with age-only fallbacks for specific
+  // closure dates — better to show fewer, verified matches than to hallucinate.
+  // Admin tool (include_unverified) keeps the old age-only fallback for review.
+  if (closure_id && !include_unverified) {
+    annotated = annotated.filter((c) => (c.matching_sessions?.length ?? 0) > 0);
+  } else if (closure_id) {
     annotated = annotated.filter((c) => c.sessions_unknown || (c.matching_sessions?.length ?? 0) > 0);
   }
 

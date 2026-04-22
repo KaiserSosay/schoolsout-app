@@ -39,18 +39,65 @@ type WeatherResponse =
   | { highF: number; lowF: number; code?: number; source: 'forecast' }
   | { highF: number; lowF: number; icon?: string; label?: { en: string; es: string }; source: 'monthly_average' };
 
+export type FamilyActivity = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  category: 'outdoor' | 'indoor' | 'event' | 'beach' | 'park' | 'museum' | 'playspace' | 'nature' | 'library' | 'cultural' | 'market';
+  ages_min: number;
+  ages_max: number;
+  cost_tier: 'free' | '$' | '$$' | '$$$';
+  cost_note: string | null;
+  neighborhood: string | null;
+  website_url: string | null;
+  weather_preference: 'any' | 'indoor_preferred' | 'outdoor_preferred';
+  distance_miles: number | null;
+};
+
 function durationDays(start: string, end: string): number {
   return daysUntil(end, new Date(start + 'T00:00:00Z')) + 1;
+}
+
+// Open-Meteo WMO weather codes we consider "rainy" enough to prefer indoor.
+// Source: https://open-meteo.com/en/docs — codes 51–67 (drizzle, rain, freezing rain),
+// 80–82 (rain showers), 95–99 (thunderstorm).
+function isRainyCode(code: number | undefined): boolean {
+  if (typeof code !== 'number') return false;
+  if (code >= 51 && code <= 67) return true;
+  if (code >= 80 && code <= 82) return true;
+  if (code >= 95 && code <= 99) return true;
+  return false;
+}
+
+function categoryEmoji(cat: FamilyActivity['category']): string {
+  switch (cat) {
+    case 'beach': return '🏖️';
+    case 'park': return '🌳';
+    case 'museum': return '🏛️';
+    case 'nature': return '🌿';
+    case 'outdoor': return '☀️';
+    case 'indoor': return '🏠';
+    case 'event': return '🎉';
+    case 'playspace': return '🎡';
+    case 'library': return '📚';
+    case 'cultural': return '🎭';
+    case 'market': return '🧺';
+  }
 }
 
 export function ClosureDetailView({
   locale,
   closure,
   camps,
+  activities = [],
+  whyText = null,
 }: {
   locale: string;
   closure: Closure;
   camps: Camp[];
+  activities?: FamilyActivity[];
+  whyText?: string | null;
 }) {
   const { mode } = useMode();
   const t = useTranslations();
@@ -139,6 +186,17 @@ export function ClosureDetailView({
           </p>
         </header>
 
+        {whyText ? (
+          <section className={cardClass + ' space-y-2'}>
+            <p className={'text-xs font-bold uppercase tracking-widest ' + (isKids ? 'text-cta-yellow' : 'text-brand-purple')}>
+              {t('app.closure.why.heading')}
+            </p>
+            <p className={'text-sm leading-relaxed ' + (isKids ? 'text-white/90' : 'text-ink')}>
+              {whyText}
+            </p>
+          </section>
+        ) : null}
+
         <section className={cardClass + ' space-y-2'}>
           <p className={'text-xs font-bold uppercase tracking-widest ' + (isKids ? 'text-cta-yellow' : 'text-brand-purple')}>
             🌤️ {t('app.closure.weather.title')}
@@ -176,8 +234,18 @@ export function ClosureDetailView({
             {t('app.closure.camps.title')}
           </h2>
           {camps.length === 0 && (
-            <p className={'text-sm ' + (isKids ? 'text-white/70' : 'text-muted')}>
-              {t('app.closure.camps.empty')}
+            <div className={cardClass + ' space-y-2'}>
+              <p className={'text-sm ' + (isKids ? 'text-white/90' : 'text-ink')}>
+                {t('app.closure.integrity.none')}
+              </p>
+              <p className={'text-xs ' + (isKids ? 'text-white/60' : 'text-muted')}>
+                {t('app.closure.integrity.browseActivities')}
+              </p>
+            </div>
+          )}
+          {camps.length > 0 && camps.length < 3 && (
+            <p className={'text-xs italic ' + (isKids ? 'text-white/60' : 'text-muted')}>
+              {t('app.closure.integrity.fewerThan', { count: camps.length })}
             </p>
           )}
           {camps.length > 0 && (
@@ -219,6 +287,69 @@ export function ClosureDetailView({
             </div>
           )}
         </section>
+
+        {activities.length > 0 ? (
+          <section className="space-y-3">
+            <h2 className={'text-xl font-bold ' + (isKids ? 'text-white' : 'text-ink')}>
+              {t('app.closure.activities.heading')}
+            </h2>
+            <p className={'text-sm ' + (isKids ? 'text-white/70' : 'text-muted')}>
+              {weather && 'code' in weather && isRainyCode(weather.code)
+                ? t('app.closure.activities.indoorPreferred')
+                : t('app.closure.activities.outdoorPreferred')}
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {activities
+                .slice()
+                .sort((a, b) => {
+                  // Weather-aware ordering:
+                  //   rainy → indoor_preferred first, then any, then outdoor_preferred
+                  //   sunny → outdoor_preferred first, then any, then indoor_preferred
+                  const rainy = weather && 'code' in weather && isRainyCode(weather.code);
+                  const weightOf = (w: FamilyActivity['weather_preference']) => {
+                    if (rainy) {
+                      return w === 'indoor_preferred' ? 0 : w === 'any' ? 1 : 2;
+                    }
+                    return w === 'outdoor_preferred' ? 0 : w === 'any' ? 1 : 2;
+                  };
+                  const w = weightOf(a.weather_preference) - weightOf(b.weather_preference);
+                  if (w !== 0) return w;
+                  const da = a.distance_miles ?? Number.POSITIVE_INFINITY;
+                  const db = b.distance_miles ?? Number.POSITIVE_INFINITY;
+                  return da - db;
+                })
+                .slice(0, 6)
+                .map((a) => (
+                  <a
+                    key={a.id}
+                    href={a.website_url ?? '#'}
+                    target={a.website_url ? '_blank' : undefined}
+                    rel={a.website_url ? 'noopener noreferrer' : undefined}
+                    className={'block transition hover:-translate-y-0.5 ' + cardClass}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl" aria-hidden="true">{categoryEmoji(a.category)}</span>
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <p className={'font-bold ' + (isKids ? 'text-white' : 'text-ink')}>
+                          {a.name}
+                        </p>
+                        <p className={'text-xs ' + (isKids ? 'text-white/70' : 'text-muted')}>
+                          Ages {a.ages_min}–{a.ages_max} · {a.cost_tier === 'free' ? 'Free' : a.cost_tier}
+                          {a.neighborhood && ` · ${a.neighborhood}`}
+                          {a.distance_miles != null && ` · 📍 ${a.distance_miles < 10 ? a.distance_miles.toFixed(1) : Math.round(a.distance_miles)} mi`}
+                        </p>
+                        {a.description && (
+                          <p className={'text-xs ' + (isKids ? 'text-white/60' : 'text-muted')}>
+                            {a.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+            </div>
+          </section>
+        ) : null}
 
         <a
           href="/api/calendar.ics"

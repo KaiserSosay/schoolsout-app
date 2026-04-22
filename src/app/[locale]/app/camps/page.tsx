@@ -69,11 +69,15 @@ export default async function CampsPage({
   } = await sb.auth.getUser();
 
   const [campsResp, savesResp, profilesResp, savedLocsResp] = await Promise.all([
+    // INTEGRITY FILTER — UX_PRINCIPLES.md #2. Public camps listing only shows
+    // admin-reviewed camps whose websites haven't been flagged broken.
     svc
       .from('camps')
       .select(
-        'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified',
+        'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at',
       )
+      .eq('verified', true)
+      .neq('website_status', 'broken')
       .order('is_featured', { ascending: false })
       .order('name'),
     user

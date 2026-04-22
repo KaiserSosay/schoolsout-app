@@ -33,7 +33,7 @@ describe('StatsGrid', () => {
         emoji: '☀️',
       },
     ];
-    wrap(<StatsGrid kidCount={2} closures={closures} savesCount={5} />);
+    wrap(<StatsGrid kidCount={2} closures={closures} savesCount={5} locale="en" />);
 
     const grid = screen.getByTestId('stats-grid');
     expect(grid).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('StatsGrid', () => {
   });
 
   it('shows an em dash for nextBreakIn when there are no closures', () => {
-    wrap(<StatsGrid kidCount={1} closures={[]} savesCount={0} />);
+    wrap(<StatsGrid kidCount={1} closures={[]} savesCount={0} locale="en" />);
     const grid = screen.getByTestId('stats-grid');
     const nextCell = grid.querySelector('[data-stat="nextBreakIn"]')!;
     expect(nextCell.textContent).toContain('—');

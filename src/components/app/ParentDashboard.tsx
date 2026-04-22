@@ -100,6 +100,7 @@ export function ParentDashboard({
         kidCount={profiles.length}
         closures={closures}
         savesCount={savesCount}
+        locale={locale}
       />
 
       {closures[0] ? (

@@ -1,7 +1,9 @@
 import { notFound, redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { ClosureDetailView } from '@/components/app/ClosureDetailView';
+import { ClosureDetailView, type FamilyActivity } from '@/components/app/ClosureDetailView';
+import { reasonFor } from '@/lib/closure-reasons';
+import { haversineMiles } from '@/lib/distance';
 
 export default async function ClosureDetailPage({
   params,
@@ -41,47 +43,128 @@ export default async function ClosureDetailPage({
   const wantMin = ageRanges.length ? Math.min(...ageRanges.map((r) => rangeBounds[r][0])) : 4;
   const wantMax = ageRanges.length ? Math.max(...ageRanges.map((r) => rangeBounds[r][1])) : 17;
 
+  // INTEGRITY FILTER — UX_PRINCIPLES.md #2. Closures only surface admin-
+  // reviewed camps whose websites haven't been flagged broken, AND which
+  // have a verified session overlapping the closure dates. No age-only
+  // fallback — "we don't know" beats "we guessed" for specific dates.
   const { data: matchingCamps } = await admin
     .from('camps')
-    .select('id, slug, name, ages_min, ages_max, price_tier, categories, neighborhood, verified, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, logistics_verified, phone')
+    .select('id, slug, name, ages_min, ages_max, price_tier, categories, neighborhood, verified, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, logistics_verified, phone, website_status')
+    .eq('verified', true)
+    .neq('website_status', 'broken')
     .lte('ages_min', wantMax)
     .gte('ages_max', wantMin)
     .order('is_featured', { ascending: false })
-    .limit(12);
+    .limit(20);
 
-  // DECISION: We fetch a broader pool (up to 12) then split into
-  // session-overlap vs age-only-fallback. Age-only matches carry a
-  // sessions_unknown flag so the UI can disclose "call camp to confirm".
   const campIds = (matchingCamps ?? []).map((c) => c.id);
   const { data: sessions } = campIds.length
     ? await admin
         .from('camp_sessions')
-        .select('id, camp_id, start_date, end_date')
+        .select('id, camp_id, start_date, end_date, closed_dates')
         .in('camp_id', campIds)
-    : { data: [] as Array<{ id: string; camp_id: string; start_date: string; end_date: string }> };
+    : { data: [] as Array<{ id: string; camp_id: string; start_date: string; end_date: string; closed_dates: string[] | null }> };
 
-  const sessionsByCamp: Record<string, Array<{ start_date: string; end_date: string }>> = {};
+  const sessionsByCamp: Record<string, Array<{ start_date: string; end_date: string; closed_dates: string[] | null }>> = {};
   for (const s of sessions ?? []) {
     const arr = sessionsByCamp[s.camp_id] ?? [];
-    arr.push({ start_date: s.start_date, end_date: s.end_date });
+    arr.push({ start_date: s.start_date, end_date: s.end_date, closed_dates: s.closed_dates ?? null });
     sessionsByCamp[s.camp_id] = arr;
   }
 
-  const annotatedCamps = (matchingCamps ?? []).map((c) => {
-    const sList = sessionsByCamp[c.id] ?? [];
-    if (sList.length === 0) {
-      return { ...c, sessions_unknown: true, session_match: false };
+  // A closure can span multiple dates. The camp is "open that day" iff at
+  // least one of its verified sessions contains the range AND none of the
+  // closure's dates falls inside the session's closed_dates[].
+  function closureDatesInRange(start: string, end: string): string[] {
+    const out: string[] = [];
+    const s = new Date(start + 'T00:00:00Z');
+    const e = new Date(end + 'T00:00:00Z');
+    for (let d = new Date(s); d <= e; d.setUTCDate(d.getUTCDate() + 1)) {
+      out.push(d.toISOString().slice(0, 10));
     }
-    const hit = sList.some(
-      (s) => s.start_date <= closure.end_date && s.end_date >= closure.start_date,
-    );
-    return { ...c, sessions_unknown: false, session_match: hit };
-  });
+    return out;
+  }
+  const closureDates = closureDatesInRange(closure.start_date, closure.end_date);
 
-  // Keep camps with no sessions OR a session overlap; cap at 3 for display.
-  const displayCamps = annotatedCamps
-    .filter((c) => c.sessions_unknown || c.session_match)
-    .slice(0, 3);
+  const displayCamps = (matchingCamps ?? [])
+    .filter((c) => {
+      const sList = sessionsByCamp[c.id] ?? [];
+      if (sList.length === 0) return false;
+      return sList.some((s) => {
+        if (!(s.start_date <= closure.end_date && s.end_date >= closure.start_date)) return false;
+        const closed = new Set(s.closed_dates ?? []);
+        // Camp is genuinely open during this closure if AT LEAST ONE day of
+        // the closure isn't on the session's blackout list.
+        return closureDates.some((d) => !closed.has(d));
+      });
+    })
+    .slice(0, 3)
+    .map((c) => ({ ...c, sessions_unknown: false, session_match: true }));
+
+  // Family activities — weather-aware ordering.
+  // DECISION: We use the existing /api/weather logic inline (Open-Meteo ≤16 days,
+  // monthly-average beyond) by doing a light inline decision — if closure start
+  // is within 16 days we could fetch a forecast, but we don't want to block on
+  // the network during server render. Keep the weather decision client-side
+  // (ClosureDetailView already fetches /api/weather). Here we fetch a generous
+  // pool of activities and let the client re-sort once weather is known.
+  const { data: activitiesRaw } = await admin
+    .from('family_activities')
+    .select('id, slug, name, description, category, ages_min, ages_max, cost_tier, cost_note, neighborhood, latitude, longitude, website_url, weather_preference')
+    .eq('verified', true)
+    .lte('ages_min', wantMax)
+    .gte('ages_max', wantMin)
+    .limit(40);
+
+  // If the user has a primary saved location, sort activities by distance there;
+  // otherwise by school distance; otherwise alphabetical.
+  const { data: primaryLoc } = await supabase
+    .from('saved_locations')
+    .select('latitude, longitude')
+    .eq('user_id', user.id)
+    .eq('is_primary', true)
+    .maybeSingle();
+
+  let originLat: number | null = null;
+  let originLng: number | null = null;
+  if (primaryLoc?.latitude != null && primaryLoc?.longitude != null) {
+    originLat = Number(primaryLoc.latitude);
+    originLng = Number(primaryLoc.longitude);
+  } else {
+    const { data: schoolRow } = await admin
+      .from('schools')
+      .select('latitude, longitude')
+      .eq('id', closure.school_id)
+      .maybeSingle();
+    if (schoolRow?.latitude != null && schoolRow?.longitude != null) {
+      originLat = Number(schoolRow.latitude);
+      originLng = Number(schoolRow.longitude);
+    }
+  }
+
+  const activities: FamilyActivity[] = (activitiesRaw ?? []).map((a) => {
+    const lat = a.latitude != null ? Number(a.latitude) : null;
+    const lng = a.longitude != null ? Number(a.longitude) : null;
+    const dist =
+      originLat != null && originLng != null && lat != null && lng != null && Number.isFinite(lat) && Number.isFinite(lng)
+        ? Number(haversineMiles(originLat, originLng, lat, lng).toFixed(2))
+        : null;
+    return {
+      id: a.id as string,
+      slug: a.slug as string,
+      name: a.name as string,
+      description: (a.description as string | null) ?? null,
+      category: a.category as FamilyActivity['category'],
+      ages_min: a.ages_min as number,
+      ages_max: a.ages_max as number,
+      cost_tier: a.cost_tier as FamilyActivity['cost_tier'],
+      cost_note: (a.cost_note as string | null) ?? null,
+      neighborhood: (a.neighborhood as string | null) ?? null,
+      website_url: (a.website_url as string | null) ?? null,
+      weather_preference: (a.weather_preference as FamilyActivity['weather_preference']) ?? 'any',
+      distance_miles: dist,
+    };
+  });
 
   // Log activity (ignore errors — best-effort)
   await supabase
@@ -98,6 +181,8 @@ export default async function ClosureDetailPage({
     ? (closure.schools[0] as { name: string } | undefined)?.name ?? ''
     : (closure.schools as { name: string } | null)?.name ?? '';
 
+  const whyText = reasonFor(closure.name);
+
   return (
     <ClosureDetailView
       locale={locale}
@@ -110,6 +195,8 @@ export default async function ClosureDetailPage({
         school_name: schoolName,
       }}
       camps={displayCamps}
+      activities={activities}
+      whyText={whyText}
     />
   );
 }

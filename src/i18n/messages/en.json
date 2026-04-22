@@ -89,7 +89,11 @@
     "emailLabel": "Your email",
     "emailPlaceholder": "parent@example.com",
     "ageRangeLabel": "Age range in your family",
-    "ageRange": { "4-6": "Ages 4–6", "7-9": "Ages 7–9", "all": "All ages" },
+    "ageRange": {
+      "4-6": "Ages 4–6",
+      "7-9": "Ages 7–9",
+      "all": "All ages"
+    },
     "coppaConsent": "I'm a parent or legal guardian and consent to receive these emails.",
     "submit": "Remind me before every break",
     "success": "Check your email to confirm your subscription.",
@@ -202,8 +206,14 @@
       "label": "How it works",
       "title": "Three steps. One calmer year.",
       "steps": {
-        "1": { "title": "Sign in once", "body": "Tell us your family. Takes 30 seconds." },
-        "2": { "title": "See every day off", "body": "Every closure. Every countdown. Both schools. One screen." },
+        "1": {
+          "title": "Sign in once",
+          "body": "Tell us your family. Takes 30 seconds."
+        },
+        "2": {
+          "title": "See every day off",
+          "body": "Every closure. Every countdown. Both schools. One screen."
+        },
         "3": {
           "title": "Plan in one tap",
           "body": "Smart camp picks matched to your kid's age and the break.",
@@ -286,10 +296,22 @@
       "label": "Coverage",
       "title": "Starting in Miami. Built to go national.",
       "phases": {
-        "1": { "emoji": "✅", "label": "Phase 1: Coral Gables (live)" },
-        "2": { "emoji": "🔜", "label": "Phase 2: All Miami-Dade (2026)" },
-        "3": { "emoji": "📍", "label": "Phase 3: All Florida (2026)" },
-        "4": { "emoji": "🌎", "label": "Phase 4: United States (2027)" }
+        "1": {
+          "emoji": "✅",
+          "label": "Phase 1: Coral Gables (live)"
+        },
+        "2": {
+          "emoji": "🔜",
+          "label": "Phase 2: All Miami-Dade (2026)"
+        },
+        "3": {
+          "emoji": "📍",
+          "label": "Phase 3: All Florida (2026)"
+        },
+        "4": {
+          "emoji": "🌎",
+          "label": "Phase 4: United States (2027)"
+        }
       },
       "request": {
         "title": "Not in Miami? Tell us where you are.",
@@ -308,12 +330,36 @@
       "title": "Miami parents are looking for camps. Get yours in front of them.",
       "subtitle": "School's Out! is the free app every Coral Gables parent is about to download. Be in the first batch.",
       "benefits": {
-        "featured": { "emoji": "⭐", "title": "Featured placement", "body": "Top of the list when parents plan the next break." },
-        "profile":  { "emoji": "📝", "title": "Full profile", "body": "Ages, pricing, photos, neighborhood — parents can say yes in one scroll." },
-        "dashboard":{ "emoji": "📊", "title": "Monthly dashboard", "body": "See views, clicks, and reach. Know what's working." },
-        "bookings": { "emoji": "🔗", "title": "100% of bookings", "body": "Parents book on your site. We never touch the transaction." },
-        "boost":    { "emoji": "🎯", "title": "Seasonal boost", "body": "Featured during the break windows that matter most." },
-        "commissions": { "emoji": "🚫", "title": "No commissions", "body": "We're a directory, not a broker. Keep what you earn." }
+        "featured": {
+          "emoji": "⭐",
+          "title": "Featured placement",
+          "body": "Top of the list when parents plan the next break."
+        },
+        "profile": {
+          "emoji": "📝",
+          "title": "Full profile",
+          "body": "Ages, pricing, photos, neighborhood — parents can say yes in one scroll."
+        },
+        "dashboard": {
+          "emoji": "📊",
+          "title": "Monthly dashboard",
+          "body": "See views, clicks, and reach. Know what's working."
+        },
+        "bookings": {
+          "emoji": "🔗",
+          "title": "100% of bookings",
+          "body": "Parents book on your site. We never touch the transaction."
+        },
+        "boost": {
+          "emoji": "🎯",
+          "title": "Seasonal boost",
+          "body": "Featured during the break windows that matter most."
+        },
+        "commissions": {
+          "emoji": "🚫",
+          "title": "No commissions",
+          "body": "We're a directory, not a broker. Keep what you earn."
+        }
       },
       "price": {
         "big": "$0",
@@ -330,11 +376,26 @@
       "form": {
         "title": "Apply to be a Launch Partner",
         "subtitle": "We review every application within 48 hours.",
-        "name":         { "label": "Camp name", "placeholder": "Sunshine Adventure Camp" },
-        "website":      { "label": "Website", "placeholder": "https://yourcamp.com" },
-        "ages":         { "label": "Ages served", "placeholder": "e.g. 6–10" },
-        "neighborhood": { "label": "Neighborhood", "placeholder": "Coral Gables" },
-        "email":        { "label": "Email", "placeholder": "owner@yourcamp.com" },
+        "name": {
+          "label": "Camp name",
+          "placeholder": "Sunshine Adventure Camp"
+        },
+        "website": {
+          "label": "Website",
+          "placeholder": "https://yourcamp.com"
+        },
+        "ages": {
+          "label": "Ages served",
+          "placeholder": "e.g. 6–10"
+        },
+        "neighborhood": {
+          "label": "Neighborhood",
+          "placeholder": "Coral Gables"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "owner@yourcamp.com"
+        },
         "submit": "Apply →",
         "submitting": "Sending…",
         "success": "Got it. We review every application within 48 hours.",
@@ -666,7 +727,30 @@
         "title": "Camp suggestions for this break",
         "empty": "No matched camps yet — check back soon."
       },
-      "addToCalendar": "📅 Add to calendar"
+      "addToCalendar": "📅 Add to calendar",
+      "why": {
+        "heading": "Why is school closed?"
+      },
+      "affected": {
+        "singular": "Affects {name}",
+        "plural": "Affects {names}",
+        "allKids": "Affects all kids"
+      },
+      "activities": {
+        "heading": "Things to do without a camp",
+        "indoorPreferred": "Weather looks iffy — here are indoor picks first.",
+        "outdoorPreferred": "Great day to be outside.",
+        "empty": "No activities curated for this date yet.",
+        "suggestYours": "Suggest an activity"
+      },
+      "integrity": {
+        "fewerThan": "We've verified {count} camps for this date. We're still researching — check back soon.",
+        "none": "No camps verified for this date yet.",
+        "browseActivities": "Browse family activities instead →",
+        "shareDay": "Share this day",
+        "exportDay": "Export this day to calendar",
+        "linkCopied": "Link copied to clipboard"
+      }
     },
     "kid": {
       "subtitle": "School's out soon! Let's plan something awesome.",
@@ -741,7 +825,14 @@
       "toast": {
         "saved": "⭐ Saved {name}",
         "saveFailed": "Couldn't save that camp. Try again?"
-      }
+      },
+      "verifyingEmpty": {
+        "title": "We're verifying camps right now",
+        "body": "Every camp we show is admin-reviewed and has a working website. More verified listings land as our team finishes review — usually within a few days.",
+        "cta": "Browse family activities instead →"
+      },
+      "brokenWebsite": "Website offline — call to book",
+      "callToBook": "📞 Call camp to book"
     },
     "calendar": {
       "title": "School Calendar",
@@ -772,6 +863,28 @@
         "title": "Nothing here yet",
         "body": "Coming soon: reminders, messages from camps, and activity updates."
       }
+    },
+    "family": {
+      "title": "Your Family",
+      "subtitle": "Kids, their schools, and the next closures affecting each one.",
+      "editFamily": "Edit family",
+      "kidLabel": "Kid {n}",
+      "kidNumber": "Kid {n}",
+      "ageRange": {
+        "4-6": "Ages 4–6",
+        "7-9": "Ages 7–9",
+        "10-12": "Ages 10–12",
+        "13+": "Ages 13+"
+      },
+      "gradeLabel": "Grade {grade}",
+      "edit": "Edit",
+      "upcomingClosures": "Next closures",
+      "noUpcomingClosures": "No upcoming closures for this school yet.",
+      "addAnotherKid": "+ Add another kid",
+      "addKid": "Add a kid",
+      "emptyTitle": "No kids added yet",
+      "emptyBody": "Add a kid in Settings to see their school's closures and find matching camps.",
+      "inDays": "{count, plural, =0 {today} one {in # day} other {in # days}}"
     }
   },
   "kidInvalid": {
