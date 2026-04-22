@@ -144,7 +144,7 @@ export function CampDetailView({
 
             {camp.website_url ? (
               <a
-                href={camp.website_url}
+                href={`/api/camps/${camp.slug}/visit`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold px-4 py-3 text-sm font-black text-ink transition-colors hover:brightness-105"

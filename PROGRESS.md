@@ -342,3 +342,28 @@ After smoke test passes: distribute to Noah's school community (PTO email, NextD
 **Admin:** `/admin/calendar-review` and `/admin/camp-review` gated by `ADMIN_EMAILS` env var (comma-separated allowlist, matched case-insensitively). Approve / reject / bulk-approve / manual-add for closures; inline fill for camp logistics. No AI enrichment pipeline yet — manual admin entry is the honest path until we build review tooling around a scraper. School `calendar_status` auto-recomputes after every verify/bulk-verify/manual create based on school-year coverage (Aug→Jul windows).
 
 **Commits:** Subagent F `1aeb719`, Subagent G `06820ca`.
+
+## Admin dashboard — 2026-04-22
+
+Added real KPI dashboard at `/admin`. Honest baselines:
+- MRR: $0 (no Stripe yet; Featured tier unlocks at 1,000 MAU per PRD §7)
+- Camp clicks: tracking added today; historical data starts now
+- Kid profiles: server stores only `age_range` + `school_id` per COPPA; no grades/names in admin
+- Categories: flat aggregation of `camps.categories[]` — no separate categories table
+
+**New features:**
+- Camp application approval queue with inline form to convert application → camp row
+- Full camp admin (edit every field, toggle launch_partner with auto-90-day window)
+- User list with per-user breakdown (kids, age ranges, reminders, saved camps)
+- COPPA right-to-be-forgotten via `POST /api/admin/users/[id]/delete`
+- Email engagement dashboard (sent/opened/clicked per day)
+- City request demand signals (top cities)
+- Outbound click tracking via `camp_clicks` table + `/api/camps/[slug]/visit` redirect
+
+**New API routes:** /api/admin/{metrics,users,users/[id]/delete,users/[id]/detail,camp-applications,camp-applications/[id]/{approve,reject},camps,camps/[id]/{edit,toggle-launch-partner},reminders/stats,city-requests}, /api/camps/[slug]/visit
+
+**New admin pages:** /admin (overview), /admin/users, /admin/camp-applications, /admin/camps, /admin/reminders, /admin/city-requests, /admin/categories. Old /admin/calendar-review + /admin/camp-review kept alongside with nav links.
+
+**Migration 006:** `camp_clicks` table + `camps.is_launch_partner` + `camps.launch_partner_until`. Applied to hosted Supabase.
+
+**Commit:** `0b81664`.
