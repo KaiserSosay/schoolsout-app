@@ -14,7 +14,7 @@ Legend: ✅ done · ⏭️ skipped (reason) · ❌ failed (error) · ⏳ in prog
 | 2 | Install runtime + dev dependencies | ✅ | Vitest 4.1.5 config added; `pnpm test` exits 0 with `--passWithNoTests` |
 | 3 | Configure Tailwind design tokens | ✅ | Tailwind v3.4.1 (classic `tailwind.config.ts` route); Plus Jakarta Sans via `next/font/google`; scrubbed scaffold CSS overrides |
 | 4 | `.env.example` + env loader | ✅ | Zod 4 schema in `src/lib/env.ts`; tests stub env via `vi.stubEnv` + dynamic import (pattern required because `parse` runs at module load); `.env.local` already covered by `.env*.local` in `.gitignore` |
-| 5 | Initialize Supabase locally | ⏳ | |
+| 5 | Initialize Supabase locally | ⏭️ | `supabase init` succeeded (config.toml generated). `supabase start` attempted: Docker daemon available, but image pulls too slow and `public.ecr.aws/supabase/logflare:1.37.1` returned 429 Too Many Requests. Killed at 2-min cap per plan; ran `supabase stop --no-backup` to clean partial containers. Local DB will be wired to hosted Supabase in Task 25. |
 | 6 | Write initial schema migration | ⏳ | |
 | 7 | Seed Noah's school + closures | ⏳ | |
 | 8 | Supabase client helpers (browser + server + service) | ⏳ | |
@@ -78,6 +78,13 @@ Any `// DECISION:` comments added by implementers will be summarized here at the
 - **`.gitignore` untouched**: `.env*.local` on line 29 already matches `.env.local` (verified with `git check-ignore -v`). No append needed.
 - **Test location**: placed at `tests/lib/env.test.ts` (matching the plan). This is the first file in `tests/`; the directory was created fresh. Vitest picks it up automatically with the default glob.
 - **Build**: `pnpm run build` still succeeds (compiled, 5 static pages generated, no env var prompts).
+
+### Task 5
+- **`supabase init`**: ran non-interactively (no `-i` flag); defaults skipped the VSCode-settings prompt. Generated `supabase/config.toml` (14.8 KB) and `supabase/.gitignore` (already ignores `.branches/`, `.temp/`, `.env*.local`).
+- **Root `.gitignore`**: appended `supabase/.branches/` and `supabase/.temp/` per plan, even though the nested `supabase/.gitignore` already covers them — redundant but matches the plan spec and documents intent at the repo root.
+- **`supabase start` skipped**: Docker daemon *was* running (daemon check passed). But the image pull for `public.ecr.aws/supabase/logflare:1.37.1` returned `429 Too Many Requests` from ECR Public immediately, and the other twelve images were pulling at 1 MB/s per layer with many 1.049 MB/45.82 MB progress bars stalled in the output stream. Killed the background task at the 2-minute cap per plan. Ran `pnpm exec supabase stop --no-backup` to clean up any partial containers — exited cleanly with "Stopped supabase local development setup."
+- **Marked ⏭️ not ❌**: plan explicitly authorized skipping local start if it hangs >2 min; downstream tasks that need a live DB (migrations in Task 6, seed in Task 7, client helpers in Task 8) will need to target the hosted Supabase project once Task 25 provisions it. Alternately, re-running `supabase start` off-peak (when ECR Public isn't rate-limiting) would succeed — images were progressing, just too slowly.
+- **Credentials**: no `.env.local` written this task because the stack never reached "started" state and no API keys were emitted.
 
 ## Final summary
 
