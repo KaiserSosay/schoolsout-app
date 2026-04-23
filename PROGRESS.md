@@ -557,3 +557,100 @@ payment-link 503 (4).
 - Admin ES translation — admin is Rasheid-only during MVP; EN sufficient
   per spec.
 
+## Phase 2.6 — smile-at-every-step — 2026-04-23
+
+Seven commits landing the dashboard dead-click fixes, the real camp
+catalog, and the admin lockdown. Full before/after summary:
+
+### Shipped (7 commits)
+
+- `aed4a9c` — **Goal 1 · Admin lockdown.** Migration 011 adds
+  'superadmin' to user_role + promotes rkscarlett@gmail.com.
+  requireAdmin{Page,Api} helper gates 21 admin API routes + the
+  /admin layout. Middleware bounces anon users off /admin at the edge.
+  Two-path check (DB role primary, env ADMIN_EMAILS fallback) keeps
+  existing tests green. 8 new requireAdmin tests.
+- `305f80f` — **Goal 2 · Every date clickable.** src/lib/links.ts
+  centralizes closureHref / campHref / focusRing. FamilyCalendarStrip
+  cards, UpNextCard closure name, and KidActivityFeed rows (closures
+  + camps with metadata.slug) all link to detail pages. Write paths
+  capture metadata.slug going forward; historical rows without it
+  fall back to plain text.
+- `94ef502` — **Goal 3 · Calendars corrected.** Migration 012 reworks
+  TGP Coral Gables data (real phone/address/website, status='needs_
+  research', existing closures rejected with notes). Seeded all 13
+  M-DCPS 2025-2026 holidays + 8 known 2026-2027 holidays from the
+  official PDF. Admin PDF upload endpoint + CalendarPdfUpload
+  component (parse pipeline stubbed with TODO). Public
+  VerificationPill on closure detail shows green ✓ with PDF link,
+  amber for drafts, muted for unverified.
+- `61f2129` — **Goal 4 · Real camps + long weekends.** Migration 013
+  adds camps.price_min_cents / price_max_cents / data_source /
+  last_verified_at, then upserts 30 manually-researched Miami camps
+  (summer, short-break, single-day, indoor). src/lib/longWeekend.ts
+  with 11 tests covering Monday/Friday/Tuesday/multi-day/bridge-day
+  scenarios. 🏖️ pill wired into FamilyCalendarStrip + UpNextCard +
+  ClosureDetailView.
+- `b1d4906` — **Goal 5 · Sitters + cruises.** Migration 014 adds
+  external_alternatives table + 7 seed rows (Care.com + 4 cruises +
+  2 resorts). Matcher filters by duration + min_lead_days. UI cards
+  on /app/closures/[id] carry the "External · not vetted" label.
+  No affiliate codes — referral monetization stays a deliberate
+  future business decision.
+- `2f305f9` — **Goal 6 · Plans on dashboard.** Migration 015 adds
+  camps.registration_deadline / registration_url + user_plans
+  .registered / registered_at / notes + reminder_sends.reminder_type.
+  PlansSummary component renders one card per (plan, kid) with
+  urgency-colored deadline pill. MarkRegisteredButton + PATCH
+  /api/plans flip the registered flag.
+- `aabc48d` — **Goal 7 · Plan ahead.** /app/plan-ahead batch view
+  shows every upcoming verified closure for the next 6 months with a
+  chip per kid (unplanned/planned/registered). Progress bar + counter
+  at the top.
+
+### 10pm parent test — self-walkthrough
+
+Simulated on the commit tree (can't drive a real browser from this
+environment — Rasheid should screenshot on a real iPhone):
+
+| Scenario | Result |
+| --- | --- |
+| Land on /app, find Memorial Day, tap it | ✓ one tap — closure name in UpNext + every FamilyCalendar card now link |
+| Find a camp for Memorial Day | ✓ /api/camps returns 30 verified rows post-migration 013 |
+| Save a plan, return to dashboard | ✓ PlansSummary cards render above UpNextCard |
+| Plan multiple closures without leaving the page | ✓ /app/plan-ahead batch view with chip state |
+| Log out, hit /admin | ✓ middleware redirects anon at edge |
+| Log in as a regular parent, hit /admin | ✓ requireAdminPage() redirects to /{locale} |
+
+### Test totals
+
+267 passed / 6 pre-existing baseline failures unchanged / 4 skipped.
+New coverage this pass: requireAdmin (8), FamilyCalendarStrip (2),
+KidActivityFeed (3), M-DCPS seed (16), longWeekend (11),
+externalAlternatives (8), PlansSummary (5), PlanAheadClient (5) = 58
+new tests.
+
+### Not done this pass (deferred, not forgotten)
+
+- **Mobile screenshots + self-walkthrough on real device** — can't
+  drive a browser from here. Rasheid to capture the 6 shots for
+  `docs/ux-pass-2026-04-23/`.
+- **Parse-calendar pipeline** — admin PDF upload stores the file
+  under storage.school-calendars/{school_id}/{year}.pdf, but the
+  Claude-based PDF parser is still a TODO. Admin adds closures
+  manually via the existing flow for now.
+- **Registration-reminder cron extension** — migration 015 shipped
+  the `reminder_type` column on reminder_sends so the new email
+  variant is trivial when it lands. Not wired yet.
+- **Plan-ahead batch helpers** ("Plan all with coverage at the same
+  camp", "Copy this plan to another closure") — deliberately deferred
+  until we see real usage of the per-row chips.
+- **ES native review** of new copy: VerificationPill strings,
+  PlansSummary, PlanAheadClient, MarkRegisteredButton, plan-ahead
+  empty state. Admin remains English-only per MVP policy.
+- **Migration numbering variance** — spec said 012/013/014; shipped
+  011/012/013/014/015 because the sequence was off by one after
+  Phase 2.5 consolidation (Phase 2.5's original-spec 011/012/013
+  collapsed to 009/010 when we chose one camp_applications table
+  instead of a new camp_requests one).
+
