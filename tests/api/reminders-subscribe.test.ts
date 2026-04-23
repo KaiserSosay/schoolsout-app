@@ -19,7 +19,12 @@ const MAGIC_TOKEN = 'magic-token-xyz';
 
 const generateLinkMock = vi.fn();
 const updateMock = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) });
-const upsertMock = vi.fn().mockResolvedValue({ data: [], error: null });
+// DECISION: Route now chains `.select('id')` after upsert so the welcome
+// email can carry an HMAC-signed unsubscribe link for that subscription.
+// The mock must mimic the Supabase builder shape: upsert() returns an
+// object whose `.select()` returns a thenable with { data, error }.
+const upsertSelectMock = vi.fn().mockResolvedValue({ data: [{ id: 'sub-1' }], error: null });
+const upsertMock = vi.fn().mockReturnValue({ select: upsertSelectMock });
 
 // DECISION: The route now queries public.users BEFORE generateLink() to detect
 // new-vs-returning. The users .select().eq().maybeSingle() chain must be
@@ -116,6 +121,10 @@ describe('POST /api/reminders/subscribe', () => {
     // From is the "Noah at" friendly name on the verified hello@ mailbox.
     expect(sendArgs.from).toContain("Noah at School");
     expect(sendArgs.from).toContain('hello@schoolsout.net');
+    // Goal 2: welcome-email template is now in play — assert it carries an
+    // HMAC-signed unsubscribe link and the matching List-Unsubscribe header.
+    expect(sendArgs.html).toContain('/api/reminders/unsubscribe?sub=sub-1');
+    expect(sendArgs.headers?.['List-Unsubscribe']).toContain('sub=sub-1');
   });
 
   it('creates subscription + sends welcome-back email for RETURNING user (isReturning=true)', async () => {
@@ -160,6 +169,9 @@ describe('POST /api/reminders/subscribe', () => {
     expect(sendArgs.html).toContain(MAGIC_TOKEN);
     expect(sendArgs.html).toContain('type=magiclink');
     expect(sendArgs.subject).toMatch(/Qué bueno verte/);
+    // Returning users get the WelcomeBack template — assert the ES "Hola de
+    // nuevo" heading appears so we know the right component rendered.
+    expect(sendArgs.html).toMatch(/Hola de nuevo/);
   });
 
   it('still recovers via fallback link type when primary returns null user', async () => {

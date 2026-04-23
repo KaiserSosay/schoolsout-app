@@ -4,7 +4,10 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { env } from '@/lib/env';
-import { ConfirmEmail } from '@/lib/email/ConfirmEmail';
+import { WelcomeEmail } from '@/lib/email/WelcomeEmail';
+import { WelcomeBackEmail } from '@/lib/email/WelcomeBackEmail';
+import { welcomeSubject } from '@/lib/email/subjects';
+import { signToken } from '@/lib/tokens';
 
 const schema = z.object({
   email: z.string().email(),
@@ -136,39 +139,41 @@ export async function POST(req: Request) {
 
   await db.from('users').update({ preferred_language: locale }).eq('id', userId);
 
-  const { error } = await db
+  // DECISION (Goal 2): Capture the subscription id on upsert so we can build
+  // the HMAC-signed unsubscribe link for the welcome email footer — matching
+  // the pattern in src/app/api/cron/send-reminders/route.ts.
+  const { data: subRows, error } = await db
     .from('reminder_subscriptions')
     .upsert(
       { user_id: userId, school_id, age_range, enabled: true },
       { onConflict: 'user_id,school_id' },
-    );
+    )
+    .select('id');
   if (error) return NextResponse.json({ error: 'db_error' }, { status: 500 });
+  const subscriptionId = subRows?.[0]?.id as string | undefined;
+  const unsubscribeUrl = subscriptionId
+    ? `${env.APP_URL}/api/reminders/unsubscribe?sub=${subscriptionId}&sig=${signToken(subscriptionId)}`
+    : undefined;
 
   // DECISION: Gate the Resend send on env.RESEND_API_KEY existence for local dev.
   // DECISION: From-address stays `hello@schoolsout.net` — that's what the
-  // existing ConfirmEmail + ReminderEmail flows use and what the schoolsout.net
-  // Resend domain is verified for. Goal 2 introduces the "Noah at" friendly
-  // name while keeping the same verified `hello@` mailbox.
+  // existing ReminderEmail flow uses and what the schoolsout.net Resend
+  // domain is verified for. The "Noah at" friendly name (Cheers vibe)
+  // sits on the same verified mailbox.
   if (process.env.RESEND_API_KEY) {
-    // DECISION: Subject branches on isReturning so returning users see a
-    // warm "Welcome back" line instead of the subscription-confirmation
-    // subject. Body copy in ConfirmEmail still reads as "confirm your
-    // subscription" for this commit — Goal 2 swaps the template entirely.
-    const subject = isReturning
-      ? locale === 'es'
-        ? '¡Qué bueno verte! 👋'
-        : 'Welcome back 👋'
-      : locale === 'es'
-        ? "¡Ya estás dentro! Bienvenido a School's Out! 🎉"
-        : "You're in. Welcome to School's Out! 🎉";
+    const subject = welcomeSubject(isReturning, locale);
     try {
       const resend = new Resend(env.RESEND_API_KEY);
-      const html = await render(ConfirmEmail({ locale, confirmUrl: actionLink, isReturning }));
+      const template = isReturning
+        ? WelcomeBackEmail({ locale, magicLinkUrl: actionLink, unsubscribeUrl })
+        : WelcomeEmail({ locale, magicLinkUrl: actionLink, unsubscribeUrl });
+      const html = await render(template);
       await resend.emails.send({
         from: "Noah at School's Out! <hello@schoolsout.net>",
         to: email,
         subject,
         html,
+        headers: unsubscribeUrl ? { 'List-Unsubscribe': `<${unsubscribeUrl}>` } : undefined,
       });
     } catch (err) {
       // DECISION: If Resend send fails, log but don't fail the request — the
