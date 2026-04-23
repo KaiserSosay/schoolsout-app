@@ -96,7 +96,20 @@
     },
     "coppaConsent": "I'm a parent or legal guardian and consent to receive these emails.",
     "submit": "Remind me before every break",
-    "success": "Check your email to confirm your subscription.",
+    "success": {
+      "firstTimer": {
+        "heading": "You're in! 🎉",
+        "body": "Check {email} — we sent you a link to sign in. Use this same email every time you come back."
+      },
+      "returning": {
+        "heading": "Welcome back! 👋",
+        "body": "Check {email} — your sign-in link is waiting."
+      },
+      "resendHint": "Didn't get it? Check spam, or",
+      "resendLink": "resend link",
+      "resending": "Sending…",
+      "resent": "Sent ✓"
+    },
     "error": "Something went wrong. Please try again.",
     "errorFriendly": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help."
   },
@@ -150,6 +163,7 @@
       "error": "Something went wrong. Please try again.",
       "errorFriendly": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help.",
       "enterEmail": "Enter your email to get started.",
+      "newOrReturning": "New here? We'll create your spot. Been here before? Enter the same email and we'll send you a sign-in link.",
       "successCheckEmail": "Check your email at {email}",
       "successSubject": "Confirm your School's Out! reminder subscription",
       "successFrom": "School's Out! <hi@schoolsout.net>",

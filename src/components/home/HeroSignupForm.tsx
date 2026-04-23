@@ -4,15 +4,11 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeContext';
+import { obfuscateEmail } from '@/lib/email/obfuscate';
 
-// DECISION: mask the local-part down to first-char + stars, keep the domain.
-// Matches the GDPR-friendly pattern most email UIs already use in confirm flows.
-function maskEmail(email: string): string {
-  const [local, domain] = email.split('@');
-  if (!local || !domain) return email;
-  const first = local.charAt(0);
-  return `${first}***@${domain}`;
-}
+// DECISION: moved to src/lib/email/obfuscate.ts so the server route + every
+// client surface share one canonical implementation (Goal 1 warmth pass).
+const maskEmail = obfuscateEmail;
 
 // CSS-only confetti — rendered on first successful signup of the session.
 // Skipped entirely when prefers-reduced-motion is set.
@@ -55,11 +51,16 @@ export function HeroSignupForm({
   locale: string;
 }) {
   const t = useTranslations('landing.hero');
+  // DECISION (Goal 1 warmth pass): Reuse the shared reminderSignup.success
+  // namespace for the new-vs-returning copy. Keeps one source of truth for
+  // the wording across every signup surface.
+  const tSignup = useTranslations('reminderSignup');
   const { mode } = useMode();
 
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(true);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [isReturning, setIsReturning] = useState(false);
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent'>(
     'idle',
   );
@@ -92,7 +93,13 @@ export function HeroSignupForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, school_id: schoolId, age_range: 'all', locale }),
       });
-      setStatus(res.ok ? 'success' : 'error');
+      if (!res.ok) {
+        setStatus('error');
+        return;
+      }
+      const body = await res.json().catch(() => ({ isReturning: false }));
+      setIsReturning(Boolean(body?.isReturning));
+      setStatus('success');
     } catch {
       setStatus('error');
     }
@@ -132,6 +139,12 @@ export function HeroSignupForm({
   const btnKids = 'bg-cta-yellow text-purple-deep disabled:opacity-80 disabled:cursor-progress';
 
   if (status === 'success') {
+    const heading = isReturning
+      ? tSignup('success.returning.heading')
+      : tSignup('success.firstTimer.heading');
+    const body = isReturning
+      ? tSignup('success.returning.body', { email: maskEmail(email) })
+      : tSignup('success.firstTimer.body', { email: maskEmail(email) });
     return (
       <div
         id="signup"
@@ -140,20 +153,8 @@ export function HeroSignupForm({
       >
         {showConfetti && <Confetti />}
         <div className="rounded-2xl bg-success/10 border border-success/30 p-5 space-y-3 text-left">
-          <p className="font-bold text-ink">
-            ✅{' '}
-            {t('successCheckEmail', {
-              email: maskEmail(email),
-            })}
-          </p>
-          <div className="text-sm text-muted space-y-1">
-            <p>
-              <span className="font-semibold">Subject:</span> {t('successSubject')}
-            </p>
-            <p>
-              <span className="font-semibold">From:</span> {t('successFrom')}
-            </p>
-          </div>
+          <p className="font-bold text-ink">{heading}</p>
+          <p className="text-sm text-ink">{body}</p>
           <p className="text-xs text-muted">
             {t('successHint')}{' '}
             <button
@@ -235,6 +236,18 @@ export function HeroSignupForm({
           {t('enterEmail')}
         </p>
       ) : null}
+
+      {/* DECISION (Goal 1): pre-submit hint that explains new vs returning
+          behavior. Reassures returning users that the same email re-enters
+          their spot; nudges new users that we'll create it on first submit. */}
+      <p
+        className={
+          'text-xs text-center editorial-body ' +
+          (mode === 'parents' ? 'text-muted' : 'text-white/60')
+        }
+      >
+        {t('newOrReturning')}
+      </p>
 
       <label
         className={

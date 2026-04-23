@@ -3,6 +3,11 @@ import { Html, Body, Container, Heading, Text, Button, Hr } from '@react-email/c
 type Props = {
   locale: 'en' | 'es';
   confirmUrl: string;
+  // DECISION: Added in Goal 1 of the Phase 1.5 warmth pass so the route can
+  // pass through a new-vs-returning flag. Goal 2 swaps this template out
+  // entirely for WelcomeEmail + WelcomeBackEmail — this prop is deliberately
+  // a no-op for now so the interface is stable while both sides land.
+  isReturning?: boolean;
 };
 
 const copy = {
@@ -23,7 +28,10 @@ const copy = {
 // DECISION: Match ReminderEmail visual language — dark purple bg (#1a0b2e),
 // yellow CTA (#facc15), system font — so the confirmation feels like the
 // same brand as the reminder emails users will get later.
-export function ConfirmEmail({ locale, confirmUrl }: Props) {
+export function ConfirmEmail({ locale, confirmUrl, isReturning: _isReturning }: Props) {
+  // isReturning intentionally unused in Commit 1 body; Commit 2 replaces this
+  // template with WelcomeEmail + WelcomeBackEmail components.
+  void _isReturning;
   const c = copy[locale];
   return (
     <Html lang={locale}>

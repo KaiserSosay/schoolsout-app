@@ -96,7 +96,20 @@
     },
     "coppaConsent": "Soy madre, padre o tutor legal y doy mi consentimiento para recibir estos correos.",
     "submit": "Recuérdame antes de cada vacación",
-    "success": "Revisa tu correo para confirmar tu suscripción.",
+    "success": {
+      "firstTimer": {
+        "heading": "¡Ya estás dentro! 🎉",
+        "body": "Revisa {email} — te enviamos un enlace para entrar. Usa este mismo correo cada vez que vuelvas."
+      },
+      "returning": {
+        "heading": "¡Qué bueno verte! 👋",
+        "body": "Revisa {email} — tu enlace de acceso te está esperando."
+      },
+      "resendHint": "¿No lo recibiste? Revisa spam, o",
+      "resendLink": "reenviar enlace",
+      "resending": "Enviando…",
+      "resent": "Enviado ✓"
+    },
     "error": "Algo salió mal. Intenta de nuevo.",
     "errorFriendly": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos."
   },
@@ -150,6 +163,7 @@
       "error": "Algo salió mal. Intenta de nuevo.",
       "errorFriendly": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos.",
       "enterEmail": "Ingresa tu correo para empezar.",
+      "newOrReturning": "¿Primera vez? Te hacemos un lugar. ¿Ya estuviste? Usa el mismo correo y te mandamos un enlace de acceso.",
       "successCheckEmail": "Revisa tu correo en {email}",
       "successSubject": "Confirma tu suscripción a School's Out!",
       "successFrom": "School's Out! <hi@schoolsout.net>",

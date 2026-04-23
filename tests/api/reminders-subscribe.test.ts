@@ -20,9 +20,25 @@ const MAGIC_TOKEN = 'magic-token-xyz';
 const generateLinkMock = vi.fn();
 const updateMock = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) });
 const upsertMock = vi.fn().mockResolvedValue({ data: [], error: null });
+
+// DECISION: The route now queries public.users BEFORE generateLink() to detect
+// new-vs-returning. The users .select().eq().maybeSingle() chain must be
+// mockable — we expose `usersSelectMock` so each test can decide whether the
+// email corresponds to an existing user (returning) or not (new).
+const usersSelectMaybeSingleMock = vi.fn();
+
 const fromMock = vi.fn((table: string) => {
   if (table === 'reminder_subscriptions') return { upsert: upsertMock };
-  if (table === 'users') return { update: updateMock };
+  if (table === 'users') {
+    return {
+      update: updateMock,
+      select: () => ({
+        eq: () => ({
+          maybeSingle: usersSelectMaybeSingleMock,
+        }),
+      }),
+    };
+  }
   return {};
 });
 vi.mock('@/lib/supabase/service', () => ({
@@ -36,6 +52,7 @@ beforeEach(() => {
   sendMock.mockClear();
   generateLinkMock.mockReset();
   upsertMock.mockClear();
+  usersSelectMaybeSingleMock.mockReset();
 });
 
 describe('POST /api/reminders/subscribe', () => {
@@ -49,7 +66,10 @@ describe('POST /api/reminders/subscribe', () => {
     expect(res.status).toBe(400);
   });
 
-  it('creates subscription and sends branded confirmation email when user is new (invite path)', async () => {
+  it('creates subscription + sends invite email for NEW user (isReturning=false)', async () => {
+    // public.users returns no row → new user
+    usersSelectMaybeSingleMock.mockResolvedValueOnce({ data: null, error: null });
+
     generateLinkMock.mockResolvedValueOnce({
       data: {
         user: { id: 'user-1', email: 'a@b.com' },
@@ -75,30 +95,34 @@ describe('POST /api/reminders/subscribe', () => {
     }));
 
     expect(res.status).toBe(200);
-    // Only the invite generateLink was called (no fallback needed)
+    const body = await res.json();
+    expect(body).toMatchObject({ ok: true, isReturning: false });
+
+    // Primary (invite) generateLink called once — no fallback needed
     expect(generateLinkMock).toHaveBeenCalledTimes(1);
     expect(generateLinkMock).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'invite', email: 'a@b.com' }),
     );
     expect(sendMock).toHaveBeenCalledOnce();
+    const sendArgs = sendMock.mock.calls[0][0];
     // The HTML body must contain a link to our own /auth/callback with the
     // token_hash embedded — NOT the raw Supabase /auth/v1/verify action_link.
-    const sendArgs = sendMock.mock.calls[0][0];
     expect(sendArgs.html).toContain('/auth/callback');
     expect(sendArgs.html).toContain(INVITE_TOKEN);
     expect(sendArgs.html).toContain('type=invite');
-    // Confirm the raw Supabase verify URL does NOT leak into the email.
     expect(sendArgs.html).not.toContain('/auth/v1/verify');
-    expect(sendArgs.subject).toMatch(/Confirm your School's Out/);
+    // New-user subject is the warm "You're in" line, not the old "Confirm your subscription".
+    expect(sendArgs.subject).toMatch(/You(&#x27;|')re in/);
+    // From is the "Noah at" friendly name on the verified hello@ mailbox.
+    expect(sendArgs.from).toContain("Noah at School");
+    expect(sendArgs.from).toContain('hello@schoolsout.net');
   });
 
-  it('falls back to magiclink when user already exists (invite returns null user)', async () => {
-    // First call (invite) — user is null → fall back
-    generateLinkMock.mockResolvedValueOnce({
-      data: { user: null, properties: null },
-      error: { message: 'User already registered' },
-    });
-    // Second call (magiclink) — succeeds
+  it('creates subscription + sends welcome-back email for RETURNING user (isReturning=true)', async () => {
+    // public.users returns a row → returning user
+    usersSelectMaybeSingleMock.mockResolvedValueOnce({ data: { id: 'user-2' }, error: null });
+
+    // Primary type is magiclink now (returning) — succeeds on first call
     generateLinkMock.mockResolvedValueOnce({
       data: {
         user: { id: 'user-2', email: 'existing@b.com' },
@@ -124,14 +148,60 @@ describe('POST /api/reminders/subscribe', () => {
     }));
 
     expect(res.status).toBe(200);
-    expect(generateLinkMock).toHaveBeenCalledTimes(2);
-    expect(generateLinkMock.mock.calls[0][0]).toMatchObject({ type: 'invite' });
-    expect(generateLinkMock.mock.calls[1][0]).toMatchObject({ type: 'magiclink' });
+    const body = await res.json();
+    expect(body).toMatchObject({ ok: true, isReturning: true });
+
+    // Exactly one generateLink call — the primary magiclink path.
+    expect(generateLinkMock).toHaveBeenCalledTimes(1);
+    expect(generateLinkMock.mock.calls[0][0]).toMatchObject({ type: 'magiclink' });
     expect(sendMock).toHaveBeenCalledOnce();
     const sendArgs = sendMock.mock.calls[0][0];
     expect(sendArgs.html).toContain('/auth/callback');
     expect(sendArgs.html).toContain(MAGIC_TOKEN);
     expect(sendArgs.html).toContain('type=magiclink');
-    expect(sendArgs.subject).toMatch(/Confirma tu suscripción/);
+    expect(sendArgs.subject).toMatch(/Qué bueno verte/);
+  });
+
+  it('still recovers via fallback link type when primary returns null user', async () => {
+    // DECISION: Covers the safety-net branch — detection says "new" (invite)
+    // but invite somehow fails (e.g. race, stale users row). Route falls back
+    // to magiclink and still succeeds.
+    usersSelectMaybeSingleMock.mockResolvedValueOnce({ data: null, error: null });
+
+    // Primary (invite) — returns null user
+    generateLinkMock.mockResolvedValueOnce({
+      data: { user: null, properties: null },
+      error: { message: 'User already registered' },
+    });
+    // Fallback (magiclink) — succeeds
+    generateLinkMock.mockResolvedValueOnce({
+      data: {
+        user: { id: 'user-3', email: 'edge@b.com' },
+        properties: {
+          hashed_token: MAGIC_TOKEN,
+          verification_type: 'magiclink',
+          action_link: 'https://x.supabase.co/auth/v1/verify?token=raw3',
+        },
+      },
+      error: null,
+    });
+
+    const { POST } = await import('@/app/api/reminders/subscribe/route');
+    const res = await POST(new Request('http://localhost/api/reminders/subscribe', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: 'edge@b.com',
+        school_id: '00000000-0000-0000-0000-000000000001',
+        age_range: 'all',
+        locale: 'en',
+      }),
+    }));
+
+    expect(res.status).toBe(200);
+    expect(generateLinkMock).toHaveBeenCalledTimes(2);
+    expect(generateLinkMock.mock.calls[0][0]).toMatchObject({ type: 'invite' });
+    expect(generateLinkMock.mock.calls[1][0]).toMatchObject({ type: 'magiclink' });
+    expect(sendMock).toHaveBeenCalledOnce();
   });
 });

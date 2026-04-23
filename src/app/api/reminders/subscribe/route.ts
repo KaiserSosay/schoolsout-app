@@ -24,12 +24,18 @@ export async function POST(req: Request) {
   const { email, school_id, age_range, locale } = parsed.data;
   const db = createServiceSupabase();
 
-  // DECISION: Use generateLink() instead of inviteUserByEmail(). inviteUserByEmail
-  // sends Supabase's built-in English-only email from noreply@mail.app.supabase.io —
-  // which confused users (two emails, one without a link). generateLink RETURNS
-  // the action_link WITHOUT sending — we then embed it in our single branded
-  // bilingual Resend email.
-  //
+  // DECISION (Goal 1 warmth pass): Detect new-vs-returning BEFORE generating
+  // the auth link. This lets us pick the right Supabase link type up front
+  // (magiclink for returning, invite for new) AND lets the client render a
+  // different success pane. We query public.users — which is populated by
+  // our Supabase trigger for every auth.users insert — via service role.
+  const { data: existingRow } = await db
+    .from('users')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle();
+  const isReturning = Boolean(existingRow?.id);
+
   // DECISION: We do NOT embed the returned `action_link` directly. That link
   // hits Supabase's /auth/v1/verify endpoint, which on this project emits an
   // implicit-flow redirect (tokens in the URL hash fragment). A Server
@@ -55,39 +61,60 @@ export async function POST(req: Request) {
   // own callback URL but keep as a fallback for any system that inspects it.
   const inviteRedirect = `${env.APP_URL}/auth/callback?next=${encodeURIComponent(nextPath)}`;
 
-  const inviteResult = await db.auth.admin.generateLink({
-    type: 'invite',
+  // DECISION: Pick link type from the isReturning detection. Keep the
+  // invite→magiclink fallback as a safety net — if the public.users row is
+  // stale or a race condition causes invite to fail for an existing user,
+  // we still recover via magiclink.
+  const primaryType: 'invite' | 'magiclink' = isReturning ? 'magiclink' : 'invite';
+  const fallbackType: 'invite' | 'magiclink' = isReturning ? 'invite' : 'magiclink';
+
+  const primaryOptions =
+    primaryType === 'invite'
+      ? {
+          redirectTo: inviteRedirect,
+          data: { preferred_language: locale, coppa_consent_at: new Date().toISOString() },
+        }
+      : { redirectTo: inviteRedirect };
+
+  const primaryResult = await db.auth.admin.generateLink({
+    type: primaryType,
     email,
-    options: {
-      redirectTo: inviteRedirect,
-      data: { preferred_language: locale, coppa_consent_at: new Date().toISOString() },
-    },
+    options: primaryOptions,
   });
 
   if (
-    inviteResult.data?.properties?.hashed_token &&
-    inviteResult.data?.properties?.verification_type &&
-    inviteResult.data.user
+    primaryResult.data?.properties?.hashed_token &&
+    primaryResult.data?.properties?.verification_type &&
+    primaryResult.data.user
   ) {
-    tokenHash = inviteResult.data.properties.hashed_token;
-    verificationType = inviteResult.data.properties.verification_type;
-    userId = inviteResult.data.user.id;
+    tokenHash = primaryResult.data.properties.hashed_token;
+    verificationType = primaryResult.data.properties.verification_type;
+    userId = primaryResult.data.user.id;
   } else {
-    // DECISION: Fall back to magiclink when invite fails (user likely already
-    // exists). magiclink works for existing users; invite only works for new.
-    const magicResult = await db.auth.admin.generateLink({
-      type: 'magiclink',
+    // Fallback path — inverse link type. Preserves the pre-warmth-pass
+    // behavior of "invite first, magiclink on error" without the detection,
+    // just inverted by whatever we tried first.
+    const fallbackOptions =
+      fallbackType === 'invite'
+        ? {
+            redirectTo: inviteRedirect,
+            data: { preferred_language: locale, coppa_consent_at: new Date().toISOString() },
+          }
+        : { redirectTo: inviteRedirect };
+
+    const fallbackResult = await db.auth.admin.generateLink({
+      type: fallbackType,
       email,
-      options: { redirectTo: inviteRedirect },
+      options: fallbackOptions,
     });
     if (
-      magicResult.data?.properties?.hashed_token &&
-      magicResult.data?.properties?.verification_type &&
-      magicResult.data.user
+      fallbackResult.data?.properties?.hashed_token &&
+      fallbackResult.data?.properties?.verification_type &&
+      fallbackResult.data.user
     ) {
-      tokenHash = magicResult.data.properties.hashed_token;
-      verificationType = magicResult.data.properties.verification_type;
-      userId = magicResult.data.user.id;
+      tokenHash = fallbackResult.data.properties.hashed_token;
+      verificationType = fallbackResult.data.properties.verification_type;
+      userId = fallbackResult.data.user.id;
     }
   }
 
@@ -101,6 +128,7 @@ export async function POST(req: Request) {
   // redirect target when triaging. Useful evidence for future auth regressions.
   console.log('[subscribe] generated', {
     type: verificationType,
+    isReturning,
     hasLink: Boolean(actionLink),
     linkHost: new URL(actionLink).host,
     next: nextPath,
@@ -117,16 +145,27 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: 'db_error' }, { status: 500 });
 
   // DECISION: Gate the Resend send on env.RESEND_API_KEY existence for local dev.
+  // DECISION: From-address stays `hello@schoolsout.net` — that's what the
+  // existing ConfirmEmail + ReminderEmail flows use and what the schoolsout.net
+  // Resend domain is verified for. Goal 2 introduces the "Noah at" friendly
+  // name while keeping the same verified `hello@` mailbox.
   if (process.env.RESEND_API_KEY) {
-    const subject =
-      locale === 'es'
-        ? "Confirma tu suscripción a School's Out!"
-        : "Confirm your School's Out! reminder subscription";
+    // DECISION: Subject branches on isReturning so returning users see a
+    // warm "Welcome back" line instead of the subscription-confirmation
+    // subject. Body copy in ConfirmEmail still reads as "confirm your
+    // subscription" for this commit — Goal 2 swaps the template entirely.
+    const subject = isReturning
+      ? locale === 'es'
+        ? '¡Qué bueno verte! 👋'
+        : 'Welcome back 👋'
+      : locale === 'es'
+        ? "¡Ya estás dentro! Bienvenido a School's Out! 🎉"
+        : "You're in. Welcome to School's Out! 🎉";
     try {
       const resend = new Resend(env.RESEND_API_KEY);
-      const html = await render(ConfirmEmail({ locale, confirmUrl: actionLink }));
+      const html = await render(ConfirmEmail({ locale, confirmUrl: actionLink, isReturning }));
       await resend.emails.send({
-        from: "School's Out! <hello@schoolsout.net>",
+        from: "Noah at School's Out! <hello@schoolsout.net>",
         to: email,
         subject,
         html,
@@ -134,9 +173,11 @@ export async function POST(req: Request) {
     } catch (err) {
       // DECISION: If Resend send fails, log but don't fail the request — the
       // user can request another link, and the subscription is already saved.
+      // The client still receives isReturning so the success pane renders
+      // correctly regardless of email delivery.
       console.error('[subscribe] resend send failed', err);
     }
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, isReturning });
 }
