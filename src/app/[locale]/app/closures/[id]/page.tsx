@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { ClosureDetailView, type FamilyActivity } from '@/components/app/ClosureDetailView';
+import type { WizardKid, WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
 import { reasonFor } from '@/lib/closure-reasons';
 import { haversineMiles } from '@/lib/distance';
 
@@ -183,6 +184,39 @@ export default async function ClosureDetailPage({
 
   const whyText = reasonFor(closure.name);
 
+  // Fetch the user's saved plan for this closure (Goal 4).
+  const { data: existingPlan } = await supabase
+    .from('user_plans')
+    .select('id, plan_type, kid_names, camps, activities, created_at, updated_at')
+    .eq('user_id', user.id)
+    .eq('closure_id', closure.id)
+    .maybeSingle();
+
+  const initialPlan: WizardInitialPlan | null = existingPlan
+    ? {
+        id: existingPlan.id as string,
+        plan_type: existingPlan.plan_type as WizardInitialPlan['plan_type'],
+        kid_names: (existingPlan.kid_names as string[] | null) ?? [],
+        camps: (existingPlan.camps as string[] | null) ?? [],
+        activities: (existingPlan.activities as string[] | null) ?? [],
+      }
+    : null;
+
+  // Build WizardKid[] from server kid_profiles (names/grades are localStorage
+  // only — the client fills those in at render time via so-kids).
+  const { data: kidProfiles } = await supabase
+    .from('kid_profiles')
+    .select('ordinal, age_range, school_id')
+    .eq('user_id', user.id)
+    .order('ordinal', { ascending: true });
+
+  const wizardKids: WizardKid[] = (kidProfiles ?? []).map((k) => ({
+    ordinal: k.ordinal as number,
+    name: '', // filled in client-side from localStorage in the wizard
+    age_range: k.age_range as WizardKid['age_range'],
+    school_id: (k.school_id as string | null) ?? null,
+  }));
+
   return (
     <ClosureDetailView
       locale={locale}
@@ -193,10 +227,13 @@ export default async function ClosureDetailPage({
         end_date: closure.end_date,
         emoji: closure.emoji,
         school_name: schoolName,
+        school_id: closure.school_id as string | null,
       }}
       camps={displayCamps}
       activities={activities}
       whyText={whyText}
+      initialPlan={initialPlan}
+      wizardKids={wizardKids}
     />
   );
 }

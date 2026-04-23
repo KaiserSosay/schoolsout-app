@@ -5,6 +5,7 @@
 - [ ] Native Spanish-speaker review of `app.camps.distance.*`, `app.camps.hours.*`, `app.camps.care.*`, `app.camps.sort.*`, `app.camps.mustHave.*`, `app.camps.filter.*`, `app.camps.closure.sessionsPending` (Subagent F logistics UX — Claude-translated, never reviewed)
 - [ ] Native Spanish-speaker review of `reminderSignup.success.firstTimer/returning.*`, `reminderSignup.success.resend*`, `landing.hero.newOrReturning`, and the Goal 2 welcome/welcome-back email templates' ES copy (Phase 1.5 warmth pass Goals 1 + 2 — Claude-translated, never reviewed)
 - [ ] Native Spanish-speaker review of `about.*` (hero, body p1–p6, links, signature — Phase 1.5 Goal 3 About page — spec-provided ES, not native-reviewed)
+- [ ] Native Spanish-speaker review of `app.planThisDay.*` (wizard trigger, screens 1–3, nav — Phase 1.5 Goal 4 — Claude-translated except screen2 which uses spec-provided ES)
 - [ ] Lawyer-drafted COPPA consent + privacy policy + ToS
 - [ ] Resend domain verification (schoolsout.net SPF/DKIM)
 

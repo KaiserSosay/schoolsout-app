@@ -37,3 +37,13 @@ Every pull request, every subagent pass, every design decision is held against t
 If shipping a feature would require breaking a rule, stop. Either scope down the feature, add the missing data to make it honest, or ship a different feature. "We'll fix it later" is how trust erodes.
 
 One wrong Spring Break date costs us a parent forever. Design accordingly.
+
+## COPPA exceptions (documented)
+
+- **`user_plans.kid_names TEXT[]`** (migration 008). Kid display names are
+  plaintext server-stored for this table ONLY. Justification: the parent
+  opts in by saving a plan; the plan is shareable with a co-parent via the
+  closure URL; the user can delete via `DELETE /api/plans?closure_id=…`.
+  Everywhere else in the codebase (`kid_profiles`, localStorage `so-kids`,
+  reminder subscriptions), names are kept client-side. Do not add name
+  storage to new server tables without a comparable PM-authored exception.

@@ -451,3 +451,27 @@ The `?include_unverified=true` admin bypass on /api/camps has a caching behavior
 - `5ba86a1` — feat(trust): integrity filter, link checker, /app/family, closure activities
 - `b2ae34f` — fix(api): camps route force-dynamic so integrity filter isn't cached
 
+## Phase 1.5 warmth pass — 2026-04-22
+
+Four commits. Auth vibe + about page + the Plan This Day wizard.
+
+- Warm new-vs-returning detection on signup: `reminder_subscriptions.isReturning` flag branches success pane + email subject (Commit `5761cf3`)
+- `WelcomeEmail` + `WelcomeBackEmail` templates (Cheers-style). Noah as sender. Gold CTA, cream card, small `List-Unsubscribe` header (Commit `70a330b`)
+- `/about` page (EN + ES) with Noah's story, YouTube + BeSoGood links, motto card (Commit `06a2525`)
+- Plan This Day wizard — 3-screen bottom sheet. `user_plans` table + `/api/plans` + `/api/family-activities`. Closure detail now shows "✓ You have a plan" pill once saved (Commit `<fill after push>`)
+
+### COPPA exception (documented in `docs/UX_PRINCIPLES.md`)
+
+`user_plans.kid_names TEXT[]` stores plaintext display names — the one
+server-side place kid names live. Justification: parent explicitly opts in
+by saving a plan; the plan is shareable with a co-parent via the closure
+URL; deletable via `DELETE /api/plans?closure_id=…`. Everywhere else in
+the codebase names stay in `localStorage:so-kids`.
+
+Gated smoke test: /en/about + /es/about 200, footer links wired,
+/api/plans 401s unauthed, /api/family-activities returns activities,
+migration 008 visible in DB.
+
+Deferred to next pass: wizard's weather-fetch on screen 3 uses existing
+/api/weather; no separate cache.
+

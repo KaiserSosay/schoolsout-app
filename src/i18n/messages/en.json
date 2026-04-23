@@ -768,6 +768,52 @@
         "linkCopied": "Link copied to clipboard"
       }
     },
+    "planThisDay": {
+      "trigger": "Plan this day for me",
+      "saved": "✓ You have a plan for this day",
+      "edit": "Edit",
+      "close": "Close",
+      "screen1": {
+        "title": "Who's this day for?",
+        "emptyKids": "Add your kids first so I can match plans to them",
+        "goToFamily": "Open Family settings →"
+      },
+      "screen2": {
+        "title": "What do you need?",
+        "coverage": {
+          "title": "Full-day coverage",
+          "subtitle": "I have to work"
+        },
+        "activities": {
+          "title": "Activities together",
+          "subtitle": "I'm off too, just need ideas"
+        },
+        "mix": {
+          "title": "A mix",
+          "subtitle": "Coverage for some kids, activities for others"
+        }
+      },
+      "screen3": {
+        "title": "Your plan",
+        "campsHeading": "Camps",
+        "activitiesHeading": "Things to do",
+        "empty": "Nothing matched — try a different plan type.",
+        "noCamps": "No verified camps open for this day yet — activities only.",
+        "save": "Save this plan",
+        "saveSuccess": "Saved ✨",
+        "saveFailed": "Couldn't save — try again?",
+        "share": "Share with co-parent",
+        "shareCopied": "Link copied!",
+        "shareFailed": "Couldn't share — copy the URL from the browser bar.",
+        "shareText": "Here's our plan for {closureName}",
+        "remove": "Remove plan",
+        "removeConfirm": "Remove this plan? Your saved camps stay saved."
+      },
+      "nav": {
+        "next": "Next →",
+        "back": "← Back"
+      }
+    },
     "kid": {
       "subtitle": "School's out soon! Let's plan something awesome.",
       "tapHint": "Tap for camps, weather & ideas",

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { daysUntil, countdownColor } from '@/lib/countdown';
+import { PlanThisDayWizard, type WizardKid, type WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
 
 type Closure = {
   id: string;
@@ -13,6 +14,7 @@ type Closure = {
   end_date: string;
   emoji: string;
   school_name: string;
+  school_id?: string | null;
 };
 
 type Camp = {
@@ -92,18 +94,46 @@ export function ClosureDetailView({
   camps,
   activities = [],
   whyText = null,
+  initialPlan = null,
+  wizardKids = [],
 }: {
   locale: string;
   closure: Closure;
   camps: Camp[];
   activities?: FamilyActivity[];
   whyText?: string | null;
+  initialPlan?: WizardInitialPlan | null;
+  wizardKids?: WizardKid[];
 }) {
   const { mode } = useMode();
   const t = useTranslations();
   const isKids = mode === 'kids';
 
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [plan, setPlan] = useState<WizardInitialPlan | null>(initialPlan);
+  const [mergedKids, setMergedKids] = useState<WizardKid[]>(wizardKids);
+
+  // Merge server kid_profiles (ordinal + age_range + school_id) with
+  // localStorage so-kids (name + grade) so the wizard can render names
+  // while the server never stores them (except via user_plans explicit opt-in).
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem('so-kids') : null;
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as Array<{ name?: string; grade?: string }>;
+      if (!Array.isArray(parsed)) return;
+      setMergedKids(
+        wizardKids.map((k, i) => ({
+          ...k,
+          name: parsed[i]?.name ?? k.name,
+          grade: parsed[i]?.grade ?? k.grade,
+        })),
+      );
+    } catch {
+      // ignore malformed localStorage
+    }
+  }, [wizardKids]);
 
   useEffect(() => {
     let cancelled = false;
@@ -228,6 +258,33 @@ export function ClosureDetailView({
             </div>
           )}
         </section>
+
+        {!isKids && (
+          plan ? (
+            <section
+              className="flex flex-wrap items-center gap-2 rounded-2xl bg-white border border-cream-border px-4 py-3"
+              data-testid="plan-pill"
+            >
+              <span className="flex-1 font-semibold text-ink">{t('app.planThisDay.saved')}</span>
+              <button
+                type="button"
+                onClick={() => setWizardOpen(true)}
+                className="min-h-[44px] px-4 py-2 rounded-full border border-ink/20 font-semibold text-ink hover:bg-ink/5"
+              >
+                {t('app.planThisDay.edit')}
+              </button>
+            </section>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setWizardOpen(true)}
+              className="w-full h-14 rounded-2xl bg-gold text-ink font-bold text-lg hover:-translate-y-0.5 transition"
+              data-testid="plan-trigger"
+            >
+              ✨ {t('app.planThisDay.trigger')}
+            </button>
+          )
+        )}
 
         <section className="space-y-3">
           <h2 className={'text-xl font-bold ' + (isKids ? 'text-white' : 'text-ink')}>
@@ -364,6 +421,29 @@ export function ClosureDetailView({
           📥 {t('app.closure.addToCalendar')}
         </a>
       </div>
+
+      {!isKids && (
+        <PlanThisDayWizard
+          locale={locale}
+          open={wizardOpen}
+          onClose={() => setWizardOpen(false)}
+          closure={{
+            id: closure.id,
+            name: closure.name,
+            start_date: closure.start_date,
+            school_id: closure.school_id ?? null,
+          }}
+          kids={mergedKids}
+          initialPlan={plan}
+          onSaved={(planId) =>
+            setPlan((prev) => ({
+              id: planId,
+              plan_type: prev?.plan_type ?? 'coverage',
+            }))
+          }
+          onRemoved={() => setPlan(null)}
+        />
+      )}
     </main>
   );
 }

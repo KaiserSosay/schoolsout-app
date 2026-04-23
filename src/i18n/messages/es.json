@@ -768,6 +768,52 @@
         "linkCopied": "Enlace copiado al portapapeles"
       }
     },
+    "planThisDay": {
+      "trigger": "Arma mi día",
+      "saved": "✓ Ya tienes un plan para este día",
+      "edit": "Editar",
+      "close": "Cerrar",
+      "screen1": {
+        "title": "¿Para quién es este día?",
+        "emptyKids": "Agrega a tus hijos primero para poder armar un plan a la medida",
+        "goToFamily": "Abrir Ajustes de Familia →"
+      },
+      "screen2": {
+        "title": "¿Qué necesitas?",
+        "coverage": {
+          "title": "Cobertura de día completo",
+          "subtitle": "Tengo que trabajar"
+        },
+        "activities": {
+          "title": "Actividades juntos",
+          "subtitle": "Yo también tengo libre, solo quiero ideas"
+        },
+        "mix": {
+          "title": "Una mezcla",
+          "subtitle": "Cobertura para unos, actividades para otros"
+        }
+      },
+      "screen3": {
+        "title": "Tu plan",
+        "campsHeading": "Campamentos",
+        "activitiesHeading": "Qué hacer",
+        "empty": "Nada coincidió — prueba otro tipo de plan.",
+        "noCamps": "Aún no hay campamentos verificados abiertos este día — solo actividades.",
+        "save": "Guardar este plan",
+        "saveSuccess": "¡Guardado! ✨",
+        "saveFailed": "No se pudo guardar — ¿intentar de nuevo?",
+        "share": "Compartir con co-padre",
+        "shareCopied": "¡Enlace copiado!",
+        "shareFailed": "No se pudo compartir — copia la URL desde el navegador.",
+        "shareText": "Este es nuestro plan para {closureName}",
+        "remove": "Quitar plan",
+        "removeConfirm": "¿Quitar este plan? Tus campamentos guardados se quedan guardados."
+      },
+      "nav": {
+        "next": "Siguiente →",
+        "back": "← Atrás"
+      }
+    },
     "kid": {
       "subtitle": "¡Se acerca un día sin escuela! Vamos a planear algo genial.",
       "tapHint": "Toca para ver campamentos, clima e ideas",
