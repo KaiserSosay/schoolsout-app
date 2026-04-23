@@ -91,6 +91,48 @@ export async function POST(req: Request) {
   return NextResponse.json({ id: data.id, created_at: data.created_at, updated_at: data.updated_at });
 }
 
+// PATCH — flip registered flag on an existing plan. Returns the updated
+// row. Used by MarkRegisteredButton after the parent confirms on the
+// camp's registration site.
+const patchSchema = z.object({
+  plan_id: z.guid(),
+  registered: z.boolean(),
+});
+
+export async function PATCH(req: Request) {
+  const sb = createServerSupabase();
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+
+  const json = await req.json().catch(() => null);
+  const parsed = patchSchema.safeParse(json);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'invalid_body' }, { status: 400 });
+  }
+
+  const update: Record<string, unknown> = {
+    registered: parsed.data.registered,
+    updated_at: new Date().toISOString(),
+  };
+  if (parsed.data.registered) update.registered_at = new Date().toISOString();
+  else update.registered_at = null;
+
+  const { data, error } = await sb
+    .from('user_plans')
+    .update(update)
+    .eq('id', parsed.data.plan_id)
+    .eq('user_id', user.id)
+    .select('id, registered, registered_at')
+    .maybeSingle();
+  if (error) {
+    return NextResponse.json({ error: 'db_error', detail: error.message }, { status: 500 });
+  }
+  if (!data) return NextResponse.json({ error: 'not_found' }, { status: 404 });
+  return NextResponse.json({ ok: true, plan: data });
+}
+
 export async function DELETE(req: Request) {
   const sb = createServerSupabase();
   const {

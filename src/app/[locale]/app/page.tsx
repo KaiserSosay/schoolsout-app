@@ -127,6 +127,90 @@ export default async function AppPage({
   }));
   const savesCount = savesResp.count ?? saves.length;
 
+  // Load this user's upcoming plans + join linked camps for deadline info.
+  type PlanRow = {
+    id: string;
+    closure_id: string;
+    plan_type: 'coverage' | 'activities' | 'mix';
+    kid_names: string[];
+    camps: string[];
+    registered: boolean;
+  };
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: planRows } = await sb
+    .from('user_plans')
+    .select('id, closure_id, plan_type, kid_names, camps, registered')
+    .eq('user_id', user.id);
+
+  const plans: import('@/components/app/PlansSummary').PlanCard[] = [];
+  if (planRows && planRows.length > 0) {
+    const closureIds = Array.from(new Set(planRows.map((p) => p.closure_id)));
+    const allCampIds = Array.from(
+      new Set((planRows as PlanRow[]).flatMap((p) => p.camps ?? [])),
+    );
+    const [closuresResp, campsResp] = await Promise.all([
+      sb
+        .from('closures')
+        .select('id, name, start_date, emoji')
+        .in('id', closureIds)
+        .gte('start_date', today),
+      allCampIds.length
+        ? sb
+            .from('camps')
+            .select('id, name, registration_deadline, registration_url')
+            .in('id', allCampIds)
+        : Promise.resolve({ data: [] as Array<{ id: string; name: string; registration_deadline: string | null; registration_url: string | null }> }),
+    ]);
+    const closureById = new Map(
+      (closuresResp.data ?? []).map((c) => [c.id as string, c as { id: string; name: string; start_date: string; emoji: string }]),
+    );
+    type CampRow = {
+      id: string;
+      name: string;
+      registration_deadline: string | null;
+      registration_url: string | null;
+    };
+    const campById = new Map(
+      (campsResp.data as CampRow[] | null ?? []).map((c) => [c.id, c]),
+    );
+    for (const p of planRows as PlanRow[]) {
+      const c = closureById.get(p.closure_id);
+      if (!c) continue; // past closure — skip
+      const linkedCamps = (p.camps ?? [])
+        .map((id) => campById.get(id))
+        .filter(Boolean) as CampRow[];
+      const campNames = linkedCamps.map((c) => c.name);
+      const deadlines = linkedCamps
+        .map((c) => c.registration_deadline)
+        .filter((d): d is string => Boolean(d))
+        .sort();
+      const registrationUrl =
+        linkedCamps.find((c) => c.registration_url)?.registration_url ?? null;
+      // One card per kid if kid_names present, else one anonymous card.
+      const names = p.kid_names.length > 0 ? p.kid_names : ['Your kid'];
+      for (const kid of names) {
+        plans.push({
+          plan_id: p.id,
+          closure: {
+            id: c.id,
+            name: c.name,
+            start_date: c.start_date,
+            emoji: c.emoji,
+          },
+          kid_name: kid,
+          plan_type: p.plan_type,
+          camp_names: campNames,
+          registration_deadline: deadlines[0] ?? null,
+          registration_url: registrationUrl,
+          registered: p.registered,
+        });
+      }
+    }
+    plans.sort((a, b) =>
+      a.closure.start_date.localeCompare(b.closure.start_date),
+    );
+  }
+
   return (
     <DashboardRouter
       locale={locale}
@@ -136,6 +220,7 @@ export default async function AppPage({
       saves={saves}
       savesCount={savesCount}
       activity={activityResp.data ?? []}
+      plans={plans}
     />
   );
 }

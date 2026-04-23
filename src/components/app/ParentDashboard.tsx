@@ -9,6 +9,7 @@ import { ReminderBanner } from './ReminderBanner';
 import { WishlistSection } from './WishlistSection';
 import { QuickActions } from './QuickActions';
 import { KidActivityFeed } from './KidActivityFeed';
+import { PlansSummary } from './PlansSummary';
 import { VerifyingCalendarsCard } from './VerifyingCalendarsCard';
 import type { SchoolStatus } from '@/lib/school-status';
 
@@ -64,6 +65,7 @@ export function ParentDashboard({
   saves,
   savesCount,
   activity,
+  plans,
 }: {
   locale: string;
   displayName: string | null;
@@ -72,6 +74,7 @@ export function ParentDashboard({
   saves: Save[];
   savesCount: number;
   activity: Activity[];
+  plans: import('./PlansSummary').PlanCard[];
 }) {
   const t = useTranslations('app.dashboard');
 
@@ -101,6 +104,12 @@ export function ParentDashboard({
         closures={closures}
         savesCount={savesCount}
         locale={locale}
+      />
+
+      <PlansSummary
+        cards={plans}
+        locale={locale}
+        hasUpcomingClosures={closures.length > 0}
       />
 
       {closures[0] ? (

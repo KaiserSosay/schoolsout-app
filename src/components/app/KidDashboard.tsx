@@ -78,6 +78,7 @@ export function KidDashboard({
   saves: Save[];
   savesCount: number;
   activity: Activity[];
+  plans: import('./PlansSummary').PlanCard[];
 }) {
   const t = useTranslations('app.kid');
   const tDash = useTranslations('app.dashboard.upNext');

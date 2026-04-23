@@ -4,6 +4,7 @@ import { useMode } from './ModeProvider';
 import { ParentDashboard } from './ParentDashboard';
 import { KidDashboard } from './KidDashboard';
 import type { Closure } from '@/lib/closures';
+import type { PlanCard } from './PlansSummary';
 
 type ClosureWithSchool = Closure & { schoolName: string | null };
 
@@ -57,6 +58,7 @@ export function DashboardRouter(props: {
   saves: Save[];
   savesCount: number;
   activity: Activity[];
+  plans: PlanCard[];
 }) {
   const { mode } = useMode();
   if (mode === 'kids') return <KidDashboard {...props} />;
