@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { daysUntil, countdownColor } from '@/lib/countdown';
 import { PlanThisDayWizard, type WizardKid, type WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
+import { AppBreadcrumb } from '@/components/app/AppBreadcrumb';
 
 type Closure = {
   id: string;
@@ -170,15 +171,10 @@ export function ClosureDetailView({
   return (
     <main className={pageClass}>
       <div className="max-w-2xl mx-auto space-y-6">
-        <Link
+        <AppBreadcrumb
           href={`/${locale}/app/calendar`}
-          className={
-            'inline-flex items-center gap-2 text-sm font-semibold transition ' +
-            (isKids ? 'text-white/70 hover:text-white' : 'text-muted hover:text-ink')
-          }
-        >
-          {t('app.closure.back')}
-        </Link>
+          where={t('app.nav.calendar')}
+        />
 
         <header className="space-y-3 text-center">
           <div className="text-7xl" aria-hidden="true">{closure.emoji}</div>

@@ -1,15 +1,10 @@
 import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { ModeProvider } from '@/components/app/ModeProvider';
-import { AppHeader } from '@/components/app/AppHeader';
-import { BottomNav } from '@/components/app/BottomNav';
+import { AppShell } from '@/components/app/AppShell';
 
 export const dynamic = 'force-dynamic';
 
-// DECISION: Auth guard at the layout level. Any un-authed user who browses
-// /en/app or deeper gets bounced to /{locale} (the marketing page). We also
-// pre-load `display_name` here so the header can greet by initial without a
-// second round-trip.
 export default async function AppLayout({
   children,
   params,
@@ -32,13 +27,13 @@ export default async function AppLayout({
 
   return (
     <ModeProvider>
-      <AppHeader
+      <AppShell
         locale={locale}
         email={user.email ?? ''}
         displayName={userRow?.display_name ?? null}
-      />
-      <main className="animate-page-in pb-24 md:pb-12">{children}</main>
-      <BottomNav locale={locale} />
+      >
+        {children}
+      </AppShell>
     </ModeProvider>
   );
 }

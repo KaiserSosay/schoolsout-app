@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { SaveCampButton } from './SaveCampButton';
 import { useMode } from './ModeProvider';
+import { AppBreadcrumb } from './AppBreadcrumb';
 
 // DECISION: Client component that owns the mode-aware styling for the camp
 // detail page. The outer page stays a Server Component for auth + data fetch;
@@ -35,6 +35,7 @@ export function CampDetailView({
   locale: string;
 }) {
   const t = useTranslations('app.camps');
+  const tNav = useTranslations('app.nav');
   const { mode } = useMode();
   const isParents = mode === 'parents';
 
@@ -53,18 +54,13 @@ export function CampDetailView({
     ? 'border border-cream-border bg-white text-muted'
     : 'border border-white/20 bg-white/10 text-white/70';
   const descCls = isParents ? 'text-ink/80' : 'text-white/80';
-  const backCls = isParents
-    ? 'text-muted hover:text-ink'
-    : 'text-white/60 hover:text-white';
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 md:px-6 md:py-10">
-      <Link
+      <AppBreadcrumb
         href={`/${locale}/app/camps`}
-        className={'inline-flex items-center gap-1 text-sm font-bold ' + backCls}
-      >
-        ← {t('backToCamps')}
-      </Link>
+        where={tNav('camps')}
+      />
 
       <div className={'mt-4 overflow-hidden rounded-3xl ' + cardCls}>
         {camp.image_url ? (

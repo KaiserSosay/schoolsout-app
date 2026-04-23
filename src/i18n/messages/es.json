@@ -497,12 +497,6 @@
       "settings": "Ajustes",
       "changeLanguage": "Cambiar idioma"
     },
-    "bottomNav": {
-      "calendar": "Calendario",
-      "camps": "Campamentos",
-      "saved": "Guardados",
-      "inbox": "Mensajes"
-    },
     "onboarding": {
       "title": "Cuéntanos de tu familia",
       "subtitle": "Adaptaremos cada cierre, campamento y cuenta regresiva a tus hijos.",
@@ -947,6 +941,27 @@
       "emptyTitle": "Aún no has agregado hijos",
       "emptyBody": "Agrega un hijo en Ajustes para ver las vacaciones de su escuela y encontrar campamentos.",
       "inDays": "{count, plural, =0 {hoy} one {en # día} other {en # días}}"
+    },
+    "nav": {
+      "home": "Inicio",
+      "calendar": "Calendario",
+      "camps": "Campamentos",
+      "saved": "Guardados",
+      "family": "Familia",
+      "profile": "Perfil",
+      "settings": "Ajustes",
+      "about": "Acerca de",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "logout": "Cerrar sesión",
+      "idea": "¿Tienes una idea?",
+      "notifications": "Notificaciones",
+      "backTo": "Volver a {where}",
+      "switchToKidMode": "Cambiar a Modo Niño",
+      "switchToParentMode": "Cambiar a Modo Padres",
+      "openUserMenu": "Abrir menú",
+      "notificationsEmpty": "Sin notificaciones aún. Los recordatorios por correo aparecerán aquí.",
+      "notificationsTitle": "Actividad reciente"
     }
   },
   "kidInvalid": {

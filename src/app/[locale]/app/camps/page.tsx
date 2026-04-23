@@ -5,7 +5,6 @@ import { CampCard, type CampCardCamp } from '@/components/app/CampCard';
 import { CampFilters } from '@/components/app/CampFilters';
 import { CampSortControl, type FromOption } from '@/components/app/CampSortControl';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
-import { CampsBackLink } from '@/components/app/CampsBackLink';
 import { CampsEmpty } from '@/components/app/CampsEmpty';
 import { haversineMiles } from '@/lib/distance';
 
@@ -195,10 +194,6 @@ export default async function CampsPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:px-6 md:py-10">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <CampsBackLink href={`/${locale}/app`} label={t('back')} />
-      </div>
-
       <AppPageHeader
         eyebrow="PLAN"
         title={t('title')}
