@@ -55,9 +55,19 @@ export function PlansSummary({
 
   return (
     <section>
-      <h3 className="mb-3 text-xs font-black uppercase tracking-wider text-muted">
-        Your plans
-      </h3>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h3 className="text-xs font-black uppercase tracking-wider text-muted">
+          Your plans
+        </h3>
+        <Link
+          href={`/${locale}/app/plan-ahead`}
+          className={
+            'text-xs font-bold text-brand-purple hover:underline ' + focusRing
+          }
+        >
+          Plan ahead →
+        </Link>
+      </div>
       <ul className="grid gap-3 md:grid-cols-2">
         {cards.map((c) => (
           <li key={c.plan_id + '-' + c.kid_name}>
