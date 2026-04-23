@@ -1024,5 +1024,99 @@
       "generic": "Algo salió mal. ¿Intentar de nuevo?",
       "email": "Agrega tu correo para que Noah pueda responderte."
     }
+  },
+  "listYourCamp": {
+    "meta": {
+      "title": "Registra tu campamento — School's Out!",
+      "description": "¿Tienes un campamento? Agrega tu ficha y padres de Miami te van a encontrar."
+    },
+    "eyebrow": "PARA OPERADORES",
+    "title": "Registra tu campamento.",
+    "subtitle": "Un formulario. Revisamos en dos días hábiles y te avisamos.",
+    "form": {
+      "email": "Tu correo",
+      "yourName": "Tu nombre (opcional)",
+      "businessName": "Nombre del negocio",
+      "campName": "Campamento / programa",
+      "website": "Sitio web",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "neighborhood": "Barrio",
+      "ageMin": "Edad mínima",
+      "ageMax": "Edad máxima",
+      "priceMin": "Precio desde (USD)",
+      "priceMax": "Precio hasta (USD)",
+      "categories": "Categorías (separadas por coma)",
+      "description": "Cuéntanos sobre tu programa",
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando…",
+      "responseTime": "Revisamos en dos días hábiles.",
+      "error": "Algo salió mal. ¿Intentar de nuevo?",
+      "success": {
+        "title": "Recibimos tu solicitud.",
+        "subtitle": "Revisamos en dos días hábiles y te escribimos."
+      }
+    }
+  },
+  "admin": {
+    "tabs": {
+      "featureRequests": "Feature requests",
+      "campRequests": "Camp requests",
+      "calendarReviews": "Calendar reviews",
+      "integrity": "Integrity",
+      "users": "Users"
+    },
+    "pills": {
+      "featureRequests": "Feature requests",
+      "campRequests": "Camp requests",
+      "calendarReviews": "Calendar reviews",
+      "integrityWarnings": "Integrity warnings",
+      "users": "Users"
+    },
+    "empty": {
+      "featureRequests": "No new feedback. When a parent sends you an idea it lands here.",
+      "campRequests": "No pending camp requests. Share the /list-your-camp link to get operators in the door."
+    },
+    "featureRequests": {
+      "selectPrompt": "Select a feedback item to respond.",
+      "actions": {
+        "acknowledge": "Acknowledge",
+        "replyAndInProgress": "Reply & mark in progress",
+        "markShipped": "Mark shipped",
+        "wontDo": "Won't do"
+      },
+      "statusBadges": {
+        "new": "New",
+        "acknowledged": "Acknowledged",
+        "in_progress": "In progress",
+        "shipped": "Shipped",
+        "wont_do": "Won't do"
+      },
+      "responseLabel": "Your reply (sent via email)",
+      "responsePlaceholder": "I read this yesterday — here's what I'm going to do…",
+      "submitter": {
+        "anon": "Anonymous",
+        "loggedIn": "Member"
+      }
+    },
+    "campRequests": {
+      "selectPrompt": "Select a camp request to review.",
+      "actions": {
+        "approve": "Approve & create camp",
+        "sendPaymentLink": "Send payment link",
+        "manageBilling": "Copy billing portal link",
+        "deny": "Deny"
+      },
+      "stripeNotConfigured": "Stripe not configured — ask Rasheid to finish setup.",
+      "statusBadges": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "denied": "Denied",
+        "payment_sent": "Payment sent",
+        "paid": "Paid",
+        "active": "Active"
+      }
+    }
   }
 }

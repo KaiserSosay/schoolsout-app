@@ -1,167 +1,278 @@
-import Link from 'next/link';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { env } from '@/lib/env';
+import { AdminPillStrip, type PillCounts } from '@/components/admin/AdminPillStrip';
+import { AdminTabsNav } from '@/components/admin/AdminTabsNav';
+import {
+  FeatureRequestsPanel,
+  type AdminFeatureRequest,
+} from '@/components/admin/FeatureRequestsPanel';
+import {
+  CampRequestsPanel,
+  type AdminCampRequest,
+} from '@/components/admin/CampRequestsPanel';
+import { CalendarReviewClient } from '@/components/admin/CalendarReviewClient';
+import { UsersClient, type AdminUserRow } from '@/components/admin/UsersClient';
+import type { SchoolStatus } from '@/lib/school-status';
 
 export const dynamic = 'force-dynamic';
 
-// DECISION: Fetch metrics server-side rather than hitting our own /api/admin/metrics
-// via HTTP — we already have an auth guard at the layout level and a service
-// client here. No network hop, no self-fetch quirks, faster first paint.
+const VALID_TABS = [
+  'feature-requests',
+  'camp-requests',
+  'calendar-reviews',
+  'integrity',
+  'users',
+] as const;
+type Tab = (typeof VALID_TABS)[number];
 
-type Metrics = {
-  generatedAt: string;
-  users: {
-    total: number;
-    newLast7Days: number;
-    newLast30Days: number;
-    last7DaysByDay: Array<{ date: string; count: number }>;
-  };
-  kidProfiles: {
-    total: number;
-    byAgeRange: Record<string, number>;
-  };
-  reminders: {
-    activeSubscriptions: number;
-    totalSent: number;
-    totalOpened: number;
-    totalClicked: number;
-    openRatePct: number;
-    clickRatePct: number;
-  };
-  schools: {
-    total: number;
-    verifiedCurrent: number;
-    verifiedMultiYear: number;
-    needsResearch: number;
-    aiDraft: number;
-    unavailable: number;
-  };
-  camps: {
-    total: number;
-    verified: number;
-    logisticsVerified: number;
-    launchPartners: number;
-    featured: number;
-  };
-  campApplications: { pending: number; approved: number; rejected: number };
-  savedCamps: number;
-  campClicks: { total: number; last7Days: number; last30Days: number };
-  cityRequests: {
-    total: number;
-    topCities: Array<{ city: string; count: number }>;
-  };
-  mrr: { cents: number; note: string };
-};
-
-function dayKey(d: Date): string {
-  return d.toISOString().slice(0, 10);
-}
-function daysAgo(n: number): Date {
-  const d = new Date();
-  d.setUTCHours(0, 0, 0, 0);
-  d.setUTCDate(d.getUTCDate() - n);
-  return d;
+function normalizeTab(raw: string | undefined): Tab {
+  return (VALID_TABS as readonly string[]).includes(raw ?? '')
+    ? (raw as Tab)
+    : 'feature-requests';
 }
 
-async function fetchMetrics(): Promise<Metrics> {
+// --- Pill counts — cheap aggregate queries -----------------------------------
+async function fetchPillCounts(): Promise<PillCounts> {
   const db = createServiceSupabase();
-  const d7 = daysAgo(7);
-  const d30 = daysAgo(30);
-
-  const [
-    usersTotal,
-    usersNew7,
-    usersNew30,
-    usersRecent,
-    kidRows,
-    subsTotal,
-    sendsAgg,
-    schoolRows,
-    campRows,
-    appRows,
-    savedCampsCount,
-    clicksTotal,
-    clicks7,
-    clicks30,
-    cityRows,
-  ] = await Promise.all([
+  const [fr, cr, sch, cl, brokenCamps, mismatched, users] = await Promise.all([
+    db.from('feature_requests').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+    db.from('camp_applications').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    db
+      .from('schools')
+      .select('*', { count: 'exact', head: true })
+      .in('calendar_status', ['needs_research', 'ai_draft']),
+    db.from('closures').select('*', { count: 'exact', head: true }).eq('status', 'ai_draft'),
+    db.from('camps').select('*', { count: 'exact', head: true }).eq('website_status', 'broken'),
+    db
+      .from('camps')
+      .select('*', { count: 'exact', head: true })
+      .eq('verified', true)
+      .eq('logistics_verified', false),
     db.from('users').select('*', { count: 'exact', head: true }),
-    db.from('users').select('*', { count: 'exact', head: true }).gte('created_at', d7.toISOString()),
-    db.from('users').select('*', { count: 'exact', head: true }).gte('created_at', d30.toISOString()),
-    db.from('users').select('id, created_at').gte('created_at', d7.toISOString()),
-    db.from('kid_profiles').select('age_range'),
-    db.from('reminder_subscriptions').select('*', { count: 'exact', head: true }).eq('enabled', true),
-    db.from('reminder_sends').select('opened_at, clicked_at'),
-    db.from('schools').select('calendar_status'),
-    db.from('camps').select('verified, logistics_verified, is_launch_partner, is_featured'),
-    db.from('camp_applications').select('status'),
-    db.from('saved_camps').select('*', { count: 'exact', head: true }),
-    db.from('camp_clicks').select('*', { count: 'exact', head: true }),
-    db.from('camp_clicks').select('*', { count: 'exact', head: true }).gte('clicked_at', d7.toISOString()),
-    db.from('camp_clicks').select('*', { count: 'exact', head: true }).gte('clicked_at', d30.toISOString()),
-    db.from('city_requests').select('city'),
+  ]);
+  return {
+    featureRequests: fr.count ?? 0,
+    campRequests: cr.count ?? 0,
+    calendarReviews: (sch.count ?? 0) + (cl.count ?? 0),
+    integrityWarnings: (brokenCamps.count ?? 0) + (mismatched.count ?? 0),
+    users: users.count ?? 0,
+  };
+}
+
+// --- Per-tab data fetchers ---------------------------------------------------
+async function loadFeatureRequests(): Promise<AdminFeatureRequest[]> {
+  const db = createServiceSupabase();
+  const { data } = await db
+    .from('feature_requests')
+    .select(
+      'id, user_id, email, category, body, page_path, locale, status, admin_response, admin_responded_at, created_at, users(display_name, email)',
+    )
+    .order('created_at', { ascending: false })
+    .limit(100);
+  const rows = (data ?? []) as unknown as Array<
+    Omit<AdminFeatureRequest, 'users'> & {
+      users:
+        | { display_name: string | null; email: string | null }
+        | Array<{ display_name: string | null; email: string | null }>
+        | null;
+    }
+  >;
+  return rows.map((r) => ({
+    ...r,
+    users: Array.isArray(r.users) ? (r.users[0] ?? null) : r.users,
+  }));
+}
+
+async function loadCampRequests(): Promise<AdminCampRequest[]> {
+  const db = createServiceSupabase();
+  const { data } = await db
+    .from('camp_applications')
+    .select(
+      'id, camp_name, website, ages, neighborhood, email, status, created_at, reviewed_at, notes, submitted_by_email, submitted_by_name, business_name, phone, address, age_min, age_max, description, categories, price_min_cents, price_max_cents, admin_notes, linked_camp_id, stripe_customer_id, stripe_subscription_id',
+    )
+    .order('status', { ascending: true })
+    .order('created_at', { ascending: false })
+    .limit(100);
+  return (data ?? []) as AdminCampRequest[];
+}
+
+async function loadCalendarData() {
+  const db = createServiceSupabase();
+  const [schoolsResp, closuresResp] = await Promise.all([
+    db
+      .from('schools')
+      .select('id, name, district, calendar_status')
+      .order('calendar_status', { ascending: true })
+      .order('name', { ascending: true }),
+    db
+      .from('closures')
+      .select('id, school_id, name, start_date, end_date, emoji, status, source')
+      .order('start_date'),
   ]);
 
-  const byDayMap = new Map<string, number>();
-  for (let i = 6; i >= 0; i--) byDayMap.set(dayKey(daysAgo(i)), 0);
-  for (const row of usersRecent.data ?? []) {
-    const k = (row.created_at as string).slice(0, 10);
-    if (byDayMap.has(k)) byDayMap.set(k, (byDayMap.get(k) ?? 0) + 1);
-  }
+  type SchoolRow = {
+    id: string;
+    name: string;
+    district: string;
+    calendar_status: SchoolStatus;
+  };
+  type ClosureRow = {
+    id: string;
+    school_id: string;
+    name: string;
+    start_date: string;
+    end_date: string;
+    emoji: string;
+    status: 'ai_draft' | 'verified' | 'rejected';
+    source: string;
+  };
 
-  const byAge: Record<string, number> = { '4-6': 0, '7-9': 0, '10-12': 0, '13+': 0 };
-  for (const row of kidRows.data ?? []) {
-    const k = row.age_range as string;
-    if (k in byAge) byAge[k] += 1;
+  const schools = (schoolsResp.data ?? []) as SchoolRow[];
+  const closures = (closuresResp.data ?? []) as ClosureRow[];
+
+  const draftsBySchool = new Map<string, ClosureRow[]>();
+  const verifiedBySchool = new Map<string, number>();
+  for (const c of closures) {
+    if (c.status === 'ai_draft') {
+      const arr = draftsBySchool.get(c.school_id) ?? [];
+      arr.push(c);
+      draftsBySchool.set(c.school_id, arr);
+    } else if (c.status === 'verified') {
+      verifiedBySchool.set(c.school_id, (verifiedBySchool.get(c.school_id) ?? 0) + 1);
+    }
   }
+  return schools.map((s) => ({
+    id: s.id,
+    name: s.name,
+    district: s.district,
+    calendar_status: s.calendar_status,
+    drafts: draftsBySchool.get(s.id) ?? [],
+    verifiedCount: verifiedBySchool.get(s.id) ?? 0,
+  }));
+}
+
+async function loadUsersData() {
+  const db = createServiceSupabase();
+  const { data: userData, count } = await db
+    .from('users')
+    .select(
+      'id, email, display_name, preferred_language, role, coppa_consent_at, created_at, last_seen_at',
+      { count: 'exact' },
+    )
+    .order('created_at', { ascending: false })
+    .range(0, 49);
+  type UserRow = {
+    id: string;
+    email: string;
+    display_name: string | null;
+    preferred_language: string;
+    role: string;
+    coppa_consent_at: string;
+    created_at: string;
+    last_seen_at: string | null;
+  };
+  const rows = (userData ?? []) as UserRow[];
+  const ids = rows.map((r) => r.id);
+  const [kids, subs, saves] = await Promise.all([
+    ids.length
+      ? db.from('kid_profiles').select('user_id, age_range').in('user_id', ids)
+      : Promise.resolve({ data: [] as Array<{ user_id: string; age_range: string }> }),
+    ids.length
+      ? db
+          .from('reminder_subscriptions')
+          .select('user_id')
+          .in('user_id', ids)
+          .eq('enabled', true)
+      : Promise.resolve({ data: [] as Array<{ user_id: string }> }),
+    ids.length
+      ? db.from('saved_camps').select('user_id').in('user_id', ids)
+      : Promise.resolve({ data: [] as Array<{ user_id: string }> }),
+  ]);
+  const kidCount = new Map<string, number>();
+  const ageRangesByUser = new Map<string, Set<string>>();
+  for (const k of (kids.data ?? []) as Array<{ user_id: string; age_range: string }>) {
+    kidCount.set(k.user_id, (kidCount.get(k.user_id) ?? 0) + 1);
+    const s = ageRangesByUser.get(k.user_id) ?? new Set();
+    s.add(k.age_range);
+    ageRangesByUser.set(k.user_id, s);
+  }
+  const reminderCount = new Map<string, number>();
+  for (const r of (subs.data ?? []) as Array<{ user_id: string }>) {
+    reminderCount.set(r.user_id, (reminderCount.get(r.user_id) ?? 0) + 1);
+  }
+  const savedCount = new Map<string, number>();
+  for (const s of (saves.data ?? []) as Array<{ user_id: string }>) {
+    savedCount.set(s.user_id, (savedCount.get(s.user_id) ?? 0) + 1);
+  }
+  const adminEmails = new Set(
+    (env.ADMIN_EMAILS || '')
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean),
+  );
+  const users: AdminUserRow[] = rows.map((r) => ({
+    id: r.id,
+    email: r.email,
+    display_name: r.display_name,
+    preferred_language: r.preferred_language,
+    role: r.role,
+    coppa_consent_at: r.coppa_consent_at,
+    created_at: r.created_at,
+    last_seen_at: r.last_seen_at,
+    kidCount: kidCount.get(r.id) ?? 0,
+    ageRanges: Array.from(ageRangesByUser.get(r.id) ?? []).sort(),
+    activeReminders: reminderCount.get(r.id) ?? 0,
+    savedCamps: savedCount.get(r.id) ?? 0,
+    isAdmin: adminEmails.has(r.email.toLowerCase()),
+  }));
+  return { users, total: count ?? users.length };
+}
+
+async function loadIntegrityData() {
+  const db = createServiceSupabase();
+  const [
+    brokenCamps,
+    unverifiedCamps,
+    sendsAgg,
+    cityRows,
+    clicksTotal,
+    clicks7,
+  ] = await Promise.all([
+    db
+      .from('camps')
+      .select('id, name, slug, website_url, website_status, website_last_verified_at')
+      .eq('website_status', 'broken')
+      .limit(50),
+    db
+      .from('camps')
+      .select('id, name, slug')
+      .eq('verified', true)
+      .eq('logistics_verified', false)
+      .limit(50),
+    db.from('reminder_sends').select('opened_at, clicked_at'),
+    db.from('city_requests').select('city'),
+    db.from('camp_clicks').select('*', { count: 'exact', head: true }),
+    db
+      .from('camp_clicks')
+      .select('*', { count: 'exact', head: true })
+      .gte('clicked_at', new Date(Date.now() - 7 * 86400000).toISOString()),
+  ]);
 
   let totalSent = 0;
   let totalOpened = 0;
   let totalClicked = 0;
-  for (const s of sendsAgg.data ?? []) {
+  for (const s of (sendsAgg.data ?? []) as Array<{
+    opened_at: string | null;
+    clicked_at: string | null;
+  }>) {
     totalSent += 1;
     if (s.opened_at) totalOpened += 1;
     if (s.clicked_at) totalClicked += 1;
   }
-
-  const schoolBuckets = {
-    total: 0,
-    verifiedCurrent: 0,
-    verifiedMultiYear: 0,
-    needsResearch: 0,
-    aiDraft: 0,
-    unavailable: 0,
-  };
-  for (const s of schoolRows.data ?? []) {
-    schoolBuckets.total += 1;
-    const status = s.calendar_status as string;
-    if (status === 'verified_current') schoolBuckets.verifiedCurrent += 1;
-    else if (status === 'verified_multi_year') schoolBuckets.verifiedMultiYear += 1;
-    else if (status === 'needs_research') schoolBuckets.needsResearch += 1;
-    else if (status === 'ai_draft') schoolBuckets.aiDraft += 1;
-    else if (status === 'unavailable') schoolBuckets.unavailable += 1;
-  }
-
-  const campBuckets = { total: 0, verified: 0, logisticsVerified: 0, launchPartners: 0, featured: 0 };
-  for (const c of campRows.data ?? []) {
-    campBuckets.total += 1;
-    if (c.verified) campBuckets.verified += 1;
-    if (c.logistics_verified) campBuckets.logisticsVerified += 1;
-    if (c.is_launch_partner) campBuckets.launchPartners += 1;
-    if (c.is_featured) campBuckets.featured += 1;
-  }
-
-  const appBuckets = { pending: 0, approved: 0, rejected: 0 };
-  for (const a of appRows.data ?? []) {
-    const s = a.status as keyof typeof appBuckets;
-    if (s in appBuckets) appBuckets[s] += 1;
-  }
-
   const cityCounts = new Map<string, number>();
-  for (const r of cityRows.data ?? []) {
-    const c = (r.city as string).trim();
-    if (!c) continue;
-    cityCounts.set(c, (cityCounts.get(c) ?? 0) + 1);
+  for (const r of (cityRows.data ?? []) as Array<{ city: string }>) {
+    const c = r.city.trim();
+    if (c) cityCounts.set(c, (cityCounts.get(c) ?? 0) + 1);
   }
   const topCities = Array.from(cityCounts.entries())
     .sort((a, b) => b[1] - a[1])
@@ -169,290 +280,179 @@ async function fetchMetrics(): Promise<Metrics> {
     .map(([city, count]) => ({ city, count }));
 
   return {
-    generatedAt: new Date().toISOString(),
-    users: {
-      total: usersTotal.count ?? 0,
-      newLast7Days: usersNew7.count ?? 0,
-      newLast30Days: usersNew30.count ?? 0,
-      last7DaysByDay: Array.from(byDayMap.entries()).map(([date, count]) => ({ date, count })),
-    },
-    kidProfiles: { total: kidRows.data?.length ?? 0, byAgeRange: byAge },
+    brokenCamps: (brokenCamps.data ?? []) as Array<{
+      id: string;
+      name: string;
+      slug: string;
+      website_url: string | null;
+      website_status: string;
+      website_last_verified_at: string | null;
+    }>,
+    unverifiedCamps: (unverifiedCamps.data ?? []) as Array<{
+      id: string;
+      name: string;
+      slug: string;
+    }>,
     reminders: {
-      activeSubscriptions: subsTotal.count ?? 0,
       totalSent,
       totalOpened,
       totalClicked,
-      openRatePct: totalSent > 0 ? Math.round((totalOpened / totalSent) * 1000) / 10 : 0,
-      clickRatePct: totalSent > 0 ? Math.round((totalClicked / totalSent) * 1000) / 10 : 0,
-    },
-    schools: schoolBuckets,
-    camps: campBuckets,
-    campApplications: appBuckets,
-    savedCamps: savedCampsCount.count ?? 0,
-    campClicks: {
-      total: clicksTotal.count ?? 0,
-      last7Days: clicks7.count ?? 0,
-      last30Days: clicks30.count ?? 0,
+      openRatePct:
+        totalSent > 0 ? Math.round((totalOpened / totalSent) * 1000) / 10 : 0,
+      clickRatePct:
+        totalSent > 0 ? Math.round((totalClicked / totalSent) * 1000) / 10 : 0,
     },
     cityRequests: { total: cityRows.data?.length ?? 0, topCities },
-    mrr: {
-      cents: 0,
-      note: 'Revenue launches when Featured listings unlock at 1,000 MAU (per v3.1 PRD §7).',
-    },
+    clicks: { total: clicksTotal.count ?? 0, last7: clicks7.count ?? 0 },
   };
 }
 
-// Small editorial KPI card
-function Card({
+// --- Integrity panel (inline — system health overview) -----------------------
+function IntegrityPanel({
+  data,
+}: {
+  data: Awaited<ReturnType<typeof loadIntegrityData>>;
+}) {
+  return (
+    <div className="space-y-6">
+      <section>
+        <h3 className="text-sm font-black text-ink">
+          Broken websites ({data.brokenCamps.length})
+        </h3>
+        <p className="text-xs text-muted">
+          Flagged by the weekly link-checker cron. Hidden from public /api/camps.
+        </p>
+        {data.brokenCamps.length === 0 ? (
+          <p className="mt-2 text-xs text-emerald-700">Nothing broken — good.</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-cream-border rounded-2xl border border-cream-border bg-white">
+            {data.brokenCamps.map((c) => (
+              <li key={c.id} className="px-3 py-2 text-sm">
+                <span className="font-bold text-ink">{c.name}</span>{' '}
+                {c.website_url ? (
+                  <a
+                    href={c.website_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-red-600 underline"
+                  >
+                    {c.website_url}
+                  </a>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section>
+        <h3 className="text-sm font-black text-ink">
+          Missing logistics ({data.unverifiedCamps.length})
+        </h3>
+        <p className="text-xs text-muted">
+          Verified camps without logistics_verified=true. Honest disclosures still show
+          on the public surface.
+        </p>
+        {data.unverifiedCamps.length > 0 ? (
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {data.unverifiedCamps.map((c) => (
+              <li
+                key={c.id}
+                className="rounded-full border border-cream-border bg-white px-3 py-1 text-xs font-semibold text-ink"
+              >
+                {c.name}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        <StatCard label="Emails sent" value={data.reminders.totalSent.toLocaleString()} />
+        <StatCard
+          label="Open rate"
+          value={`${data.reminders.openRatePct}%`}
+          sub={`${data.reminders.totalOpened} opened`}
+        />
+        <StatCard
+          label="Click rate"
+          value={`${data.reminders.clickRatePct}%`}
+          sub={`${data.reminders.totalClicked} clicked`}
+        />
+        <StatCard
+          label="Camp clicks (7d / total)"
+          value={`${data.clicks.last7} / ${data.clicks.total}`}
+        />
+        <StatCard
+          label="City requests"
+          value={data.cityRequests.total.toString()}
+          sub={
+            data.cityRequests.topCities[0]
+              ? `top: ${data.cityRequests.topCities[0].city} (${data.cityRequests.topCities[0].count})`
+              : 'no requests yet'
+          }
+        />
+      </section>
+    </div>
+  );
+}
+
+function StatCard({
   label,
   value,
   sub,
-  tone = 'neutral',
 }: {
   label: string;
-  value: React.ReactNode;
-  sub?: React.ReactNode;
-  tone?: 'neutral' | 'alert';
+  value: string;
+  sub?: string;
 }) {
   return (
     <div className="rounded-2xl border border-cream-border bg-white p-4">
-      <p className="text-[11px] font-black uppercase tracking-wider text-muted">{label}</p>
-      <p
-        className={
-          'mt-1 text-2xl font-black ' + (tone === 'alert' ? 'text-red-600' : 'text-ink')
-        }
-        style={{ letterSpacing: '-0.02em' }}
-      >
-        {value}
+      <p className="text-[11px] font-black uppercase tracking-wider text-muted">
+        {label}
       </p>
+      <p className="mt-1 text-2xl font-black text-ink">{value}</p>
       {sub ? <p className="mt-1 text-xs font-bold text-muted">{sub}</p> : null}
     </div>
   );
 }
 
-function Bar({ pct, label, count }: { pct: number; label: string; count: number }) {
-  const width = Math.max(1, Math.min(100, pct));
-  return (
-    <div className="flex items-center gap-2">
-      <span className="w-16 shrink-0 text-[11px] font-bold text-muted">{label}</span>
-      <span className="h-3 flex-1 overflow-hidden rounded-full bg-cream-border">
-        <span
-          className="block h-full rounded-full bg-brand-purple"
-          style={{ width: `${width}%` }}
-        />
-      </span>
-      <span className="w-10 text-right text-[11px] font-black text-ink tabular-nums">{count}</span>
-    </div>
-  );
-}
-
-function SignupChart({ days }: { days: Array<{ date: string; count: number }> }) {
-  const max = Math.max(1, ...days.map((d) => d.count));
-  return (
-    <div className="flex h-24 items-end gap-2">
-      {days.map((d) => {
-        const h = Math.max(2, Math.round((d.count / max) * 90));
-        const label = new Date(d.date + 'T00:00:00Z').toLocaleDateString('en-US', {
-          weekday: 'short',
-        });
-        return (
-          <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
-            <span className="text-[10px] font-black text-ink tabular-nums">{d.count}</span>
-            <span
-              className="w-full rounded-t-md bg-brand-purple/80"
-              style={{ height: `${h}%` }}
-              title={`${d.date}: ${d.count}`}
-            />
-            <span className="text-[10px] font-bold text-muted">{label}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export default async function AdminOverviewPage({
+// --- Page ---------------------------------------------------------------------
+export default async function AdminPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
   const { locale } = await params;
-  const m = await fetchMetrics();
+  const sp = await searchParams;
+  const activeTab = normalizeTab(sp.tab);
+  const counts = await fetchPillCounts();
 
-  const ageRangeTotal =
-    m.kidProfiles.byAgeRange['4-6'] +
-    m.kidProfiles.byAgeRange['7-9'] +
-    m.kidProfiles.byAgeRange['10-12'] +
-    m.kidProfiles.byAgeRange['13+'];
-  const pct = (n: number) => (ageRangeTotal === 0 ? 0 : (n / ageRangeTotal) * 100);
-
-  const adminEmail = (env.ADMIN_EMAILS || '').split(',')[0] || '—';
+  let panel: React.ReactNode = null;
+  if (activeTab === 'feature-requests') {
+    const rows = await loadFeatureRequests();
+    panel = <FeatureRequestsPanel initialRequests={rows} />;
+  } else if (activeTab === 'camp-requests') {
+    const rows = await loadCampRequests();
+    panel = <CampRequestsPanel initialRequests={rows} />;
+  } else if (activeTab === 'calendar-reviews') {
+    const blocks = await loadCalendarData();
+    panel = <CalendarReviewClient schools={blocks} />;
+  } else if (activeTab === 'integrity') {
+    const data = await loadIntegrityData();
+    panel = <IntegrityPanel data={data} />;
+  } else if (activeTab === 'users') {
+    const { users, total } = await loadUsersData();
+    panel = <UsersClient initialUsers={users} initialTotal={total} initialSearch={''} />;
+  }
 
   return (
-    <div className="space-y-8">
-      <section>
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <h2 className="text-lg font-black text-ink">Overview</h2>
-            <p className="text-xs font-bold text-muted">
-              As of{' '}
-              {new Date(m.generatedAt).toLocaleString('en-US', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })}{' '}
-              · {adminEmail}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Card
-            label="Users"
-            value={m.users.total.toLocaleString()}
-            sub={`+${m.users.newLast7Days} this week · +${m.users.newLast30Days} last 30d`}
-          />
-          <Card
-            label="Kid profiles"
-            value={m.kidProfiles.total.toLocaleString()}
-            sub={`4-6: ${m.kidProfiles.byAgeRange['4-6']} · 7-9: ${m.kidProfiles.byAgeRange['7-9']} · 10-12: ${m.kidProfiles.byAgeRange['10-12']} · 13+: ${m.kidProfiles.byAgeRange['13+']}`}
-          />
-          <Card
-            label="Reminder subs"
-            value={m.reminders.activeSubscriptions.toLocaleString()}
-            sub={`Open ${m.reminders.openRatePct}% · Click ${m.reminders.clickRatePct}%`}
-          />
-          <Card
-            label="Emails sent (all-time)"
-            value={m.reminders.totalSent.toLocaleString()}
-            sub={`${m.reminders.totalOpened} opened · ${m.reminders.totalClicked} clicked`}
-          />
-          <Card
-            label="Schools"
-            value={`${m.schools.verifiedCurrent + m.schools.verifiedMultiYear} / ${m.schools.total}`}
-            sub={`${m.schools.needsResearch} need research · ${m.schools.aiDraft} AI draft`}
-          />
-          <Card
-            label="Camps"
-            value={m.camps.total.toLocaleString()}
-            sub={`${m.camps.logisticsVerified} logistics · ${m.camps.launchPartners} launch partners`}
-          />
-          <Card
-            label="Camp applications"
-            value={m.campApplications.pending}
-            sub={`${m.campApplications.approved} approved · ${m.campApplications.rejected} rejected`}
-            tone={m.campApplications.pending > 0 ? 'alert' : 'neutral'}
-          />
-          <Card
-            label="Clicks (since Apr 22, 2026)"
-            value={m.campClicks.last30Days.toLocaleString()}
-            sub={`last 7d: ${m.campClicks.last7Days} · all-time: ${m.campClicks.total}`}
-          />
-          <Card
-            label="Saved camps"
-            value={m.savedCamps.toLocaleString()}
-            sub="parent wishlists"
-          />
-          <Card
-            label="City requests"
-            value={m.cityRequests.total.toLocaleString()}
-            sub={
-              m.cityRequests.topCities[0]
-                ? `top: ${m.cityRequests.topCities[0].city} (${m.cityRequests.topCities[0].count})`
-                : 'no requests yet'
-            }
-          />
-          <Card
-            label="MRR"
-            value={'$0'}
-            sub="Revenue launches when Featured listings unlock at 1,000 MAU (per v3.1 PRD §7)."
-          />
-          <Card
-            label="Featured listings"
-            value={m.camps.featured}
-            sub="none are paid yet — tier unlocks at 1,000 MAU"
-          />
-        </div>
-      </section>
-
-      <section className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-cream-border bg-white p-5">
-          <h3 className="text-sm font-black text-ink">New signups · last 7 days</h3>
-          <p className="text-xs font-bold text-muted">
-            Total: {m.users.newLast7Days}
-          </p>
-          <div className="mt-4">
-            <SignupChart days={m.users.last7DaysByDay} />
-          </div>
-        </div>
-        <div className="rounded-2xl border border-cream-border bg-white p-5">
-          <h3 className="text-sm font-black text-ink">Age-range distribution</h3>
-          <p className="text-xs font-bold text-muted">
-            Across all {m.kidProfiles.total} kid profiles. No names or grades stored server-side.
-          </p>
-          <div className="mt-4 space-y-2">
-            <Bar label="4-6" count={m.kidProfiles.byAgeRange['4-6']} pct={pct(m.kidProfiles.byAgeRange['4-6'])} />
-            <Bar label="7-9" count={m.kidProfiles.byAgeRange['7-9']} pct={pct(m.kidProfiles.byAgeRange['7-9'])} />
-            <Bar label="10-12" count={m.kidProfiles.byAgeRange['10-12']} pct={pct(m.kidProfiles.byAgeRange['10-12'])} />
-            <Bar label="13+" count={m.kidProfiles.byAgeRange['13+']} pct={pct(m.kidProfiles.byAgeRange['13+'])} />
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h3 className="text-sm font-black text-ink">Next actions</h3>
-        <div className="mt-3 grid gap-3 md:grid-cols-3">
-          <Link
-            href={`/${locale}/admin/camp-applications`}
-            className="group rounded-2xl border border-cream-border bg-white p-4 transition-colors hover:border-brand-purple"
-          >
-            <p className="text-[11px] font-black uppercase tracking-wider text-muted">Approvals</p>
-            <p className="mt-1 text-xl font-black text-ink">
-              {m.campApplications.pending} camp application{m.campApplications.pending === 1 ? '' : 's'} waiting
-            </p>
-            <p className="mt-1 text-xs font-bold text-brand-purple">Review now →</p>
-          </Link>
-          <Link
-            href={`/${locale}/admin/calendar-review`}
-            className="group rounded-2xl border border-cream-border bg-white p-4 transition-colors hover:border-brand-purple"
-          >
-            <p className="text-[11px] font-black uppercase tracking-wider text-muted">Calendar</p>
-            <p className="mt-1 text-xl font-black text-ink">
-              {m.schools.needsResearch + m.schools.aiDraft} school{m.schools.needsResearch + m.schools.aiDraft === 1 ? '' : 's'} need review
-            </p>
-            <p className="mt-1 text-xs font-bold text-brand-purple">Open calendar review →</p>
-          </Link>
-          <Link
-            href={`/${locale}/admin/camps`}
-            className="group rounded-2xl border border-cream-border bg-white p-4 transition-colors hover:border-brand-purple"
-          >
-            <p className="text-[11px] font-black uppercase tracking-wider text-muted">Camps</p>
-            <p className="mt-1 text-xl font-black text-ink">
-              {m.camps.total - m.camps.logisticsVerified} camp{m.camps.total - m.camps.logisticsVerified === 1 ? '' : 's'} need logistics
-            </p>
-            <p className="mt-1 text-xs font-bold text-brand-purple">Edit catalog →</p>
-          </Link>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-cream-border bg-cream/50 p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-brand-purple">
-          Honest data
-        </p>
-        <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-muted">
-          <li>
-            MRR is $0. Stripe is not connected. Featured tier unlocks at 1,000 MAU or 500 reminder subscribers per v3.1 PRD §7.
-          </li>
-          <li>
-            Click tracking started April 22, 2026. Historical clicks are genuinely zero.
-          </li>
-          <li>
-            Kid profiles server-side store only <code>age_range</code> + <code>school_id</code>. Names and grades live client-side per COPPA.
-          </li>
-          <li>
-            Categories are aggregated from <code>camps.categories[]</code>. No separate categories table.
-          </li>
-        </ul>
-      </section>
+    <div className="space-y-5">
+      <AdminPillStrip counts={counts} activeTab={activeTab} locale={locale} />
+      <AdminTabsNav locale={locale} active={activeTab} />
+      <div>{panel}</div>
     </div>
   );
 }

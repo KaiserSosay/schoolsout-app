@@ -7,20 +7,10 @@ export const dynamic = 'force-dynamic';
 
 // DECISION: Admin is English-only (skip ES). Rasheid is the single admin
 // during MVP — we'll translate when we grow past one admin.
-
-type NavItem = { href: (locale: string) => string; label: string };
-const NAV: NavItem[] = [
-  { href: (l) => `/${l}/admin`, label: 'Overview' },
-  { href: (l) => `/${l}/admin/users`, label: 'Users' },
-  { href: (l) => `/${l}/admin/camp-applications`, label: 'Applications' },
-  { href: (l) => `/${l}/admin/camps`, label: 'Camps' },
-  { href: (l) => `/${l}/admin/calendar-review`, label: 'Calendar' },
-  { href: (l) => `/${l}/admin/camp-review`, label: 'Logistics' },
-  { href: (l) => `/${l}/admin/reminders`, label: 'Reminders' },
-  { href: (l) => `/${l}/admin/city-requests`, label: 'City demand' },
-  { href: (l) => `/${l}/admin/categories`, label: 'Categories' },
-];
-
+//
+// Phase 2.5: consolidated to one surface at /admin. Tabs live inside the
+// page via ?tab= query param. This layout just enforces auth and renders
+// the outer frame (title + "← App" exit link).
 export default async function AdminLayout({
   children,
   params,
@@ -43,7 +33,9 @@ export default async function AdminLayout({
             <p className="text-[11px] font-black uppercase tracking-wider text-brand-purple">
               ADMIN
             </p>
-            <h1 className="text-2xl font-black text-ink">School&apos;s Out! operations</h1>
+            <h1 className="text-2xl font-black text-ink">
+              School&apos;s Out! operations
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <span className="hidden rounded-full border border-cream-border bg-white px-3 py-1.5 text-[11px] font-bold text-muted md:inline-flex">
@@ -57,17 +49,6 @@ export default async function AdminLayout({
             </Link>
           </div>
         </header>
-        <nav className="mb-6 -mx-1 flex flex-wrap gap-1.5 text-xs font-bold">
-          {NAV.map((n) => (
-            <Link
-              key={n.label}
-              href={n.href(locale)}
-              className="rounded-full border border-cream-border bg-white px-3 py-1.5 transition-colors hover:border-brand-purple/40 hover:text-brand-purple"
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
         {children}
       </div>
     </main>

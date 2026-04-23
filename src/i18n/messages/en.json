@@ -1024,5 +1024,99 @@
       "generic": "Something went wrong. Try again?",
       "email": "Add your email so Noah can respond."
     }
+  },
+  "listYourCamp": {
+    "meta": {
+      "title": "List your camp — School's Out!",
+      "description": "Run a camp? Add your listing and Miami parents will find you."
+    },
+    "eyebrow": "FOR CAMP OPERATORS",
+    "title": "List your camp.",
+    "subtitle": "One form. We'll review within two business days and let you know either way.",
+    "form": {
+      "email": "Your email",
+      "yourName": "Your name (optional)",
+      "businessName": "Business name",
+      "campName": "Camp / program name",
+      "website": "Website",
+      "phone": "Phone",
+      "address": "Street address",
+      "neighborhood": "Neighborhood",
+      "ageMin": "Youngest age",
+      "ageMax": "Oldest age",
+      "priceMin": "Price (from, USD)",
+      "priceMax": "Price (to, USD)",
+      "categories": "Categories (comma-separated)",
+      "description": "Tell us about your program",
+      "submit": "Send application",
+      "submitting": "Sending…",
+      "responseTime": "We'll review within two business days.",
+      "error": "Something went wrong. Try again?",
+      "success": {
+        "title": "Got your application.",
+        "subtitle": "We'll review within two business days and email you either way."
+      }
+    }
+  },
+  "admin": {
+    "tabs": {
+      "featureRequests": "Feature requests",
+      "campRequests": "Camp requests",
+      "calendarReviews": "Calendar reviews",
+      "integrity": "Integrity",
+      "users": "Users"
+    },
+    "pills": {
+      "featureRequests": "Feature requests",
+      "campRequests": "Camp requests",
+      "calendarReviews": "Calendar reviews",
+      "integrityWarnings": "Integrity warnings",
+      "users": "Users"
+    },
+    "empty": {
+      "featureRequests": "No new feedback. When a parent sends you an idea it lands here.",
+      "campRequests": "No pending camp requests. Share the /list-your-camp link to get operators in the door."
+    },
+    "featureRequests": {
+      "selectPrompt": "Select a feedback item to respond.",
+      "actions": {
+        "acknowledge": "Acknowledge",
+        "replyAndInProgress": "Reply & mark in progress",
+        "markShipped": "Mark shipped",
+        "wontDo": "Won't do"
+      },
+      "statusBadges": {
+        "new": "New",
+        "acknowledged": "Acknowledged",
+        "in_progress": "In progress",
+        "shipped": "Shipped",
+        "wont_do": "Won't do"
+      },
+      "responseLabel": "Your reply (sent via email)",
+      "responsePlaceholder": "I read this yesterday — here's what I'm going to do…",
+      "submitter": {
+        "anon": "Anonymous",
+        "loggedIn": "Member"
+      }
+    },
+    "campRequests": {
+      "selectPrompt": "Select a camp request to review.",
+      "actions": {
+        "approve": "Approve & create camp",
+        "sendPaymentLink": "Send payment link",
+        "manageBilling": "Copy billing portal link",
+        "deny": "Deny"
+      },
+      "stripeNotConfigured": "Stripe not configured — ask Rasheid to finish setup.",
+      "statusBadges": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "denied": "Denied",
+        "payment_sent": "Payment sent",
+        "paid": "Paid",
+        "active": "Active"
+      }
+    }
   }
 }
