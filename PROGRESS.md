@@ -458,7 +458,7 @@ Four commits. Auth vibe + about page + the Plan This Day wizard.
 - Warm new-vs-returning detection on signup: `reminder_subscriptions.isReturning` flag branches success pane + email subject (Commit `5761cf3`)
 - `WelcomeEmail` + `WelcomeBackEmail` templates (Cheers-style). Noah as sender. Gold CTA, cream card, small `List-Unsubscribe` header (Commit `70a330b`)
 - `/about` page (EN + ES) with Noah's story, YouTube + BeSoGood links, motto card (Commit `06a2525`)
-- Plan This Day wizard — 3-screen bottom sheet. `user_plans` table + `/api/plans` + `/api/family-activities`. Closure detail now shows "✓ You have a plan" pill once saved (Commit `<fill after push>`)
+- Plan This Day wizard — 3-screen bottom sheet. `user_plans` table + `/api/plans` + `/api/family-activities`. Closure detail now shows "✓ You have a plan" pill once saved (Commit `024af3e`)
 
 ### COPPA exception (documented in `docs/UX_PRINCIPLES.md`)
 
