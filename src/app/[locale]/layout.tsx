@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n/config';
+import { createServerSupabase } from '@/lib/supabase/server';
+import { FeatureRequestModal } from '@/components/FeatureRequestModal';
 import '../globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -153,6 +155,21 @@ export default async function LocaleLayout({
   const t = await getTranslations({ locale, namespace: 'landing.meta' });
   const jsonLd = buildJsonLd(locale, t('title'), t('description'));
 
+  // Probe auth so the global FeatureRequestModal can pre-fill the email
+  // field for logged-in users and skip the "email required" gate.
+  // DECISION: swallow errors so the outer layout never fails on transient
+  // auth issues — the modal just falls back to anon mode.
+  let loggedInEmail: string | null = null;
+  try {
+    const sb = createServerSupabase();
+    const {
+      data: { user },
+    } = await sb.auth.getUser();
+    loggedInEmail = user?.email ?? null;
+  } catch {
+    loggedInEmail = null;
+  }
+
   // DECISION: body background stays cream — Parents mode is the default. The
   // HomeClient re-paints its own wrapper on toggle, but non-landing pages
   // (privacy/terms/reminder confirmation) inherit the cream shell.
@@ -168,6 +185,10 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-cream text-ink font-display antialiased">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <FeatureRequestModal
+            presetEmail={loggedInEmail}
+            isLoggedIn={Boolean(loggedInEmail)}
+          />
         </NextIntlClientProvider>
       </body>
     </html>

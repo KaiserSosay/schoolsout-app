@@ -8,6 +8,7 @@ const schema = z.object({
   CRON_SECRET: z.string().min(1),
   APP_URL: z.string().url(),
   ADMIN_EMAILS: z.string().default(''),
+  ADMIN_NOTIFY_EMAIL: z.string().email().default('hi@schoolsout.net'),
 });
 
 type Env = z.infer<typeof schema>;

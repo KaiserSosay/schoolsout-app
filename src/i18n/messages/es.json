@@ -1002,5 +1002,27 @@
       "mottoTitle": "Sé tan bueno que nadie te pueda ignorar."
     },
     "signature": "Noah Half Boy. Half Amazing."
+  },
+  "feedback": {
+    "trigger": "¿Tienes una idea?",
+    "heading": "¿Tienes una idea? Cuéntame.",
+    "subtitle": "Las leo todas. — Noah",
+    "categories": {
+      "idea": "💡 Idea",
+      "bug": "🐛 Algo no funciona",
+      "love": "❤️ Algo que me encanta",
+      "question": "❓ Pregunta"
+    },
+    "placeholder": "¿Qué haría School's Out! mejor para ti?",
+    "emailLabel": "Tu correo (para que Noah te responda)",
+    "submit": "Enviar a Noah",
+    "success": {
+      "title": "Recibido.",
+      "subtitle": "Gracias por ayudarme a mejorar esto. — Noah"
+    },
+    "error": {
+      "generic": "Algo salió mal. ¿Intentar de nuevo?",
+      "email": "Agrega tu correo para que Noah pueda responderte."
+    }
   }
 }

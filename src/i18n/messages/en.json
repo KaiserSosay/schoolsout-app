@@ -1002,5 +1002,27 @@
       "mottoTitle": "Be so good, nobody can ignore you."
     },
     "signature": "Noah Half Boy. Half Amazing."
+  },
+  "feedback": {
+    "trigger": "Got an idea?",
+    "heading": "Got an idea? Tell me.",
+    "subtitle": "I read every one. — Noah",
+    "categories": {
+      "idea": "💡 Idea",
+      "bug": "🐛 Something's broken",
+      "love": "❤️ A thing I love",
+      "question": "❓ Question"
+    },
+    "placeholder": "What would make School's Out! better for you?",
+    "emailLabel": "Your email (so Noah can write back)",
+    "submit": "Send to Noah",
+    "success": {
+      "title": "Got it.",
+      "subtitle": "Thanks for helping make this better. — Noah"
+    },
+    "error": {
+      "generic": "Something went wrong. Try again?",
+      "email": "Add your email so Noah can respond."
+    }
   }
 }
