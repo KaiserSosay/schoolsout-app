@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { daysUntil, countdownColor } from '@/lib/countdown';
 import { detectLongWeekend } from '@/lib/longWeekend';
+import { ExternalAlternativesSection } from '@/components/app/ExternalAlternativesSection';
 import { PlanThisDayWizard, type WizardKid, type WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
 import { AppBreadcrumb } from '@/components/app/AppBreadcrumb';
 
@@ -157,6 +158,8 @@ export function ClosureDetailView({
   whyText = null,
   initialPlan = null,
   wizardKids = [],
+  externalAlternatives = [],
+  parentZip = null,
 }: {
   locale: string;
   closure: Closure;
@@ -165,6 +168,8 @@ export function ClosureDetailView({
   whyText?: string | null;
   initialPlan?: WizardInitialPlan | null;
   wizardKids?: WizardKid[];
+  externalAlternatives?: import('@/lib/externalAlternatives').ExternalAlternative[];
+  parentZip?: string | null;
 }) {
   const { mode } = useMode();
   const t = useTranslations();
@@ -497,6 +502,13 @@ export function ClosureDetailView({
         >
           📥 {t('app.closure.addToCalendar')}
         </a>
+
+        <ExternalAlternativesSection
+          alternatives={externalAlternatives}
+          closure={{ start_date: closure.start_date, end_date: closure.end_date }}
+          parentZip={parentZip}
+          isKids={isKids}
+        />
       </div>
 
       {!isKids && (

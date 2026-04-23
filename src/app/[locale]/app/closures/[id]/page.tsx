@@ -5,6 +5,10 @@ import { ClosureDetailView, type FamilyActivity } from '@/components/app/Closure
 import type { WizardKid, WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
 import { reasonFor } from '@/lib/closure-reasons';
 import { haversineMiles } from '@/lib/distance';
+import {
+  alternativesForClosure,
+  type ExternalAlternative,
+} from '@/lib/externalAlternatives';
 
 export default async function ClosureDetailPage({
   params,
@@ -120,10 +124,11 @@ export default async function ClosureDetailPage({
     .limit(40);
 
   // If the user has a primary saved location, sort activities by distance there;
-  // otherwise by school distance; otherwise alphabetical.
+  // otherwise by school distance; otherwise alphabetical. Also pull zip_code
+  // so the Care.com deep-link can pre-fill the parent's neighborhood.
   const { data: primaryLoc } = await supabase
     .from('saved_locations')
-    .select('latitude, longitude')
+    .select('latitude, longitude, zip_code')
     .eq('user_id', user.id)
     .eq('is_primary', true)
     .maybeSingle();
@@ -219,6 +224,24 @@ export default async function ClosureDetailPage({
     school_id: (k.school_id as string | null) ?? null,
   }));
 
+  // Pull external alternatives (sitters, cruises, resorts) and filter to
+  // the ones that fit this closure's duration + lead time.
+  const { data: altRows } = await admin
+    .from('external_alternatives')
+    .select(
+      'id, type, name, provider, description, deep_link_template, duration_days, departure_city, min_lead_days, price_from_cents',
+    )
+    .eq('is_active', true);
+  const alternatives = alternativesForClosure(
+    { start_date: closure.start_date, end_date: closure.end_date },
+    (altRows ?? []) as ExternalAlternative[],
+  );
+
+  // Parent zip for Care.com deep link — pulled from the earlier primary
+  // saved-location fetch. Falls back to null; parent will fill zip on
+  // Care.com's end if we don't have one.
+  const parentZip = ((primaryLoc as { zip_code?: string | null } | null)?.zip_code) ?? null;
+
   return (
     <ClosureDetailView
       locale={locale}
@@ -239,6 +262,8 @@ export default async function ClosureDetailPage({
       whyText={whyText}
       initialPlan={initialPlan}
       wizardKids={wizardKids}
+      externalAlternatives={alternatives}
+      parentZip={parentZip}
     />
   );
 }
