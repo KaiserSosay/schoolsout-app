@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { statusBadge, type SchoolStatus } from '@/lib/school-status';
+import { CalendarPdfUpload } from './CalendarPdfUpload';
 
 type Closure = {
   id: string;
@@ -97,6 +98,10 @@ function SchoolBlockView({ school }: { school: SchoolBlock }) {
           </button>
         ) : null}
       </header>
+
+      <div className="mt-4">
+        <CalendarPdfUpload schoolId={school.id} />
+      </div>
 
       {school.drafts.length > 0 ? (
         <ul className="mt-4 divide-y divide-cream-border rounded-xl border border-cream-border">

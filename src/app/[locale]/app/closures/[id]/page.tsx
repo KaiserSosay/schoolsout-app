@@ -21,7 +21,9 @@ export default async function ClosureDetailPage({
   const admin = createServiceSupabase();
   const { data: closure } = await admin
     .from('closures')
-    .select('id, school_id, name, start_date, end_date, emoji, status, schools(name)')
+    .select(
+      'id, school_id, name, start_date, end_date, emoji, status, source, source_url, schools(name)',
+    )
     .eq('id', id)
     .maybeSingle();
 
@@ -228,6 +230,9 @@ export default async function ClosureDetailPage({
         emoji: closure.emoji,
         school_name: schoolName,
         school_id: closure.school_id as string | null,
+        status: (closure.status as 'ai_draft' | 'verified' | 'rejected') ?? 'ai_draft',
+        source: (closure.source as string | null) ?? null,
+        source_url: (closure.source_url as string | null) ?? null,
       }}
       camps={displayCamps}
       activities={activities}

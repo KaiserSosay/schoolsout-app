@@ -16,6 +16,9 @@ type Closure = {
   emoji: string;
   school_name: string;
   school_id?: string | null;
+  status?: 'ai_draft' | 'verified' | 'rejected';
+  source?: string | null;
+  source_url?: string | null;
 };
 
 type Camp = {
@@ -60,6 +63,62 @@ export type FamilyActivity = {
 
 function durationDays(start: string, end: string): number {
   return daysUntil(end, new Date(start + 'T00:00:00Z')) + 1;
+}
+
+// Public verification pill on the closure detail — honest disclosure per
+// UX_PRINCIPLES.md rule #4. Green for admin-verified rows with a source
+// URL, amber for AI drafts still awaiting review, muted fallback.
+function VerificationPill({
+  status,
+  sourceUrl,
+  isKids,
+}: {
+  status: 'ai_draft' | 'verified' | 'rejected';
+  sourceUrl: string | null;
+  isKids: boolean;
+}) {
+  if (status === 'verified') {
+    const base = isKids
+      ? 'bg-emerald-500/20 text-emerald-200'
+      : 'bg-emerald-100 text-emerald-900';
+    const label = sourceUrl ? '✓ Verified from source' : '✓ Verified';
+    return (
+      <div className="mt-2 inline-flex items-center gap-2">
+        <span className={'rounded-full px-3 py-1 text-xs font-bold ' + base}>
+          {label}
+        </span>
+        {sourceUrl ? (
+          <a
+            href={sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={
+              'text-xs font-semibold underline ' +
+              (isKids ? 'text-white/70 hover:text-white' : 'text-muted hover:text-ink')
+            }
+          >
+            view PDF
+          </a>
+        ) : null}
+      </div>
+    );
+  }
+  if (status === 'ai_draft') {
+    const cls = isKids
+      ? 'bg-amber-500/20 text-amber-200'
+      : 'bg-amber-100 text-amber-900';
+    return (
+      <span className={'mt-2 inline-flex rounded-full px-3 py-1 text-xs font-bold ' + cls}>
+        ⚠ Pending school verification
+      </span>
+    );
+  }
+  const cls = isKids ? 'bg-white/10 text-white/70' : 'bg-ink/10 text-muted';
+  return (
+    <span className={'mt-2 inline-flex rounded-full px-3 py-1 text-xs font-bold ' + cls}>
+      — Unverified source
+    </span>
+  );
 }
 
 // Open-Meteo WMO weather codes we consider "rainy" enough to prefer indoor.
@@ -210,6 +269,11 @@ export function ClosureDetailView({
           <p className={'text-sm ' + (isKids ? 'text-white/70' : 'text-muted')}>
             {new Date(closure.start_date).toLocaleDateString(locale)} – {new Date(closure.end_date).toLocaleDateString(locale)}
           </p>
+          <VerificationPill
+            status={closure.status ?? 'ai_draft'}
+            sourceUrl={closure.source_url ?? null}
+            isKids={isKids}
+          />
         </header>
 
         {whyText ? (
