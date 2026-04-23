@@ -90,7 +90,7 @@ describe('GET /api/admin/metrics', () => {
     });
     const { GET } = await import('@/app/api/admin/metrics/route');
     const res = await GET();
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('returns the full KPI shape with MRR = 0', async () => {

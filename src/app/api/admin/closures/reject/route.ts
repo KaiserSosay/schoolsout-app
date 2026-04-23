@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 const bodySchema = z.object({ closure_id: z.string().guid() });
 
@@ -11,13 +10,8 @@ const bodySchema = z.object({ closure_id: z.string().guid() });
 // never want to surface. If we later want an audit log we can soft-delete via
 // a separate `closures_audit` table.
 export async function POST(req: Request) {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   const json = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(json);

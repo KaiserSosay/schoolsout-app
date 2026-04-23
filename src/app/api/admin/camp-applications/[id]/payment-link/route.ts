@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,13 +7,8 @@ export const dynamic = 'force-dynamic';
 // STRIPE_FEATURED_PRICE_ID are set. Goal 4 replaces this implementation
 // with real Stripe Checkout session creation.
 export async function POST() {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_FEATURED_PRICE_ID) {
     return NextResponse.json(

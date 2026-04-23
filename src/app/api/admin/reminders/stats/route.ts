@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,13 +26,8 @@ function buildLast30Buckets(): Map<string, { sent: number; opened: number; click
 }
 
 export async function GET() {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   const db = createServiceSupabase();
 

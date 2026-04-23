@@ -87,7 +87,7 @@ describe('POST /api/admin/closures/verify', () => {
         body: JSON.stringify({ closure_id: '00000000-0000-0000-0000-000000000001' }),
       }),
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('returns 400 on invalid body for an admin', async () => {
@@ -134,7 +134,7 @@ describe('POST /api/admin/closures/bulk-verify', () => {
         body: JSON.stringify({ school_id: '00000000-0000-0000-0000-000000000001' }),
       }),
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 });
 
@@ -157,7 +157,7 @@ describe('POST /api/admin/closures/create', () => {
         }),
       }),
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('validates date ordering', async () => {

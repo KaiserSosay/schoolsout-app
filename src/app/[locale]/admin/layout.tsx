@@ -1,7 +1,5 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createServerSupabase } from '@/lib/supabase/server';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminPage } from '@/lib/auth/requireAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,11 +17,7 @@ export default async function AdminLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const supabase = createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) redirect(`/${locale}`);
+  const { user } = await requireAdminPage({ redirectTo: `/${locale}` });
 
   return (
     <main className="min-h-screen bg-cream text-ink">

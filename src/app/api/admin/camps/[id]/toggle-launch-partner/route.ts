@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 // POST /api/admin/camps/[id]/toggle-launch-partner
 // Flip is_launch_partner. If turning ON, set launch_partner_until = now + 90d.
@@ -14,13 +13,8 @@ export async function POST(
   _req: Request,
   { params }: { params: { id: string } },
 ) {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   const p = paramSchema.safeParse({ id: params.id });
   if (!p.success) return NextResponse.json({ error: 'invalid_id' }, { status: 400 });

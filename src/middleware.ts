@@ -30,7 +30,24 @@ export async function middleware(req: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Belt-and-suspenders: bounce anon users off /admin at the edge. The real
+  // role-based check is requireAdminPage()/requireAdminApi() inside each
+  // route — this layer just avoids a full SSR render for unauthed traffic.
+  const path = req.nextUrl.pathname;
+  if (!user && /^\/(en|es)?\/?admin(\/|$)/.test(path)) {
+    console.warn('[middleware] anon → /admin, redirecting');
+    const locale =
+      locales.find((l) => path.startsWith(`/${l}/`) || path === `/${l}`) ??
+      defaultLocale;
+    const url = req.nextUrl.clone();
+    url.pathname = `/${locale}`;
+    return NextResponse.redirect(url);
+  }
+
   return res;
 }
 

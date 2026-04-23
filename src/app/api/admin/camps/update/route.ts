@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 // DECISION: Admin inline fill for camp logistics. Once an admin touches the
 // hours/care fields and submits, we flip logistics_verified=true so the UI
@@ -31,13 +30,8 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   const json = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(json);

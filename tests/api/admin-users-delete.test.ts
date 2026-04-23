@@ -44,7 +44,7 @@ describe('POST /api/admin/users/[id]/delete', () => {
     const res = await POST(new Request('http://localhost/x', { method: 'POST' }), {
       params: { id: '00000000-0000-0000-0000-000000000001' },
     });
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('calls auth.admin.deleteUser for a valid target', async () => {

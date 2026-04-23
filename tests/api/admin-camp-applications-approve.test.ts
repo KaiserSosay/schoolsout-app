@@ -96,7 +96,7 @@ describe('POST /api/admin/camp-applications/[id]/approve', () => {
       }),
       { params: { id: '00000000-0000-0000-0000-000000000001' } },
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('creates camp + flips application status + returns camp_id', async () => {

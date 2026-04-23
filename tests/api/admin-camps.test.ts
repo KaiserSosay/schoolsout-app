@@ -69,7 +69,7 @@ describe('POST /api/admin/camps/update', () => {
         }),
       }),
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('accepts partial updates from an admin', async () => {

@@ -20,3 +20,8 @@ insert into public.closures (school_id, name, start_date, end_date, emoji, statu
   ('00000000-0000-0000-0000-000000000001', 'Presidents Day',         '2027-02-15', '2027-02-15', '🎩', 'verified', 'manual'),
   ('00000000-0000-0000-0000-000000000001', 'Spring Break',           '2027-03-22', '2027-03-26', '🌸', 'verified', 'manual')
 on conflict do nothing;
+
+
+-- Phase 2.6 Goal 1: promote Rasheid to superadmin. Idempotent (noop if
+-- no row matches yet — user must sign up first, then rerun).
+update public.users set role = 'superadmin' where email = 'rkscarlett@gmail.com';

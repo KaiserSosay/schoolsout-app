@@ -71,7 +71,7 @@ describe('GET /api/admin/users', () => {
     });
     const { GET } = await import('@/app/api/admin/users/route');
     const res = await GET(new Request('http://localhost/api/admin/users'));
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('returns users with hydrated counts', async () => {

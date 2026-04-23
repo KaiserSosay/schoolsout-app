@@ -117,7 +117,7 @@ describe('POST /api/feature-requests', () => {
 });
 
 describe('PATCH /api/admin/feature-requests/[id]', () => {
-  it('returns 401 for non-admin callers', async () => {
+  it('returns 403 for non-admin callers', async () => {
     serverCtx.user = { id: 'u1', email: 'not-admin@test.com' };
     const { PATCH } = await import('@/app/api/admin/feature-requests/[id]/route');
     const res = await PATCH(
@@ -128,7 +128,7 @@ describe('PATCH /api/admin/feature-requests/[id]', () => {
       }),
       { params: Promise.resolve({ id: 'fr-1' }) },
     );
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
   });
 
   it('updates status + sends reply email when send_reply=true', async () => {

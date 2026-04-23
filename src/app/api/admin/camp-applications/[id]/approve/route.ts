@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 import { env } from '@/lib/env';
 
 const paramSchema = z.object({ id: z.string().guid() });
@@ -36,13 +35,8 @@ export async function POST(
   req: Request,
   { params }: { params: { id: string } },
 ) {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
 
   const paramsParsed = paramSchema.safeParse({ id: params.id });
   if (!paramsParsed.success) return NextResponse.json({ error: 'invalid_id' }, { status: 400 });

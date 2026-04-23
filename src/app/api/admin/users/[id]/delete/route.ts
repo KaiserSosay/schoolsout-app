@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { isAdminEmail } from '@/lib/admin';
+import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
 // POST /api/admin/users/[id]/delete
 // COPPA right-to-be-forgotten. Deletes the auth.users row, which cascades
@@ -21,13 +20,9 @@ export async function POST(
   _req: Request,
   { params }: { params: { id: string } },
 ) {
-  const sb = createServerSupabase();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdminApi();
+  if (!gate.ok) return gate.response;
+  const { user } = gate;
 
   const parsed = paramSchema.safeParse({ id: params.id });
   if (!parsed.success) return NextResponse.json({ error: 'invalid_id' }, { status: 400 });
