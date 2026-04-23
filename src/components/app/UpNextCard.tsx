@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { daysUntil } from '@/lib/countdown';
 import { closureHref, focusRing } from '@/lib/links';
+import { detectLongWeekend } from '@/lib/longWeekend';
 import type { Closure } from '@/lib/closures';
 
 // DECISION: Needs at least one closure to render. When empty we return null —
@@ -73,6 +74,17 @@ export function UpNextCard({
         <span className="inline-flex items-center rounded-full bg-gold px-3 py-1 text-xs font-bold text-ink">
           {t('daysAway', { count: diff })}
         </span>
+        {(() => {
+          const lw = detectLongWeekend({
+            start_date: closure.start_date,
+            end_date: closure.end_date,
+          });
+          return lw.isLongWeekend ? (
+            <span className="inline-flex items-center rounded-full bg-cream px-3 py-1 text-xs font-bold text-ink">
+              {lw.label}
+            </span>
+          ) : null;
+        })()}
       </div>
       <Link
         href={detailHref}

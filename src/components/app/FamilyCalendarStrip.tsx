@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { daysUntil } from '@/lib/countdown';
 import { closureHref, focusRing } from '@/lib/links';
+import { detectLongWeekend } from '@/lib/longWeekend';
 import type { Closure } from '@/lib/closures';
 
 // DECISION: Manual school-name → 3-letter code map covers the 10 seeded
@@ -82,6 +83,7 @@ export function FamilyCalendarStrip({
         {closures.map((c) => {
           const days = Math.max(0, daysUntil(c.start_date));
           const dateLabel = fmt.format(new Date(c.start_date + 'T00:00:00'));
+          const lw = detectLongWeekend({ start_date: c.start_date, end_date: c.end_date });
           return (
             <Link
               key={c.id}
@@ -103,6 +105,11 @@ export function FamilyCalendarStrip({
               </p>
               <p className="mt-2 text-2xl font-black text-brand-purple">{days}d</p>
               <p className="text-xs text-muted">{dateLabel}</p>
+              {lw.isLongWeekend ? (
+                <p className="mt-1 inline-flex rounded-full bg-cream-border/60 px-2 py-0.5 text-[10px] font-bold text-ink">
+                  {lw.label}
+                </p>
+              ) : null}
             </Link>
           );
         })}

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { daysUntil, countdownColor } from '@/lib/countdown';
+import { detectLongWeekend } from '@/lib/longWeekend';
 import { PlanThisDayWizard, type WizardKid, type WizardInitialPlan } from '@/components/app/PlanThisDayWizard';
 import { AppBreadcrumb } from '@/components/app/AppBreadcrumb';
 
@@ -265,6 +266,22 @@ export function ClosureDetailView({
                 {t(`closure.badge.${badge}`)}
               </span>
             )}
+            {(() => {
+              const lw = detectLongWeekend({
+                start_date: closure.start_date,
+                end_date: closure.end_date,
+              });
+              return lw.isLongWeekend ? (
+                <span
+                  className={
+                    'px-3 py-1 rounded-full text-xs font-bold ' +
+                    (isKids ? 'bg-white/20 text-white' : 'bg-cream text-ink')
+                  }
+                >
+                  {lw.label}
+                </span>
+              ) : null;
+            })()}
           </div>
           <p className={'text-sm ' + (isKids ? 'text-white/70' : 'text-muted')}>
             {new Date(closure.start_date).toLocaleDateString(locale)} – {new Date(closure.end_date).toLocaleDateString(locale)}
