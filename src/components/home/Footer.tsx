@@ -28,6 +28,12 @@ export function Footer({ locale }: { locale: string }) {
           School&apos;s Out<span className="text-gold">!</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm">
+          <Link className={link} href={`/${locale}/about`}>
+            {t('nav.about')}
+          </Link>
+          <span aria-hidden="true" className="opacity-40">
+            ·
+          </span>
           <Link className={link} href={`/${locale}/privacy`}>
             {t('nav.privacy')}
           </Link>

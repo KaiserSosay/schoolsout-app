@@ -131,7 +131,8 @@
   "nav": {
     "language": "Idioma",
     "privacyPolicy": "Política de Privacidad",
-    "terms": "Términos del Servicio"
+    "terms": "Términos del Servicio",
+    "about": "Acerca de"
   },
   "landing": {
     "meta": {
@@ -475,6 +476,7 @@
     },
     "footer": {
       "nav": {
+        "about": "Acerca de",
         "privacy": "Privacidad",
         "terms": "Términos",
         "contact": "Contacto"
@@ -915,6 +917,29 @@
       "quoteLabel": "Noah dice:",
       "quote": "Hacer una app es como hacer un plan súper divertido, pero para todos.",
       "photoTodo": "Foto próximamente — con permiso de sus padres."
-    }
+    },
+    "back": "← Volver al inicio",
+    "hero": {
+      "line1": "School's Out! fue creado por",
+      "line2Highlight": "un niño de 8 años",
+      "line3": "que quería ayudar."
+    },
+    "body": {
+      "p1": "Hola, soy Noah. Tengo 8 años. Vivo en Miami. Hago sitios web y aplicaciones — algunas por diversión, otras para ayudar a la gente.",
+      "p2": "Hice School's Out! porque mi papá dirige un negocio y cada vez que cerraba mi escuela él tenía que parar todo y pensar qué hacer conmigo. Lo vi correr muchas veces. Pensé: alguien debería arreglar esto para todos los padres.",
+      "p3": "Entonces lo hice.",
+      "p4": "School's Out! sigue los calendarios reales de las escuelas. Sabe qué campamentos están abiertos, cuáles están llenos y cuánto cuestan. Cuando se acerca un día sin clases, te avisamos con tiempo — y ya tenemos un plan listo, para que no lo armes a las 10 de la noche.",
+      "p5": "Si esta app te hizo la vida un poquito más fácil hoy, ese es el punto.",
+      "p6": "— Noah"
+    },
+    "links": {
+      "youtubeLabel": "YouTube",
+      "youtubeTitle": "Noah Half Amazing",
+      "websiteLabel": "Mi sitio",
+      "websiteTitle": "BeSoGood.org",
+      "mottoLabel": "Mi lema",
+      "mottoTitle": "Sé tan bueno que nadie te pueda ignorar."
+    },
+    "signature": "Noah Half Boy. Half Amazing."
   }
 }
