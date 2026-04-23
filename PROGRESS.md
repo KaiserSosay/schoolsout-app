@@ -475,3 +475,85 @@ migration 008 visible in DB.
 Deferred to next pass: wizard's weather-fetch on screen 3 uses existing
 /api/weather; no separate cache.
 
+## Phase 2.5 — navigation + admin — 2026-04-23
+
+Three goals shipped across three commits. Goal 4 (Stripe recurring payments
+for Featured listings) intentionally deferred — awaiting Rasheid's Stripe
+account + product + webhook setup. The payment-link API endpoint is in
+place as a 503-returning stub so Goal 4 is purely additive when prereqs
+are ready.
+
+### Shipped
+
+- **Goal 1 — Persistent app shell** (Commit `c2c7a1a`). Rewrote /app/*
+  navigation as an AppShell with 5 primary tabs (Home / Calendar / Camps
+  / Saved / Family). Mobile: 56px sticky top bar (logo + bell + avatar) +
+  64px bottom tab bar (safe-area aware). Desktop: 260px sticky sidebar,
+  no top bar. AppBreadcrumb component replaces ad-hoc back links in
+  ClosureDetailView and CampDetailView (CampsBackLink deleted).
+  NotificationsDrawer (bell icon) stubbed with a list of the user's 20
+  most recent reminder_sends rows. Mode toggle + PWA install moved into
+  the user menu. i18n app.nav.* added in EN + ES (ES flagged for native
+  review); app.bottomNav removed.
+- **Goal 2 — Feature request flow** (Commit `b364590`). Migration 009
+  adds `feature_requests` table (category + status enums, RLS open for
+  insert + owner-read). One FeatureRequestModal, three triggers — user
+  menu (mobile + desktop), sidebar "Got an idea?" button (desktop), home
+  footer — all dispatch `so-open-feature-request`. POST
+  /api/feature-requests accepts anon (email required) + logged-in
+  (user_id attached). Admin notify email (FeatureRequestNotifyEmail) via
+  Resend to ADMIN_NOTIFY_EMAIL (defaults hi@schoolsout.net). PATCH
+  /api/admin/feature-requests/[id] supports status + admin_response +
+  optional reply email via FeatureRequestReplyEmail.
+- **Goal 3 — Unified admin workspace** (Commit `6d9431b`). One surface
+  at /admin with 5 tabs (feature-requests, camp-requests, calendar-reviews,
+  integrity, users). Top 5-pill counter strip — tap a pill to jump to
+  its tab. Deep-linkable via `?tab=` query param. Migration 010 extends
+  camp_applications with richer operator data (business_name, age_min/max,
+  categories, phone, address, price band, admin_notes, linked_camp_id,
+  stripe_*) and adds enum values (denied, payment_sent, paid, active).
+  New public /list-your-camp page + POST /api/camp-requests. Deny route
+  sends CampRequestDeniedEmail. CampRequestApprovedEmail stands ready
+  for the existing approve endpoint. Existing metrics dashboard content
+  folded into the Integrity tab alongside broken-camps + missing-logistics
+  + engagement stats. Deleted 8 standalone admin pages:
+  /admin/{users,camp-applications,camps,calendar-review,camp-review,
+  reminders,city-requests,categories}.
+
+### Deferred (Goal 4 — Stripe)
+
+Rasheid must complete 5 prerequisites before Goal 4 ships:
+1. Create Stripe account (or use existing)
+2. Create "Featured Camp Listing" product with $29/month recurring price
+3. Copy test + live STRIPE_SECRET_KEY + STRIPE_PUBLISHABLE_KEY
+4. Configure webhook endpoint → /api/webhooks/stripe, note STRIPE_WEBHOOK_SECRET
+5. Add all four env vars to Vercel (test + live)
+
+Current state: /api/admin/camp-applications/[id]/payment-link returns
+503 `stripe_not_configured`. The admin CampRequestsPanel shows "Stripe
+not configured — ask Rasheid to finish setup" when that happens. Migration
+010 already shipped the `payment_sent`/`paid`/`active` enum values +
+stripe_customer_id / stripe_subscription_id columns, so Goal 4 is purely
+additive wiring.
+
+### Tests
+
+All 4 goals add tests — 209 passed / 6 pre-existing baseline failures
+unchanged / 4 skipped. New coverage: AppShell nav (8 tests), feature
+request API (7), feature request modal (5), camp-requests POST +
+payment-link 503 (4).
+
+### Not done this pass
+
+- Mobile screenshots + self-walkthrough (need a real browser; I can't
+  drive one from here — Rasheid should screenshot the new shell on his
+  phone before cutting the launch tweet).
+- ES native review of: app.nav.*, feedback.*, listYourCamp.*,
+  CampRequestApprovedEmail, CampRequestDeniedEmail, FeatureRequestReplyEmail.
+  All flagged with `// TODO: native ES review` comments.
+- "Got an idea?" footer link on /privacy, /terms, /about public pages —
+  those pages don't have a shared footer today. Deferred (low-value,
+  adds footer refactor scope).
+- Admin ES translation — admin is Rasheid-only during MVP; EN sufficient
+  per spec.
+
