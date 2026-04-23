@@ -62,6 +62,7 @@ export default async function CampDetailPage({
         action: 'viewed_camp',
         target_id: c.id,
         target_name: c.name,
+        metadata: { slug: c.slug },
       })
       .then(() => undefined, () => undefined);
   }

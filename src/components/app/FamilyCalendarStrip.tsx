@@ -1,8 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { daysUntil } from '@/lib/countdown';
+import { closureHref, focusRing } from '@/lib/links';
 import type { Closure } from '@/lib/closures';
 
 // DECISION: Manual school-name → 3-letter code map covers the 10 seeded
@@ -79,25 +81,29 @@ export function FamilyCalendarStrip({
       >
         {closures.map((c) => {
           const days = Math.max(0, daysUntil(c.start_date));
+          const dateLabel = fmt.format(new Date(c.start_date + 'T00:00:00'));
           return (
-            <article
+            <Link
               key={c.id}
-              className="min-w-[180px] max-w-[180px] shrink-0 snap-start rounded-2xl border border-cream-border bg-white p-4"
+              href={closureHref(locale, c.id)}
+              aria-label={`Open ${c.name} on ${dateLabel}`}
+              className={
+                'group min-w-[180px] max-w-[180px] shrink-0 snap-start rounded-2xl border border-cream-border bg-white p-4 transition-shadow hover:shadow-md ' +
+                focusRing
+              }
             >
               <span className="inline-flex items-center rounded-full bg-purple-soft px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-brand-purple">
                 {schoolCode(c.schoolName)}
               </span>
               <p
-                className="mt-2 line-clamp-2 text-sm font-black text-ink"
+                className="mt-2 line-clamp-2 text-sm font-black text-ink group-hover:text-brand-purple"
                 style={{ letterSpacing: '-0.01em' }}
               >
                 {c.name}
               </p>
               <p className="mt-2 text-2xl font-black text-brand-purple">{days}d</p>
-              <p className="text-xs text-muted">
-                {fmt.format(new Date(c.start_date + 'T00:00:00'))}
-              </p>
-            </article>
+              <p className="text-xs text-muted">{dateLabel}</p>
+            </Link>
           );
         })}
       </div>

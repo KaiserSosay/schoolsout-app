@@ -40,8 +40,13 @@ export async function POST(req: Request) {
   const { camp_id, saved } = parsed.data;
 
   // Look up camp name for activity log (reads pass RLS — "anyone reads camps").
-  const { data: camp } = await sb.from('camps').select('name').eq('id', camp_id).maybeSingle();
+  const { data: camp } = await sb
+    .from('camps')
+    .select('name, slug')
+    .eq('id', camp_id)
+    .maybeSingle();
   const campName = camp?.name ?? 'camp';
+  const campSlug = camp?.slug as string | undefined;
 
   if (saved) {
     const { error } = await sb
@@ -54,6 +59,7 @@ export async function POST(req: Request) {
       action: 'saved_camp',
       target_id: camp_id,
       target_name: campName,
+      metadata: campSlug ? { slug: campSlug } : null,
     });
   } else {
     const { error } = await sb.from('saved_camps').delete().eq('user_id', user.id).eq('camp_id', camp_id);
@@ -64,6 +70,7 @@ export async function POST(req: Request) {
       action: 'unsaved_camp',
       target_id: camp_id,
       target_name: campName,
+      metadata: campSlug ? { slug: campSlug } : null,
     });
   }
 

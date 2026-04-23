@@ -1,9 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
 import { KidShareCard } from './KidShareCard';
+import { campHref, closureHref, focusRing } from '@/lib/links';
 
 type Activity = {
   id: string;
@@ -11,8 +13,27 @@ type Activity = {
   target_name: string;
   target_id: string | null;
   created_at: string;
-  metadata?: Record<string, unknown>;
+  // Going forward, camp-related inserts include metadata.slug so the feed
+  // can link to /app/camps/{slug}. Historical rows without this metadata
+  // render as plain text (spec permits: "no linkable target → plain text").
+  metadata?: { slug?: string } & Record<string, unknown>;
 };
+
+// Best-effort URL for a feed row. Closures always link (id → route works
+// directly). Camp rows need a slug from metadata — fall back to null when
+// absent and the row renders as plain text.
+function activityHref(a: Activity, locale: string): string | null {
+  if (a.action === 'viewed_closure' && a.target_id) {
+    return closureHref(locale, a.target_id);
+  }
+  if (
+    (a.action === 'saved_camp' || a.action === 'unsaved_camp' || a.action === 'viewed_camp') &&
+    typeof a.metadata?.slug === 'string'
+  ) {
+    return campHref(locale, a.metadata.slug);
+  }
+  return null;
+}
 
 // DECISION: Poll every 30s (server cost), BUT merge locally-dispatched
 // `so-activity` events immediately so the feed feels live when the same user
@@ -137,15 +158,40 @@ export function KidActivityFeed({ initial, locale }: { initial: Activity[]; loca
         </div>
       ) : (
         <ul className="space-y-2">
-          {items.map((a) => (
-            <li
-              key={a.id}
-              className="flex items-start justify-between rounded-2xl border border-cream-border bg-white px-4 py-3"
-            >
-              <p className="text-sm text-ink">{describe(a)}</p>
-              <span className="ml-3 shrink-0 text-[11px] text-muted">{relative(a.created_at)}</span>
-            </li>
-          ))}
+          {items.map((a) => {
+            const href = activityHref(a, locale);
+            const body = (
+              <>
+                <p className="text-sm text-ink">{describe(a)}</p>
+                <span className="ml-3 shrink-0 text-[11px] text-muted">
+                  {relative(a.created_at)}
+                </span>
+              </>
+            );
+            const className =
+              'flex items-start justify-between rounded-2xl border border-cream-border bg-white px-4 py-3';
+            if (href) {
+              return (
+                <li key={a.id}>
+                  <Link
+                    href={href}
+                    className={
+                      className +
+                      ' transition-shadow hover:shadow-md hover:border-brand-purple/40 ' +
+                      focusRing
+                    }
+                  >
+                    {body}
+                  </Link>
+                </li>
+              );
+            }
+            return (
+              <li key={a.id} className={className}>
+                {body}
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
