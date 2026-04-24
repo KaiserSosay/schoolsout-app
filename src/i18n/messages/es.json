@@ -129,6 +129,13 @@
     "error": "Algo salió mal. Intenta de nuevo.",
     "errorFriendly": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos."
   },
+  "camps": {
+    "count": {
+      "total": "{n, plural, one {# campamento} other {# campamentos}}",
+      "filtered": "de {total} campamentos",
+      "zero": "de {total} campamentos — prueba quitar filtros"
+    }
+  },
   "errors": {
     "signupFailed": "Mmm, no pudimos guardar tu correo. ¿Lo intentas de nuevo? Si sigue fallando, responde a cualquier correo de recordatorio y te ayudamos.",
     "loadFailed": "Nuestro servicio anda lento hoy.",

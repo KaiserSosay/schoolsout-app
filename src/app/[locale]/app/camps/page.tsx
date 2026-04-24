@@ -6,6 +6,7 @@ import { CampFilters } from '@/components/app/CampFilters';
 import { CampSortControl, type FromOption } from '@/components/app/CampSortControl';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
 import { CampsEmpty } from '@/components/app/CampsEmpty';
+import { CampCount } from '@/components/camps/CampCount';
 import { haversineMiles } from '@/lib/distance';
 
 export const dynamic = 'force-dynamic';
@@ -211,6 +212,15 @@ export default async function CampsPage({
 
       <div className="mb-5">
         <CampFilters active={categoriesFilter} activeMustHave={mustHaveFilter} />
+      </div>
+
+      <div className="mb-3">
+        <CampCount
+          locale={locale}
+          filtered={sorted.length}
+          total={rows.length}
+          hasFilters={categoriesFilter.length > 0 || mustHaveFilter.length > 0}
+        />
       </div>
 
       {sorted.length === 0 ? (

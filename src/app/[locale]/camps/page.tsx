@@ -8,6 +8,7 @@ import {
   PublicCampCard,
   type PublicCampCard as PublicCampCardShape,
 } from '@/components/public/PublicCampCard';
+import { CampCount } from '@/components/camps/CampCount';
 import { publicPageMetadata } from '@/lib/seo';
 
 // Public directory at /{locale}/camps — no auth required, SEO-indexable.
@@ -120,6 +121,17 @@ export default async function PublicCampsPage({
             ))}
           </nav>
         ) : null}
+
+        {/* Count indicator — total stays anchored to all verified camps so
+            parents see "X of N" framing as they narrow filters. */}
+        <div className="mb-3">
+          <CampCount
+            locale={locale}
+            filtered={filtered.length}
+            total={rows.length}
+            hasFilters={selected.length > 0}
+          />
+        </div>
 
         {/* Grid */}
         {filtered.length === 0 ? (

@@ -129,6 +129,13 @@
     "error": "Something went wrong. Please try again.",
     "errorFriendly": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help."
   },
+  "camps": {
+    "count": {
+      "total": "{n, plural, one {# camp} other {# camps}}",
+      "filtered": "of {total} camps",
+      "zero": "of {total} camps — try clearing filters"
+    }
+  },
   "errors": {
     "signupFailed": "Hmm, we couldn't save your email. Mind trying again? If it keeps happening, reply to any reminder email and we'll help.",
     "loadFailed": "Our service is having a slow day.",
