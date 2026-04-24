@@ -888,7 +888,25 @@
         "cta": "Browse family activities instead →"
       },
       "brokenWebsite": "Website offline — call to book",
-      "callToBook": "📞 Call camp to book"
+      "callToBook": "📞 Call camp to book",
+      "completeness": {
+        "partial": "Missing: {fields}",
+        "limited": "⚠ Limited info — help us verify",
+        "limitedAria": "Send a correction for {name}",
+        "bodyDraft": "Here's what I know about {name}: ",
+        "field": {
+          "phone": "phone",
+          "address": "address",
+          "website_url": "website",
+          "ages": "ages",
+          "hours": "hours",
+          "price": "price",
+          "description": "description",
+          "categories": "categories",
+          "registration_url": "registration URL",
+          "registration_deadline": "registration deadline"
+        }
+      }
     },
     "calendar": {
       "title": "School Calendar",

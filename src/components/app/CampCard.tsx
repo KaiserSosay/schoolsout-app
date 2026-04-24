@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
 import { SaveCampButton } from './SaveCampButton';
+import { CampCompletenessBadge } from './CampCompletenessBadge';
 import { formatMiles } from '@/lib/distance';
+import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 
 // DECISION: Card is a <Link>. Save button stopPropagation's to avoid nav.
 // Mode-aware: cream+border in parent mode, white/10 glass in kid mode.
@@ -39,6 +41,14 @@ export type CampCardCamp = {
   phone?: string | null;
   logistics_verified?: boolean;
   sessions_unknown?: boolean;
+  // Completeness inputs — optional so existing callers keep compiling.
+  // When absent, no badge renders.
+  address?: string | null;
+  website_url?: string | null;
+  price_min_cents?: number | null;
+  price_max_cents?: number | null;
+  registration_url?: string | null;
+  registration_deadline?: string | null;
 };
 
 export function formatTime(hhmm: string): string {
@@ -234,12 +244,41 @@ export function CampCard({
         ) : null}
       </Link>
 
-      <SaveCampButton
-        campId={camp.id}
-        campName={camp.name}
-        initiallySaved={saved}
-        size="md"
-      />
+      <div className="flex shrink-0 flex-col items-end gap-1.5">
+        <SaveCampButton
+          campId={camp.id}
+          campName={camp.name}
+          initiallySaved={saved}
+          size="md"
+        />
+        <CompletenessCorner camp={camp} />
+      </div>
     </article>
+  );
+}
+
+// Compute completeness inline; suppress when signals are sparse (avoid
+// giving a misleading "Missing: everything" on partial shapes passed by
+// callers that don't yet include the enrichment fields).
+function CompletenessCorner({ camp }: { camp: CampCardCamp }) {
+  const signals: boolean[] = [
+    typeof camp.phone !== 'undefined',
+    typeof camp.address !== 'undefined',
+    typeof camp.website_url !== 'undefined',
+    typeof camp.ages_min === 'number',
+    typeof camp.hours_start !== 'undefined',
+    typeof camp.description !== 'undefined',
+  ];
+  if (signals.filter(Boolean).length < 3) return null;
+  const { score, missing } = computeCompleteness(camp);
+  const band = bandFor(score);
+  if (band === 'complete') return null;
+  return (
+    <CampCompletenessBadge
+      band={band}
+      missing={missing}
+      campName={camp.name}
+      campSlug={camp.slug}
+    />
   );
 }

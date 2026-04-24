@@ -888,7 +888,25 @@
         "cta": "Mientras tanto, explora actividades familiares →"
       },
       "brokenWebsite": "Sitio web caído — llama al campamento",
-      "callToBook": "📞 Llamar al campamento"
+      "callToBook": "📞 Llamar al campamento",
+      "completeness": {
+        "partial": "Falta: {fields}",
+        "limited": "⚠ Info limitada — ayúdanos a verificar",
+        "limitedAria": "Enviar una corrección para {name}",
+        "bodyDraft": "Esto es lo que sé sobre {name}: ",
+        "field": {
+          "phone": "teléfono",
+          "address": "dirección",
+          "website_url": "sitio web",
+          "ages": "edades",
+          "hours": "horarios",
+          "price": "precio",
+          "description": "descripción",
+          "categories": "categorías",
+          "registration_url": "URL de inscripción",
+          "registration_deadline": "fecha límite"
+        }
+      }
     },
     "calendar": {
       "title": "Calendario escolar",

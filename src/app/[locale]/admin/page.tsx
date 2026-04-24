@@ -11,6 +11,10 @@ import {
   type AdminCampRequest,
 } from '@/components/admin/CampRequestsPanel';
 import { CalendarReviewClient } from '@/components/admin/CalendarReviewClient';
+import {
+  EnrichmentPanel,
+  type EnrichmentCamp,
+} from '@/components/admin/EnrichmentPanel';
 import { UsersClient, type AdminUserRow } from '@/components/admin/UsersClient';
 import type { SchoolStatus } from '@/lib/school-status';
 
@@ -20,6 +24,7 @@ const VALID_TABS = [
   'feature-requests',
   'camp-requests',
   'calendar-reviews',
+  'enrichment',
   'integrity',
   'users',
 ] as const;
@@ -226,6 +231,19 @@ async function loadUsersData() {
     isAdmin: adminEmails.has(r.email.toLowerCase()),
   }));
   return { users, total: count ?? users.length };
+}
+
+async function loadEnrichmentData(): Promise<EnrichmentCamp[]> {
+  const db = createServiceSupabase();
+  const { data } = await db
+    .from('camps')
+    .select(
+      'id, slug, name, phone, address, website_url, ages_min, ages_max, hours_start, hours_end, price_min_cents, price_max_cents, description, categories, registration_url, registration_deadline, last_verified_at, last_enriched_at, data_completeness, missing_fields',
+    )
+    .eq('verified', true)
+    .order('data_completeness', { ascending: true, nullsFirst: true })
+    .limit(200);
+  return (data ?? []) as EnrichmentCamp[];
 }
 
 async function loadIntegrityData() {
@@ -440,6 +458,9 @@ export default async function AdminPage({
   } else if (activeTab === 'calendar-reviews') {
     const blocks = await loadCalendarData();
     panel = <CalendarReviewClient schools={blocks} />;
+  } else if (activeTab === 'enrichment') {
+    const camps = await loadEnrichmentData();
+    panel = <EnrichmentPanel initialCamps={camps} />;
   } else if (activeTab === 'integrity') {
     const data = await loadIntegrityData();
     panel = <IntegrityPanel data={data} />;

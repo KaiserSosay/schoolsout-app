@@ -5,9 +5,20 @@ import { useLocale, useTranslations } from 'next-intl';
 
 type Category = 'idea' | 'bug' | 'love' | 'question';
 
-// One modal, three triggers (user menu, sidebar button, footer link). All
-// three dispatch `so-open-feature-request` — we listen globally, open, and
-// collect the response.
+// Camp-correction taps from CampCompletenessBadge dispatch this shape as
+// CustomEvent.detail. `category: 'correction'` is UI-only — it maps to the
+// DB enum 'bug' on submit (we didn't want to add an enum value and deal with
+// another cross-transaction migration for something cosmetic).
+type PresetDetail = {
+  category?: Category | 'correction';
+  pagePath?: string;
+  bodyDraft?: string;
+};
+
+// One modal, many triggers (user menu, sidebar button, footer link, camp
+// card "help us verify" pill). All dispatch `so-open-feature-request` —
+// we listen globally, open, and collect the response. Triggers that want
+// to pre-fill context pass a CustomEvent detail; plain triggers pass none.
 export function FeatureRequestModal({
   presetEmail,
   // When rendered inside /app, the user is logged in and the server route
@@ -24,20 +35,33 @@ export function FeatureRequestModal({
   const [category, setCategory] = useState<Category>('idea');
   const [body, setBody] = useState('');
   const [email, setEmail] = useState(presetEmail ?? '');
+  const [presetPath, setPresetPath] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const onOpen = () => {
+    const onOpen = (ev: Event) => {
+      const detail = (ev as CustomEvent<PresetDetail>).detail;
       setOpen(true);
       setSuccess(false);
       setError(null);
-      setBody('');
-      setCategory('idea');
+      // Preset handling: CampCompletenessBadge passes category='correction',
+      // a body draft, and a pagePath. 'correction' collapses to 'bug'; body
+      // draft seeds the textarea; pagePath overrides window.location on submit.
+      const presetCat = detail?.category;
+      const mappedCat: Category =
+        presetCat === 'correction' ? 'bug' : (presetCat ?? 'idea');
+      setCategory(mappedCat);
+      setBody(detail?.bodyDraft ?? '');
+      setPresetPath(detail?.pagePath ?? null);
     };
-    window.addEventListener('so-open-feature-request', onOpen);
-    return () => window.removeEventListener('so-open-feature-request', onOpen);
+    window.addEventListener('so-open-feature-request', onOpen as EventListener);
+    return () =>
+      window.removeEventListener(
+        'so-open-feature-request',
+        onOpen as EventListener,
+      );
   }, []);
 
   // Auto-dismiss the thank-you state after 3s (per spec) — only clears if
@@ -77,7 +101,8 @@ export function FeatureRequestModal({
     setSubmitting(true);
     try {
       const page_path =
-        typeof window !== 'undefined' ? window.location.pathname : undefined;
+        presetPath ??
+        (typeof window !== 'undefined' ? window.location.pathname : undefined);
       const res = await fetch('/api/feature-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
