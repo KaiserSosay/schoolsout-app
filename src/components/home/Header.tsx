@@ -70,16 +70,21 @@ export function Header({
             </Link>
           ) : (
             <>
-              <button
-                type="button"
-                onClick={focusSignup}
+              {/* DECISION: Sign-in is now a dedicated /sign-in surface so
+                  returning parents see the email field instantly instead of
+                  the homepage marketing copy. Outline style sets it apart
+                  visually from the gold-filled "Start free" CTA. */}
+              <Link
+                href={`/${locale}/sign-in`}
                 className={
-                  'hidden sm:inline-flex text-sm font-bold transition-colors min-h-11 items-center ' +
-                  (mode === 'parents' ? 'text-ink/70 hover:text-ink' : 'text-white/80 hover:text-white')
+                  'hidden sm:inline-flex items-center rounded-full border px-4 md:px-5 py-2 md:py-2.5 text-sm font-bold transition-colors min-h-11 ' +
+                  (mode === 'parents'
+                    ? 'border-ink/30 text-ink hover:bg-ink hover:text-white'
+                    : 'border-white/30 text-white hover:bg-white/10')
                 }
               >
                 {t('signIn')}
-              </button>
+              </Link>
               <button
                 type="button"
                 onClick={focusSignup}

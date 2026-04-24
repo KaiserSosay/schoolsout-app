@@ -33,9 +33,13 @@ export async function PublicTopBar({ locale }: { locale: string }) {
             </Link>
           ))}
         </nav>
+        {/* DECISION: Sign-in routes to the dedicated /sign-in page so
+            returning parents see the email field immediately. Outline style
+            so it doesn't compete with gold "Create account" CTAs elsewhere
+            on the public pages. */}
         <Link
-          href={`/${locale}#signup`}
-          className="inline-flex min-h-9 items-center rounded-full bg-gold px-4 py-1.5 text-xs font-black text-ink hover:bg-gold/90"
+          href={`/${locale}/sign-in`}
+          className="inline-flex min-h-9 items-center rounded-full border border-ink/30 px-4 py-1.5 text-xs font-black text-ink hover:bg-ink hover:text-white"
         >
           {t('signIn')}
         </Link>

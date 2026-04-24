@@ -14,7 +14,7 @@ function makeChain(rows: unknown[]) {
   const thenable: Record<string, unknown> = {};
   const make = (): typeof thenable => {
     const c: Record<string, unknown> = {};
-    const methods = ['select', 'order', 'overlaps', 'lte', 'gte', 'eq', 'in'] as const;
+    const methods = ['select', 'order', 'overlaps', 'lte', 'gte', 'eq', 'neq', 'in', 'ilike'] as const;
     for (const m of methods) c[m] = vi.fn(() => c);
     c.then = (onFulfilled: (v: { data: unknown[]; error: null }) => unknown) =>
       Promise.resolve({ data: rows, error: null }).then(onFulfilled);

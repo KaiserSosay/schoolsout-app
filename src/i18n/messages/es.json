@@ -83,6 +83,22 @@
       "forecast": "Clima típico"
     }
   },
+  "signIn": {
+    "heading": "¡Qué bueno verte! 👋",
+    "subtitle": "Escribe el correo con el que te registraste. Te enviaremos un enlace para entrar.",
+    "emailLabel": "Tu correo",
+    "emailPlaceholder": "papa@ejemplo.com",
+    "submit": "Enviar enlace",
+    "submitting": "Enviando…",
+    "enterEmail": "Escribe tu correo para enviarte el enlace.",
+    "errorFriendly": "Mmm, no pudimos enviar el enlace. ¿Lo intentas de nuevo?",
+    "newHere": "¿Primera vez aquí?",
+    "newHereCta": "Crea tu cuenta gratis →",
+    "successTitle": "Revisa tu correo ✓",
+    "successSubtitle": "Te enviamos un enlace de acceso a {email}. Tócalo para entrar.",
+    "successHintReturning": "Bienvenido de vuelta. El enlace funciona por una hora — ábrelo en el mismo dispositivo para entrar más rápido.",
+    "successHintNew": "Parece que eres nuevo aquí. Toca el enlace para crear tu cuenta gratis."
+  },
   "reminderSignup": {
     "headline": "Recibe un aviso antes de cada día sin escuela",
     "body": "Te escribiremos 2 semanas, 1 semana y 3 días antes de cada vacación. Sin spam, cancela cuando quieras.",

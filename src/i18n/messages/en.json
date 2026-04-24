@@ -83,6 +83,22 @@
       "forecast": "Typical weather"
     }
   },
+  "signIn": {
+    "heading": "Welcome back 👋",
+    "subtitle": "Enter the email you signed up with. We'll send you a sign-in link.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "parent@example.com",
+    "submit": "Send me a link",
+    "submitting": "Sending…",
+    "enterEmail": "Please enter your email so we can send you a link.",
+    "errorFriendly": "Hmm, we couldn't send that link. Mind trying again?",
+    "newHere": "New here?",
+    "newHereCta": "Create your free account →",
+    "successTitle": "Check your email ✓",
+    "successSubtitle": "We sent a sign-in link to {email}. Tap it to come back in.",
+    "successHintReturning": "Welcome back. The link works for one hour — open it on the same device for the smoothest hop in.",
+    "successHintNew": "Looks like you're new. Tap the link to set up your free account."
+  },
   "reminderSignup": {
     "headline": "Get reminded before every school closure",
     "body": "We'll email you 2 weeks, 1 week, and 3 days before each break. No spam, unsubscribe anytime.",
