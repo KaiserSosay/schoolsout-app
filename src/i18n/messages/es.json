@@ -1136,5 +1136,56 @@
         "active": "Active"
       }
     }
+  },
+  "public": {
+    "topBar": {
+      "nav": "Navegación principal",
+      "navMobile": "Navegación móvil",
+      "camps": "Campamentos",
+      "breaks": "Vacaciones",
+      "listYourCamp": "Lista tu campamento",
+      "about": "Acerca de",
+      "signIn": "Ingresar"
+    },
+    "camps": {
+      "title": "Campamentos de Miami y programas para días escolares libres",
+      "subtitle": "Un directorio revisado a mano de campamentos que las familias realmente usan. Gratis para explorar.",
+      "viewCamp": "Ver {name}",
+      "signInToSave": "Ingresa para guardar este campamento",
+      "agesUnknown": "Edades — llama al campamento",
+      "ages": "Edades {min}–{max} · {price}",
+      "limited": "⚠ Información limitada — aún verificando",
+      "partial": "Falta: {fields}",
+      "filterAll": "Todas las categorías",
+      "empty": "Ningún campamento coincide con esos filtros — prueba a quitarlos.",
+      "ctaTop": {
+        "heading": "Recibe un aviso antes de cada cierre escolar en Miami.",
+        "sub": "Un correo antes del Memorial Day, Labor Day, vacaciones de primavera, días de planificación — nunca más improvises.",
+        "button": "Crea una cuenta gratis →"
+      },
+      "ctaBottom": {
+        "heading": "¿Operas un campamento?",
+        "sub": "Publicar es gratis. Revisamos cada solicitud a mano y enlazamos tu sitio web.",
+        "button": "Lista tu campamento →"
+      }
+    },
+    "campDetail": {
+      "back": "← Volver a campamentos",
+      "call": "Llamar {phone}",
+      "visit": "Visitar sitio web",
+      "addressLabel": "Dirección",
+      "hoursLabel": "Horario",
+      "agesLabel": "Edades",
+      "priceLabel": "Precio",
+      "registerDeadlineLabel": "Inscribir antes del",
+      "verifiedSource": "✓ Verificado a mano — {date}",
+      "verifiedUnknown": "Verificación pendiente — llama para confirmar",
+      "limitedDisclaimer": "Aún estamos verificando este listado. Toca \"Lista tu campamento\" si eres el operador — revisamos actualizaciones en 2 días hábiles.",
+      "ctaSignup": {
+        "heading": "Recibe un aviso antes de cada cierre que este campamento podría cubrir.",
+        "sub": "Cuenta gratis. Un correo antes de cada receso escolar en Miami.",
+        "button": "Crea una cuenta gratis →"
+      }
+    }
   }
 }

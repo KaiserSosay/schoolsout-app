@@ -1136,5 +1136,56 @@
         "active": "Active"
       }
     }
+  },
+  "public": {
+    "topBar": {
+      "nav": "Main navigation",
+      "navMobile": "Mobile navigation",
+      "camps": "Camps",
+      "breaks": "Breaks",
+      "listYourCamp": "List your camp",
+      "about": "About",
+      "signIn": "Sign in"
+    },
+    "camps": {
+      "title": "Miami Summer Camps & School-Break Programs",
+      "subtitle": "A human-reviewed directory of camps families actually use. Free to browse.",
+      "viewCamp": "View {name}",
+      "signInToSave": "Sign in to save this camp",
+      "agesUnknown": "Ages — call to confirm",
+      "ages": "Ages {min}–{max} · {price}",
+      "limited": "⚠ Limited info — still verifying",
+      "partial": "Missing: {fields}",
+      "filterAll": "All categories",
+      "empty": "No camps match those filters — try clearing them.",
+      "ctaTop": {
+        "heading": "Get reminded before every Miami school closure.",
+        "sub": "One email before Memorial Day, Labor Day, spring break, teacher workdays — never scramble again.",
+        "button": "Create a free account →"
+      },
+      "ctaBottom": {
+        "heading": "Run a camp?",
+        "sub": "Free to list. We review every application by hand and link back to your site.",
+        "button": "List your camp →"
+      }
+    },
+    "campDetail": {
+      "back": "← Back to camps",
+      "call": "Call {phone}",
+      "visit": "Visit website",
+      "addressLabel": "Address",
+      "hoursLabel": "Hours",
+      "agesLabel": "Ages",
+      "priceLabel": "Price",
+      "registerDeadlineLabel": "Register by",
+      "verifiedSource": "✓ Manually verified — {date}",
+      "verifiedUnknown": "Pending verification — call to confirm",
+      "limitedDisclaimer": "We're still verifying this listing. Tap \"List your camp\" if you're the operator or know the owner — we review updates within 2 business days.",
+      "ctaSignup": {
+        "heading": "Get reminded before every closure this camp could fill.",
+        "sub": "Free account. One email before every Miami school break.",
+        "button": "Create a free account →"
+      }
+    }
   }
 }
