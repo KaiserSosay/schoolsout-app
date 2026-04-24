@@ -152,16 +152,26 @@ export function CampsFilterBar({ mode, hoods, matchEnabled = false }: Props) {
 
       {/* Row 2: care toggles */}
       <div role="group" aria-label={t('toggles.label')} className="flex flex-wrap gap-2" data-testid="camps-care-toggles">
-        <button
-          type="button"
-          aria-pressed={filters.fullWorkday}
-          title={t('toggles.fullWorkday.tooltip')}
-          onClick={() => push({ ...filters, fullWorkday: !filters.fullWorkday })}
-          className={chipBase + ' ' + (filters.fullWorkday ? chipActive : chipInactive)}
-          data-toggle="full_workday"
-        >
-          🏢 {t('toggles.fullWorkday.label')}
-        </button>
+        {/* DECISION: Full-workday chip is gated behind
+            NEXT_PUBLIC_ENABLE_FULL_WORKDAY_FILTER until enough camps have
+            populated hours/extended-care fields to make it useful — current
+            verified data only matches ~4/108 camps, which would make the
+            chip feel broken. Re-enable by setting the env var to 'true'
+            once an enrichment pass lifts the match count above ~25. The
+            full filter pipeline (URL state, server filtering, lib code)
+            stays wired up so the chip lights up immediately when flipped. */}
+        {process.env.NEXT_PUBLIC_ENABLE_FULL_WORKDAY_FILTER === 'true' ? (
+          <button
+            type="button"
+            aria-pressed={filters.fullWorkday}
+            title={t('toggles.fullWorkday.tooltip')}
+            onClick={() => push({ ...filters, fullWorkday: !filters.fullWorkday })}
+            className={chipBase + ' ' + (filters.fullWorkday ? chipActive : chipInactive)}
+            data-toggle="full_workday"
+          >
+            🏢 {t('toggles.fullWorkday.label')}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-pressed={filters.beforeCare}

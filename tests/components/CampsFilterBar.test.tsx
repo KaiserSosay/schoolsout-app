@@ -33,6 +33,9 @@ function wrap(props: Parameters<typeof CampsFilterBar>[0]) {
 
 describe('CampsFilterBar', () => {
   it('renders the search box, category chips, and care toggles in public mode', () => {
+    // Full-workday chip is feature-flagged off by default — light it up
+    // here so the rest of this assertion still exercises the chip.
+    vi.stubEnv('NEXT_PUBLIC_ENABLE_FULL_WORKDAY_FILTER', 'true');
     wrap({ mode: 'public', hoods: [] });
     expect(screen.getByPlaceholderText(/Search by name/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /STEM/i })).toBeInTheDocument();
@@ -41,6 +44,17 @@ describe('CampsFilterBar', () => {
     expect(screen.getByRole('button', { name: /After-care/i })).toBeInTheDocument();
     // Match-my-kids stays hidden in public mode
     expect(screen.queryByRole('button', { name: /Match my kids/i })).toBeNull();
+    vi.unstubAllEnvs();
+  });
+
+  it('hides the Full-workday chip when the feature flag is off (default)', () => {
+    vi.stubEnv('NEXT_PUBLIC_ENABLE_FULL_WORKDAY_FILTER', '');
+    wrap({ mode: 'public', hoods: [] });
+    expect(screen.queryByRole('button', { name: /Full workday/i })).toBeNull();
+    // Sibling care toggles still render — only the data-thin one is gated.
+    expect(screen.getByRole('button', { name: /Before-care/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /After-care/i })).toBeInTheDocument();
+    vi.unstubAllEnvs();
   });
 
   it('shows the Match-my-kids chip in app mode when matchEnabled=true', () => {
@@ -56,10 +70,12 @@ describe('CampsFilterBar', () => {
   });
 
   it('care toggles push the matching boolean URL params', async () => {
+    vi.stubEnv('NEXT_PUBLIC_ENABLE_FULL_WORKDAY_FILTER', 'true');
     wrap({ mode: 'public', hoods: [] });
     fireEvent.click(screen.getByRole('button', { name: /Full workday/i }));
     await waitFor(() => expect(pushMock).toHaveBeenCalled());
     expect(pushMock.mock.calls[0][0]).toContain('full_workday=1');
+    vi.unstubAllEnvs();
   });
 
   it('debounces the search input by ~300ms before pushing the URL', async () => {
