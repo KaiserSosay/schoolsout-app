@@ -55,9 +55,15 @@ export async function POST(
   }
 
   const db = createServiceSupabase();
+  // Phase 2.7 Goal 5: pull extended fields off the application so they
+  // copy into the new camps row. camp_data (from the admin UI body)
+  // remains authoritative where both exist — the UI is the admin's last
+  // chance to tweak slug/pricing/etc. before publishing.
   const { data: app, error: appErr } = await db
     .from('camp_applications')
-    .select('id, email, camp_name, status')
+    .select(
+      'id, email, camp_name, status, phone, address, price_min_cents, price_max_cents, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, registration_url, registration_deadline',
+    )
     .eq('id', paramsParsed.data.id)
     .maybeSingle();
   if (appErr) return NextResponse.json({ error: 'db_error', detail: appErr.message }, { status: 500 });
@@ -75,6 +81,19 @@ export async function POST(
       categories: camp_data.categories,
       website_url: camp_data.website_url ?? null,
       neighborhood: camp_data.neighborhood ?? null,
+      // Carry-over from the application:
+      phone: app.phone ?? null,
+      address: app.address ?? null,
+      price_min_cents: app.price_min_cents ?? null,
+      price_max_cents: app.price_max_cents ?? null,
+      hours_start: app.hours_start ?? null,
+      hours_end: app.hours_end ?? null,
+      before_care_offered: app.before_care_offered ?? null,
+      before_care_start: app.before_care_start ?? null,
+      after_care_offered: app.after_care_offered ?? null,
+      after_care_end: app.after_care_end ?? null,
+      registration_url: app.registration_url ?? null,
+      registration_deadline: app.registration_deadline ?? null,
       verified: false,
       logistics_verified: false,
     })

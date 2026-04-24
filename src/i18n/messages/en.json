@@ -1072,7 +1072,43 @@
       "error": "Something went wrong. Try again?",
       "success": {
         "title": "Got your application.",
-        "subtitle": "We'll review within two business days and email you either way."
+        "subtitle": "We'll review within two business days and email you either way.",
+        "quality": "Listing quality at submit: {pct}%. You can email us updates any time."
+      },
+      "meter": {
+        "label": "Listing quality: {pct}%",
+        "perfect": "Every field filled — top-ranking territory.",
+        "missing": "Still missing: {fields}"
+      },
+      "sections": {
+        "contact": "Your contact info",
+        "basics": "About the camp",
+        "location": "Where you are",
+        "ages": "Who it's for",
+        "hours": "Hours + extended care",
+        "pricing": "Price + meals",
+        "registration": "Registration link",
+        "extras": "Extras"
+      },
+      "hoursStart": "Drop-off time",
+      "hoursEnd": "Pick-up time",
+      "beforeCare": "We offer before-care",
+      "beforeCareStart": "Before-care start time",
+      "afterCare": "We offer after-care",
+      "afterCareEnd": "After-care end time",
+      "lunchIncluded": "Lunch is included",
+      "scholarshipsAvailable": "Need-based scholarships available",
+      "scholarshipsNotes": "Scholarship details",
+      "registrationUrl": "Direct registration URL",
+      "registrationDeadline": "Registration deadline",
+      "accommodations": "Special accommodations (allergies, therapy, etc.)",
+      "why": {
+        "description": "A clear 2-3 sentence pitch helps parents pick you over a competitor.",
+        "phone": "Parents will call to confirm details — listings with a phone get significantly more engagement.",
+        "ages": "Parents filter by their kid's age. Missing this hides you from searches that don't match.",
+        "hours": "Working parents need pickup time for planning. Missing = they move on.",
+        "beforeCare": "Working parents search specifically for extended care.",
+        "registrationDeadline": "We'll remind subscribed parents 7 days before this date."
       }
     }
   },

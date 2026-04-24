@@ -8,6 +8,17 @@ export const dynamic = 'force-dynamic';
 
 // Public endpoint for camp operators. Writes to camp_applications (one queue,
 // one mental model). Emails ADMIN_NOTIFY_EMAIL so Rasheid sees it fast.
+// Phase 2.7 Goal 5 extended the schema with hours / extended care /
+// scholarships / registration-link fields. All are optional so the short-
+// form pathway stays backward-compatible. Completeness is computed on
+// the server from the incoming payload and written to
+// camp_applications.applicant_completeness for admin sort-by-quality.
+const timeSchema = z
+  .string()
+  .regex(/^\d{2}:\d{2}(:\d{2})?$/)
+  .optional()
+  .nullable();
+
 const schema = z.object({
   submitted_by_email: z.string().email(),
   submitted_by_name: z.string().trim().max(120).optional().nullable(),
@@ -23,6 +34,28 @@ const schema = z.object({
   price_min_cents: z.number().int().min(0).optional().nullable(),
   price_max_cents: z.number().int().min(0).optional().nullable(),
   neighborhood: z.string().trim().max(120).optional().nullable(),
+  // Phase 2.7 Goal 5 — additive
+  hours_start: timeSchema,
+  hours_end: timeSchema,
+  before_care_offered: z.boolean().optional().nullable(),
+  before_care_start: timeSchema,
+  after_care_offered: z.boolean().optional().nullable(),
+  after_care_end: timeSchema,
+  lunch_included: z.boolean().optional().nullable(),
+  scholarships_available: z.boolean().optional().nullable(),
+  scholarships_notes: z.string().trim().max(2000).optional().nullable(),
+  accommodations: z.string().trim().max(2000).optional().nullable(),
+  registration_url: z.string().trim().url().optional().nullable(),
+  registration_deadline: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional()
+    .nullable(),
+  instagram_handle: z.string().trim().max(60).optional().nullable(),
+  facebook_url: z.string().trim().url().optional().nullable(),
+  tiktok_handle: z.string().trim().max(60).optional().nullable(),
+  testimonials: z.string().trim().max(2000).optional().nullable(),
+  applicant_completeness: z.number().min(0).max(1).optional().nullable(),
   locale: z.enum(['en', 'es']).default('en'),
 });
 
@@ -73,6 +106,24 @@ export async function POST(req: Request) {
       categories: d.categories,
       price_min_cents: d.price_min_cents ?? null,
       price_max_cents: d.price_max_cents ?? null,
+      // Phase 2.7 Goal 5
+      hours_start: d.hours_start ?? null,
+      hours_end: d.hours_end ?? null,
+      before_care_offered: d.before_care_offered ?? null,
+      before_care_start: d.before_care_start ?? null,
+      after_care_offered: d.after_care_offered ?? null,
+      after_care_end: d.after_care_end ?? null,
+      lunch_included: d.lunch_included ?? null,
+      scholarships_available: d.scholarships_available ?? null,
+      scholarships_notes: d.scholarships_notes ?? null,
+      accommodations: d.accommodations ?? null,
+      registration_url: d.registration_url ?? null,
+      registration_deadline: d.registration_deadline ?? null,
+      instagram_handle: d.instagram_handle ?? null,
+      facebook_url: d.facebook_url ?? null,
+      tiktok_handle: d.tiktok_handle ?? null,
+      testimonials: d.testimonials ?? null,
+      applicant_completeness: d.applicant_completeness ?? null,
       status: 'pending',
     })
     .select('id')

@@ -1072,7 +1072,43 @@
       "error": "Algo salió mal. ¿Intentar de nuevo?",
       "success": {
         "title": "Recibimos tu solicitud.",
-        "subtitle": "Revisamos en dos días hábiles y te escribimos."
+        "subtitle": "Revisamos en dos días hábiles y te escribimos.",
+        "quality": "Calidad del listado al enviar: {pct}%. Puedes enviarnos actualizaciones por correo."
+      },
+      "meter": {
+        "label": "Calidad del listado: {pct}%",
+        "perfect": "Todos los campos completos — lista lista para destacar.",
+        "missing": "Falta aún: {fields}"
+      },
+      "sections": {
+        "contact": "Tu información de contacto",
+        "basics": "Sobre el campamento",
+        "location": "Dónde están",
+        "ages": "Para quién es",
+        "hours": "Horario + cuidado extendido",
+        "pricing": "Precio + comidas",
+        "registration": "Enlace de inscripción",
+        "extras": "Extras"
+      },
+      "hoursStart": "Hora de entrada",
+      "hoursEnd": "Hora de salida",
+      "beforeCare": "Ofrecemos cuidado temprano",
+      "beforeCareStart": "Hora de inicio del cuidado temprano",
+      "afterCare": "Ofrecemos cuidado extendido",
+      "afterCareEnd": "Hora de fin del cuidado extendido",
+      "lunchIncluded": "Almuerzo incluido",
+      "scholarshipsAvailable": "Becas disponibles por necesidad",
+      "scholarshipsNotes": "Detalles de becas",
+      "registrationUrl": "Enlace directo de inscripción",
+      "registrationDeadline": "Fecha límite de inscripción",
+      "accommodations": "Acomodaciones especiales (alergias, terapia, etc.)",
+      "why": {
+        "description": "Una descripción clara de 2-3 frases ayuda a los padres a elegirte.",
+        "phone": "Los padres llaman para confirmar — listados con teléfono reciben mucho más interés.",
+        "ages": "Los padres filtran por edad. Sin esto, no apareces en sus búsquedas.",
+        "hours": "Los padres necesitan saber la hora de salida para planear su día.",
+        "beforeCare": "Los padres que trabajan buscan específicamente cuidado extendido.",
+        "registrationDeadline": "Recordaremos a los padres suscritos 7 días antes de esta fecha."
       }
     }
   },
