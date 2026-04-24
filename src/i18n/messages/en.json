@@ -1246,6 +1246,35 @@
         "button": "Create a free account →"
       }
     },
+    "howWeVerify": {
+      "title": "How we verify",
+      "subtitle": "What we check by hand, how often we re-check it, and what we honestly don't verify.",
+      "camps": {
+        "title": "Every camp is reviewed by a human",
+        "body": "Before a camp shows up in the public directory, a real person — usually Rasheid — confirms the operator's website is up, the listed ages match the program, and the contact info is reachable. Listings with partial data surface an honest \"Limited info — help us verify\" disclosure rather than hide."
+      },
+      "calendars": {
+        "title": "School-break calendars come from official sources",
+        "body": "For Miami-Dade County Public Schools we use the district's published PDF (api.dadeschools.net). For independent schools we use the school's published calendar or a direct confirmation from the school office. Every closure row is labeled verified, ai_draft, or rejected, and the status is exposed on the page."
+      },
+      "reverification": {
+        "title": "We re-verify every listing every ~90 days",
+        "body": "A weekly cron checks each listed camp's website for a 200 response and flags any that go dark. Listings with no activity after 90 days go back into the review queue until they're re-confirmed. If a listing you rely on looks stale, tap \"Help us verify\" on the card to ping us."
+      },
+      "notVerified": {
+        "title": "What we don't verify",
+        "body": "Sitter quality through Care.com (we link, Care vets). Cruise prices and cabin availability (they change hourly). Commute time (we show crow-flies distance only). If we don't verify it, we say so inline rather than imply we do."
+      },
+      "reportIssue": {
+        "title": "See something wrong? Tell us",
+        "body": "Tap the \"Limited info\" pill on any camp card, or email hello@schoolsout.net. We fix within two business days, and we reply to every message — no black hole."
+      },
+      "cta": {
+        "heading": "Want a reminder before every break?",
+        "sub": "One email before Memorial Day, Labor Day, spring break, teacher workdays. No spam.",
+        "button": "Create a free account →"
+      }
+    },
     "campDetail": {
       "back": "← Back to camps",
       "call": "Call {phone}",

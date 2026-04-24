@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
+import { PageViewLogger } from '@/components/public/PageViewLogger';
 import { publicPageMetadata } from '@/lib/seo';
 
 export async function generateMetadata({
@@ -77,6 +78,7 @@ export default async function PublicBreaksPage({
 
   return (
     <>
+      <PageViewLogger path={`/${locale}/breaks`} locale={locale} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:py-12">
         <header className="mb-6">

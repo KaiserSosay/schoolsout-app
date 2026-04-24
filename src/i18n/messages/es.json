@@ -1246,6 +1246,35 @@
         "button": "Crea una cuenta gratis →"
       }
     },
+    "howWeVerify": {
+      "title": "Cómo verificamos",
+      "subtitle": "Qué revisamos a mano, con qué frecuencia y qué no verificamos — con honestidad.",
+      "camps": {
+        "title": "Cada campamento lo revisa una persona",
+        "body": "Antes de aparecer en el directorio, una persona — generalmente Rasheid — confirma que el sitio web funciona, que las edades coinciden y que el contacto responde. Listados con datos parciales muestran \"Info limitada — ayúdanos a verificar\" en vez de esconderse."
+      },
+      "calendars": {
+        "title": "Los calendarios escolares vienen de fuentes oficiales",
+        "body": "Para Miami-Dade County Public Schools usamos el PDF oficial del distrito (api.dadeschools.net). Para colegios privados usamos su calendario publicado o una confirmación directa. Cada cierre está marcado como verified, ai_draft o rejected, y el estado se muestra públicamente."
+      },
+      "reverification": {
+        "title": "Reverificamos cada listado ~cada 90 días",
+        "body": "Un cron semanal revisa el sitio web de cada campamento. Los listados sin actividad después de 90 días vuelven a la cola de revisión. Si ves algo anticuado, toca \"Ayúdanos a verificar\" en la tarjeta."
+      },
+      "notVerified": {
+        "title": "Qué NO verificamos",
+        "body": "La calidad de niñeras en Care.com (ellos las revisan). Precios de cruceros (cambian constantemente). Tiempo de viaje (mostramos distancia en línea recta). Lo que no verificamos, lo decimos con claridad."
+      },
+      "reportIssue": {
+        "title": "¿Ves algo mal? Cuéntanos",
+        "body": "Toca \"Info limitada\" en cualquier tarjeta, o escríbenos a hello@schoolsout.net. Respondemos en dos días hábiles — cada mensaje."
+      },
+      "cta": {
+        "heading": "¿Quieres recordatorios antes de cada receso?",
+        "sub": "Un correo antes del Memorial Day, Labor Day, vacaciones, días de planificación. Sin spam.",
+        "button": "Crea una cuenta gratis →"
+      }
+    },
     "campDetail": {
       "back": "← Volver a campamentos",
       "call": "Llamar {phone}",

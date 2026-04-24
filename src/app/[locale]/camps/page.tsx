@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
+import { PageViewLogger } from '@/components/public/PageViewLogger';
 import {
   PublicCampCard,
   type PublicCampCard as PublicCampCardShape,
@@ -71,6 +72,7 @@ export default async function PublicCampsPage({
 
   return (
     <>
+      <PageViewLogger path={`/${locale}/camps`} locale={locale} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12">
         {/* Top CTA */}
