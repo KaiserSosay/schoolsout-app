@@ -60,6 +60,6 @@ export const config = {
     // never run.
     // DECISION: /k/* is excluded so /k/[token] (a server route that mints a
     // kid-mode session) never gets rewritten by next-intl.
-    '/((?!api|auth|k|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|icon|apple-icon|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|auth|k|_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|icon|apple-icon|robots.txt|sitemap.xml|llms.txt|og|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

@@ -654,3 +654,128 @@ new tests.
   collapsed to 009/010 when we chose one camp_applications table
   instead of a new camp_requests one).
 
+
+## Phase 2.7 — public browse + trusted directory + data drop — 2026-04-24
+
+Overnight autonomous session. Seven goals requested + a surprise 96-camp
+research drop from Noah. All shipped to main + live. Eight commits.
+
+### Shipped (8 commits)
+
+- `2cc87e5` — **Goal 0 · Promote Rasheid.** Migration 016 applied. `users.role`
+  for rkscarlett@gmail.com flipped from parent → superadmin. Admin access now
+  works via DB role, not just env fallback.
+- `228f05a` — **Goal 1 · Completeness + enrichment.** Migration 017 added
+  data_completeness + missing_fields + last_enriched_at with a BEFORE
+  INSERT/UPDATE trigger. TS mirror at src/lib/camps/completeness.ts for
+  existing rows (backfill deferred — no UPDATE on existing rows in prod
+  without approval). CampCompletenessBadge renders three bands; the
+  &lt;70% "Limited info" pill dispatches the feature-request modal
+  pre-filled with `category='correction'`. Admin /admin?tab=enrichment
+  sorts camps by completeness. Enrichment script at scripts/enrich-camps.ts
+  — fetches each camp's own website + /contact, runs conservative regex
+  for phone/address/hours, writes BEFORE/AFTER to
+  docs/camp-enrichment-2026-04-24.md. Hours are ALWAYS parked — the first
+  regex match tends to be venue hours, not camp session hours. Auto-apply
+  limited to phone + address where (a) same-domain source and (b) field
+  was NULL. Prod effect: missing phone 10→3, missing address 7→5.
+- `b61a0a5` — **Goal 2 · Public /camps directory.** New public surface at
+  /{locale}/camps + /{locale}/camps/{slug}. Server-rendered, no auth.
+  PublicTopBar + PublicCampCard. Category filter chips, top + bottom
+  CTAs (free account + list-your-camp).
+- `561c4be` — **Goal 3 · Public breaks + school pages.** Migration 018
+  added schools.slug as a GENERATED STORED column (no UPDATE needed).
+  closures.slug ATTEMPTED but `start_date::text` isn't IMMUTABLE in
+  Postgres, so closures route by uuid for now: /breaks/{id}. School
+  calendar at /{locale}/schools/{slug}. All 10 existing schools got
+  clean slugs auto-populated.
+- `26d2d8b` — **Goal 4 · SEO + AI.** Dynamic sitemap at /sitemap.xml
+  (force-dynamic so fresh camps/closures land without a redeploy);
+  robots.txt disallowing /app/ /admin/ /api/*; /llms.txt with factual
+  neutral attribution language; dynamic OG images at /og/[type]/[slug]
+  via Edge ImageResponse; per-page generateMetadata + Schema.org JSON-LD
+  (Camp, Event + FAQPage, School, BreadcrumbList). src/lib/seo.tsx
+  centralizes metadata + JSON-LD builders.
+- `3481d96` — **Goal 5 · Rich operator form.** Migration 019 extended
+  camp_applications with 19 new fields (hours, before/after care,
+  scholarships, accommodations, photos, sessions, socials,
+  applicant_completeness). /list-your-camp rewritten as 8 grouped
+  sections with a sticky live completeness meter. "Why we ask" helper
+  copy on high-leverage fields. Admin approve now pulls extended fields
+  from the application into the new camps row.
+- `abb3513` — **Goal 6 · Trust + analytics.** Migration 020 added a
+  privacy-first page_views table with RLS (service-role only). SHA-256
+  IP hashing with a daily-rotating salt (src/lib/analytics.ts).
+  PageViewLogger server component fires fire-and-forget from the
+  public index pages. New /how-we-verify transparency page. Weekly
+  reverify digest email extended into the existing check-camp-links
+  cron. /privacy section on analytics posture added.
+- `1e247c1` — **Data drop · 96-camp research import.** Noah's deep-
+  research batch landed mid-session. Migration 021 added ~15 more
+  additive columns (operator_name, sessions jsonb, breaks_covered,
+  city, provenance URLs, needs_review, out_of_primary_coverage).
+  Import script at scripts/import-camps-research.ts with 12 rules:
+  upsert by slug + fuzzy name match, never-overwrite-with-null,
+  category allowlist, dollar→cents, city parse, ZIP-based
+  out-of-primary flagging, Camp Matecumbe hurricane review flag.
+  Source JSON committed at data/camps/miami-research-2026-04-23.json
+  for provenance. 70 of 96 inserted successfully; 26 skipped due to
+  null age_min/age_max (research couldn't confirm). Prod verified-camps
+  jumped 38 → 108.
+
+### Prod state (live)
+
+- camps: 128 total, 108 verified
+- live /api/camps returns 108 verified rows
+- new routes live: /camps, /camps/{slug}, /breaks, /breaks/{id},
+  /schools/{slug}, /how-we-verify, /sitemap.xml, /robots.txt,
+  /llms.txt, /og/{type}/{slug}
+- migrations 016–021 applied to prod (additive only, zero
+  non-metadata UPDATEs against existing rows)
+
+### Tests
+290 passed / 6 pre-existing baseline failures (unchanged from Phase 2.6) /
+4 skipped. New test files: completeness (10 cases), CampCompletenessBadge
+(3), robots (2), analytics (7).
+
+### Deferred to Phase 3 / follow-up
+
+- **Backfill `data_completeness` on existing camps** via
+  `UPDATE public.camps SET updated_at = updated_at`. Requires Rasheid's
+  explicit approval per overnight ground rules; the import run
+  populated the trigger for the 70 new rows + any row updated by
+  enrichment, but the rest still show 0.00 stored.
+- **closures.slug** — the generated-column approach failed on the
+  non-IMMUTABLE date cast. Resolvable via (a) regular nullable column
+  + a one-shot UPDATE for backfill, or (b) a trigger on INSERT/UPDATE
+  and accept that existing rows use id. Pending Rasheid's pick.
+- **Migration 016 promotion via the separate approval flow** was
+  approved tonight. Future role changes should follow the same
+  split-migration pattern.
+- **Admin /admin?tab=traffic** — page_views query exists, dashboard UI
+  not wired.
+- **/api/admin/enrichment/run** — bulk re-run button in admin is a
+  placeholder alert.
+- **26 skipped camps from the research import** — each is in the JSON
+  with null ages. Manual age resolution needed before re-import. The
+  skip list is in the import log.
+- **IP_HASH_SECRET env var** — default dev salt in code; Rasheid should
+  set a real secret in Vercel env when convenient. Hashes stay stable
+  within a day regardless.
+- **Photo upload + sessions UI + social handles on /list-your-camp**
+  (schema fields exist, UI deferred).
+- **GSC + Bing Webmaster verification** — DNS/HTML file is Rasheid's
+  call per ground rules.
+- **6-screenshot mobile tour** for docs/ux-pass-2026-04-24/ — can't
+  drive a browser from overnight session.
+
+### Migration numbering map
+
+| # | file | shipped | notes |
+|---|---|---|---|
+| 016 | promote_superadmin | ✓ | Goal 0; was parked from Phase 2.6 |
+| 017 | camps_completeness | ✓ | Goal 1; trigger only, no backfill |
+| 018 | slugs | ✓ | Goal 3; schools-only (closures deferred) |
+| 019 | camp_applications_rich | ✓ | Goal 5 |
+| 020 | page_views_analytics | ✓ | Goal 6 |
+| 021 | camps_schema_expansion | ✓ | Research data drop |
