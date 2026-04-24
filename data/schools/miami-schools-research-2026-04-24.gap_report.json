@@ -1,0 +1,1258 @@
+[
+  {
+    "name": "Mater Academy Charter Middle School",
+    "type": "charter",
+    "neighborhood": "Hialeah Gardens",
+    "website": "https://materacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater Academy network publishes its own calendar \u2014 needs verification."
+  },
+  {
+    "name": "Mater Academy Charter High School",
+    "type": "charter",
+    "neighborhood": "Hialeah Gardens",
+    "website": "https://materacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater Academy network publishes its own calendar."
+  },
+  {
+    "name": "Mater Academy Lakes High School",
+    "type": "charter",
+    "neighborhood": "Hialeah",
+    "website": "https://materlakes.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater Lakes publishes own calendar on network site."
+  },
+  {
+    "name": "Mater Academy Lakes Middle School",
+    "type": "charter",
+    "neighborhood": "Hialeah",
+    "website": "https://materlakes.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Part of Mater Lakes K-12 campus."
+  },
+  {
+    "name": "Mater Academy Lakes K-8 Center",
+    "type": "charter",
+    "neighborhood": "Hialeah",
+    "website": "https://materlakes.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "K-8 arm of Mater Lakes campus."
+  },
+  {
+    "name": "Mater Academy Brickell",
+    "type": "charter",
+    "neighborhood": "Coral Gables",
+    "website": "https://materbrickell.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar \u2014 needs verification."
+  },
+  {
+    "name": "Mater Performing Arts & Entertainment Academy",
+    "type": "charter",
+    "neighborhood": "Hialeah Gardens",
+    "website": "https://materperformingarts.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar \u2014 needs verification."
+  },
+  {
+    "name": "Mater Grove Academy",
+    "type": "charter",
+    "neighborhood": "Coconut Grove",
+    "website": "https://matergrove.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar \u2014 needs verification."
+  },
+  {
+    "name": "Mater Academy East Charter Middle School",
+    "type": "charter",
+    "neighborhood": "Hialeah East",
+    "website": "https://matereast.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar \u2014 needs verification."
+  },
+  {
+    "name": "Mater Academy Gardens",
+    "type": "charter",
+    "neighborhood": "Kendall West",
+    "website": "https://matergardens.academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar \u2014 needs verification."
+  },
+  {
+    "name": "Doral Academy Charter Elementary School",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralacademycharter.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network publishes own calendar."
+  },
+  {
+    "name": "Doral Academy Charter Middle School",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralacademycharter.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network publishes own calendar."
+  },
+  {
+    "name": "Doral Academy Preparatory School",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralacademyprep.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network publishes own calendar."
+  },
+  {
+    "name": "Doral Performing Arts & Entertainment Academy",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralperformingarts.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network publishes own calendar."
+  },
+  {
+    "name": "Doral Academy Red Rock Campus",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralacademycharter.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network calendar."
+  },
+  {
+    "name": "Somerset Academy Charter School (South Homestead)",
+    "type": "charter",
+    "neighborhood": "Homestead",
+    "website": "https://somersetacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network publishes own calendar."
+  },
+  {
+    "name": "Somerset Academy Silver Palms",
+    "type": "charter",
+    "neighborhood": "Princeton/Silver Palms",
+    "website": "https://somersetsilverpalms.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network publishes own calendar."
+  },
+  {
+    "name": "Somerset Academy Charter High School (Homestead)",
+    "type": "charter",
+    "neighborhood": "Homestead",
+    "website": "https://somersetacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network publishes own calendar."
+  },
+  {
+    "name": "Somerset Academy Bay (Key Biscayne)",
+    "type": "charter",
+    "neighborhood": "Key Biscayne",
+    "website": "https://somersetbay.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network publishes own calendar."
+  },
+  {
+    "name": "Academir Charter School West",
+    "type": "charter",
+    "neighborhood": "West Miami-Dade",
+    "website": "https://academircharterschools.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Academir network \u2014 calendar varies; verify."
+  },
+  {
+    "name": "Academir Charter School East",
+    "type": "charter",
+    "neighborhood": "Fountainebleau",
+    "website": "https://academircharterschools.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Academir network \u2014 calendar varies."
+  },
+  {
+    "name": "Academir Charter School Preparatory",
+    "type": "charter",
+    "neighborhood": "Kendall",
+    "website": "https://academircharterschools.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Academir network \u2014 calendar varies."
+  },
+  {
+    "name": "Academir Charter School Middle",
+    "type": "charter",
+    "neighborhood": "West Miami-Dade",
+    "website": "https://academircharterschools.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Academir network \u2014 calendar varies."
+  },
+  {
+    "name": "Pinecrest Academy Charter Middle/High",
+    "type": "charter",
+    "neighborhood": "Cutler Bay",
+    "website": "https://pinecrestacademy.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Pinecrest network \u2014 calendar varies."
+  },
+  {
+    "name": "Pinecrest Preparatory Academy",
+    "type": "charter",
+    "neighborhood": "Richmond West",
+    "website": "https://pinecrestprepacademy.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Pinecrest network \u2014 calendar varies."
+  },
+  {
+    "name": "Pinecrest Glades Academy",
+    "type": "charter",
+    "neighborhood": "The Hammocks",
+    "website": "https://pinecrestgladesacademy.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Pinecrest network \u2014 calendar varies."
+  },
+  {
+    "name": "Pinecrest Cove Academy",
+    "type": "charter",
+    "neighborhood": "Palmetto Bay",
+    "website": "https://pinecrestcoveacademy.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Pinecrest network \u2014 calendar varies."
+  },
+  {
+    "name": "Archimedean Academy",
+    "type": "charter",
+    "neighborhood": "Kendall",
+    "website": "https://archimedean.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Independent Greek-focused charter; may publish own calendar."
+  },
+  {
+    "name": "Archimedean Middle Conservatory",
+    "type": "charter",
+    "neighborhood": "Kendall",
+    "website": "https://archimedean.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Independent Greek-focused charter."
+  },
+  {
+    "name": "Archimedean Upper Conservatory",
+    "type": "charter",
+    "neighborhood": "Kendall",
+    "website": "https://archimedean.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Independent Greek-focused charter."
+  },
+  {
+    "name": "BASIS Independent Brickell",
+    "type": "private",
+    "neighborhood": "Brickell",
+    "website": "https://basisindependent.com/brickell",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Private (not charter) \u2014 BASIS network publishes own calendar."
+  },
+  {
+    "name": "Renaissance Charter School at Doral",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doral.rcsedu.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Charter Schools USA network \u2014 own calendar."
+  },
+  {
+    "name": "Keys Gate Charter School",
+    "type": "charter",
+    "neighborhood": "Homestead",
+    "website": "https://keysgatecharter.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Charter Schools USA network \u2014 own calendar."
+  },
+  {
+    "name": "Keys Gate Charter High School",
+    "type": "charter",
+    "neighborhood": "Homestead",
+    "website": "https://keysgatecharter.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Charter Schools USA network \u2014 own calendar."
+  },
+  {
+    "name": "Mater Academy at Mount Sinai",
+    "type": "charter",
+    "neighborhood": "Miami Beach",
+    "website": "https://materacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network calendar."
+  },
+  {
+    "name": "Doral Academy Charter High School",
+    "type": "charter",
+    "neighborhood": "Doral",
+    "website": "https://doralacademycharter.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Doral Academy network calendar."
+  },
+  {
+    "name": "Somerset Arts Academy",
+    "type": "charter",
+    "neighborhood": "Miami Gardens",
+    "website": "https://somersetacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network \u2014 own calendar."
+  },
+  {
+    "name": "Somerset Academy Charter Middle (Miami-Dade)",
+    "type": "charter",
+    "neighborhood": "Homestead",
+    "website": "https://somersetacademy.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Somerset network \u2014 own calendar."
+  },
+  {
+    "name": "Sports Leadership and Management Academy (SLAM! Miami)",
+    "type": "charter",
+    "neighborhood": "Allapattah",
+    "website": "https://slamcharterschool.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Academica-managed \u2014 own calendar."
+  },
+  {
+    "name": "iMater Academy",
+    "type": "charter",
+    "neighborhood": "Hialeah",
+    "website": "https://imater.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network \u2014 own calendar."
+  },
+  {
+    "name": "iMater Preparatory Academy High School",
+    "type": "charter",
+    "neighborhood": "Hialeah",
+    "website": "https://imater.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Mater network \u2014 own calendar."
+  },
+  {
+    "name": "The Growing Place School",
+    "type": "religious",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.thegrowingplace.school",
+    "calendar_status": "not_available_online",
+    "notes": "School has a public 'School Calendar' page at https://www.thegrowingplace.school/school-calendar but the page was not reachable from this environment (outbound fetch to the school's domain was blocked by network allowlist). Search-engine snippets did not expose specific dates. Founded 1963 as ministry of First United Methodist Church of Coral Gables; 275 students PK-5. Recommend direct call to (305) 446-0846 or email via their site to obtain the 2025-26 and 2026-27 closure dates. IMPORTANT anchor school - highest priority to re-verify once domain is reachable."
+  },
+  {
+    "name": "Gulliver Preparatory School",
+    "type": "independent",
+    "neighborhood": "Pinecrest / Coral Gables",
+    "website": "https://www.gulliverprep.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "2025-26 PDF is at /wp-content/uploads/academic_calendar.pdf and also /docs/calendar/2025/academic_calendar.pdf; 2026-27 PDF at /docs/calendar/2026/SY-26-27-calendar.pdf. Both exist publicly. Could not fetch directly from this environment. Search snippets suggest first day of school Aug 14, 2025 but the snippet was not a verbatim quote of the school's own page - mark as pending until PDF is read."
+  },
+  {
+    "name": "Ransom Everglades School",
+    "type": "independent",
+    "neighborhood": "Coconut Grove",
+    "website": "https://www.ransomeverglades.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Public calendar page exists; a downloadable PDF is referenced at ransomeverglades.myschoolapp.com/ftpimages/748/download/download_10617054.pdf. Unable to fetch from this environment."
+  },
+  {
+    "name": "The Cushman School",
+    "type": "independent",
+    "neighborhood": "Miami (Upper Eastside)",
+    "website": "https://cushmanschool.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "2025-26 School Profile PDF exists at cushmanschool.org/wp-content/uploads/2025/11/TheCushmanSchool_CollegeProfile_25-26.pdf but the direct calendar PDF was not surfaced in searches."
+  },
+  {
+    "name": "Carrollton School of the Sacred Heart",
+    "type": "religious",
+    "neighborhood": "Coconut Grove",
+    "website": "https://www.carrollton.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "All-girls Catholic. Calendar page is on site but specific PDF not surfaced in search snippets."
+  },
+  {
+    "name": "Belen Jesuit Preparatory School",
+    "type": "religious",
+    "neighborhood": "West Miami-Dade (Tamiami)",
+    "website": "https://www.belenjesuit.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "All-boys Jesuit. 2025-2026 Parent & Student Handbook is published on issuu.com/belenjesuit (Aug 25, 2025) and likely contains the academic calendar. Live fetch blocked in this environment."
+  },
+  {
+    "name": "Miami Country Day School",
+    "type": "independent",
+    "neighborhood": "Miami Shores",
+    "website": "https://www.miamicountryday.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Calendar appears on the site as a dynamic calendar (not a flat PDF). Direct fetch blocked."
+  },
+  {
+    "name": "Westminster Christian School",
+    "type": "religious",
+    "neighborhood": "Palmetto Bay",
+    "website": "https://www.wcsmiami.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Key Dates 2025-26 page exists publicly but dates not extractable via search snippets."
+  },
+  {
+    "name": "Miami Christian School",
+    "type": "religious",
+    "neighborhood": "Tamiami / Fontainebleau",
+    "website": "https://www.miamichristian.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Search did not surface a direct PDF; calendar likely on parent portal."
+  },
+  {
+    "name": "Scheck Hillel Community School",
+    "type": "religious",
+    "neighborhood": "North Miami Beach (Ojus)",
+    "website": "https://www.ehillel.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Lionpalooza Back-to-School Expo Aug 17, 2025 captured from school's own page; full calendar not extractable."
+  },
+  {
+    "name": "Lehrman Community Day School",
+    "type": "religious",
+    "neighborhood": "Miami Beach",
+    "website": "https://www.lehrmanschool.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Dedicated 2025-26 Calendar page and 2026-27 Important Dates page both exist. Fetch blocked."
+  },
+  {
+    "name": "Hillel Community Day School",
+    "type": "religious",
+    "neighborhood": "North Miami Beach",
+    "website": "https://www.hillelmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": "Task prompt referenced 'Hillel Community Day School (hillelmiami.org)' separately from Scheck Hillel. Needs disambiguation - may overlap with Scheck Hillel. Unable to fetch in this environment."
+  },
+  {
+    "name": "David Posnack Jewish Day School (Hochberg Preparatory Campus)",
+    "type": "religious",
+    "neighborhood": "North Miami Beach (Aventura area)",
+    "website": "https://www.hochbergprep.org",
+    "calendar_status": "not_available_online",
+    "notes": "STEM focus. Note: the main Posnack K-12 campus is in Davie (Broward), not Miami-Dade."
+  },
+  {
+    "name": "Temple Beth Am Day School",
+    "type": "religious",
+    "neighborhood": "Pinecrest",
+    "website": "https://www.tbam.org",
+    "calendar_status": "not_available_online",
+    "notes": "Specific academic calendar not publicly indexed."
+  },
+  {
+    "name": "Rambam Day School",
+    "type": "religious",
+    "neighborhood": "North Miami Beach",
+    "website": "https://www.rambammiami.org",
+    "calendar_status": "not_available_online",
+    "notes": "Premiere Jewish Education, details minimal in public search."
+  },
+  {
+    "name": "Beth David Religious School",
+    "type": "religious",
+    "neighborhood": "Miami (Brickell area)",
+    "website": "https://www.bethdavidmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": "Synagogue-based supplemental/religious school; not a full-day day school."
+  },
+  {
+    "name": "Beit Aviv Day School",
+    "type": "religious",
+    "neighborhood": null,
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Referenced in user prompt list but not found via public search; may be a program at another congregation. Needs manual verification."
+  },
+  {
+    "name": "Archbishop Curley-Notre Dame Preparatory School",
+    "type": "religious",
+    "neighborhood": "Miami (Buena Vista / Little Haiti)",
+    "website": "https://www.acndprep.org",
+    "calendar_status": "not_available_online",
+    "notes": "Original Archbishop Curley-Notre Dame HS closed 2017 and merged with Pace; ACND Prep is a successor 6-12 prep program of the Archdiocese."
+  },
+  {
+    "name": "St. Brendan High School",
+    "type": "religious",
+    "neighborhood": "Westchester",
+    "website": "https://www.stbrendanhigh.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "2025-2026 School Profile PDF indexed at finalsite.net."
+  },
+  {
+    "name": "Christopher Columbus High School",
+    "type": "religious",
+    "neighborhood": "Westchester",
+    "website": "https://www.columbushs.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Official 2025-2026 School Calendar PDF at bbk12e1-cdn.myschoolcdn.com (Finalsite CDN backing school's site)."
+  },
+  {
+    "name": "Immaculata-La Salle High School",
+    "type": "religious",
+    "neighborhood": "Coconut Grove / Brickell",
+    "website": "https://www.ilsroyals.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Calendar page referenced; specific PDF not surfaced in search."
+  },
+  {
+    "name": "Monsignor Edward Pace High School",
+    "type": "religious",
+    "neighborhood": "Miami Gardens",
+    "website": "https://www.pacehs.com",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Calendar displays Dec 2025 - Mar 2027 per search results."
+  },
+  {
+    "name": "Archbishop Coleman F. Carroll High School",
+    "type": "religious",
+    "neighborhood": "Doral",
+    "website": "http://www.colemancarroll.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Year calendar page exists on school site."
+  },
+  {
+    "name": "St. Brendan Catholic School",
+    "type": "religious",
+    "neighborhood": "Westchester",
+    "website": "https://school.stbrendanmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Hugh Catholic School",
+    "type": "religious",
+    "neighborhood": "Coconut Grove",
+    "website": "https://sthughmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Agnes Academy",
+    "type": "religious",
+    "neighborhood": "Key Biscayne",
+    "website": "https://www.stagnesacademy.net",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Theresa Catholic School",
+    "type": "religious",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.littleflower.org/school",
+    "calendar_status": "not_available_online",
+    "notes": "Also known as 'Little Flower' parish school."
+  },
+  {
+    "name": "Epiphany Catholic School",
+    "type": "religious",
+    "neighborhood": "South Miami",
+    "website": "https://www.ecsmiami.org",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Official 2025-2026 Calendar PDF exists on ecslc.org."
+  },
+  {
+    "name": "Our Lady of Lourdes Academy",
+    "type": "religious",
+    "neighborhood": "South Miami / Kendall",
+    "website": "https://www.olla.org",
+    "calendar_status": "not_available_online",
+    "notes": "All-girls Catholic HS."
+  },
+  {
+    "name": "La Salle Educational Center (MDC LaSalle)",
+    "type": "religious",
+    "neighborhood": "Coconut Grove / Brickell",
+    "website": "https://www3.mdc.edu/lasallehighschool/",
+    "calendar_status": "not_available_online",
+    "notes": "May be a historic/alternative reference. Confirm with Archdiocese."
+  },
+  {
+    "name": "St. Thomas Episcopal Parish School",
+    "type": "religious",
+    "neighborhood": "Pinecrest",
+    "website": "https://www.stepsmia.org",
+    "calendar_status": "not_available_online",
+    "notes": "Largest PK-5 Episcopal school in Miami per their own site."
+  },
+  {
+    "name": "St. Stephen's Episcopal Day School",
+    "type": "religious",
+    "neighborhood": "Coconut Grove",
+    "website": "https://www.sseds.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "The Biltmore School",
+    "type": "independent",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.biltmoreschool.com",
+    "calendar_status": "not_available_online",
+    "notes": "Founded 1926; offers IB programme."
+  },
+  {
+    "name": "Alpha Miami",
+    "type": "independent",
+    "neighborhood": "South Miami",
+    "website": "https://alpha.school/miami/",
+    "calendar_status": "not_available_online",
+    "notes": "New AI-model school."
+  },
+  {
+    "name": "Key Point Academy Downtown",
+    "type": "independent",
+    "neighborhood": "Downtown Miami",
+    "website": "https://www.keypointacademydowntown.com",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Conchita Espinosa Academy",
+    "type": "independent",
+    "neighborhood": "West Miami-Dade",
+    "website": "https://www.conchitaespinosa.com",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Vanguard School of Coconut Grove",
+    "type": "independent",
+    "neighborhood": "Coconut Grove",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Needs confirmation."
+  },
+  {
+    "name": "Beacon Hill Private School",
+    "type": "independent",
+    "neighborhood": null,
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Listed in community references; needs direct verification."
+  },
+  {
+    "name": "MAST Academy at Homestead (private alternative) / Mater Academy",
+    "type": "independent",
+    "neighborhood": "Hialeah",
+    "website": "https://materacademy.com",
+    "calendar_status": "not_available_online",
+    "notes": "This is actually a CHARTER, not private - included for reference in case family-planning app needs distinction. Remove if strictly private-only."
+  },
+  {
+    "name": "Centner Academy",
+    "type": "independent",
+    "neighborhood": "Miami (Design District / Edgewater)",
+    "website": "https://centneracademy.com",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Sunset Hills Christian Academy",
+    "type": "religious",
+    "neighborhood": null,
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Needs verification."
+  },
+  {
+    "name": "Our Lady of the Lakes Catholic School",
+    "type": "religious",
+    "neighborhood": "Miami Lakes",
+    "website": "https://www.ollcatholicschool.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Michael the Archangel School",
+    "type": "religious",
+    "neighborhood": "Little Havana",
+    "website": "https://www.stmichaelmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Patrick Catholic School",
+    "type": "religious",
+    "neighborhood": "Miami Beach",
+    "website": "https://stpatrickparish.org/school",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Lawrence Catholic School",
+    "type": "religious",
+    "neighborhood": "North Miami Beach",
+    "website": "https://www.stlawrenceschool.com",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. James Catholic School",
+    "type": "religious",
+    "neighborhood": "North Miami",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Agatha Catholic School",
+    "type": "religious",
+    "neighborhood": "Westchester",
+    "website": "https://stagathaschool.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Kevin Catholic School",
+    "type": "religious",
+    "neighborhood": "Westchester / Tamiami",
+    "website": "https://www.stkevin.net",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Sts. Peter and Paul School",
+    "type": "religious",
+    "neighborhood": "Brickell / Little Havana",
+    "website": "https://www.stspeterandpaulmiami.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Rose of Lima School",
+    "type": "religious",
+    "neighborhood": "Miami Shores",
+    "website": "https://www.stroseoflima.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Ambrose Catholic School",
+    "type": "religious",
+    "neighborhood": "(Broward - remove if strictly Miami-Dade)",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Note: located in Broward county. Archdiocese of Miami spans Miami-Dade/Broward/Monroe - may not be Miami-Dade proper."
+  },
+  {
+    "name": "St. Andrew Catholic School",
+    "type": "religious",
+    "neighborhood": "North Miami area",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Timothy Catholic School",
+    "type": "religious",
+    "neighborhood": "Olympia Heights",
+    "website": "https://www.sttimothymiami.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "St. Bernadette Catholic School",
+    "type": "religious",
+    "neighborhood": "Hollywood",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": "Note: located in Broward. Included as Archdiocese of Miami reference."
+  },
+  {
+    "name": "Corpus Christi Catholic School",
+    "type": "religious",
+    "neighborhood": "Allapattah",
+    "website": null,
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Mother of Christ Catholic School",
+    "type": "religious",
+    "neighborhood": "Kendall",
+    "website": "https://www.motherofchrist.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "Holy Family Catholic School",
+    "type": "religious",
+    "neighborhood": "North Miami",
+    "website": "https://www.holyfamilynmb.org",
+    "calendar_status": "not_available_online",
+    "notes": null
+  },
+  {
+    "name": "KLA Schools of Brickell",
+    "type": "preschool",
+    "neighborhood": "Brickell",
+    "website": "https://klaschools.com/brickell/",
+    "calendar_status": "not_available_online",
+    "notes": "KLA corporate site lists campus; academic calendar is shared with enrolled families via parent portal"
+  },
+  {
+    "name": "KLA Schools of Doral",
+    "type": "preschool",
+    "neighborhood": "Doral",
+    "website": "https://klaschools.com/doral/",
+    "calendar_status": "not_available_online",
+    "notes": "Campus page on corporate site; calendar distributed to families"
+  },
+  {
+    "name": "KLA Schools of Coral Gables",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://klaschools.com/coral-gables/",
+    "calendar_status": "not_available_online",
+    "notes": "Reggio-inspired campus; calendar not published online"
+  },
+  {
+    "name": "The Learning Experience - Miami Lakes",
+    "type": "preschool",
+    "neighborhood": "Miami Lakes",
+    "website": "https://thelearningexperience.com/centers/miami-lakes/",
+    "calendar_status": "not_available_online",
+    "notes": "TLE franchise corporate page; calendar shared via parent portal"
+  },
+  {
+    "name": "The Learning Experience - Doral",
+    "type": "preschool",
+    "neighborhood": "Doral",
+    "website": "https://thelearningexperience.com/centers/doral/",
+    "calendar_status": "not_available_online",
+    "notes": "TLE corporate campus page"
+  },
+  {
+    "name": "Primrose School of West Kendall",
+    "type": "preschool",
+    "neighborhood": "West Kendall",
+    "website": "https://www.primroseschools.com/schools/west-kendall/",
+    "calendar_status": "not_available_online",
+    "notes": "Primrose corporate campus page; calendar via parent portal"
+  },
+  {
+    "name": "The Goddard School of Miami (Doral)",
+    "type": "preschool",
+    "neighborhood": "Doral",
+    "website": "https://www.goddardschool.com/schools/fl/doral/doral",
+    "calendar_status": "not_available_online",
+    "notes": "Goddard franchise page; calendar not public"
+  },
+  {
+    "name": "Bright Horizons at Baptist Hospital",
+    "type": "preschool",
+    "neighborhood": "Kendall",
+    "website": "https://child-care-preschool.brighthorizons.com/fl/miami/baptisthospital",
+    "calendar_status": "not_available_online",
+    "notes": "Employer-sponsored childcare at Baptist Hospital"
+  },
+  {
+    "name": "La Petite Academy of Miami",
+    "type": "preschool",
+    "neighborhood": "Kendall",
+    "website": "https://www.lapetite.com/",
+    "calendar_status": "not_available_online",
+    "notes": "National chain; calendar not published publicly"
+  },
+  {
+    "name": "KinderCare Learning Center - Kendall",
+    "type": "preschool",
+    "neighborhood": "Kendall",
+    "website": "https://www.kindercare.com/our-centers/miami/fl/",
+    "calendar_status": "not_available_online",
+    "notes": "National chain; center-specific calendar via parent portal"
+  },
+  {
+    "name": "Temple Beth Am Early Childhood Center",
+    "type": "preschool",
+    "neighborhood": "Pinecrest",
+    "website": "https://www.tbam.org/learning/ecc",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Temple Beth Am Day School & ECC share calendar; Jewish holidays observed"
+  },
+  {
+    "name": "Temple Israel of Greater Miami Preschool",
+    "type": "preschool",
+    "neighborhood": "Edgewater/Downtown",
+    "website": "https://www.templeisrael.net/",
+    "calendar_status": "not_available_online",
+    "notes": "Reform synagogue; preschool info on temple site"
+  },
+  {
+    "name": "Temple Judea Early Childhood Center",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.judeagables.org/ecc",
+    "calendar_status": "not_available_online",
+    "notes": "Reform temple in Coral Gables; ECC serves ages 1-5"
+  },
+  {
+    "name": "Beth David Preschool",
+    "type": "preschool",
+    "neighborhood": "Brickell/Roads",
+    "website": "https://www.bethdavidmiami.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Historic Conservative synagogue; preschool on-site"
+  },
+  {
+    "name": "Chabad of Key Biscayne Preschool",
+    "type": "preschool",
+    "neighborhood": "Key Biscayne",
+    "website": "https://www.chabadkb.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Chabad center preschool on Key Biscayne"
+  },
+  {
+    "name": "David Posnack Jewish Day School ECC",
+    "type": "preschool",
+    "neighborhood": "Davie (serves Miami-Dade families)",
+    "website": "https://www.posnackschool.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Broward location but draws from north Miami-Dade"
+  },
+  {
+    "name": "Hillel Community Day School ECC",
+    "type": "preschool",
+    "neighborhood": "North Miami Beach/Aventura",
+    "website": "https://www.hilleldayschool.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Jewish day school with ECC component; calendar page exists on site"
+  },
+  {
+    "name": "Temple Emanu-El Preschool",
+    "type": "preschool",
+    "neighborhood": "South Beach",
+    "website": "https://www.tesobe.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Conservative synagogue; preschool on Miami Beach"
+  },
+  {
+    "name": "Beth Torah Benny Rok Campus Preschool",
+    "type": "preschool",
+    "neighborhood": "Aventura/NMB",
+    "website": "https://www.bethtorah.net/",
+    "calendar_status": "not_available_online",
+    "notes": "Conservative synagogue preschool"
+  },
+  {
+    "name": "St. Thomas Episcopal Parish Day School",
+    "type": "preschool",
+    "neighborhood": "Coral Gables/Pinecrest",
+    "website": "https://www.stthomasparishschool.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Separate from St. Thomas Episcopal School (K-8); parish day school serves PK3-K"
+  },
+  {
+    "name": "Trinity Episcopal Cathedral Preschool",
+    "type": "preschool",
+    "neighborhood": "Edgewater/Downtown",
+    "website": "https://www.trinitymiami.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Cathedral of the Diocese of Southeast Florida"
+  },
+  {
+    "name": "St. Stephen's Episcopal Day School",
+    "type": "preschool",
+    "neighborhood": "Coconut Grove",
+    "website": "https://www.sseds.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Long-established Coconut Grove day school; public calendar page"
+  },
+  {
+    "name": "St. Philip's Episcopal School",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.stphilipschool.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Parish day school in Coral Gables; calendar on site"
+  },
+  {
+    "name": "Coral Gables Congregational Church Preschool",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.gablesucc.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Historic church by Biltmore; preschool program"
+  },
+  {
+    "name": "St. Augustine Catholic School (Early Childhood)",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.staugustineschoolmiami.com/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Archdiocese of Miami school; PK through 8"
+  },
+  {
+    "name": "Immaculate Conception Catholic School",
+    "type": "preschool",
+    "neighborhood": "Hialeah",
+    "website": "https://www.icchs.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Archdiocese elementary with preschool"
+  },
+  {
+    "name": "St. Brendan Catholic School (Preschool)",
+    "type": "preschool",
+    "neighborhood": "Westchester",
+    "website": "https://www.stbrendanschoolmiami.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Parish school with preschool wing"
+  },
+  {
+    "name": "Corpus Christi Catholic School",
+    "type": "preschool",
+    "neighborhood": "Allapattah",
+    "website": "https://www.corpuschristischool.net/",
+    "calendar_status": "not_available_online",
+    "notes": "Archdiocese parish school"
+  },
+  {
+    "name": "Our Lady of Lourdes Academy (Preschool/PK)",
+    "type": "preschool",
+    "neighborhood": "South Miami/Kendall",
+    "website": "https://www.olla.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Primarily girls' high school with PK program serving boys and girls"
+  },
+  {
+    "name": "Alexander Montessori School",
+    "type": "preschool",
+    "neighborhood": "South Miami",
+    "website": "https://www.alexandermontessori.com/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Multi-campus Montessori (several locations); largest in Miami-Dade"
+  },
+  {
+    "name": "Coconut Grove Montessori School",
+    "type": "preschool",
+    "neighborhood": "Coconut Grove",
+    "website": "https://coconutgrovemontessori.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Independent Montessori in the Grove"
+  },
+  {
+    "name": "Little Gables Montessori Academy",
+    "type": "preschool",
+    "neighborhood": "Little Gables/Coral Gables",
+    "website": "https://littlegablesmontessori.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Neighborhood Montessori"
+  },
+  {
+    "name": "Casa Montessori School of Miami",
+    "type": "preschool",
+    "neighborhood": "South Miami",
+    "website": "https://www.casamontessorimiami.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Independent Montessori program"
+  },
+  {
+    "name": "Children's House Montessori School",
+    "type": "preschool",
+    "neighborhood": "The Roads",
+    "website": "https://www.childrenshousemontessori.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Independent Montessori"
+  },
+  {
+    "name": "The Cushman School (Early Childhood)",
+    "type": "preschool",
+    "neighborhood": "MiMo/Upper East Side",
+    "website": "https://www.cushmanschool.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Historic PK3-12 independent school with ECE wing"
+  },
+  {
+    "name": "Coral Gables Preparatory Academy (Preschool)",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://coralgablesprep.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Charter school with early childhood program"
+  },
+  {
+    "name": "Riviera Day School (Lower Division)",
+    "type": "preschool",
+    "neighborhood": "Coral Gables/South Miami",
+    "website": "https://www.rivieraschools.com/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Riviera PK3-8 and separate prep school; calendar on site"
+  },
+  {
+    "name": "Palmer Trinity School (Early Years Program)",
+    "type": "preschool",
+    "neighborhood": "Palmetto Bay",
+    "website": "https://www.palmertrinity.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Primarily grades 6-12; verify if still running early years program"
+  },
+  {
+    "name": "Pinecrest Preparatory Academy Preschool",
+    "type": "preschool",
+    "neighborhood": "Kendall",
+    "website": "https://pinecrestprep.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Charter network with VPK program"
+  },
+  {
+    "name": "Key Biscayne Community Church Preschool",
+    "type": "preschool",
+    "neighborhood": "Key Biscayne",
+    "website": "https://www.kbcc.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Interdenominational church preschool on KB"
+  },
+  {
+    "name": "St. Christopher's By-The-Sea Preschool",
+    "type": "preschool",
+    "neighborhood": "Key Biscayne",
+    "website": "https://www.stchristopherskb.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Episcopal preschool on Key Biscayne"
+  },
+  {
+    "name": "Miami Beach Community Church Preschool",
+    "type": "preschool",
+    "neighborhood": "South Beach",
+    "website": "https://www.miamibeachcommunitychurch.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Historic church in the heart of South Beach"
+  },
+  {
+    "name": "St. Patrick Catholic School (Preschool)",
+    "type": "preschool",
+    "neighborhood": "Miami Beach",
+    "website": "https://www.stpatrickcatholicschool.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Archdiocese of Miami; PK through 8"
+  },
+  {
+    "name": "Bet Breira Samuel Or Olom Preschool",
+    "type": "preschool",
+    "neighborhood": "Kendall",
+    "website": "https://www.betbreira.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Reform temple with preschool"
+  },
+  {
+    "name": "Temple Beth Sholom Preschool",
+    "type": "preschool",
+    "neighborhood": "Miami Beach",
+    "website": "https://www.tbsmb.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Reform temple preschool on Miami Beach"
+  },
+  {
+    "name": "The Cushman School (Primary / Preschool)",
+    "type": "preschool",
+    "neighborhood": "MiMo/Upper East Side",
+    "website": "https://www.cushmanschool.org/primary/",
+    "calendar_status": "not_available_online",
+    "notes": "Duplicate-guard: Cushman has ECE and primary divisions on same campus"
+  },
+  {
+    "name": "Aventura Learning Center",
+    "type": "preschool",
+    "neighborhood": "Aventura",
+    "website": "https://aventuralearningcenter.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Independent Aventura preschool"
+  },
+  {
+    "name": "Doral Academy Preparatory (Preschool)",
+    "type": "preschool",
+    "neighborhood": "Doral",
+    "website": "https://doralacademyprep.org/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Charter with PK program; Academica network"
+  },
+  {
+    "name": "Somerset Academy Preschool (Pembroke/Doral)",
+    "type": "preschool",
+    "neighborhood": "Doral",
+    "website": "https://somersetacademydoral.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Charter network with VPK"
+  },
+  {
+    "name": "KLA Schools of Pinecrest",
+    "type": "preschool",
+    "neighborhood": "Pinecrest",
+    "website": "https://klaschools.com/pinecrest/",
+    "calendar_status": "not_available_online",
+    "notes": "KLA franchise campus"
+  },
+  {
+    "name": "Epiphany Catholic School (Preschool)",
+    "type": "preschool",
+    "neighborhood": "South Miami",
+    "website": "https://www.epiphanycatholicschool.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Archdiocese parish school with PK"
+  },
+  {
+    "name": "Sts. Peter and Paul Catholic School (Preschool)",
+    "type": "preschool",
+    "neighborhood": "The Roads",
+    "website": "https://stspeterandpaulschool.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Parish school near Brickell/Roads"
+  },
+  {
+    "name": "Gulliver Academy (Primary Campus / Preschool)",
+    "type": "preschool",
+    "neighborhood": "Pinecrest/Coral Gables",
+    "website": "https://www.gulliverschools.org/academics/academy",
+    "calendar_status": "pending_pdf_review",
+    "notes": "Gulliver Academy PK3-5; calendar on main Gulliver site"
+  },
+  {
+    "name": "Ransom Everglades Lower School feeder - not offered (Grove Montessori Lab)",
+    "type": "preschool",
+    "neighborhood": "Coconut Grove",
+    "website": "https://www.grovemontessori.com/",
+    "calendar_status": "not_available_online",
+    "notes": "Independent Coconut Grove Montessori; verify exact name with admin"
+  },
+  {
+    "name": "North Beach Elementary (MDCPS Pre-K / VPK)",
+    "type": "preschool",
+    "neighborhood": "Miami Beach",
+    "website": "http://northbeachelementary.com/",
+    "calendar_status": "pending_pdf_review",
+    "notes": "MDCPS school offering VPK; follows MDCPS calendar"
+  },
+  {
+    "name": "International Studies Charter Lower (PK)",
+    "type": "preschool",
+    "neighborhood": "Little Havana",
+    "website": "https://iscs-k8.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Charter school; verify PK offering with admin"
+  },
+  {
+    "name": "Kol Tikvah Preschool",
+    "type": "preschool",
+    "neighborhood": "Parkland (serves NMD families)",
+    "website": "https://www.koltikvah.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Broward temple but on the Miami-Dade family-planning radar"
+  },
+  {
+    "name": "First Presbyterian Church of Miami Preschool",
+    "type": "preschool",
+    "neighborhood": "Brickell",
+    "website": "https://www.fpcmiami.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Historic Brickell church with preschool"
+  },
+  {
+    "name": "Granada Presbyterian Church Preschool",
+    "type": "preschool",
+    "neighborhood": "Coral Gables",
+    "website": "https://www.granadapres.org/",
+    "calendar_status": "not_available_online",
+    "notes": "Coral Gables Presbyterian preschool"
+  }
+]
