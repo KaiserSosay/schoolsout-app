@@ -1169,6 +1169,47 @@
         "button": "Lista tu campamento →"
       }
     },
+    "breaks": {
+      "title": "Próximos recesos escolares en Miami",
+      "subtitle": "Cada cierre verificado en las escuelas que seguimos. Toca un receso para ver ideas y campamentos.",
+      "empty": "No hay recesos próximos — vuelve después del próximo calendario.",
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "inDays": "en {n} días",
+      "cta": {
+        "heading": "Nunca más improvises un plan.",
+        "sub": "Cuenta gratis. Un correo antes de cada receso escolar.",
+        "button": "Crea una cuenta gratis →"
+      }
+    },
+    "closureDetail": {
+      "back": "← Volver a recesos",
+      "duration": "{count, plural, one {# día libre} other {# días libres}}",
+      "affects": "Afecta a",
+      "verified": "✓ Verificado de fuente oficial",
+      "pending": "Verificación pendiente",
+      "camps": {
+        "title": "Campamentos abiertos para este receso",
+        "subtitle": "Revisados a mano por School's Out!.",
+        "empty": "Ningún campamento coincide aún — revisa el índice de recesos."
+      },
+      "cta": {
+        "heading": "Planea este día para tus hijos.",
+        "sub": "Crea una cuenta gratis para guardar campamentos, compartir planes y recibir recordatorios.",
+        "button": "Crea una cuenta gratis →"
+      }
+    },
+    "school": {
+      "closures": "Próximos recesos",
+      "empty": "No hay recesos próximos en el archivo.",
+      "verified": "Verificado",
+      "pending": "Pendiente",
+      "cta": {
+        "heading": "Recibe recordatorios para esta escuela.",
+        "sub": "Cuenta gratis. Un correo antes de cada receso del calendario.",
+        "button": "Crea una cuenta gratis →"
+      }
+    },
     "campDetail": {
       "back": "← Volver a campamentos",
       "call": "Llamar {phone}",

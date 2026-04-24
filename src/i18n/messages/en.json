@@ -1169,6 +1169,47 @@
         "button": "List your camp →"
       }
     },
+    "breaks": {
+      "title": "Upcoming Miami school breaks",
+      "subtitle": "Every verified closure across the schools we track. Tap any break for plan ideas + matching camps.",
+      "empty": "No upcoming breaks — check back after the next calendar drop.",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "inDays": "in {n} days",
+      "cta": {
+        "heading": "Never scramble for a plan again.",
+        "sub": "Free account. One email before every Miami school break.",
+        "button": "Create a free account →"
+      }
+    },
+    "closureDetail": {
+      "back": "← Back to breaks",
+      "duration": "{count, plural, one {# day off} other {# days off}}",
+      "affects": "Affects",
+      "verified": "✓ Verified from official source",
+      "pending": "Pending school verification",
+      "camps": {
+        "title": "Camps open for this break",
+        "subtitle": "Human-reviewed by School's Out!.",
+        "empty": "No camps matched yet — try the breaks index."
+      },
+      "cta": {
+        "heading": "Plan this day for your kids.",
+        "sub": "Create a free account to save camps, share plans with a co-parent, and get reminded before the break.",
+        "button": "Create a free account →"
+      }
+    },
+    "school": {
+      "closures": "Upcoming breaks",
+      "empty": "No upcoming breaks on file.",
+      "verified": "Verified",
+      "pending": "Pending",
+      "cta": {
+        "heading": "Get reminders for this school.",
+        "sub": "Free account. One email before every break on this school's calendar.",
+        "button": "Create a free account →"
+      }
+    },
     "campDetail": {
       "back": "← Back to camps",
       "call": "Call {phone}",
