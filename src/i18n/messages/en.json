@@ -1275,6 +1275,34 @@
         "button": "Create a free account →"
       }
     },
+    "cities": {
+      "title": "Browse by city",
+      "subtitle": "We're starting small and verifying every school by hand.",
+      "currentHeading": "Cities we cover today",
+      "currentCity": "Miami-Dade County, FL",
+      "currentNote": "Every public-school closure across the county, plus a growing list of independent schools.",
+      "requestHeading": "Don't see your city?",
+      "requestBody": "Tell us where your kid goes to school. We'll email you the moment we add calendars for your area.",
+      "requestCta": "Request your city →",
+      "requestBodyDraft": "City request: "
+    },
+    "howItWorks": {
+      "title": "How School's Out! works",
+      "subtitle": "Three steps, no paywall, zero ads.",
+      "step1": {
+        "title": "1. Get reminded",
+        "body": "Give us your email and we'll send you a note 2 weeks, 1 week, and 3 days before every Miami school closure on your kid's calendar."
+      },
+      "step2": {
+        "title": "2. Browse verified camps",
+        "body": "Every camp in our directory is manually reviewed. No fake listings, no affiliate links, no \"sponsored\" slots pretending to be editorial picks."
+      },
+      "step3": {
+        "title": "3. Plan your day",
+        "body": "Create a free account to save camps, share plans with a co-parent, and build a break-by-break schedule your kids will actually enjoy."
+      },
+      "cta": "Get reminders →"
+    },
     "campDetail": {
       "back": "← Back to camps",
       "call": "Call {phone}",
@@ -1292,6 +1320,39 @@
         "sub": "Free account. One email before every Miami school break.",
         "button": "Create a free account →"
       }
+    }
+  },
+  "footer": {
+    "columns": {
+      "explore": {
+        "title": "Explore",
+        "camps": "Camps",
+        "breaks": "School breaks",
+        "cities": "Browse by city",
+        "verify": "How we verify"
+      },
+      "camps": {
+        "title": "For camps",
+        "list": "List your camp",
+        "whyList": "Why list with us"
+      },
+      "parents": {
+        "title": "For parents",
+        "reminders": "Free reminders",
+        "howItWorks": "How it works",
+        "plan": "Plan your year"
+      },
+      "about": {
+        "title": "About",
+        "aboutNoah": "About Noah",
+        "idea": "Got an idea?",
+        "privacy": "Privacy",
+        "terms": "Terms"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2026 School's Out! — Built with care by Noah in Miami.",
+      "motto": "Be so good, nobody can ignore you."
     }
   }
 }

@@ -15,7 +15,6 @@ import { Coverage } from './Coverage';
 import { ForCampOwners } from './ForCampOwners';
 import { FAQ } from './FAQ';
 import { FinalCTA } from './FinalCTA';
-import { Footer } from './Footer';
 
 export function HomeClient({
   closures,
@@ -46,7 +45,6 @@ export function HomeClient({
           <FAQ />
           <FinalCTA />
         </main>
-        <Footer locale={locale} />
       </ModeRoot>
     </ModeProvider>
   );

@@ -1275,6 +1275,34 @@
         "button": "Crea una cuenta gratis →"
       }
     },
+    "cities": {
+      "title": "Explorar por ciudad",
+      "subtitle": "Estamos empezando de a poco y verificando cada escuela a mano.",
+      "currentHeading": "Ciudades que cubrimos hoy",
+      "currentCity": "Condado de Miami-Dade, FL",
+      "currentNote": "Todos los cierres de escuelas públicas del condado, más una lista creciente de escuelas independientes.",
+      "requestHeading": "¿No ves tu ciudad?",
+      "requestBody": "Cuéntanos dónde estudia tu hijo. Te avisamos por correo cuando agreguemos calendarios para tu zona.",
+      "requestCta": "Solicita tu ciudad →",
+      "requestBodyDraft": "Solicitud de ciudad: "
+    },
+    "howItWorks": {
+      "title": "Cómo funciona School's Out!",
+      "subtitle": "Tres pasos, sin muro de pago, sin anuncios.",
+      "step1": {
+        "title": "1. Recibe recordatorios",
+        "body": "Danos tu correo y te avisamos 2 semanas, 1 semana y 3 días antes de cada cierre escolar en Miami del calendario de tu hijo."
+      },
+      "step2": {
+        "title": "2. Explora campamentos verificados",
+        "body": "Cada campamento de nuestro directorio se revisa a mano. Sin listados falsos, sin enlaces de afiliado, sin espacios \"patrocinados\" disfrazados de recomendaciones."
+      },
+      "step3": {
+        "title": "3. Planea tu día",
+        "body": "Crea una cuenta gratis para guardar campamentos, compartir planes con un co-padre y armar un horario por receso que tus hijos disfruten."
+      },
+      "cta": "Quiero recordatorios →"
+    },
     "campDetail": {
       "back": "← Volver a campamentos",
       "call": "Llamar {phone}",
@@ -1292,6 +1320,39 @@
         "sub": "Cuenta gratis. Un correo antes de cada receso escolar en Miami.",
         "button": "Crea una cuenta gratis →"
       }
+    }
+  },
+  "footer": {
+    "columns": {
+      "explore": {
+        "title": "Explorar",
+        "camps": "Campamentos",
+        "breaks": "Vacaciones escolares",
+        "cities": "Por ciudad",
+        "verify": "Cómo verificamos"
+      },
+      "camps": {
+        "title": "Para campamentos",
+        "list": "Lista tu campamento",
+        "whyList": "Por qué listar con nosotros"
+      },
+      "parents": {
+        "title": "Para padres",
+        "reminders": "Recordatorios gratis",
+        "howItWorks": "Cómo funciona",
+        "plan": "Planea tu año"
+      },
+      "about": {
+        "title": "Acerca de",
+        "aboutNoah": "Sobre Noah",
+        "idea": "¿Tienes una idea?",
+        "privacy": "Privacidad",
+        "terms": "Términos"
+      }
+    },
+    "bottom": {
+      "copyright": "© 2026 School's Out! — Construido con cariño por Noah en Miami.",
+      "motto": "Sé tan bueno que no te puedan ignorar."
     }
   }
 }

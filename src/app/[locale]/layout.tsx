@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n/config';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { FeatureRequestModal } from '@/components/FeatureRequestModal';
+import { Footer } from '@/components/home/Footer';
 import '../globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -185,6 +186,7 @@ export default async function LocaleLayout({
       <body className="min-h-screen bg-cream text-ink font-display antialiased">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Footer locale={locale} loggedIn={Boolean(loggedInEmail)} />
           <FeatureRequestModal
             presetEmail={loggedInEmail}
             isLoggedIn={Boolean(loggedInEmail)}
