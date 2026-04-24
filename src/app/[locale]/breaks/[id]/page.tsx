@@ -1,9 +1,45 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { PublicCampCard, type PublicCampCard as PublicCampCardShape } from '@/components/public/PublicCampCard';
+import {
+  publicPageMetadata,
+  breadcrumbListJsonLd,
+  closureEventJsonLd,
+  faqJsonLd,
+  JsonLdScripts,
+  SITE_URL,
+} from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { locale, id } = await params;
+  const svc = createServiceSupabase();
+  const { data } = await svc
+    .from('closures')
+    .select('name, start_date, end_date, school_id')
+    .eq('id', id)
+    .maybeSingle();
+  const c = data as { name: string; start_date: string; end_date: string; school_id: string } | null;
+  if (!c) return publicPageMetadata({ locale, path: `/breaks/${id}`, title: "Break | School's Out!", description: '' });
+  const startYear = c.start_date.slice(0, 4);
+  const dateStr = new Date(c.start_date + 'T00:00:00').toLocaleDateString(
+    locale === 'es' ? 'es-US' : 'en-US',
+    { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
+  );
+  return publicPageMetadata({
+    locale,
+    path: `/breaks/${id}`,
+    title: `${c.name} ${startYear} — Miami schools closed ${dateStr} | School's Out!`,
+    description: `Miami schools are closed for ${c.name} on ${dateStr}. See camp options and plan-ahead ideas. Human-reviewed by School's Out!`,
+  });
+}
 
 // Public closure detail at /{locale}/breaks/{id}.
 // Routed by uuid because closures.slug didn't fit the immutable-generated-
@@ -68,8 +104,41 @@ export default async function PublicClosureDetailPage({
   const camps = (matchedCamps ?? []) as PublicCampCardShape[];
   const daysOff = dayCount(c.start_date, c.end_date);
 
+  const pageUrl = `${SITE_URL}/${locale}/breaks/${c.id}`;
+  const ldItems = [
+    closureEventJsonLd({
+      name: c.name,
+      description: `${c.name} — Miami schools closed`,
+      url: pageUrl,
+      startDate: c.start_date,
+      endDate: c.end_date,
+      schoolName: school?.name ?? null,
+      schoolUrl: school ? `${SITE_URL}/${locale}/schools/${school.slug}` : null,
+    }),
+    breadcrumbListJsonLd([
+      { name: 'Home', href: `/${locale}` },
+      { name: 'Breaks', href: `/${locale}/breaks` },
+      { name: c.name, href: `/${locale}/breaks/${c.id}` },
+    ]),
+    faqJsonLd([
+      {
+        q: `Do Miami schools have school on ${c.name}?`,
+        a: `No. Miami-area schools are closed on ${c.name}. See the per-school pages for the exact dates.`,
+      },
+      {
+        q: 'Are camps open on teacher planning days?',
+        a: 'Yes — most Miami-area summer and short-break camps explicitly run on teacher planning days. Browse the camps directory or the matched cards on this page.',
+      },
+      {
+        q: 'How does School\'s Out! verify school closures?',
+        a: 'Every closure row is sourced from the official district PDF (e.g. Miami-Dade County Public Schools) or from the school office directly. See /how-we-verify for the full posture.',
+      },
+    ]),
+  ];
+
   return (
     <>
+      <JsonLdScripts items={ldItems} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-3xl px-4 py-6 md:px-6 md:py-10">
         <Link

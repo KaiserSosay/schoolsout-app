@@ -1,15 +1,61 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
+import {
+  publicPageMetadata,
+  breadcrumbListJsonLd,
+  campJsonLd,
+  JsonLdScripts,
+  SITE_URL,
+} from '@/lib/seo';
 
 // Public camp detail at /{locale}/camps/{slug}. No auth. No SaveCampButton,
 // no Plan-this-day wizard. Shows what a parent googling the camp wants:
 // who, where, when, how much, how to register. Plus a sign-up CTA.
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const svc = createServiceSupabase();
+  const { data } = await svc
+    .from('camps')
+    .select('name, description, neighborhood, ages_min, ages_max, image_url')
+    .eq('slug', slug)
+    .maybeSingle();
+  const camp = data as {
+    name: string;
+    description: string | null;
+    neighborhood: string | null;
+    ages_min: number | null;
+    ages_max: number | null;
+    image_url: string | null;
+  } | null;
+  if (!camp) return publicPageMetadata({ locale, path: `/camps/${slug}`, title: "Camp | School's Out!", description: '' });
+  const agePart =
+    camp.ages_min != null && camp.ages_max != null
+      ? ` Ages ${camp.ages_min}–${camp.ages_max}.`
+      : '';
+  const neighborhoodPart = camp.neighborhood ? ` ${camp.neighborhood}, Miami.` : ' Miami.';
+  const desc =
+    (camp.description ?? camp.name) + `.${agePart}${neighborhoodPart} Human-reviewed by School's Out!`;
+  const trimmed = desc.length > 160 ? desc.slice(0, 157) + '…' : desc;
+  return publicPageMetadata({
+    locale,
+    path: `/camps/${slug}`,
+    title: `${camp.name} — Miami Summer Camps 2026 | School's Out!`,
+    description: trimmed,
+    image: camp.image_url ?? `${SITE_URL}/og/camp/${slug}`,
+  });
+}
 
 type CampFull = {
   id: string;
@@ -90,8 +136,30 @@ export default async function PublicCampDetailPage({
       )
     : null;
 
+  const ldItems = [
+    campJsonLd({
+      name: camp.name,
+      description: camp.description,
+      url: `${SITE_URL}/${locale}/camps/${camp.slug}`,
+      imageUrl: camp.image_url,
+      address: camp.address,
+      phone: camp.phone,
+      websiteUrl: camp.website_url,
+      priceMinCents: camp.price_min_cents,
+      priceMaxCents: camp.price_max_cents,
+      agesMin: camp.ages_min,
+      agesMax: camp.ages_max,
+    }),
+    breadcrumbListJsonLd([
+      { name: 'Home', href: `/${locale}` },
+      { name: 'Camps', href: `/${locale}/camps` },
+      { name: camp.name, href: `/${locale}/camps/${camp.slug}` },
+    ]),
+  ];
+
   return (
     <>
+      <JsonLdScripts items={ldItems} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-3xl px-4 py-6 md:px-6 md:py-10">
         <Link

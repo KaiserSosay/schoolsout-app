@@ -1,8 +1,38 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
+import {
+  publicPageMetadata,
+  breadcrumbListJsonLd,
+  schoolJsonLd,
+  JsonLdScripts,
+  SITE_URL,
+} from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const svc = createServiceSupabase();
+  const { data } = await svc
+    .from('schools')
+    .select('name, district, city')
+    .eq('slug', slug)
+    .maybeSingle();
+  const s = data as { name: string; district: string; city: string } | null;
+  if (!s) return publicPageMetadata({ locale, path: `/schools/${slug}`, title: "School | School's Out!", description: '' });
+  return publicPageMetadata({
+    locale,
+    path: `/schools/${slug}`,
+    title: `${s.name} calendar — Miami school breaks 2026 | School's Out!`,
+    description: `Upcoming school breaks and holiday calendar for ${s.name} (${s.district}, ${s.city}). Verified by School's Out!`,
+  });
+}
 
 // Public per-school calendar page. SEO gold for queries like
 // "Miami Beach Senior High calendar" or "Gulliver Academy winter
@@ -60,8 +90,23 @@ export default async function PublicSchoolPage({
     .limit(40);
   const closures = (closuresData ?? []) as ClosureRow[];
 
+  const ldItems = [
+    schoolJsonLd({
+      name: school.name,
+      url: `${SITE_URL}/${locale}/schools/${school.slug}`,
+      district: school.district ?? null,
+      city: school.city ?? null,
+    }),
+    breadcrumbListJsonLd([
+      { name: 'Home', href: `/${locale}` },
+      { name: 'Breaks', href: `/${locale}/breaks` },
+      { name: school.name, href: `/${locale}/schools/${school.slug}` },
+    ]),
+  ];
+
   return (
     <>
+      <JsonLdScripts items={ldItems} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-3xl px-4 py-8 md:px-6 md:py-12">
         <header className="mb-6">

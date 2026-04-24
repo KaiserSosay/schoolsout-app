@@ -1,15 +1,32 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import {
   PublicCampCard,
   type PublicCampCard as PublicCampCardShape,
 } from '@/components/public/PublicCampCard';
+import { publicPageMetadata } from '@/lib/seo';
 
 // Public directory at /{locale}/camps — no auth required, SEO-indexable.
 // Distinct from /{locale}/app/camps, which is the signed-in planner view.
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'public.camps' });
+  return publicPageMetadata({
+    locale,
+    path: '/camps',
+    title: t('title') + " | School's Out!",
+    description: t('subtitle'),
+  });
+}
 
 type SearchParams = {
   category?: string;

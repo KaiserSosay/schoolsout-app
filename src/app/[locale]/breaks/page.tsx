@@ -1,7 +1,24 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
+import { publicPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'public.breaks' });
+  return publicPageMetadata({
+    locale,
+    path: '/breaks',
+    title: t('title') + " | School's Out!",
+    description: t('subtitle'),
+  });
+}
 
 // Public school-breaks index at /{locale}/breaks.
 // Lists upcoming verified closures across every tracked school, grouped
