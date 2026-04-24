@@ -2,11 +2,12 @@ import { getTranslations } from 'next-intl/server';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { CampCard, type CampCardCamp } from '@/components/app/CampCard';
-import { CampFilters } from '@/components/app/CampFilters';
 import { CampSortControl, type FromOption } from '@/components/app/CampSortControl';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
-import { CampsEmpty } from '@/components/app/CampsEmpty';
 import { CampCount } from '@/components/camps/CampCount';
+import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
+import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
+import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { haversineMiles } from '@/lib/distance';
 
 export const dynamic = 'force-dynamic';
@@ -24,25 +25,7 @@ type CampRow = CampCardCamp & {
   created_at?: string;
 };
 
-type SearchParams = {
-  categories?: string;
-  must_have?: string;
-  sort?: string;
-  from_id?: string;
-  from_lat?: string;
-  from_lng?: string;
-};
-
-function parseCsv(v: string | undefined): string[] {
-  return v ? v.split(',').map((s) => s.trim()).filter(Boolean) : [];
-}
-
-function hasFullWorkday(c: CampRow): boolean {
-  const effectiveStart = c.before_care_offered && c.before_care_start ? c.before_care_start : c.hours_start;
-  const effectiveEnd = c.after_care_offered && c.after_care_end ? c.after_care_end : c.hours_end;
-  if (!effectiveStart || !effectiveEnd) return false;
-  return effectiveStart <= '08:00' && effectiveEnd >= '17:30';
-}
+type SearchParams = Record<string, string | string[] | undefined>;
 
 export default async function CampsPage({
   params,
@@ -55,10 +38,10 @@ export default async function CampsPage({
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: 'app.camps' });
 
-  const categoriesFilter = parseCsv(sp.categories);
-  const mustHaveFilter = parseCsv(sp.must_have);
+  const filters = parseFiltersFromRecord(sp);
+  const sortRaw = typeof sp.sort === 'string' ? sp.sort : null;
   const sortParam =
-    sp.sort === 'price' || sp.sort === 'name' || sp.sort === 'distance' ? sp.sort : null;
+    sortRaw === 'price' || sortRaw === 'name' || sortRaw === 'distance' ? sortRaw : null;
 
   // DECISION: use service role for camps read (public) and authed client for
   // the user's saved set + schools (RLS-protected). Parallel to shave latency.
@@ -142,13 +125,14 @@ export default async function CampsPage({
   // Resolve origin for distance sort
   let originLat: number | null = null;
   let originLng: number | null = null;
-  let activeFromId: string | null = sp.from_id ?? null;
+  let activeFromId: string | null =
+    typeof sp.from_id === 'string' ? sp.from_id : null;
   if (activeSort === 'distance') {
-    const qLat = sp.from_lat ? Number(sp.from_lat) : NaN;
-    const qLng = sp.from_lng ? Number(sp.from_lng) : NaN;
-    if (Number.isFinite(qLat) && Number.isFinite(qLng)) {
-      originLat = qLat;
-      originLng = qLng;
+    const fromLat = typeof sp.from_lat === 'string' ? Number(sp.from_lat) : NaN;
+    const fromLng = typeof sp.from_lng === 'string' ? Number(sp.from_lng) : NaN;
+    if (Number.isFinite(fromLat) && Number.isFinite(fromLng)) {
+      originLat = fromLat;
+      originLng = fromLng;
     } else if (fromOptions[0]) {
       originLat = fromOptions[0].latitude;
       originLng = fromOptions[0].longitude;
@@ -156,20 +140,8 @@ export default async function CampsPage({
     }
   }
 
-  // Filter camps
-  let filtered: CampRow[] =
-    categoriesFilter.length === 0
-      ? rows
-      : rows.filter((c) => (c.categories ?? []).some((cat) => categoriesFilter.includes(cat)));
-  if (mustHaveFilter.includes('before_care')) {
-    filtered = filtered.filter((c) => c.before_care_offered === true);
-  }
-  if (mustHaveFilter.includes('after_care')) {
-    filtered = filtered.filter((c) => c.after_care_offered === true);
-  }
-  if (mustHaveFilter.includes('full_workday')) {
-    filtered = filtered.filter(hasFullWorkday);
-  }
+  const filtered = applyFilters(rows, filters);
+  const active = hasActiveFilters(filters);
 
   // Annotate with distance
   const annotated = filtered.map((c) => {
@@ -193,6 +165,10 @@ export default async function CampsPage({
     sorted = [...annotated].sort((a, b) => rank[a.price_tier] - rank[b.price_tier]);
   }
 
+  const hoods = Array.from(
+    new Set(rows.map((r) => r.neighborhood).filter((h): h is string => Boolean(h))),
+  ).sort();
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:px-6 md:py-10">
       <AppPageHeader
@@ -211,20 +187,19 @@ export default async function CampsPage({
       </div>
 
       <div className="mb-5">
-        <CampFilters active={categoriesFilter} activeMustHave={mustHaveFilter} />
+        {/* DECISION: Same shared bar as /camps. matchEnabled is wired to a
+            URL ?match=1 param but the chip stays hidden until the underlying
+            kid-age match logic ships (per COPPA, kid ages live client-side
+            so this needs a client-side overlay rather than a server filter). */}
+        <CampsFilterBar mode="app" hoods={hoods} matchEnabled={false} />
       </div>
 
       <div className="mb-3">
-        <CampCount
-          locale={locale}
-          filtered={sorted.length}
-          total={rows.length}
-          hasFilters={categoriesFilter.length > 0 || mustHaveFilter.length > 0}
-        />
+        <CampCount filtered={sorted.length} total={rows.length} hasFilters={active} />
       </div>
 
       {sorted.length === 0 ? (
-        <CampsEmpty text={t('empty')} />
+        <CampsEmptyHint hasSearchTerm={Boolean(filters.q)} />
       ) : (
         <ul className="space-y-3">
           {sorted.map((camp) => (

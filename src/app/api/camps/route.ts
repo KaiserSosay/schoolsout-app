@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { haversineMiles } from '@/lib/distance';
+import { applyFilters, parseFilters, type FilterableCamp } from '@/lib/camps/filters';
 
 // Opt out of Next.js route caching. This API reads live DB state + respects
 // query-string filters; if it gets cached we end up serving stale camp lists
@@ -189,6 +190,14 @@ export async function GET(req: Request) {
   if (mustHaveList.includes('full_workday')) {
     camps = camps.filter(hasFullWorkday);
   }
+
+  // DECISION (Phase 2.7 filter-bar parity): pull q / cats / care toggles /
+  // ages-band / tier / hood through the shared filter library so any consumer
+  // of /api/camps gets the same semantics as the page-side filters. Older
+  // params (categories, age, min_price, max_price, must_have) still apply
+  // first — these are additive AND filters.
+  const sharedFilters = parseFilters(url.searchParams);
+  camps = applyFilters(camps as unknown as FilterableCamp[], sharedFilters) as unknown as CampRow[];
 
   // --- closure_id: sessions overlap (or age-only fallback with sessions_unknown) ---
   const sessionsByCamp: Record<string, CampSessionRow[]> = {};

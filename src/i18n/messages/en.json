@@ -134,6 +134,36 @@
       "total": "{n, plural, one {# camp} other {# camps}}",
       "filtered": "of {total} camps",
       "zero": "of {total} camps — try clearing filters"
+    },
+    "filters": {
+      "search": {
+        "label": "Search camps by name",
+        "placeholder": "Search by name",
+        "clear": "Clear search"
+      },
+      "matchMyKids": "Match my kids",
+      "categories": {
+        "label": "Filter by category"
+      },
+      "toggles": {
+        "label": "Filter by extended care",
+        "fullWorkday": {
+          "label": "Full workday",
+          "tooltip": "Covers roughly 8am–5pm with before + after care"
+        },
+        "beforeCare": { "label": "Before-care" },
+        "afterCare": { "label": "After-care" }
+      },
+      "advanced": {
+        "toggle": "More filters",
+        "ages": "Ages",
+        "price": "Price",
+        "neighborhood": "Neighborhood"
+      },
+      "empty": {
+        "title": "No camps match those filters.",
+        "body": "Try <clear>clearing filters</clear> or <search>searching by name instead</search>."
+      }
     }
   },
   "errors": {

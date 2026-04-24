@@ -134,6 +134,36 @@
       "total": "{n, plural, one {# campamento} other {# campamentos}}",
       "filtered": "de {total} campamentos",
       "zero": "de {total} campamentos — prueba quitar filtros"
+    },
+    "filters": {
+      "search": {
+        "label": "Buscar campamentos por nombre",
+        "placeholder": "Buscar por nombre",
+        "clear": "Borrar búsqueda"
+      },
+      "matchMyKids": "Para mis hijos",
+      "categories": {
+        "label": "Filtrar por categoría"
+      },
+      "toggles": {
+        "label": "Filtrar por cuidado extendido",
+        "fullWorkday": {
+          "label": "Día completo",
+          "tooltip": "Cubre aproximadamente de 8 a.m. a 5 p.m. con cuidado antes y después"
+        },
+        "beforeCare": { "label": "Antes de clases" },
+        "afterCare": { "label": "Después de clases" }
+      },
+      "advanced": {
+        "toggle": "Más filtros",
+        "ages": "Edades",
+        "price": "Precio",
+        "neighborhood": "Vecindario"
+      },
+      "empty": {
+        "title": "Ningún campamento coincide.",
+        "body": "Prueba <clear>quitar filtros</clear> o <search>buscar por nombre</search>."
+      }
     }
   },
   "errors": {

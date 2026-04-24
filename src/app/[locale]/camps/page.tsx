@@ -9,6 +9,9 @@ import {
   type PublicCampCard as PublicCampCardShape,
 } from '@/components/public/PublicCampCard';
 import { CampCount } from '@/components/camps/CampCount';
+import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
+import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
+import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { publicPageMetadata } from '@/lib/seo';
 
 // Public directory at /{locale}/camps — no auth required, SEO-indexable.
@@ -30,13 +33,18 @@ export async function generateMetadata({
   });
 }
 
-type SearchParams = {
-  category?: string;
-};
+type SearchParams = Record<string, string | string[] | undefined>;
 
-function parseCsv(v: string | undefined): string[] {
-  return v ? v.split(',').map((s) => s.trim()).filter(Boolean) : [];
-}
+// Public card shape extended with the care + hours columns the shared filter
+// needs. PublicCampCard ignores the extras — they're only here for filtering.
+type CampRow = PublicCampCardShape & {
+  hours_start: string | null;
+  hours_end: string | null;
+  before_care_offered: boolean | null;
+  before_care_start: string | null;
+  after_care_offered: boolean | null;
+  after_care_end: string | null;
+};
 
 export default async function PublicCampsPage({
   params,
@@ -49,26 +57,24 @@ export default async function PublicCampsPage({
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: 'public.camps' });
 
-  const selected = parseCsv(sp.category);
+  const filters = parseFiltersFromRecord(sp);
+
   const svc = createServiceSupabase();
   const { data } = await svc
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, neighborhood, is_featured, verified, phone, address, hours_start, hours_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
+      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, neighborhood, is_featured, verified, phone, address, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
     )
     .eq('verified', true)
     .neq('website_status', 'broken')
     .order('is_featured', { ascending: false })
     .order('name');
 
-  const rows = (data ?? []) as PublicCampCardShape[];
-  const filtered = selected.length
-    ? rows.filter((c) => (c.categories ?? []).some((cat) => selected.includes(cat)))
-    : rows;
-
-  // Build category chip list dynamically from the data we have.
-  const allCategories = Array.from(
-    new Set(rows.flatMap((r) => r.categories ?? [])),
+  const rows = (data ?? []) as CampRow[];
+  const filtered = applyFilters(rows, filters);
+  const active = hasActiveFilters(filters);
+  const hoods = Array.from(
+    new Set(rows.map((r) => r.neighborhood).filter((h): h is string => Boolean(h))),
   ).sort();
 
   return (
@@ -103,41 +109,24 @@ export default async function PublicCampsPage({
           </div>
         </section>
 
-        {/* Category chips */}
-        {allCategories.length ? (
-          <nav aria-label="Categories" className="mb-5 flex flex-wrap gap-2">
-            <CategoryChip
-              href={`/${locale}/camps`}
-              active={selected.length === 0}
-              label={t('filterAll')}
-            />
-            {allCategories.map((c) => (
-              <CategoryChip
-                key={c}
-                href={`/${locale}/camps?category=${encodeURIComponent(c)}`}
-                active={selected.includes(c)}
-                label={c}
-              />
-            ))}
-          </nav>
-        ) : null}
+        {/* Shared filter bar — same component the signed-in /app/camps page
+            uses, minus the "Match my kids" toggle. */}
+        <div className="mb-5">
+          <CampsFilterBar mode="public" hoods={hoods} />
+        </div>
 
         {/* Count indicator — total stays anchored to all verified camps so
             parents see "X of N" framing as they narrow filters. */}
         <div className="mb-3">
           <CampCount
-            locale={locale}
             filtered={filtered.length}
             total={rows.length}
-            hasFilters={selected.length > 0}
+            hasFilters={active}
           />
         </div>
 
-        {/* Grid */}
         {filtered.length === 0 ? (
-          <p className="rounded-2xl border border-cream-border bg-white p-8 text-center text-sm text-muted">
-            {t('empty')}
-          </p>
+          <CampsEmptyHint hasSearchTerm={Boolean(filters.q)} />
         ) : (
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((camp) => (
@@ -165,30 +154,5 @@ export default async function PublicCampsPage({
         </section>
       </main>
     </>
-  );
-}
-
-function CategoryChip({
-  href,
-  active,
-  label,
-}: {
-  href: string;
-  active: boolean;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? 'page' : undefined}
-      className={
-        'inline-flex min-h-9 items-center rounded-full px-3 py-1 text-xs font-bold transition-colors ' +
-        (active
-          ? 'bg-ink text-white'
-          : 'border border-cream-border bg-white text-ink hover:border-brand-purple/40')
-      }
-    >
-      {label}
-    </Link>
   );
 }
