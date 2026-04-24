@@ -779,3 +779,93 @@ research drop from Noah. All shipped to main + live. Eight commits.
 | 019 | camp_applications_rich | ✓ | Goal 5 |
 | 020 | page_views_analytics | ✓ | Goal 6 |
 | 021 | camps_schema_expansion | ✓ | Research data drop |
+
+## Phase 2.7.1 — public discoverability — 2026-04-24
+
+Short follow-up pass to answer Noah's "why does Google return nothing for
+site:schoolsout.net" after the Phase 2.7 SEO drop. Audit first: the
+sitemap, robots, llms.txt, and OG routes were all already shipped. The
+gap was coverage — no footer on public pages — plus two footer-linked
+routes that didn't exist yet.
+
+### Shipped (2 commits)
+
+- **Public-aware footer** — 4-column grid on desktop, mobile accordion
+  with 44px tap targets. Columns: Explore (Camps, School breaks, Browse
+  by city, How we verify), For camps (List your camp, Why list with
+  us), For parents (Free reminders, How it works, Plan your year — the
+  last smart-conditional based on auth), About (About Noah, Got an
+  idea? → opens FeatureRequestModal, Privacy, Terms). Bottom strip: ©
+  line with Noah's name, EN↔ES toggle, Noah's motto linking to
+  BeSoGood.org. New top-level `footer.*` i18n namespace (EN + ES; ES
+  flagged for native review). Mounted once in `[locale]/layout.tsx` so
+  every public page AND every /app page shows it. HomeClient no longer
+  renders its own Footer — the landing page picks it up from the layout
+  like everyone else.
+- **/cities + /how-it-works stubs** — the footer referenced both. /cities
+  lists Miami-Dade County FL as the one city we cover today; the
+  "Request your city" CTA opens the existing FeatureRequestModal with a
+  prefilled body draft via the shared `so-open-feature-request` event.
+  /how-it-works is a three-section explainer (Get reminded → Browse
+  verified camps → Plan your day) with a "Get reminders →" CTA back to
+  the landing signup.
+- **Robots AI allowlist** — explicit rules for Google-Extended, GPTBot,
+  ClaudeBot, PerplexityBot so each gets an entry it will actually obey.
+  Disallow set unchanged (/app/, /admin/, /api/admin/, /api/).
+
+### Not done this pass (deferred / already shipped)
+
+- **Sitemap + robots + llms.txt rewrite** — all three already shipped
+  in Phase 2.7 Goal 4. Sitemap currently returns 78 URLs because the
+  builder filters `verified=true AND website_status != broken` and most
+  of the 70 imported camps are still un-verified in the DB. Bumping
+  those to `verified=true` will bring the sitemap closer to 200 without
+  touching code. This is a data pass, not an engineering pass.
+- **JSON-LD on detail pages** — already shipped in Phase 2.7. Camp,
+  Event+FAQPage, School, BreadcrumbList all emit via `src/lib/seo.tsx`
+  helpers (`campJsonLd`, `closureEventJsonLd`, `schoolJsonLd`,
+  `faqJsonLd`, `breadcrumbListJsonLd`). Landing also emits
+  SoftwareApplication + Organization + FAQPage in `[locale]/layout.tsx`.
+- **CityRequestForm reuse** — the landing's `CityRequestForm` depends
+  on the `useMode` context from `ModeProvider` (landing-only). Rather
+  than plumb that context into the new /cities page, the stub uses a
+  tiny `CityRequestTrigger` button that opens the global
+  FeatureRequestModal via CustomEvent. Same database table, same admin
+  queue.
+
+### Tests
+
+- `tests/components/Footer.test.tsx` — verifies every `footer.*` key
+  exists in both EN and ES (19 required keys × 2 locales = 38
+  assertions).
+- Existing `tests/pages/about.test.tsx` kept passing because
+  `landing.footer.nav.about` is still in the catalog (the new
+  `footer.*` namespace lives alongside it).
+- Existing `tests/app/robots.test.ts` kept passing — the `'*'` rule
+  still disallows the same paths.
+
+### Live verification
+
+After push: `/en/cities`, `/es/cities`, `/en/how-it-works`, `/es/how-it-works`
+all return HTTP 200. `robots.txt` shows the AI-bot allowlist.
+`sitemap.xml` returns 78 URLs (unchanged — see note above about camp
+verification status).
+
+### Phase 2.7.1 — what Rasheid needs to do
+
+- [ ] **Submit sitemap to Google Search Console**
+      → https://search.google.com/search-console
+      Requires domain verification via TXT record or HTML file upload.
+      TXT via Vercel DNS is fastest. Once verified, submit
+      `https://schoolsout.net/sitemap.xml`.
+- [ ] **Submit sitemap to Bing Webmaster Tools**
+      → https://www.bing.com/webmasters
+      (Optional but free; also feeds DuckDuckGo.)
+- [ ] **Check back in 48 hours** — run `site:schoolsout.net` on Google
+      to confirm indexing has started. First results usually show up
+      within 2–5 days once GSC has the sitemap.
+- [ ] **Mark imported camps as verified in the DB** so they show up in
+      the sitemap. Current state: sitemap returns 78 URLs but we have
+      70 imported camps × 2 locales = 140 potential entries.
+- [ ] **Optional: IndexNow** for Yandex/Bing/Seznam
+      → https://www.indexnow.org/
