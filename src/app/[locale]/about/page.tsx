@@ -77,6 +77,7 @@ export default async function AboutPage({
 
         <article className="prose prose-lg max-w-none text-ink space-y-5">
           <p className="text-lg leading-relaxed">{t('body.p1')}</p>
+          <p className="text-lg leading-relaxed">{t('body.vibeCode')}</p>
           <p className="text-lg leading-relaxed">{t('body.p2')}</p>
           <p className="text-lg leading-relaxed font-semibold">{t('body.p3')}</p>
           <p className="text-lg leading-relaxed">{t('body.p4')}</p>

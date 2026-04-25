@@ -1058,6 +1058,7 @@
     },
     "body": {
       "p1": "Hi, I'm Noah. I'm 8 years old. I live in Miami. I build websites and apps — some for fun, some to help people.",
+      "vibeCode": "I vibe-coded the first version of School's Out! in Claude in spring of 2026 with my dad's help.",
       "p2": "I made School's Out! because my dad runs a business and whenever my school closed he had to stop everything and figure out what to do with me. I watched him scramble a lot. I thought: someone should just fix this for every parent.",
       "p3": "So I did.",
       "p4": "School's Out! tracks real school calendars. It knows which camps are open, which are full, and which cost what. When a day off is coming, we tell you early — and we already have a plan ready, so you don't have to build one from scratch at 10pm the night before.",
