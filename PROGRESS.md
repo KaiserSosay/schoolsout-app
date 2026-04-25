@@ -869,3 +869,47 @@ verification status).
       70 imported camps × 2 locales = 140 potential entries.
 - [ ] **Optional: IndexNow** for Yandex/Bing/Seznam
       → https://www.indexnow.org/
+
+---
+
+## Phase 2.7.2 — School calendar research targets (2026-04-25)
+
+The schools-research import (commit 34a75ee) populated 316 Miami-Dade
+schools but only ~10% have verified calendars. With the new unofficial
+calendar template now live, every school has a public landing page that
+asks parents to help us verify — but the real win is closing the gap
+ourselves on the highest-traffic schools first.
+
+**Anchor schools to research first (Cowork-driven, separate run):**
+
+- **The Growing Place School** (Coral Gables, independent — Noah's school)
+- **Gulliver Prep / Gulliver Academy** (Pinecrest)
+- **Ransom Everglades School** (Coconut Grove)
+- **Cushman School** (Miami)
+- **Carrollton School of the Sacred Heart** (Coconut Grove)
+- **Belen Jesuit Preparatory School** (Tamiami)
+- **Miami Country Day School** (Miami Shores)
+- **Westminster Christian School** (Palmetto Bay)
+- **BASIS Independent Brickell** (Brickell)
+- **Scheck Hillel Community School** (North Miami Beach)
+- **Lehrman Community Day School** (Miami Beach)
+- **Posnack Jewish Day School** (Davie)
+
+**Charter networks (one calendar per network, fan out across campuses):**
+
+- **Mater Academy**
+- **Doral Academy**
+- **Somerset Academy**
+- **Pinecrest Preparatory** (charter, distinct from the Pinecrest neighborhood)
+- **Academir Charter Schools**
+
+For each: locate the official 2025–2026 calendar PDF, parse the major
+break dates (Thanksgiving, Winter Break, Spring Break, teacher workdays,
+Memorial Day, last day), insert as `closures` rows with `status='verified'`
++ `source_url` = the PDF, then update `schools.calendar_status` to
+`verified_current`.
+
+Same data-quality rules as the camp-hours enrichment pass: source URL
+must be the school's own domain (not a third-party directory), every
+closure row carries the source line that justified the date, no
+auto-applies — Rasheid reviews before commit.
