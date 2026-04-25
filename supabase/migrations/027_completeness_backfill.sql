@@ -1,0 +1,32 @@
+-- Phase 3.0 daytime grind — Item 3.8 part B: data_completeness backfill.
+--
+-- Migration 017 added a BEFORE INSERT/UPDATE trigger that computes
+-- `data_completeness` (numeric) and `missing_fields` (text[]) from each
+-- row's signal fields. The trigger only fires when a row is written, so
+-- existing rows that haven't been touched since 017 landed still have
+-- the column DEFAULTs (`0.00` and `'{}'`) — which makes the admin
+-- enrichment dashboard look like everything is incomplete even when
+-- 80%+ of the listing is filled in.
+--
+-- This migration touches every camp row by setting `updated_at = now()`,
+-- which fires the trigger and recomputes `data_completeness` +
+-- `missing_fields` from the actual stored values. NO other columns
+-- change. The two derived columns flip from default values to the
+-- correct ones; everything else (name, address, phone, hours, prices,
+-- categories, etc.) is untouched.
+--
+-- Verify with:
+--   SELECT
+--     COUNT(*) AS total,
+--     COUNT(*) FILTER (WHERE data_completeness > 0) AS scored,
+--     AVG(data_completeness)::numeric(3,2) AS avg_completeness,
+--     COUNT(*) FILTER (WHERE data_completeness >= 0.8) AS high_quality,
+--     COUNT(*) FILTER (WHERE data_completeness < 0.5) AS low_quality
+--   FROM camps;
+--
+-- Expected ballpark: total ≈ 128, scored ≈ 128, avg 0.4–0.7,
+-- high_quality 30–50, low_quality 30–60. Anything wildly off should be
+-- investigated before declaring the backfill done.
+
+update public.camps
+set updated_at = now();
