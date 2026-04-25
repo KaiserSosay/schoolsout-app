@@ -38,6 +38,7 @@ export function Footer({
       links: [
         { label: t('columns.explore.camps'), href: `/${locale}/camps` },
         { label: t('columns.explore.breaks'), href: `/${locale}/breaks` },
+        { label: t('columns.explore.schools'), href: `/${locale}/schools` },
         { label: t('columns.explore.cities'), href: `/${locale}/cities` },
         { label: t('columns.explore.verify'), href: `/${locale}/how-we-verify` },
       ],

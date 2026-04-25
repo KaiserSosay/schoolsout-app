@@ -1297,6 +1297,67 @@
         "heading": "Recibe recordatorios para esta escuela.",
         "sub": "Cuenta gratis. Un correo antes de cada receso del calendario.",
         "button": "Crea una cuenta gratis →"
+      },
+      "verifiedFrame": {
+        "badge": "✓ Calendario verificado",
+        "mdcpsBadge": "✓ Verificado por Miami-Dade County Public Schools",
+        "sectionTitle": "Fechas confirmadas"
+      },
+      "unofficialFrame": {
+        "h1": "El calendario no oficial 2025–2026 de {name}",
+        "title": "Calendario no oficial de {name} — School's Out!",
+        "subhead": "Estamos trabajando para conseguir las fechas verificadas de {name}. Esto es lo que sabemos hasta ahora.",
+        "confirmedTitle": "Fechas confirmadas",
+        "confirmedEmpty": "Aún no tenemos fechas verificadas para {name}.",
+        "districtBannerTitle": "Estas son fechas de Miami-Dade Public Schools.",
+        "districtBannerBody": "{name} podría seguir un calendario distinto.",
+        "linksTitle": "Enlaces oficiales",
+        "linksWebsite": "Sitio oficial",
+        "linksPhone": "Llamar",
+        "linksAddress": "Dirección",
+        "metaDescription": "¿Cuándo está cerrada {name} en 2025-26? Recesos, días feriados y días de planificación verificados para familias de {neighborhood}."
+      },
+      "helpVerify": {
+        "title": "Ayúdanos a verificar el calendario de {name}",
+        "body": "¿Tienes una copia del calendario oficial de {name}? Envíalo a hi@schoolsout.net o toca el botón de abajo. Verificamos y actualizamos esta página en 2 días hábiles.",
+        "emailLink": "Escribir a hi@schoolsout.net",
+        "modalTrigger": "¿Tienes una idea? Cuéntanos →",
+        "bodyDraftPrefix": "Calendario para {name}: tengo el PDF oficial / puedo compartir estas fechas / "
+      },
+      "faq": {
+        "springBreakQ": "¿Cuándo es el spring break de {name} en 2026?",
+        "springBreakAVerified": "El spring break de {name} es {date}.",
+        "springBreakAUnverifiedKnown": "El último spring break conocido de {name} fue {date}. Estamos verificando — escríbenos a hi@schoolsout.net si tienes el PDF oficial.",
+        "springBreakAUnverifiedNone": "Aún no tenemos una fecha verificada de spring break para {name}. Escríbenos a hi@schoolsout.net si tienes el PDF oficial.",
+        "nextHolidayQ": "¿Está cerrada {name} el {holiday}?",
+        "nextHolidayAYes": "Sí — {name} está cerrada por {holiday} el {date}.",
+        "nextHolidayANone": "Aún no tenemos fechas de feriados verificadas para {name}.",
+        "fullCalendarQ": "¿Cómo veo el calendario completo de {name}?",
+        "fullCalendarAWithLink": "El calendario completo de {name} está publicado en {url}. Lo revisamos cada mes.",
+        "fullCalendarANoLink": "Aún no tenemos un enlace público al calendario de {name} — llama a la oficina o escríbenos a hi@schoolsout.net."
+      }
+    },
+    "schoolsIndex": {
+      "title": "Escuelas de Miami que rastreamos",
+      "subtitle": "Cada escuela para la que tenemos (o estamos consiguiendo) un calendario. Toca una escuela para ver recesos, feriados y días de planificación docente.",
+      "empty": "Ninguna escuela coincide con esos filtros.",
+      "mdcpsBadge": "Calendario MDCPS",
+      "count": {
+        "total": "{n, plural, one {# escuela} other {# escuelas}}",
+        "filtered": "{filtered} de {total} escuelas"
+      },
+      "filters": {
+        "typeLabel": "Filtrar por tipo de escuela",
+        "hoodLabel": "Filtrar por vecindario",
+        "types": {
+          "public": "Pública",
+          "charter": "Chárter",
+          "magnet": "Magnet",
+          "private": "Privada",
+          "religious": "Religiosa",
+          "independent": "Independiente",
+          "preschool": "Preescolar"
+        }
       }
     },
     "howWeVerify": {
@@ -1381,6 +1442,7 @@
         "title": "Explorar",
         "camps": "Campamentos",
         "breaks": "Vacaciones escolares",
+        "schools": "Escuelas",
         "cities": "Por ciudad",
         "verify": "Cómo verificamos"
       },

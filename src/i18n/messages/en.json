@@ -1297,6 +1297,67 @@
         "heading": "Get reminders for this school.",
         "sub": "Free account. One email before every break on this school's calendar.",
         "button": "Create a free account →"
+      },
+      "verifiedFrame": {
+        "badge": "✓ Verified calendar",
+        "mdcpsBadge": "✓ Verified by Miami-Dade County Public Schools",
+        "sectionTitle": "Confirmed dates"
+      },
+      "unofficialFrame": {
+        "h1": "The unofficial 2025–2026 calendar for {name}",
+        "title": "Unofficial calendar for {name} — School's Out!",
+        "subhead": "We're working on getting verified dates from {name}. Here's what we know so far.",
+        "confirmedTitle": "Confirmed dates",
+        "confirmedEmpty": "We don't have verified dates for {name} yet.",
+        "districtBannerTitle": "These are Miami-Dade Public Schools dates.",
+        "districtBannerBody": "{name} may follow a different schedule.",
+        "linksTitle": "Official links",
+        "linksWebsite": "Official website",
+        "linksPhone": "Call",
+        "linksAddress": "Address",
+        "metaDescription": "When is {name} closed in 2025-26? Verified school breaks, holidays, and teacher workdays for {neighborhood} families."
+      },
+      "helpVerify": {
+        "title": "Help us verify {name}'s calendar",
+        "body": "Do you have a copy of {name}'s official calendar? Email it to hi@schoolsout.net or tap the button below. We'll verify and update this page within 2 business days.",
+        "emailLink": "Email hi@schoolsout.net",
+        "modalTrigger": "Got an idea? Tell us →",
+        "bodyDraftPrefix": "Calendar for {name}: I have the official PDF / can share these dates / "
+      },
+      "faq": {
+        "springBreakQ": "When does {name} have spring break in 2026?",
+        "springBreakAVerified": "{name}'s spring break is {date}.",
+        "springBreakAUnverifiedKnown": "Last known spring break for {name} was {date}. We're verifying — email hi@schoolsout.net if you have the official PDF.",
+        "springBreakAUnverifiedNone": "We don't have a verified spring break date for {name} yet. Email hi@schoolsout.net if you have the official PDF.",
+        "nextHolidayQ": "Is {name} closed on {holiday}?",
+        "nextHolidayAYes": "Yes — {name} is closed for {holiday} on {date}.",
+        "nextHolidayANone": "We don't have verified holiday dates for {name} yet.",
+        "fullCalendarQ": "How can I see {name}'s full calendar?",
+        "fullCalendarAWithLink": "{name}'s full calendar is published at {url}. We re-check it monthly.",
+        "fullCalendarANoLink": "We don't have a public calendar URL for {name} yet — call the school office or email hi@schoolsout.net and we'll dig it up."
+      }
+    },
+    "schoolsIndex": {
+      "title": "Miami schools we track",
+      "subtitle": "Every school we have a calendar (or are working on one) for. Tap a school to see breaks, holidays, and teacher workdays.",
+      "empty": "No schools match those filters.",
+      "mdcpsBadge": "MDCPS calendar",
+      "count": {
+        "total": "{n, plural, one {# school} other {# schools}}",
+        "filtered": "{filtered} of {total} schools"
+      },
+      "filters": {
+        "typeLabel": "Filter by school type",
+        "hoodLabel": "Filter by neighborhood",
+        "types": {
+          "public": "Public",
+          "charter": "Charter",
+          "magnet": "Magnet",
+          "private": "Private",
+          "religious": "Religious",
+          "independent": "Independent",
+          "preschool": "Preschool"
+        }
       }
     },
     "howWeVerify": {
@@ -1381,6 +1442,7 @@
         "title": "Explore",
         "camps": "Camps",
         "breaks": "School breaks",
+        "schools": "Schools",
         "cities": "Browse by city",
         "verify": "How we verify"
       },
