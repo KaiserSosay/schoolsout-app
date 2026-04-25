@@ -70,3 +70,28 @@ column, paste the actual `CREATE TABLE` from the original migration
 into the comment block of the new migration. If the column isn't in
 the original `CREATE TABLE` and isn't added by a later `ADD COLUMN`,
 it doesn't exist.
+
+## R3 — Visual assets that must look a specific way are static files, not runtime-generated
+
+**Rule:** When a customer specifies "I want it to look like X" for a brand
+asset (favicon, app icon, logo, OG image), embed the actual asset as a
+static file. Don't generate it at runtime through ImageResponse or font
+fallback. Runtime emoji rendering uses whatever font the host system
+provides (Twemoji on Vercel Edge), which often doesn't match what the
+customer expected.
+
+**Incident:** 2026-04-25. Noah requested an Apple-style backpack favicon.
+The icon.tsx route used `<div>🎒</div>` rendered through ImageResponse.
+Vercel's Edge runtime fell back to Twemoji's geometric backpack instead of
+Apple's rounded one. Fix: downloaded actual Apple PNG, served as static
+file under public/icons/.
+
+**Applies to:**
+- Favicons + app icons + iOS home-screen icons
+- Logos and brand marks
+- OG/social-share images that need exact branding
+- Any visual element where customer said "make it look like X"
+
+**Doesn't apply to:**
+- Programmatically generated content (charts, screenshot OG images, etc.)
+- Asset variations where any reasonable rendering is fine
