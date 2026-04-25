@@ -1009,3 +1009,51 @@ prod env vars set).
 Group 3 still pending Noah review: 3.1 school autocomplete, 3.2
 operator dashboard, 3.7 per-kid plans. Group 2 (trust + honesty) item
 2.6 still awaiting Noah's brain dump.
+
+### INCIDENT — 2026-04-25 — `/camps` empty for several hours
+
+**Symptom:** `https://schoolsout.net/en/camps` rendered "0 of 0 camps."
+`/api/camps` returned HTTP 500 with body
+`{"error":"db_error","detail":"column camps.featured_until does not exist"}`.
+
+**Cause:** Commit `6ef64e1` (the badges work above) added
+`featured_until` to the SELECT in `src/app/api/camps/route.ts` and the
+two `[locale]/camps` pages. Migration `024_featured_launch_set.sql`
+adds the column AND ships in the same commit, but only the code
+shipped to prod — the migration sat in the repo unapplied. Every camps
+read threw, the empty result bubbled up to the UI, and the regression
+went unnoticed until Noah refreshed the page.
+
+The agent had assumed dad would apply the migration manually before
+the next pageview. That assumption was wrong: the deploy went out the
+moment Vercel rebuilt, and there was no gate between code-merged and
+code-serving-traffic.
+
+Compounding: migration `027_completeness_backfill.sql` itself was
+buggy — it referenced `camps.updated_at`, which has never existed on
+the table (only `created_at` does). `name = name` is the correct
+no-op write to fire the BEFORE UPDATE trigger. Fixed in the
+incident-response commit.
+
+**Recovery (~3 minutes once dad sat down):**
+
+1. `curl /api/camps` → confirmed HTTP 500 + the exact missing-column
+   error.
+2. `pnpm exec supabase db push --include-all` → applied 024 + 026 +
+   027 in order. 027 errored on `updated_at`; 024 + 026 succeeded.
+3. Re-curled `/api/camps` → HTTP 200, 108 camps. Confirmed the 3
+   featured anchors and Zoo Miami's Kendall retag.
+4. Patched migration 027 to use `name = name`, re-pushed, succeeded.
+
+**Prevention:** Wrote `docs/SHIPPING_RULES.md` rule R1 (migration-
+dependent code never ships before the migration) and rule R2 (verify
+migration assumptions against the actual schema). Going forward any
+PR that adds a new column to a `SELECT` must either push the
+migration first OR be schema-defensive.
+
+The deeper lesson: the agent has no way to push migrations without
+human creds, so any migration-dependent code change MUST either (a)
+wait for the human to apply the migration before the code merges, or
+(b) be written to degrade gracefully when the column is missing.
+Splitting the work across two commits — "migration first, code
+second" — is the simplest enforcement.

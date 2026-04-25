@@ -8,12 +8,18 @@
 -- enrichment dashboard look like everything is incomplete even when
 -- 80%+ of the listing is filled in.
 --
--- This migration touches every camp row by setting `updated_at = now()`,
+-- This migration touches every camp row by setting `name = name`,
 -- which fires the trigger and recomputes `data_completeness` +
--- `missing_fields` from the actual stored values. NO other columns
--- change. The two derived columns flip from default values to the
--- correct ones; everything else (name, address, phone, hours, prices,
--- categories, etc.) is untouched.
+-- `missing_fields` from the actual stored values. NO real columns
+-- change (writing the existing value is a no-op for the data); the two
+-- derived columns flip from default values to the correct ones, and
+-- everything else (address, phone, hours, prices, categories, etc.)
+-- is untouched.
+--
+-- DECISION: original draft used `updated_at = now()`, but the camps
+-- table only has `created_at` — there's no `updated_at` column. Touching
+-- `name = name` is the cheapest valid no-op write that fires the
+-- BEFORE UPDATE trigger.
 --
 -- Verify with:
 --   SELECT
@@ -29,4 +35,4 @@
 -- investigated before declaring the backfill done.
 
 update public.camps
-set updated_at = now();
+set name = name;
