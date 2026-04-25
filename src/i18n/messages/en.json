@@ -1164,6 +1164,18 @@
         "beforeCare": "Working parents search specifically for extended care.",
         "registrationDeadline": "We'll remind subscribed parents 7 days before this date."
       }
+    },
+    "whySection": {
+      "title": "Why list your camp on School's Out!",
+      "p1": "Miami parents come here when school's out — every closure, every break, every teacher workday. We're becoming the one place parents check before planning.",
+      "p2": "When they need a camp, they're already here. Be the one they find first.",
+      "bullets": {
+        "now": "Get in front of parents looking for camps THIS week, not next year",
+        "price": "Free listing forever — pay $29/month only when you want to be Featured",
+        "verify": "We re-verify your hours and dates every 90 days, free, so your listing stays accurate",
+        "direct": "Your direct registration link, your phone number — no middleman"
+      },
+      "kicker": "Be here or be square."
     }
   },
   "admin": {

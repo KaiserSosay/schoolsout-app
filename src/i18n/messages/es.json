@@ -1164,6 +1164,18 @@
         "beforeCare": "Los padres que trabajan buscan específicamente cuidado extendido.",
         "registrationDeadline": "Recordaremos a los padres suscritos 7 días antes de esta fecha."
       }
+    },
+    "whySection": {
+      "title": "Por qué listar tu campamento en School's Out!",
+      "p1": "Los padres de Miami vienen aquí cuando hay cierre — cada vacación, cada receso, cada día de planificación. Nos estamos convirtiendo en el primer lugar que revisan antes de planear.",
+      "p2": "Cuando necesitan un campamento, ya están aquí. Sé el primero que encuentren.",
+      "bullets": {
+        "now": "Aparece frente a los padres que buscan campamentos ESTA semana, no el año que viene",
+        "price": "Listado gratis para siempre — paga $29/mes sólo cuando quieras ser Destacado",
+        "verify": "Reverificamos tus horarios y fechas cada 90 días, gratis, para que tu listado se mantenga al día",
+        "direct": "Tu enlace de inscripción directo, tu teléfono — sin intermediarios"
+      },
+      "kicker": "\"Be here or be square.\" (Estés aquí o quédate fuera.)"
     }
   },
   "admin": {
