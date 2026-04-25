@@ -968,3 +968,44 @@ While Noah was asleep, shipped 4 items that don't require copy review:
 
 Group 3 remaining items (3.1, 3.2, 3.3, 3.5, 3.7, 3.8) reserved for
 Noah's review.
+
+### Phase 3.0 partial — daytime grind — 2026-04-25 ✅
+
+While dad applied migration 023 and Noah was awake, shipped 4 medium
+items that don't need copy review:
+
+- `6ef64e1` — Item 3.3: Verified (✓ within 90 days) + Featured (⭐ with
+  `featured_until` future-gate) badges on app + public CampCard. Migration
+  024 adds `featured_until` column and marks 3 anchor camps featured for
+  90 days (Frost Science, Miami Children's Museum, Deering Estate Eco —
+  slugs corrected from plan to match seed). Featured-aware tiebreaker in
+  `src/lib/camps/sort.ts` lifts featured camps inside same 0.5mi distance
+  bucket. 6 new badge tests + 6 new sort tests.
+- `1a6116f` — Item 3.5: `/list-your-camp` accordion ("Improve your
+  listing quality (optional)") with sessions (1-8 repeatable),
+  Instagram/Facebook/TikTok handles, scholarships, accommodations,
+  testimonials. API zod accepts `photo_urls` (≤5) + `sessions` (≤8) and
+  persists both. Photos UI deferred — no `camp-submissions` Supabase
+  Storage bucket exists yet (needs dad's dashboard); friendly fallback
+  asks operators to email photos for now. Full prereqs in
+  `docs/grind-2026-04-25-blockers.md`. 5 new form tests + 3 new API tests.
+- `654cc0c` — Item 3.3 data quality: Migration 026 retags
+  `zoo-miami-summer` (the only camp in seed tagged `South Miami-Dade`)
+  to Kendall. ZIP 33177 isn't in the explicit ZIP buckets — judgment
+  call documented + reversible in
+  `docs/grind-2026-04-25-ambiguous-camps.md`.
+- `3b4d01d` — Item 3.8 prep: research target list of 26 camps
+  lacking addresses written to `docs/missing-camp-addresses-2026-04-25.md`
+  (derived from seed-data audit since agent has no prod read access).
+  Migration 027 backfills `data_completeness` by `UPDATE camps SET
+  updated_at = now()` to fire migration-017 trigger across every row.
+  Prod-gated test asserts every verified camp scored after backfill.
+
+Build clean across all 4 commits. Full test suite 438 passed / 7
+skipped (extra skipped test is the new prod-gated completeness backfill
+check, which lights up the moment Noah's dad applies migration 027 with
+prod env vars set).
+
+Group 3 still pending Noah review: 3.1 school autocomplete, 3.2
+operator dashboard, 3.7 per-kid plans. Group 2 (trust + honesty) item
+2.6 still awaiting Noah's brain dump.
