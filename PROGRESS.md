@@ -1057,3 +1057,85 @@ wait for the human to apply the migration before the code merges, or
 (b) be written to degrade gracefully when the column is missing.
 Splitting the work across two commits — "migration first, code
 second" — is the simplest enforcement.
+
+### Phase 3.0 partial — big day grind — 2026-04-25 (evening) ✅
+
+While dad ran a Cowork session researching the 12 anchor school
+calendars, the agent ground through three buckets of work that don't
+touch school-calendar data.
+
+**Group A — quick wins:**
+
+- `0297beb` — Replaced runtime ImageResponse-rendered emoji favicon
+  with static Apple-style backpack PNG. Sourced from emojipedia
+  (160x160), upscaled via `sips` to 32 / 180 / 192 / 512. Files at
+  `src/app/{favicon.ico,icon.png,apple-icon.png}` (Next 14
+  auto-detect) and `public/icons/icon-{32,192,512}.png` referenced
+  from `manifest.ts`. Deleted `src/app/icon.tsx` + `src/app/apple-
+  icon.tsx` runtime generators. Browsers cache favicons aggressively
+  — expect 24-48h before all see the new one.
+- `b4716e2` — Added SHIPPING_RULES R3 documenting the favicon
+  incident: when a customer says "make it look like X" the asset
+  ships as a static file, not an ImageResponse fallback.
+- A1 / A3 / A4 / A5 — verified, no commits needed:
+  - Migration 027 confirmed applied to remote (`supabase migration
+    list` shows 027 in the Local + Remote columns). Prod-gated
+    backfill test still skips for the agent (no creds) but lights up
+    when dad runs with prod env.
+  - `/cities` school-field admin parsing already shipped via overnight
+    work (`src/lib/city-request-parser.ts` + `CityRequestExtract` in
+    `FeatureRequestsPanel`). Tests cover all three plan cases.
+  - Sign-in flow smoke: `/en/sign-in` renders, `/api/auth/sign-in`
+    returns `{"ok":true,"isReturning":false}`, `?next=` is preserved
+    via hidden form value.
+
+**Group B — trust + honesty:**
+
+- B1 — zero user-facing "Rasheid" references found. All hits in code
+  comments + internal docs. No commit.
+- `96fea11` — About page Claude vibe-coding credit. EN string already
+  matched the plan; tweaked the ES string to translate "vibe-code"
+  with the parenthetical "Le decimos 'vibe-code' — codificar al
+  sentir." so Spanish parents understand the term.
+- B3 — `/list-your-camp` "Why list with us" already shipped via
+  `1a6116f` (#why anchor + EN/ES copy + brand line "Be here or be
+  square" with ES parenthetical). No commit.
+- B4 — `/how-we-verify` already rewritten honest about AI in the same
+  earlier batch. No commit.
+- `b67c0f3` — Marked `docs/tgp-calendar-2026-04-25.md` as SUPERSEDED.
+  Cowork research is reserved for tomorrow; this doc represents the
+  agent's earlier best-effort proposal.
+
+**Group C — Item 3.1 school autocomplete:**
+
+Two-commit migration-first ship per R1.
+
+- `a499d27` — Migration 028 alone: `public.school_requests` table
+  with status enum (pending|researching|added|rejected),
+  `linked_school_id` FK to `public.schools`, RLS service-role-only
+  policy. Indexed on (status, created_at desc).
+- `507ba2a` — Feature code: `SchoolAutocomplete.tsx` (debounced 200ms
+  client-side filter, arrow-key nav, click-outside, "+ Add" affordance
+  with `__pending__:<id>` sentinel value), `/api/school-requests` POST
+  with Resend `SchoolRequestNotifyEmail` to `ADMIN_NOTIFY_EMAIL`,
+  `/api/admin/school-requests/[id]` PATCH for triage,
+  `SchoolRequestsPanel` admin UI with link-to-existing-school
+  dropdown, new admin tab "School requests" 🏫 wired into
+  `AdminPillStrip` + `AdminTabsNav`, i18n `app.schoolAutocomplete.*`
+  (EN + ES). 4 component tests + 3 API tests = 7 net new (full suite
+  445 passed / 7 skipped). Code is schema-defensive (try/catch around
+  count + admin loader) so the rest of the dashboard keeps working
+  until dad applies migration 028. To activate: `pnpm exec supabase
+  db push --include-all`. Future hook: TODO in `/api/school-requests/
+  route.ts` for Phase 4 auto-research-on-submit.
+
+Group 3 still pending: 3.2 operator dashboard, 3.7 per-kid plans,
+3.5+ deferred. Group 2 (trust + honesty) item 2.6 still awaiting
+Noah's brain dump.
+
+**One outstanding manual action for dad:** apply migration 028 with
+`pnpm exec supabase db push --include-all`. Until then the
+SchoolAutocomplete "+ Add" affordance returns a friendly error toast,
+the admin "School requests" tab renders empty, and the pill count
+shows 0. After apply, the feature lights up automatically with no
+redeploy needed.
