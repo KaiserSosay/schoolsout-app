@@ -61,7 +61,7 @@ export async function POST(
       We&apos;d love to hear back if anything changes — the catalog is still growing and priorities shift as we add cities.
     </p>
     <p style="font-size: 13px; color: #71717A; margin-top: 24px;">
-      — Rasheid, School&apos;s Out!
+      — Noah & dad, School&apos;s Out!
     </p>
   </body>
 </html>`,

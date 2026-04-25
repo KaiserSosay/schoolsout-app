@@ -26,7 +26,7 @@ const copy = {
     p1NoName: "We reviewed your application and aren't able to publish it right now.",
     reasonEyebrow: 'A note from our side:',
     p2: "If you'd like to reapply — a clearer website, updated hours, or more details about your program will all help — just reply to this email and we'll walk you through it.",
-    sig: '— Rasheid & Noah',
+    sig: '— Noah & dad',
   },
   es: {
     preheader: 'Una actualización sobre tu solicitud de campamento.',
@@ -36,7 +36,7 @@ const copy = {
     p1NoName: 'Revisamos tu solicitud y no podemos publicarla en este momento.',
     reasonEyebrow: 'Una nota de nuestra parte:',
     p2: 'Si quieres volver a postular — un sitio web más claro, horarios actualizados, o más detalles sobre tu programa pueden ayudar — solo responde este correo y te guiamos.',
-    sig: '— Rasheid y Noah',
+    sig: '— Noah y papá',
   },
 } as const;
 

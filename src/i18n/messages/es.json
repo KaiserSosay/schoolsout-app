@@ -503,7 +503,7 @@
         },
         "6": {
           "q": "¿Quién creó School's Out!?",
-          "a": "Noah (8 años) y su papá Rasheid, en Coral Gables. Noah hizo el primer boceto en una servilleta durante Spring Break 2025 — cuando cada campamento ya estaba lleno."
+          "a": "Noah (8 años) y su papá, en Coral Gables. Noah hizo el primer boceto en una servilleta durante Spring Break 2025 — cuando cada campamento ya estaba lleno."
         }
       }
     },
@@ -566,7 +566,7 @@
         "grade": "Grado"
       },
       "placeholders": {
-        "name": "Rasheid",
+        "name": "Maria",
         "kidName": "Noah (se queda en tu dispositivo)",
         "grade": "Elige un grado"
       },
@@ -1045,7 +1045,7 @@
       "title": "Conoce a Noah, nuestro fundador de 8 años",
       "back": "← Volver al inicio",
       "p1": "Noah tiene 8 años y está en 2º grado en Coral Gables. Cada vez que no había escuela, veía a sus padres enloquecer. Una noche levantó la mirada y preguntó: \"Papá, ¿por qué no hay una app para esto?\"",
-      "p2": "Su papá Rasheid es desarrollador. Construyeron la primera versión juntos. Noah escoge los emojis, les pone nombre a los cierres, escribe los resúmenes de campamentos y dirige las reuniones de revisión del producto.",
+      "p2": "Su papá es desarrollador. Construyeron la primera versión juntos. Noah escoge los emojis, les pone nombre a los cierres, escribe los resúmenes de campamentos y dirige las reuniones de revisión del producto.",
       "quoteLabel": "Noah dice:",
       "quote": "Hacer una app es como hacer un plan súper divertido, pero para todos.",
       "photoTodo": "Foto próximamente — con permiso de sus padres."
@@ -1214,7 +1214,7 @@
         "manageBilling": "Copy billing portal link",
         "deny": "Deny"
       },
-      "stripeNotConfigured": "Stripe not configured — ask Rasheid to finish setup.",
+      "stripeNotConfigured": "Stripe sin configurar — termina el setup antes de aprobar operadores.",
       "statusBadges": {
         "pending": "Pending",
         "approved": "Approved",

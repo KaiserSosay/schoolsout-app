@@ -24,7 +24,7 @@ const copy = {
     p1: "Thanks for applying. Your listing is now live on School's Out! — parents in Coral Gables will start seeing it when they browse camps for the ages you submitted.",
     p2: "We may reach out shortly to confirm logistics (hours, before/after-care, drop-off). That second review stamps your listing with a green 'verified' badge.",
     p3: "If you'd like to upgrade to a Featured listing ($29/month) for priority placement and a gold badge, reply to this email and we'll send you a payment link.",
-    sig: '— Rasheid & Noah',
+    sig: '— Noah & dad',
   },
   es: {
     preheader: 'Tu listado de campamento fue aprobado.',
@@ -32,7 +32,7 @@ const copy = {
     p1: 'Gracias por postularte. Tu listado ya está publicado en School\'s Out! — los padres en Coral Gables van a verlo cuando busquen campamentos para las edades que enviaste.',
     p2: 'Puede que te contactemos pronto para confirmar logística (horarios, cuidado antes/después, drop-off). Esa segunda revisión le da a tu listado la insignia verde de "verificado".',
     p3: 'Si quieres subir de nivel a un listado Destacado ($29/mes) para tener colocación prioritaria y una insignia dorada, responde este correo y te enviamos un enlace de pago.',
-    sig: '— Rasheid y Noah',
+    sig: '— Noah y papá',
   },
 } as const;
 

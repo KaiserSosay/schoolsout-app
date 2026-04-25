@@ -222,7 +222,7 @@ function CampDetail({
       const j = await res.json().catch(() => ({}));
       setToast(
         j.error === 'stripe_not_configured'
-          ? 'Stripe not configured — ask Rasheid to finish setup.'
+          ? 'Stripe not configured — finish setup before approving operators.'
           : 'Payment link failed.',
       );
       return;

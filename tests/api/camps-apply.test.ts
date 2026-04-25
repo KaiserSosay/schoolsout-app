@@ -66,7 +66,9 @@ describe('POST /api/camps/apply', () => {
     expect(insertMock.mock.calls[0][0]).toMatchObject(GOOD_BODY);
     expect(sendMock).toHaveBeenCalledOnce();
     const sendArgs = sendMock.mock.calls[0][0];
-    expect(sendArgs.to).toBe('rkscarlett@gmail.com');
+    // Phase 3.0: hardcoded recipient migrated to env.ADMIN_NOTIFY_EMAIL,
+    // which defaults to 'hi@schoolsout.net' in env.ts when unset.
+    expect(sendArgs.to).toBe('hi@schoolsout.net');
     expect(sendArgs.subject).toContain('Test Camp');
     expect(sendArgs.html).toContain('Coconut Grove');
   });

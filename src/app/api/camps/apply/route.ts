@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       const resend = new Resend(env.RESEND_API_KEY);
       await resend.emails.send({
         from: "School's Out! Applications <hello@schoolsout.net>",
-        to: 'rkscarlett@gmail.com',
+        to: env.ADMIN_NOTIFY_EMAIL,
         subject: `New camp application: ${parsed.data.camp_name}`,
         html: `<p><strong>${parsed.data.camp_name}</strong> applied to be featured.</p>
                <p>Website: <a href="${parsed.data.website}">${parsed.data.website}</a><br>

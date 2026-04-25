@@ -503,7 +503,7 @@
         },
         "6": {
           "q": "Who built School's Out!?",
-          "a": "Noah (age 8) and his dad Rasheid, in Coral Gables. Noah sketched the first version on a napkin during Spring Break 2025 — when every camp was already sold out."
+          "a": "Noah (age 8) and his dad, in Coral Gables. Noah sketched the first version on a napkin during Spring Break 2025 — when every camp was already sold out."
         }
       }
     },
@@ -566,7 +566,7 @@
         "grade": "Grade"
       },
       "placeholders": {
-        "name": "Rasheid",
+        "name": "Maria",
         "kidName": "Noah (stays on your device)",
         "grade": "Select a grade"
       },
@@ -1045,7 +1045,7 @@
       "title": "Meet Noah, our 8-year-old founder",
       "back": "← Back to home",
       "p1": "Noah is an 8-year-old 2nd grader in Coral Gables. Every time school was out, he watched his parents scramble. One night he looked up and asked, \"Dad, why isn't there just an app?\"",
-      "p2": "His dad Rasheid is a developer. They built the first version together. Noah picks the emojis, names the closures, writes camp blurbs, and runs the product review meetings.",
+      "p2": "His dad is a developer. They built the first version together. Noah picks the emojis, names the closures, writes camp blurbs, and runs the product review meetings.",
       "quoteLabel": "Noah says:",
       "quote": "Making an app is like making a super-fun plan, but for everyone.",
       "photoTodo": "Photo coming soon — with a parent's permission."
@@ -1214,7 +1214,7 @@
         "manageBilling": "Copy billing portal link",
         "deny": "Deny"
       },
-      "stripeNotConfigured": "Stripe not configured — ask Rasheid to finish setup.",
+      "stripeNotConfigured": "Stripe not configured — finish setup before approving operators.",
       "statusBadges": {
         "pending": "Pending",
         "approved": "Approved",

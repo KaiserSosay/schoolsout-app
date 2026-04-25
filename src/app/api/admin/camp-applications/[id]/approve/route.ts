@@ -146,7 +146,7 @@ export async function POST(
       That second review stamps your listing with a green "verified" badge parents trust.
     </p>
     <p style="font-size: 13px; color: #71717A; margin-top: 24px;">
-      — Rasheid, School&apos;s Out!
+      — Noah & dad, School&apos;s Out!
     </p>
   </body>
 </html>`,

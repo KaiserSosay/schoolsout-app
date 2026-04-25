@@ -82,7 +82,7 @@ function buildJsonLd(locale: string, title: string, description: string) {
       { q: 'Does School\'s Out! take a cut of camp bookings?', a: 'No. We\'re a directory, not a broker. Parents book directly on the camp\'s website. Camp operators keep 100% of every booking.' },
       { q: 'Will my family data be shared?', a: 'No. Kid data stays on your device per our COPPA-aligned design. The only data we store on our server is the email you give us for closure reminders — and you can unsubscribe any time.' },
       { q: 'What if my kid\'s school isn\'t listed?', a: 'Use the city request form. Tell us the city (and your email) and we\'ll email you the moment we add your school or expand coverage.' },
-      { q: 'Who built School\'s Out!?', a: 'Noah (age 8) and his dad Rasheid, in Coral Gables. Noah sketched the first version on a napkin during Spring Break 2025 — when every camp was already sold out.' },
+      { q: 'Who built School\'s Out!?', a: 'Noah (age 8) and his dad, in Coral Gables. Noah sketched the first version on a napkin during Spring Break 2025 — when every camp was already sold out.' },
     ].map(({ q, a }) => ({
       '@type': 'Question',
       name: q,
@@ -97,8 +97,9 @@ function buildJsonLd(locale: string, title: string, description: string) {
     url: SITE_URL,
     logo: `${SITE_URL}/opengraph-image`,
     founder: [
+      // Noah is the publicly-credited 8-year-old founder. His dad is on the
+      // build but doesn't surface his name in rich results.
       { '@type': 'Person', name: 'Noah Scarlett' },
-      { '@type': 'Person', name: 'Rasheid Scarlett' },
     ],
     foundingDate: '2025',
     areaServed: {
@@ -129,10 +130,7 @@ function buildJsonLd(locale: string, title: string, description: string) {
       'Co-parent share links',
       'Multi-locale (English + Spanish)',
     ],
-    founder: [
-      { '@type': 'Person', name: 'Noah Scarlett' },
-      { '@type': 'Person', name: 'Rasheid Scarlett' },
-    ],
+    founder: [{ '@type': 'Person', name: 'Noah Scarlett' }],
     foundingDate: '2025',
     areaServed: {
       '@type': 'AdministrativeArea',

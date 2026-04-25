@@ -71,7 +71,7 @@ describe('OnboardingForm', () => {
     wrap();
 
     // Parent name
-    fireEvent.change(screen.getByPlaceholderText(/Rasheid/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Maria/i), {
       target: { value: 'Rasheid' },
     });
 
@@ -120,7 +120,7 @@ describe('OnboardingForm', () => {
     const submit = screen.getByRole('button', { name: /^Next/i });
     expect(submit).toBeDisabled();
 
-    fireEvent.change(screen.getByPlaceholderText(/Rasheid/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Maria/i), {
       target: { value: 'Rasheid' },
     });
     expect(submit).toBeDisabled();
@@ -133,7 +133,7 @@ describe('OnboardingForm', () => {
     wrap();
 
     // Parent name
-    fireEvent.change(screen.getByPlaceholderText(/Rasheid/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Maria/i), {
       target: { value: 'Rasheid' },
     });
 

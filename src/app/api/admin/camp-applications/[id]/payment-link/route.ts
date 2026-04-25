@@ -15,7 +15,7 @@ export async function POST() {
       {
         error: 'stripe_not_configured',
         detail:
-          'Ask Rasheid to complete the 5-step Stripe prereq checklist before Goal 4 ships.',
+          'Stripe not configured — finish the 5-step prereq checklist before Goal 4 ships.',
       },
       { status: 503 },
     );
