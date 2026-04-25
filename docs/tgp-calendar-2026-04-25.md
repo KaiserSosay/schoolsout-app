@@ -1,8 +1,17 @@
 # The Growing Place School — Calendar Research (2026-04-25)
 
 **Item:** Phase 3.0 / Group 2 / Item 2.5
-**Status:** Findings only. NO DB writes. Awaiting Noah's review before
-            migration 023 (or whatever number is next).
+**Status:** SUPERSEDED — Noah running fresh Cowork research session
+            2026-04-25. This doc represents the agent's best-effort
+            initial proposal. Wait for Cowork's verified output before
+            applying any closure rows to prod.
+
+See `docs/cowork-2026-04-25-schools-output.json` once that lands.
+
+---
+
+**Original status:** Findings only. NO DB writes. Awaiting Noah's review
+            before migration 023 (or whatever number is next).
 
 ## TL;DR
 
