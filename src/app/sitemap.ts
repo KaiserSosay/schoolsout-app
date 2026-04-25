@@ -28,7 +28,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from('closures')
       .select('id, created_at')
       .eq('status', 'verified'),
-    svc.from('schools').select('slug, created_at'),
+    // Try to honour closed_permanently exclusion first; fall back to the
+    // unfiltered fetch on un-migrated DBs so the sitemap never goes empty.
+    (async () => {
+      const filtered = await svc
+        .from('schools')
+        .select('slug, created_at')
+        .eq('closed_permanently', false);
+      if (filtered.error) {
+        return svc.from('schools').select('slug, created_at');
+      }
+      return filtered;
+    })(),
   ]);
 
   const now = new Date();
@@ -81,14 +92,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       });
     }
-    // Per-school
+    // /schools index
+    entries.push({
+      url: `${SITE_URL}/${locale}/schools`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    });
+    // Per-school detail
     for (const s of (schools ?? []) as SchoolRow[]) {
       if (!s.slug) continue;
       entries.push({
         url: `${SITE_URL}/${locale}/schools/${s.slug}`,
         lastModified: s.created_at ? new Date(s.created_at) : now,
         changeFrequency: 'weekly',
-        priority: 0.6,
+        priority: 0.7,
       });
     }
   }

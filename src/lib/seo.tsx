@@ -168,27 +168,39 @@ export function schoolJsonLd({
   url,
   district,
   city,
+  streetAddress,
+  telephone,
+  websiteUrl,
 }: {
   name: string;
   url: string;
   district: string | null;
   city: string | null;
+  streetAddress?: string | null;
+  telephone?: string | null;
+  websiteUrl?: string | null;
 }) {
-  return {
+  const ld: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'School',
     name,
     url,
     address: {
       '@type': 'PostalAddress',
+      streetAddress: streetAddress ?? undefined,
       addressLocality: city ?? undefined,
       addressRegion: 'FL',
       addressCountry: 'US',
     },
-    parentOrganization: district
-      ? { '@type': 'EducationalOrganization', name: district }
-      : undefined,
   };
+  if (district) {
+    ld.parentOrganization = { '@type': 'EducationalOrganization', name: district };
+  }
+  if (telephone) ld.telephone = telephone;
+  // sameAs lets crawlers tie our listing to the school's canonical web
+  // presence, which strengthens the entity link in the knowledge graph.
+  if (websiteUrl) ld.sameAs = [websiteUrl];
+  return ld;
 }
 
 export function faqJsonLd(
