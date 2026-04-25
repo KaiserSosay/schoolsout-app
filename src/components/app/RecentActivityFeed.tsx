@@ -39,8 +39,8 @@ function activityHref(a: Activity, locale: string): string | null {
 // `so-activity` events immediately so the feed feels live when the same user
 // is saving camps. The optimistic local row is deduplicated on the next poll
 // by target_id+action (we keep the newer created_at).
-export function KidActivityFeed({ initial, locale }: { initial: Activity[]; locale: string }) {
-  const t = useTranslations('app.dashboard.activity');
+export function RecentActivityFeed({ initial, locale }: { initial: Activity[]; locale: string }) {
+  const t = useTranslations('app.dashboard.recentActivity');
   const [items, setItems] = useState<Activity[]>(initial);
   const [loaded, setLoaded] = useState(initial.length > 0);
   const { setMode } = useMode();

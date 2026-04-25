@@ -1,7 +1,7 @@
 import { render, screen, act } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { KidActivityFeed } from '@/components/app/KidActivityFeed';
+import { RecentActivityFeed } from '@/components/app/RecentActivityFeed';
 import { ModeProvider } from '@/components/app/ModeProvider';
 import messages from '@/i18n/messages/en.json';
 
@@ -41,17 +41,17 @@ beforeEach(() => {
   });
 });
 
-function renderFeed(initial: Parameters<typeof KidActivityFeed>[0]['initial']) {
+function renderFeed(initial: Parameters<typeof RecentActivityFeed>[0]['initial']) {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
       <ModeProvider>
-        <KidActivityFeed initial={initial} locale="en" />
+        <RecentActivityFeed initial={initial} locale="en" />
       </ModeProvider>
     </NextIntlClientProvider>,
   );
 }
 
-describe('KidActivityFeed', () => {
+describe('RecentActivityFeed', () => {
   it('renders closure activity row as a link to the closure detail', async () => {
     await act(async () => {
       renderFeed([
