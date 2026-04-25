@@ -20,9 +20,11 @@ export async function generateMetadata({
   });
 }
 
-// Phase 2.7 Goal 6: transparency page. What we verify, what we re-verify,
-// what we don't. Honest disclosure is the UX north star (UX_PRINCIPLES.md
-// #2); this page makes it searchable.
+// Phase 3.0 Group 2 / Item 2.4: honesty rewrite. The previous version said
+// "every camp is reviewed by a human" — that wasn't fully accurate. Claude
+// (an AI) does the first pass; a human reviews before publish. This page
+// now says so explicitly. UX_PRINCIPLES.md #2 — no hallucinations, including
+// about ourselves.
 export default async function HowWeVerifyPage({
   params,
 }: {
@@ -30,7 +32,8 @@ export default async function HowWeVerifyPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'public.howWeVerify' });
-  const sections = ['camps', 'calendars', 'reverification', 'notVerified', 'reportIssue'] as const;
+  const simpleSections = ['promise', 'howItWorks', 'schedule', 'help'] as const;
+  const sourceItems = ['camps', 'calendars', 'notVerified'] as const;
   return (
     <>
       <PageViewLogger path={`/${locale}/how-we-verify`} locale={locale} />
@@ -47,18 +50,27 @@ export default async function HowWeVerifyPage({
         </header>
 
         <div className="space-y-6">
-          {sections.map((s) => (
-            <section
-              key={s}
-              className="rounded-3xl border border-cream-border bg-white p-5 md:p-6"
-            >
-              <h2 className="text-lg font-black text-ink md:text-xl">
-                {t(`${s}.title`)}
-              </h2>
-              <p className="mt-2 text-sm text-ink/80 md:text-base">
-                {t(`${s}.body`)}
-              </p>
-            </section>
+          <Section title={t('promise.title')} body={t('promise.body')} />
+          <Section title={t('howItWorks.title')} body={t('howItWorks.body')} />
+
+          <section className="rounded-3xl border border-cream-border bg-white p-5 md:p-6">
+            <h2 className="text-lg font-black text-ink md:text-xl">
+              {t('sources.title')}
+            </h2>
+            <ul className="mt-3 space-y-3">
+              {sourceItems.map((k) => (
+                <li key={k} className="text-sm text-ink/85 md:text-base">
+                  <span className="font-bold text-ink">
+                    {t(`sources.items.${k}.label`)}:
+                  </span>{' '}
+                  {t(`sources.items.${k}.body`)}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {simpleSections.slice(2).map((s) => (
+            <Section key={s} title={t(`${s}.title`)} body={t(`${s}.body`)} />
           ))}
         </div>
 
@@ -74,5 +86,14 @@ export default async function HowWeVerifyPage({
         </section>
       </main>
     </>
+  );
+}
+
+function Section({ title, body }: { title: string; body: string }) {
+  return (
+    <section className="rounded-3xl border border-cream-border bg-white p-5 md:p-6">
+      <h2 className="text-lg font-black text-ink md:text-xl">{title}</h2>
+      <p className="mt-2 text-sm text-ink/80 md:text-base">{body}</p>
+    </section>
   );
 }

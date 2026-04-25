@@ -1379,26 +1379,39 @@
     },
     "howWeVerify": {
       "title": "How we verify",
-      "subtitle": "What we check by hand, how often we re-check it, and what we honestly don't verify.",
-      "camps": {
-        "title": "Every camp is reviewed by a human",
-        "body": "Before a camp shows up in the public directory, a real person — usually Rasheid — confirms the operator's website is up, the listed ages match the program, and the contact info is reachable. Listings with partial data surface an honest \"Limited info — help us verify\" disclosure rather than hide."
+      "subtitle": "What we promise, how verification actually works, and where the data comes from.",
+      "promise": {
+        "title": "What we promise",
+        "body": "Every camp listing on School's Out! is reviewed before it goes public. Every school calendar entry has a source we can point to. If something's wrong, tell us and we'll fix it within 2 business days."
       },
-      "calendars": {
-        "title": "School-break calendars come from official sources",
-        "body": "For Miami-Dade County Public Schools we use the district's published PDF (api.dadeschools.net). For independent schools we use the school's published calendar or a direct confirmation from the school office. Every closure row is labeled verified, ai_draft, or rejected, and the status is exposed on the page."
+      "howItWorks": {
+        "title": "How verification actually works",
+        "body": "We use an AI assistant (Claude) to research camps and parse school calendar PDFs. Then a human reviews the results before anything goes live. The AI is faster than a human; the human catches what the AI gets wrong. Both are necessary."
       },
-      "reverification": {
-        "title": "We re-verify every listing every ~90 days",
-        "body": "A weekly cron checks each listed camp's website for a 200 response and flags any that go dark. Listings with no activity after 90 days go back into the review queue until they're re-confirmed. If a listing you rely on looks stale, tap \"Help us verify\" on the card to ping us."
+      "sources": {
+        "title": "Where the data comes from",
+        "items": {
+          "camps": {
+            "label": "Camps",
+            "body": "Each camp's own website is the primary source. We capture the URL we pulled the data from. You can see it on every camp's detail page."
+          },
+          "calendars": {
+            "label": "School calendars",
+            "body": "Miami-Dade County Public Schools — directly from the district's published PDF. Private schools — directly from each school's own PDF or website."
+          },
+          "notVerified": {
+            "label": "What we don't verify",
+            "body": "Sitter quality (we link to Care.com — they do their own background checks). Cruise pricing (it changes daily). Anything labeled \"External\" on our site."
+          }
+        }
       },
-      "notVerified": {
-        "title": "What we don't verify",
-        "body": "Sitter quality through Care.com (we link, Care vets). Cruise prices and cabin availability (they change hourly). Commute time (we show crow-flies distance only). If we don't verify it, we say so inline rather than imply we do."
+      "schedule": {
+        "title": "Re-verification schedule",
+        "body": "Every camp gets re-checked every 90 days. If a camp's website goes down or their hours change, we update the listing or flag it."
       },
-      "reportIssue": {
-        "title": "See something wrong? Tell us",
-        "body": "Tap the \"Limited info\" pill on any camp card, or email hello@schoolsout.net. We fix within two business days, and we reply to every message — no black hole."
+      "help": {
+        "title": "Help us stay accurate",
+        "body": "Found wrong info? Tell us. Every page has a \"Got an idea?\" button. We read every message."
       },
       "cta": {
         "heading": "Want a reminder before every break?",

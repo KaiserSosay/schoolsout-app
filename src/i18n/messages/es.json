@@ -1379,26 +1379,39 @@
     },
     "howWeVerify": {
       "title": "Cómo verificamos",
-      "subtitle": "Qué revisamos a mano, con qué frecuencia y qué no verificamos — con honestidad.",
-      "camps": {
-        "title": "Cada campamento lo revisa una persona",
-        "body": "Antes de aparecer en el directorio, una persona — generalmente Rasheid — confirma que el sitio web funciona, que las edades coinciden y que el contacto responde. Listados con datos parciales muestran \"Info limitada — ayúdanos a verificar\" en vez de esconderse."
+      "subtitle": "Qué prometemos, cómo funciona la verificación de verdad, y de dónde vienen los datos.",
+      "promise": {
+        "title": "Lo que prometemos",
+        "body": "Cada listado de campamento en School's Out! se revisa antes de hacerse público. Cada cierre escolar tiene una fuente que podemos enseñar. Si algo está mal, dínoslo y lo arreglamos en 2 días hábiles."
       },
-      "calendars": {
-        "title": "Los calendarios escolares vienen de fuentes oficiales",
-        "body": "Para Miami-Dade County Public Schools usamos el PDF oficial del distrito (api.dadeschools.net). Para colegios privados usamos su calendario publicado o una confirmación directa. Cada cierre está marcado como verified, ai_draft o rejected, y el estado se muestra públicamente."
+      "howItWorks": {
+        "title": "Cómo funciona la verificación de verdad",
+        "body": "Usamos un asistente de IA (Claude) para investigar campamentos y leer los PDFs de los calendarios escolares. Después una persona revisa los resultados antes de publicar. La IA es más rápida que una persona; la persona detecta lo que la IA equivoca. Ambos son necesarios."
       },
-      "reverification": {
-        "title": "Reverificamos cada listado ~cada 90 días",
-        "body": "Un cron semanal revisa el sitio web de cada campamento. Los listados sin actividad después de 90 días vuelven a la cola de revisión. Si ves algo anticuado, toca \"Ayúdanos a verificar\" en la tarjeta."
+      "sources": {
+        "title": "De dónde vienen los datos",
+        "items": {
+          "camps": {
+            "label": "Campamentos",
+            "body": "El sitio web propio de cada campamento es la fuente principal. Capturamos la URL de donde sacamos los datos. Lo verás en la página de detalle de cada campamento."
+          },
+          "calendars": {
+            "label": "Calendarios escolares",
+            "body": "Miami-Dade County Public Schools — directamente del PDF publicado por el distrito. Colegios privados — directamente del PDF o sitio web del propio colegio."
+          },
+          "notVerified": {
+            "label": "Qué NO verificamos",
+            "body": "Calidad de niñeras (enlazamos a Care.com — ellos hacen sus propias verificaciones de antecedentes). Precios de cruceros (cambian a diario). Cualquier cosa marcada como \"Externo\" en nuestro sitio."
+          }
+        }
       },
-      "notVerified": {
-        "title": "Qué NO verificamos",
-        "body": "La calidad de niñeras en Care.com (ellos las revisan). Precios de cruceros (cambian constantemente). Tiempo de viaje (mostramos distancia en línea recta). Lo que no verificamos, lo decimos con claridad."
+      "schedule": {
+        "title": "Calendario de reverificación",
+        "body": "Cada campamento se revisa de nuevo cada 90 días. Si el sitio web de un campamento se cae o cambian sus horarios, actualizamos el listado o lo marcamos."
       },
-      "reportIssue": {
-        "title": "¿Ves algo mal? Cuéntanos",
-        "body": "Toca \"Info limitada\" en cualquier tarjeta, o escríbenos a hello@schoolsout.net. Respondemos en dos días hábiles — cada mensaje."
+      "help": {
+        "title": "Ayúdanos a mantener la precisión",
+        "body": "¿Encontraste información equivocada? Dínoslo. Cada página tiene un botón \"Got an idea?\". Leemos cada mensaje."
       },
       "cta": {
         "heading": "¿Quieres recordatorios antes de cada receso?",
