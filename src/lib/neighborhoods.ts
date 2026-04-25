@@ -71,7 +71,11 @@ export const NEIGHBORHOOD_CENTROIDS: Record<string, Centroid> = {
   'Sweetwater':              { lat: 25.7634, lng: -80.3711 },
   'Tamiami':                 { lat: 25.7494, lng: -80.4264 },
   'The Roads':               { lat: 25.7623, lng: -80.2050 },
+  // Both spellings: prod data uses "Upper East Side" (3 words); the
+  // Miami official neighborhood name is "Upper Eastside" (compound).
+  // Same centroid; alias keeps either form in-bounds.
   'Upper Eastside':          { lat: 25.8270, lng: -80.1856 },
+  'Upper East Side':         { lat: 25.8270, lng: -80.1856 },
   'Virginia Gardens':        { lat: 25.8062, lng: -80.3045 },
   'West Miami':              { lat: 25.7611, lng: -80.2967 },
   'Westchester':             { lat: 25.7548, lng: -80.3399 },
