@@ -913,3 +913,58 @@ Same data-quality rules as the camp-hours enrichment pass: source URL
 must be the school's own domain (not a third-party directory), every
 closure row carries the source line that justified the date, no
 auto-applies — Rasheid reviews before commit.
+
+---
+
+## Phase 3.0 — Noah's brain dump (rolling) — 2026-04-25
+
+Phase 3.0 is the "Noah audited the live site before sharing with parents"
+pass. 24 items split into three groups: Fixes (Group 1), Trust + Honesty
+(Group 2), Features (Group 3). See `docs/overnight-2026-04-25-report.md`
+for the latest tally.
+
+### Group 1 — Fixes (10 items, 1 cohesive commit + rename fix-up) ✅
+
+Shipped in `b48743a` + `864473e` (2026-04-24).
+- 1.1 Start Free animation flash + 1.5 Hero text vanishes in Kid Mode
+  (one CSS fix in `globals.css` — `.animate-fade-up` switched from
+  `opacity:0 + animation:... forwards` to `animation-fill-mode: both`)
+- 1.2 Backpack favicon (deleted scaffold `favicon.ico`; `icon.tsx` +
+  `apple-icon.tsx` already render 🎒)
+- 1.3 PWA install modal with platform-aware steps
+- 1.4 Stacked eyebrow + title on `/[locale]/schools/[slug]`
+- 1.6 Anonymous landing now defaults to MDCPS district closures
+- 1.7 `<ErrorState />` extracted; `NotificationsDrawer` hardened
+- 1.8 Removed window-level `mousedown` listener that was unmounting the
+  user menu mid-iOS-Safari-tap
+- 1.9 `src/lib/neighborhoods.ts` — Miami centroid fallback for camps
+  without lat/lng; "~" prefix on approximate distances
+- 1.10 KidActivityFeed → RecentActivityFeed (file + export + i18n)
+
+### Group 2 — Trust + Honesty (5 items, 5 commits) ✅
+
+Shipped 2026-04-24 / 2026-04-25.
+- 2.1 `1e9c6b7` — Rasheid → "me and my dad" / "Noah & dad" in user-
+  facing copy. Code-level admin allowlist kept.
+- 2.2 `a6cbe0d` — About page Claude vibe-coding credit added between
+  body.p1 and body.p2.
+- 2.3 `60e2231` — `/list-your-camp#why` section.
+- 2.4 `1ccdfa2` — `/how-we-verify` rewrite acknowledging AI-assisted
+  verification.
+- 2.5 `858e324` — `docs/tgp-calendar-2026-04-25.md` with 15 proposed
+  TGP closure rows (review needed; migration 023 will follow).
+
+### Phase 3.0 partial — overnight run — 2026-04-25 ✅
+
+While Noah was asleep, shipped 4 items that don't require copy review:
+- `983a2d4` — Neighborhood patch verify + prod-query test (added
+  "Upper East Side" alias; 27/29 prod neighborhoods resolve, 2
+  documented as intentionally unresolved in
+  `docs/neighborhoods-pending-2026-04-25.md`)
+- `433accb` — Item 3.4 clickable closure dates on school pages
+- `cf9571e` — Item 3.6 city-request form captures school + admin
+  parsing (additive migration 023)
+- `ae29943` — Item 3.9 new-device kid reminder banner on /app
+
+Group 3 remaining items (3.1, 3.2, 3.3, 3.5, 3.7, 3.8) reserved for
+Noah's review.
