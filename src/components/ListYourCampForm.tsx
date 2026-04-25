@@ -6,8 +6,32 @@ import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 
 // Phase 2.7 Goal 5: rich camp application form with live completeness
 // meter. Same endpoint (/api/camp-requests) — schema extended with the
-// optional fields this form now collects. Photos + sessions + social
-// handles are deferred (Supabase Storage + repeatable-field UX).
+// optional fields this form now collects.
+//
+// Phase 3.0 Item 3.5: collapsed accordion for the long tail of optional
+// fields (sessions, social handles, scholarships, accommodations,
+// testimonials). Photos remain deferred until the Supabase Storage
+// `camp-submissions` bucket exists — see docs/grind-2026-04-25-blockers.md.
+
+const MAX_SESSIONS = 8;
+
+type SessionEntry = {
+  name: string;
+  start_date: string;
+  end_date: string;
+  age_min: string;
+  age_max: string;
+  capacity: string;
+};
+
+const EMPTY_SESSION: SessionEntry = {
+  name: '',
+  start_date: '',
+  end_date: '',
+  age_min: '',
+  age_max: '',
+  capacity: '',
+};
 
 type Form = {
   submitted_by_email: string;
@@ -32,11 +56,17 @@ type Form = {
   after_care_offered: boolean;
   after_care_end: string;
   lunch_included: boolean | null;
+  registration_url: string;
+  registration_deadline: string;
+  // Phase 3.0 Item 3.5 — accordion fields
+  sessions: SessionEntry[];
+  instagram_handle: string;
+  facebook_url: string;
+  tiktok_handle: string;
   scholarships_available: boolean | null;
   scholarships_notes: string;
   accommodations: string;
-  registration_url: string;
-  registration_deadline: string;
+  testimonials: string;
 };
 
 const EMPTY: Form = {
@@ -61,11 +91,16 @@ const EMPTY: Form = {
   after_care_offered: false,
   after_care_end: '',
   lunch_included: null,
+  registration_url: '',
+  registration_deadline: '',
+  sessions: [{ ...EMPTY_SESSION }],
+  instagram_handle: '',
+  facebook_url: '',
+  tiktok_handle: '',
   scholarships_available: null,
   scholarships_notes: '',
   accommodations: '',
-  registration_url: '',
-  registration_deadline: '',
+  testimonials: '',
 };
 
 export function ListYourCampForm() {
@@ -123,6 +158,26 @@ export function ListYourCampForm() {
     setError(null);
     setSubmitting(true);
     try {
+      // Drop blank session rows (operators commonly leave the default
+      // empty entry untouched if they aren't ready to publish dates).
+      const cleanSessions = form.sessions
+        .map((s) => ({
+          name: s.name.trim() || null,
+          start_date: s.start_date || null,
+          end_date: s.end_date || null,
+          age_min: s.age_min ? Number(s.age_min) : null,
+          age_max: s.age_max ? Number(s.age_max) : null,
+          capacity: s.capacity ? Number(s.capacity) : null,
+        }))
+        .filter(
+          (s) =>
+            s.name ||
+            s.start_date ||
+            s.end_date ||
+            s.age_min != null ||
+            s.age_max != null ||
+            s.capacity != null,
+        );
       const payload = {
         submitted_by_email: form.submitted_by_email.trim(),
         submitted_by_name: form.submitted_by_name.trim() || null,
@@ -157,6 +212,11 @@ export function ListYourCampForm() {
         accommodations: form.accommodations.trim() || null,
         registration_url: form.registration_url.trim() || null,
         registration_deadline: form.registration_deadline || null,
+        instagram_handle: form.instagram_handle.trim() || null,
+        facebook_url: form.facebook_url.trim() || null,
+        tiktok_handle: form.tiktok_handle.trim() || null,
+        testimonials: form.testimonials.trim() || null,
+        sessions: cleanSessions,
         applicant_completeness: completeness.score,
         locale,
       };
@@ -496,30 +556,6 @@ export function ListYourCampForm() {
           />
           {t('lunchIncluded')}
         </label>
-        <label className="flex items-center gap-2 text-sm font-bold text-ink">
-          <input
-            type="checkbox"
-            checked={form.scholarships_available === true}
-            onChange={(e) =>
-              update('scholarships_available', e.target.checked ? true : null)
-            }
-          />
-          {t('scholarshipsAvailable')}
-        </label>
-        {form.scholarships_available ? (
-          <div>
-            <label className={labelCls} htmlFor="scholarships_notes">
-              {t('scholarshipsNotes')}
-            </label>
-            <textarea
-              id="scholarships_notes"
-              rows={2}
-              value={form.scholarships_notes}
-              onChange={(e) => update('scholarships_notes', e.target.value)}
-              className={inputCls + ' mt-1 resize-none'}
-            />
-          </div>
-        ) : null}
       </Section>
 
       <Section title={t('sections.registration')}>
@@ -564,19 +600,170 @@ export function ListYourCampForm() {
             placeholder="sports, arts, STEM"
           />
         </div>
-        <div>
-          <label className={labelCls} htmlFor="accommodations">
-            {t('accommodations')}
-          </label>
-          <textarea
-            id="accommodations"
-            rows={3}
-            value={form.accommodations}
-            onChange={(e) => update('accommodations', e.target.value)}
-            className={inputCls + ' mt-1 resize-none'}
-          />
-        </div>
       </Section>
+
+      <details
+        className="rounded-2xl border border-cream-border bg-white p-4 md:p-5 [&_summary]:list-none"
+        data-testid="quality-accordion"
+      >
+        <summary className="flex cursor-pointer items-center justify-between gap-3 text-sm font-black text-ink">
+          <span>
+            {t('quality.title')}
+            <span className="ml-2 text-[11px] font-normal text-muted">
+              {t('quality.subhead')}
+            </span>
+          </span>
+          <span aria-hidden="true" className="text-muted">▾</span>
+        </summary>
+
+        <div className="mt-4 flex flex-col gap-4">
+          <p className="text-xs italic text-muted" data-testid="photos-deferred">
+            {t('quality.photosDeferred')}
+          </p>
+
+          <div>
+            <h4 className="text-sm font-bold text-ink">{t('quality.sessions.title')}</h4>
+            <p className={helpCls}>{t('quality.sessions.help')}</p>
+            <div className="mt-2 flex flex-col gap-3">
+              {form.sessions.map((s, i) => (
+                <SessionRow
+                  key={i}
+                  index={i}
+                  session={s}
+                  onChange={(next) =>
+                    setForm((f) => ({
+                      ...f,
+                      sessions: f.sessions.map((row, j) => (j === i ? next : row)),
+                    }))
+                  }
+                  onRemove={
+                    form.sessions.length > 1
+                      ? () =>
+                          setForm((f) => ({
+                            ...f,
+                            sessions: f.sessions.filter((_, j) => j !== i),
+                          }))
+                      : null
+                  }
+                  t={t}
+                  inputCls={inputCls}
+                  labelCls={labelCls}
+                />
+              ))}
+            </div>
+            {form.sessions.length < MAX_SESSIONS ? (
+              <button
+                type="button"
+                onClick={() =>
+                  setForm((f) => ({ ...f, sessions: [...f.sessions, { ...EMPTY_SESSION }] }))
+                }
+                className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-brand-purple hover:underline"
+                data-testid="add-session"
+              >
+                + {t('quality.sessions.add')}
+              </button>
+            ) : null}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <label className={labelCls} htmlFor="instagram_handle">
+                {t('quality.social.instagram')}
+              </label>
+              <input
+                id="instagram_handle"
+                placeholder="@yourcamp"
+                value={form.instagram_handle}
+                onChange={(e) => update('instagram_handle', e.target.value)}
+                className={inputCls + ' mt-1'}
+              />
+            </div>
+            <div>
+              <label className={labelCls} htmlFor="facebook_url">
+                {t('quality.social.facebook')}
+              </label>
+              <input
+                id="facebook_url"
+                type="url"
+                placeholder="https://facebook.com/…"
+                value={form.facebook_url}
+                onChange={(e) => update('facebook_url', e.target.value)}
+                className={inputCls + ' mt-1'}
+              />
+            </div>
+            <div>
+              <label className={labelCls} htmlFor="tiktok_handle">
+                {t('quality.social.tiktok')}
+              </label>
+              <input
+                id="tiktok_handle"
+                placeholder="@yourcamp"
+                value={form.tiktok_handle}
+                onChange={(e) => update('tiktok_handle', e.target.value)}
+                className={inputCls + ' mt-1'}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="flex items-center gap-2 text-sm font-bold text-ink">
+              <input
+                type="checkbox"
+                checked={form.scholarships_available === true}
+                onChange={(e) =>
+                  update('scholarships_available', e.target.checked ? true : null)
+                }
+              />
+              {t('scholarshipsAvailable')}
+            </label>
+            {form.scholarships_available ? (
+              <div className="mt-2">
+                <label className={labelCls} htmlFor="scholarships_notes">
+                  {t('scholarshipsNotes')}
+                </label>
+                <textarea
+                  id="scholarships_notes"
+                  rows={2}
+                  value={form.scholarships_notes}
+                  onChange={(e) => update('scholarships_notes', e.target.value)}
+                  className={inputCls + ' mt-1 resize-none'}
+                />
+              </div>
+            ) : null}
+          </div>
+
+          <div>
+            <label className={labelCls} htmlFor="accommodations">
+              {t('accommodations')}
+            </label>
+            <textarea
+              id="accommodations"
+              rows={3}
+              value={form.accommodations}
+              onChange={(e) => update('accommodations', e.target.value)}
+              className={inputCls + ' mt-1 resize-none'}
+            />
+          </div>
+
+          <div>
+            <label className={labelCls} htmlFor="testimonials">
+              {t('quality.testimonials.label')}
+            </label>
+            <textarea
+              id="testimonials"
+              rows={4}
+              maxLength={1000}
+              value={form.testimonials}
+              onChange={(e) => update('testimonials', e.target.value)}
+              className={inputCls + ' mt-1 resize-none'}
+              placeholder={t('quality.testimonials.placeholder')}
+            />
+            <p className={helpCls}>
+              {t('quality.testimonials.counter', { used: form.testimonials.length, max: 1000 })}
+            </p>
+          </div>
+        </div>
+      </details>
 
       {error ? (
         <p className="text-sm font-semibold text-red-600">{error}</p>
@@ -605,5 +792,128 @@ function Section({
       <h3 className="text-sm font-black text-ink">{title}</h3>
       {children}
     </section>
+  );
+}
+
+function SessionRow({
+  index,
+  session,
+  onChange,
+  onRemove,
+  t,
+  inputCls,
+  labelCls,
+}: {
+  index: number;
+  session: SessionEntry;
+  onChange: (next: SessionEntry) => void;
+  onRemove: (() => void) | null;
+  t: ReturnType<typeof useTranslations>;
+  inputCls: string;
+  labelCls: string;
+}) {
+  const set = <K extends keyof SessionEntry>(k: K, v: SessionEntry[K]) =>
+    onChange({ ...session, [k]: v });
+  return (
+    <div
+      className="rounded-xl border border-cream-border bg-cream/40 p-3"
+      data-testid={`session-row-${index}`}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-bold text-ink">
+          {t('quality.sessions.itemTitle', { n: index + 1 })}
+        </span>
+        {onRemove ? (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="text-xs text-muted hover:text-red-600"
+            aria-label={t('quality.sessions.remove', { n: index + 1 })}
+          >
+            ×
+          </button>
+        ) : null}
+      </div>
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <label className={labelCls} htmlFor={`session-${index}-name`}>
+            {t('quality.sessions.name')}
+          </label>
+          <input
+            id={`session-${index}-name`}
+            value={session.name}
+            onChange={(e) => set('name', e.target.value)}
+            className={inputCls + ' mt-1'}
+            placeholder={t('quality.sessions.namePlaceholder')}
+          />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor={`session-${index}-start`}>
+            {t('quality.sessions.startDate')}
+          </label>
+          <input
+            id={`session-${index}-start`}
+            type="date"
+            value={session.start_date}
+            onChange={(e) => set('start_date', e.target.value)}
+            className={inputCls + ' mt-1'}
+          />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor={`session-${index}-end`}>
+            {t('quality.sessions.endDate')}
+          </label>
+          <input
+            id={`session-${index}-end`}
+            type="date"
+            value={session.end_date}
+            onChange={(e) => set('end_date', e.target.value)}
+            className={inputCls + ' mt-1'}
+          />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor={`session-${index}-agemin`}>
+            {t('quality.sessions.ageMin')}
+          </label>
+          <input
+            id={`session-${index}-agemin`}
+            type="number"
+            min={0}
+            max={25}
+            value={session.age_min}
+            onChange={(e) => set('age_min', e.target.value)}
+            className={inputCls + ' mt-1'}
+          />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor={`session-${index}-agemax`}>
+            {t('quality.sessions.ageMax')}
+          </label>
+          <input
+            id={`session-${index}-agemax`}
+            type="number"
+            min={0}
+            max={25}
+            value={session.age_max}
+            onChange={(e) => set('age_max', e.target.value)}
+            className={inputCls + ' mt-1'}
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label className={labelCls} htmlFor={`session-${index}-capacity`}>
+            {t('quality.sessions.capacity')}
+          </label>
+          <input
+            id={`session-${index}-capacity`}
+            type="number"
+            min={0}
+            value={session.capacity}
+            onChange={(e) => set('capacity', e.target.value)}
+            className={inputCls + ' mt-1'}
+            placeholder="20"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

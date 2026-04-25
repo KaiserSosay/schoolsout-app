@@ -88,6 +88,80 @@ describe('POST /api/camp-requests', () => {
     const args = sendMock.mock.calls[0][0];
     expect(args.to).toBe('notify@schoolsout.net');
   });
+
+  it('accepts the rich accordion payload (sessions, social handles, testimonials, photo_urls)', async () => {
+    insertSelectSingleMock.mockResolvedValueOnce({ data: { id: 'cr-2' }, error: null });
+    const { POST } = await import('@/app/api/camp-requests/route');
+    const res = await POST(
+      new Request('http://localhost/api/camp-requests', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          submitted_by_email: 'op@test.com',
+          business_name: 'Sunshine Co.',
+          camp_name: 'Summer Adventure',
+          instagram_handle: '@sunshinecamp',
+          facebook_url: 'https://facebook.com/sunshinecamp',
+          tiktok_handle: '@sunshinecamp',
+          testimonials: 'Best summer ever',
+          photo_urls: ['https://example.com/photo1.jpg'],
+          sessions: [
+            {
+              name: 'Summer Week 1',
+              start_date: '2026-06-08',
+              end_date: '2026-06-12',
+              age_min: 5,
+              age_max: 12,
+              capacity: 20,
+            },
+          ],
+          locale: 'en',
+        }),
+      }),
+    );
+    expect(res.status).toBe(200);
+  });
+
+  it('rejects more than 8 sessions', async () => {
+    const { POST } = await import('@/app/api/camp-requests/route');
+    const sessions = Array.from({ length: 9 }, (_, i) => ({
+      name: `Week ${i + 1}`,
+    }));
+    const res = await POST(
+      new Request('http://localhost/api/camp-requests', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          submitted_by_email: 'op@test.com',
+          business_name: 'Sunshine Co.',
+          camp_name: 'Summer Adventure',
+          sessions,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it('rejects more than 5 photo_urls', async () => {
+    const { POST } = await import('@/app/api/camp-requests/route');
+    const photo_urls = Array.from(
+      { length: 6 },
+      (_, i) => `https://example.com/p${i}.jpg`,
+    );
+    const res = await POST(
+      new Request('http://localhost/api/camp-requests', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          submitted_by_email: 'op@test.com',
+          business_name: 'Sunshine Co.',
+          camp_name: 'Summer Adventure',
+          photo_urls,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
 });
 
 describe('POST /api/admin/camp-applications/[id]/payment-link', () => {

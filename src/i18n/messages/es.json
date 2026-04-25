@@ -1179,6 +1179,35 @@
         "hours": "Los padres necesitan saber la hora de salida para planear su día.",
         "beforeCare": "Los padres que trabajan buscan específicamente cuidado extendido.",
         "registrationDeadline": "Recordaremos a los padres suscritos 7 días antes de esta fecha."
+      },
+      "quality": {
+        "title": "Mejora la calidad de tu listado (opcional)",
+        "subhead": "Listados con horarios, fotos y sesiones llaman más la atención.",
+        "photosDeferred": "📷 La carga de fotos llega la próxima semana — estamos finalizando el almacenamiento. Envía tus fotos a hi@schoolsout.net y las añadimos a tu listado.",
+        "sessions": {
+          "title": "Sesiones",
+          "help": "Lista las semanas o sesiones individuales en las que los padres pueden inscribirse. Las mostramos cuando coinciden con un cierre escolar.",
+          "itemTitle": "Sesión {n}",
+          "name": "Nombre de la sesión",
+          "namePlaceholder": "Semana 1 de verano",
+          "startDate": "Fecha de inicio",
+          "endDate": "Fecha de fin",
+          "ageMin": "Edad mínima",
+          "ageMax": "Edad máxima",
+          "capacity": "Cupos disponibles",
+          "add": "Agregar otra sesión",
+          "remove": "Eliminar sesión {n}"
+        },
+        "social": {
+          "instagram": "Instagram",
+          "facebook": "Enlace de Facebook",
+          "tiktok": "TikTok"
+        },
+        "testimonials": {
+          "label": "Reseñas o testimonios",
+          "placeholder": "Cita uno o dos padres — mostraremos la atribución como 'Madre de campista, 2025'.",
+          "counter": "{used} / {max}"
+        }
       }
     },
     "whySection": {

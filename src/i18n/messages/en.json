@@ -1179,6 +1179,35 @@
         "hours": "Working parents need pickup time for planning. Missing = they move on.",
         "beforeCare": "Working parents search specifically for extended care.",
         "registrationDeadline": "We'll remind subscribed parents 7 days before this date."
+      },
+      "quality": {
+        "title": "Improve your listing quality (optional)",
+        "subhead": "Listings with hours, photos, and sessions get noticed faster by parents.",
+        "photosDeferred": "📷 Photo upload coming next week — we're finalizing storage. Email hi@schoolsout.net any photos and we'll attach them to your listing.",
+        "sessions": {
+          "title": "Sessions",
+          "help": "List individual weeks or sessions parents can sign up for. We'll surface these on the closure-day match.",
+          "itemTitle": "Session {n}",
+          "name": "Session name",
+          "namePlaceholder": "Summer Week 1",
+          "startDate": "Start date",
+          "endDate": "End date",
+          "ageMin": "Youngest",
+          "ageMax": "Oldest",
+          "capacity": "Spots available",
+          "add": "Add another session",
+          "remove": "Remove session {n}"
+        },
+        "social": {
+          "instagram": "Instagram",
+          "facebook": "Facebook URL",
+          "tiktok": "TikTok"
+        },
+        "testimonials": {
+          "label": "Reviews or testimonials",
+          "placeholder": "Quote a parent or two — we'll display attribution as 'Parent of camper, 2025'.",
+          "counter": "{used} / {max}"
+        }
       }
     },
     "whySection": {

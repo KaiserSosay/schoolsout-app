@@ -55,6 +55,33 @@ const schema = z.object({
   facebook_url: z.string().trim().url().optional().nullable(),
   tiktok_handle: z.string().trim().max(60).optional().nullable(),
   testimonials: z.string().trim().max(2000).optional().nullable(),
+  // Phase 3.0 Item 3.5: rich sessions + photo URLs from the operator-form
+  // accordion. photo_urls is accepted but currently unused — the upload
+  // pipeline lands in a follow-up once the camp-submissions storage bucket
+  // exists. See docs/grind-2026-04-25-blockers.md.
+  photo_urls: z.array(z.string().trim().url()).max(5).optional().default([]),
+  sessions: z
+    .array(
+      z.object({
+        name: z.string().trim().max(120).nullable().optional(),
+        start_date: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .nullable()
+          .optional(),
+        end_date: z
+          .string()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .nullable()
+          .optional(),
+        age_min: z.number().int().min(0).max(25).nullable().optional(),
+        age_max: z.number().int().min(0).max(25).nullable().optional(),
+        capacity: z.number().int().min(0).max(10000).nullable().optional(),
+      }),
+    )
+    .max(8)
+    .optional()
+    .default([]),
   applicant_completeness: z.number().min(0).max(1).optional().nullable(),
   locale: z.enum(['en', 'es']).default('en'),
 });
@@ -123,6 +150,8 @@ export async function POST(req: Request) {
       facebook_url: d.facebook_url ?? null,
       tiktok_handle: d.tiktok_handle ?? null,
       testimonials: d.testimonials ?? null,
+      photo_urls: d.photo_urls,
+      sessions: d.sessions,
       applicant_completeness: d.applicant_completeness ?? null,
       status: 'pending',
     })
