@@ -6,6 +6,11 @@ const schema = z.object({
   email: z.string().email().max(320),
   city: z.string().min(2).max(100),
   state: z.string().max(2).optional(),
+  // Phase 3.0 / Item 3.6: optional kid's school. Free-text — parents
+  // out of our coverage area wouldn't be in our school DB anyway, so
+  // there's no autocomplete here. Trimmed + truncated server-side to
+  // protect against blob inserts.
+  school: z.string().max(200).optional(),
 });
 
 export async function POST(req: Request) {
@@ -15,7 +20,14 @@ export async function POST(req: Request) {
 
   const ua = req.headers.get('user-agent')?.slice(0, 500) ?? null;
   const db = createServiceSupabase();
-  const { error } = await db.from('city_requests').insert({ ...parsed.data, user_agent: ua });
+  const school = parsed.data.school?.trim() || null;
+  const { error } = await db.from('city_requests').insert({
+    email: parsed.data.email,
+    city: parsed.data.city,
+    state: parsed.data.state,
+    school,
+    user_agent: ua,
+  });
 
   // DECISION: Unique-constraint collision on (lower(email), lower(city)) = user
   // already requested that city. Treat as success so the UI can show a consistent

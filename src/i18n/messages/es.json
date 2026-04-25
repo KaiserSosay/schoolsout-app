@@ -387,6 +387,8 @@
         "emailPlaceholder": "padre@ejemplo.com",
         "cityPlaceholder": "Ciudad (ej. Orlando)",
         "statePlaceholder": "Estado",
+        "schoolLabel": "Escuela de tu hijo (opcional)",
+        "schoolPlaceholder": "¿A qué escuela va tu hijo? (opcional)",
         "submit": "Pedir mi ciudad →",
         "submitting": "Enviando…",
         "success": "Anotado. Te escribiremos cuando lancemos allá.",
@@ -1428,7 +1430,7 @@
       "requestHeading": "¿No ves tu ciudad?",
       "requestBody": "Cuéntanos dónde estudia tu hijo. Te avisamos por correo cuando agreguemos calendarios para tu zona.",
       "requestCta": "Solicita tu ciudad →",
-      "requestBodyDraft": "Solicitud de ciudad: "
+      "requestBodyDraft": "City request: \nSchool: "
     },
     "howItWorks": {
       "title": "Cómo funciona School's Out!",

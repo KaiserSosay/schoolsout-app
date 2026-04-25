@@ -9,6 +9,7 @@ const schema = z.object({
   email: z.string().email(),
   city: z.string().min(2),
   state: z.string().max(2).optional().or(z.literal('')),
+  school: z.string().max(200).optional().or(z.literal('')),
 });
 
 export function CityRequestForm() {
@@ -18,9 +19,13 @@ export function CityRequestForm() {
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
   const [stateCode, setStateCode] = useState('');
+  // Phase 3.0 / Item 3.6: optional school field. Free text. Stays empty
+  // for parents who'd rather just signal the city — submitting still
+  // succeeds.
+  const [school, setSchool] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  const parsed = schema.safeParse({ email, city, state: stateCode });
+  const parsed = schema.safeParse({ email, city, state: stateCode, school });
   const isValid = parsed.success;
 
   async function submit(e: React.FormEvent) {
@@ -35,6 +40,7 @@ export function CityRequestForm() {
           email,
           city,
           ...(stateCode ? { state: stateCode.toUpperCase() } : {}),
+          ...(school.trim() ? { school: school.trim() } : {}),
         }),
       });
       setStatus(res.ok ? 'success' : 'error');
@@ -86,6 +92,15 @@ export function CityRequestForm() {
           aria-label={t('statePlaceholder')}
         />
       </div>
+      <input
+        type="text"
+        maxLength={200}
+        value={school}
+        onChange={(e) => setSchool(e.target.value)}
+        placeholder={t('schoolPlaceholder')}
+        className={inputBase + ' ' + input}
+        aria-label={t('schoolLabel')}
+      />
       <button type="submit" disabled={!isValid || status === 'submitting'} className={btn}>
         {status === 'submitting' ? t('submitting') : t('submit')}
       </button>

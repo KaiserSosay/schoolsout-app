@@ -387,6 +387,8 @@
         "emailPlaceholder": "parent@example.com",
         "cityPlaceholder": "City (e.g. Orlando)",
         "statePlaceholder": "State",
+        "schoolLabel": "Your kid's school (optional)",
+        "schoolPlaceholder": "What school does your kid attend? (optional)",
         "submit": "Request my city →",
         "submitting": "Sending…",
         "success": "Got it. We'll email you when we launch there.",
@@ -1428,7 +1430,7 @@
       "requestHeading": "Don't see your city?",
       "requestBody": "Tell us where your kid goes to school. We'll email you the moment we add calendars for your area.",
       "requestCta": "Request your city →",
-      "requestBodyDraft": "City request: "
+      "requestBodyDraft": "City request: \nSchool: "
     },
     "howItWorks": {
       "title": "How School's Out! works",

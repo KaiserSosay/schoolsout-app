@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { parseCityRequestBody } from '@/lib/city-request-parser';
 
 export type AdminFeatureRequest = {
   id: string;
@@ -177,7 +178,8 @@ function DetailPane({
         <span className="text-xs font-bold text-muted">{request.locale}</span>
         <span className="text-xs text-muted">{relative(request.created_at)}</span>
       </header>
-      <blockquote className="rounded-2xl border-l-4 border-brand-purple bg-cream/70 p-4 text-sm text-ink">
+      <CityRequestExtract body={request.body} />
+      <blockquote className="rounded-2xl border-l-4 border-brand-purple bg-cream/70 p-4 text-sm text-ink whitespace-pre-wrap">
         {request.body}
       </blockquote>
       <dl className="grid grid-cols-2 gap-2 text-xs">
@@ -289,6 +291,29 @@ function DetailPane({
         </p>
       ) : null}
     </div>
+  );
+}
+
+// Phase 3.0 / Item 3.6: pull the city + school out of city-request bodies
+// so admin can triage at a glance without re-reading the prefix every time.
+// Renders nothing when body doesn't match the canonical "City request:" prefix.
+function CityRequestExtract({ body }: { body: string }) {
+  const parsed = parseCityRequestBody(body);
+  if (!parsed.city && !parsed.school) return null;
+  return (
+    <dl
+      data-testid="city-request-extract"
+      className="grid grid-cols-2 gap-2 rounded-2xl border border-brand-purple/30 bg-purple-soft/50 p-3 text-xs"
+    >
+      <div>
+        <dt className="font-bold text-muted">City requested</dt>
+        <dd className="text-ink font-semibold">{parsed.city ?? '—'}</dd>
+      </div>
+      <div>
+        <dt className="font-bold text-muted">School</dt>
+        <dd className="text-ink font-semibold">{parsed.school ?? '—'}</dd>
+      </div>
+    </dl>
   );
 }
 

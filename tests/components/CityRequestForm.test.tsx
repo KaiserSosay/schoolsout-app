@@ -75,4 +75,38 @@ describe('CityRequestForm', () => {
     const body = JSON.parse((global.fetch as any).mock.calls[0][1].body);
     expect(body).not.toHaveProperty('state');
   });
+
+  // Phase 3.0 / Item 3.6 — optional school field
+  it('omits school when blank (school is optional, submit still works)', async () => {
+    wrap();
+    fireEvent.change(screen.getByPlaceholderText(/parent@example.com/i), {
+      target: { value: 'city@example.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/City/i), {
+      target: { value: 'Orlando' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Request my city/i }));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const body = JSON.parse((global.fetch as any).mock.calls[0][1].body);
+    expect(body).not.toHaveProperty('school');
+  });
+
+  it('includes school in POST when filled', async () => {
+    wrap();
+    fireEvent.change(screen.getByPlaceholderText(/parent@example.com/i), {
+      target: { value: 'city@example.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/City/i), {
+      target: { value: 'Orlando' },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/What school does your kid attend/i), {
+      target: { value: 'Orlando Magnet School' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Request my city/i }));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const body = JSON.parse((global.fetch as any).mock.calls[0][1].body);
+    expect(body).toMatchObject({ school: 'Orlando Magnet School' });
+  });
 });
