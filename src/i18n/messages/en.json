@@ -750,8 +750,8 @@
           "action": "Browse camps"
         }
       },
-      "activity": {
-        "title": "Kid activity",
+      "recentActivity": {
+        "title": "Recent activity",
         "empty": "Nothing yet. Open Kid Mode on this device to start planning with your kid",
         "emptyCta": "Open Kid Mode →",
         "savedCamp": "⭐ Saved {name}",
@@ -1301,9 +1301,13 @@
       "verifiedFrame": {
         "badge": "✓ Verified calendar",
         "mdcpsBadge": "✓ Verified by Miami-Dade County Public Schools",
-        "sectionTitle": "Confirmed dates"
+        "sectionTitle": "Confirmed dates",
+        "eyebrowMdcps": "Official 2025–2026 calendar from Miami-Dade County Public Schools",
+        "eyebrow": "Official 2025–2026 calendar"
       },
       "unofficialFrame": {
+        "eyebrow": "The unofficial",
+        "titleMain": "2025–2026 calendar for {name}",
         "h1": "The unofficial 2025–2026 calendar for {name}",
         "title": "Unofficial calendar for {name} — School's Out!",
         "subhead": "We're working on getting verified dates from {name}. Here's what we know so far.",
@@ -1468,6 +1472,35 @@
     "bottom": {
       "copyright": "© 2026 School's Out! — Built with care by Noah in Miami.",
       "motto": "Be so good, nobody can ignore you."
+    }
+  },
+  "installApp": {
+    "title": "Install School's Out!",
+    "intro": "Add School's Out! to your home screen so you can check breaks with one tap.",
+    "gotIt": "Got it",
+    "alreadyInstalled": {
+      "title": "You're all set! 🎉",
+      "body": "School's Out! is already installed on this device."
+    },
+    "iosSafari": {
+      "step1": "Tap the {icon} share icon at the bottom of your screen.",
+      "step2": "Scroll down, tap <b>Add to Home Screen</b>.",
+      "step3": "Tap <b>Add</b> — the app is on your phone!"
+    },
+    "androidChrome": {
+      "step1": "Tap the <b>⋮</b> menu (top right).",
+      "step2": "Tap <b>Install app</b> (or <b>Add to Home screen</b>)."
+    },
+    "desktopChrome": {
+      "step1": "Look for the <b>install</b> icon on the right side of the address bar.",
+      "step2": "Click it and confirm \"Install\"."
+    },
+    "desktopEdge": {
+      "step1": "Click the <b>+</b> install icon on the right side of the address bar.",
+      "step2": "Confirm \"Install\"."
+    },
+    "other": {
+      "body": "Bookmark this page — or open it in Chrome or Safari on your phone to install."
     }
   }
 }

@@ -33,9 +33,17 @@
     text-wrap: balance;
   }
 
+  /* DECISION: `both` fill-mode lets the `from { opacity: 0 }` keyframe hide the
+     element before the animation starts (via `backwards`) and the `to { opacity: 1 }`
+     keyframe stick afterward (via `forwards`). The previous static `opacity: 0`
+     declaration was a foot-gun: when another class (e.g. .animate-wordmark-bump
+     on mode flip, or .glow-pulse on Start-Free click) overrode the `animation`
+     property, fadeUp's forwards-fill stopped holding opacity at 1, and the
+     static `opacity: 0` exposed the element as invisible. With `both`, the
+     element's base computed opacity once fadeUp has finished is the document
+     default (1), so co-existing animations don't blank it. */
   .animate-fade-up {
-    opacity: 0;
-    animation: fadeUp 500ms ease-out forwards;
+    animation: fadeUp 500ms ease-out both;
   }
 
   .animate-gradient-pan {

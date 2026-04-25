@@ -9,6 +9,7 @@ import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
 import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
 import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { haversineMiles } from '@/lib/distance';
+import { neighborhoodCentroid } from '@/lib/neighborhoods';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,10 @@ type CampRow = CampCardCamp & {
   website_url?: string | null;
   image_url?: string | null;
   created_at?: string;
+  // DECISION (Phase 3.0 / Item 1.9): set when a camp's distance was
+  // computed from its neighborhood centroid rather than its own lat/lng.
+  // The CampCard renders a leading "~" so parents see the approximation.
+  distance_approximate?: boolean;
 };
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -69,6 +74,7 @@ export default async function CampsPage({
     user
       ? sb.from('kid_profiles').select('school_id').eq('user_id', user.id)
       : Promise.resolve({ data: [] as { school_id: string }[] }),
+    // saved_locations — RLS-protected, requires user.
     user
       ? sb.from('saved_locations').select('id, label, latitude, longitude, is_primary').eq('user_id', user.id)
       : Promise.resolve({ data: [] as Array<{ id: string; label: string; latitude: number | string; longitude: number | string; is_primary: boolean }> }),
@@ -91,9 +97,15 @@ export default async function CampsPage({
   if (schoolIds.length) {
     const { data: schools } = await svc
       .from('schools')
-      .select('id, name, latitude, longitude')
+      .select('id, name, latitude, longitude, neighborhood')
       .in('id', schoolIds);
-    for (const s of (schools ?? []) as Array<{ id: string; name: string; latitude: number | string | null; longitude: number | string | null }>) {
+    for (const s of (schools ?? []) as Array<{
+      id: string;
+      name: string;
+      latitude: number | string | null;
+      longitude: number | string | null;
+      neighborhood: string | null;
+    }>) {
       const lat = s.latitude != null ? Number(s.latitude) : null;
       const lng = s.longitude != null ? Number(s.longitude) : null;
       if (lat != null && lng != null && Number.isFinite(lat) && Number.isFinite(lng)) {
@@ -102,6 +114,22 @@ export default async function CampsPage({
           label: s.name,
           latitude: lat,
           longitude: lng,
+        });
+        continue;
+      }
+      // DECISION (Phase 3.0 / Item 1.9): fall back to neighborhood centroid
+      // when the school's own coordinates aren't populated. Better than
+      // sinking the option entirely — the user can still sort by distance
+      // (approximate). The fromOption itself doesn't carry an "approximate"
+      // flag because the resulting camp distances are flagged per-camp
+      // anyway, and the parent picks one origin at a time.
+      const centroid = neighborhoodCentroid(s.neighborhood);
+      if (centroid) {
+        fromOptions.push({
+          id: `school:${s.id}`,
+          label: s.name,
+          latitude: centroid.lat,
+          longitude: centroid.lng,
         });
       }
     }
@@ -143,13 +171,34 @@ export default async function CampsPage({
   const filtered = applyFilters(rows, filters);
   const active = hasActiveFilters(filters);
 
-  // Annotate with distance
+  // Annotate with distance.
+  // DECISION (Phase 3.0 / Item 1.9): for camps without their own lat/lng but
+  // WITH a neighborhood, compute distance from the neighborhood centroid and
+  // flag the result as approximate. Only camps with neither lat/lng nor a
+  // recognized neighborhood drop out of the distance sort (they sink to the
+  // bottom via Number.POSITIVE_INFINITY in the comparator below).
   const annotated = filtered.map((c) => {
     if (originLat == null || originLng == null) return c;
     const lat = c.latitude != null ? Number(c.latitude) : null;
     const lng = c.longitude != null ? Number(c.longitude) : null;
-    if (lat == null || lng == null || !Number.isFinite(lat) || !Number.isFinite(lng)) return c;
-    return { ...c, distance_miles: Number(haversineMiles(originLat, originLng, lat, lng).toFixed(2)) };
+    if (lat != null && lng != null && Number.isFinite(lat) && Number.isFinite(lng)) {
+      return {
+        ...c,
+        distance_miles: Number(haversineMiles(originLat, originLng, lat, lng).toFixed(2)),
+        distance_approximate: false,
+      };
+    }
+    const centroid = neighborhoodCentroid(c.neighborhood);
+    if (centroid) {
+      return {
+        ...c,
+        distance_miles: Number(
+          haversineMiles(originLat, originLng, centroid.lat, centroid.lng).toFixed(2),
+        ),
+        distance_approximate: true,
+      };
+    }
+    return c;
   });
 
   // Sort

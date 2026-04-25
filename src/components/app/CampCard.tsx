@@ -32,6 +32,10 @@ export type CampCardCamp = {
   is_featured?: boolean;
   description?: string | null;
   distance_miles?: number | null;
+  // DECISION (Phase 3.0 / Item 1.9): true when distance was computed from a
+  // neighborhood centroid because the camp lacks its own lat/lng. Renders a
+  // leading "~" so parents see the result is approximate.
+  distance_approximate?: boolean;
   hours_start?: string | null;
   hours_end?: string | null;
   before_care_offered?: boolean;
@@ -121,7 +125,7 @@ export function CampCard({
 
   const distanceLabel =
     typeof camp.distance_miles === 'number'
-      ? formatMiles(camp.distance_miles)
+      ? (camp.distance_approximate ? '~' : '') + formatMiles(camp.distance_miles)
       : null;
 
   return (

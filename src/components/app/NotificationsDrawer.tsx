@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { createBrowserSupabase } from '@/lib/supabase/browser';
+import { ErrorState } from '@/components/ErrorState';
 
 type ReminderSend = {
   id: string;
@@ -14,6 +15,13 @@ type ReminderSend = {
 // Stubbed notifications surface. Lists the user's 20 most recent reminder
 // email sends from reminder_sends → closures. No push-notification machinery
 // yet; when we build one, this drawer is the obvious home for it.
+//
+// DECISION (Phase 3.0 / Item 1.7): every failure path here renders the
+// branded ErrorState in-place rather than throwing. A previous version
+// could push the route-segment error boundary into the foreground when
+// the bell was tapped on flaky mobile networks — that's the wrong UX
+// (an error boundary unmounts the entire page), and the bell is supposed
+// to be a low-stakes "what reminders did I get?" peek.
 export function NotificationsDrawer({
   open,
   onClose,
@@ -23,31 +31,51 @@ export function NotificationsDrawer({
 }) {
   const t = useTranslations('app.nav');
   const [sends, setSends] = useState<ReminderSend[] | null>(null);
+  const [errored, setErrored] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     if (!open || sends !== null) return;
-    const sb = createBrowserSupabase();
+    let cancelled = false;
     (async () => {
-      const { data } = await sb
-        .from('reminder_sends')
-        .select('id, created_at, days_before, closures(name, emoji)')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      const rows = (data ?? []).map((r) => {
-        const c = r.closures as
-          | { name: string | null; emoji: string | null }
-          | Array<{ name: string | null; emoji: string | null }>
-          | null;
-        return {
-          id: r.id,
-          created_at: r.created_at,
-          days_before: r.days_before,
-          closures: Array.isArray(c) ? (c[0] ?? null) : c,
-        };
-      });
-      setSends(rows);
+      try {
+        const sb = createBrowserSupabase();
+        const { data, error } = await sb
+          .from('reminder_sends')
+          .select('id, created_at, days_before, closures(name, emoji)')
+          .order('created_at', { ascending: false })
+          .limit(20);
+        if (cancelled) return;
+        if (error) {
+          setErrored(true);
+          setSends([]);
+          return;
+        }
+        const rows = (data ?? []).map((r) => {
+          const c = r.closures as
+            | { name: string | null; emoji: string | null }
+            | Array<{ name: string | null; emoji: string | null }>
+            | null;
+          return {
+            id: r.id,
+            created_at: r.created_at,
+            days_before: r.days_before,
+            closures: Array.isArray(c) ? (c[0] ?? null) : c,
+          };
+        });
+        setSends(rows);
+        setErrored(false);
+      } catch {
+        if (!cancelled) {
+          setErrored(true);
+          setSends([]);
+        }
+      }
     })();
-  }, [open, sends]);
+    return () => {
+      cancelled = true;
+    };
+  }, [open, sends, retryKey]);
 
   if (!open) return null;
 
@@ -80,6 +108,15 @@ export function NotificationsDrawer({
         <div className="flex-1 overflow-auto">
           {sends === null ? (
             <div className="p-4 text-sm text-muted">…</div>
+          ) : errored ? (
+            <ErrorState
+              compact
+              onRetry={() => {
+                setSends(null);
+                setErrored(false);
+                setRetryKey((k) => k + 1);
+              }}
+            />
           ) : sends.length === 0 ? (
             <div className="p-6 text-center text-sm text-muted">
               {t('notificationsEmpty')}

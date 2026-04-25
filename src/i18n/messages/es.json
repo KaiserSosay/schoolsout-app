@@ -750,8 +750,8 @@
           "action": "Ver campamentos"
         }
       },
-      "activity": {
-        "title": "Actividad de los niños",
+      "recentActivity": {
+        "title": "Actividad reciente",
         "empty": "Nada aún. Abre el Modo Niños en este dispositivo para empezar a planear con tu hijo",
         "emptyCta": "Abrir Modo Niños →",
         "savedCamp": "⭐ Guardó {name}",
@@ -1301,9 +1301,13 @@
       "verifiedFrame": {
         "badge": "✓ Calendario verificado",
         "mdcpsBadge": "✓ Verificado por Miami-Dade County Public Schools",
-        "sectionTitle": "Fechas confirmadas"
+        "sectionTitle": "Fechas confirmadas",
+        "eyebrowMdcps": "Calendario oficial 2025–2026 de Miami-Dade County Public Schools",
+        "eyebrow": "Calendario oficial 2025–2026"
       },
       "unofficialFrame": {
+        "eyebrow": "Calendario no oficial",
+        "titleMain": "2025–2026 de {name}",
         "h1": "El calendario no oficial 2025–2026 de {name}",
         "title": "Calendario no oficial de {name} — School's Out!",
         "subhead": "Estamos trabajando para conseguir las fechas verificadas de {name}. Esto es lo que sabemos hasta ahora.",
@@ -1468,6 +1472,35 @@
     "bottom": {
       "copyright": "© 2026 School's Out! — Construido con cariño por Noah en Miami.",
       "motto": "Sé tan bueno que no te puedan ignorar."
+    }
+  },
+  "installApp": {
+    "title": "Instala School's Out!",
+    "intro": "Agrega School's Out! a tu pantalla de inicio para revisar los recesos con un solo toque.",
+    "gotIt": "Listo",
+    "alreadyInstalled": {
+      "title": "¡Ya está! 🎉",
+      "body": "School's Out! ya está instalado en este dispositivo."
+    },
+    "iosSafari": {
+      "step1": "Toca el icono de compartir {icon} en la parte de abajo de la pantalla.",
+      "step2": "Baja y toca <b>Añadir a pantalla de inicio</b>.",
+      "step3": "Toca <b>Añadir</b> — ¡la app está en tu teléfono!"
+    },
+    "androidChrome": {
+      "step1": "Toca el menú <b>⋮</b> (arriba a la derecha).",
+      "step2": "Toca <b>Instalar app</b> (o <b>Añadir a pantalla de inicio</b>)."
+    },
+    "desktopChrome": {
+      "step1": "Busca el icono de <b>instalar</b> al final de la barra de direcciones.",
+      "step2": "Haz clic y confirma \"Instalar\"."
+    },
+    "desktopEdge": {
+      "step1": "Haz clic en el icono <b>+</b> al final de la barra de direcciones.",
+      "step2": "Confirma \"Instalar\"."
+    },
+    "other": {
+      "body": "Guarda esta página en favoritos — o ábrela en Chrome o Safari en tu teléfono para instalar."
     }
   }
 }

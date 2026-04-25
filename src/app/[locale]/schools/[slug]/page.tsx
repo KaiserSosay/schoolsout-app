@@ -215,9 +215,18 @@ export default async function PublicSchoolPage({
     ]),
   ];
 
-  const h1 = framing.isVerified
+  // DECISION (Phase 3.0 / Item 1.4): stacked header. Small eyebrow
+  // ("The unofficial" / "Official 2025–2026 calendar from M-DCPS") sits
+  // above the big title. Verified non-MDCPS schools use a generic
+  // "Official 2025–2026 calendar" eyebrow over the school name.
+  const eyebrow = framing.isVerified
+    ? framing.reason === 'mdcps'
+      ? t('verifiedFrame.eyebrowMdcps')
+      : t('verifiedFrame.eyebrow')
+    : t('unofficialFrame.eyebrow');
+  const titleMain = framing.isVerified
     ? school.name
-    : t('unofficialFrame.h1', { name: school.name });
+    : t('unofficialFrame.titleMain', { name: school.name });
 
   const showDistrictBanner =
     !framing.isVerified && school.follows_district_pattern === true;
@@ -231,11 +240,14 @@ export default async function PublicSchoolPage({
         className="mx-auto max-w-3xl px-4 py-8 md:px-6 md:py-12"
       >
         <header className="mb-6">
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+            {eyebrow}
+          </p>
           <h1
-            className="text-3xl font-black text-ink md:text-4xl"
+            className="mt-1 text-3xl font-black text-ink md:text-4xl"
             style={{ letterSpacing: '-0.02em' }}
           >
-            {h1}
+            {titleMain}
           </h1>
           <p className="mt-1 text-sm text-muted">
             {[school.district, school.city, school.state].filter(Boolean).join(' · ')}

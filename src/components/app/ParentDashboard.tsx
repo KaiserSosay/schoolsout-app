@@ -8,7 +8,7 @@ import { FamilyCalendarStrip } from './FamilyCalendarStrip';
 import { ReminderBanner } from './ReminderBanner';
 import { WishlistSection } from './WishlistSection';
 import { QuickActions } from './QuickActions';
-import { KidActivityFeed } from './KidActivityFeed';
+import { RecentActivityFeed } from './RecentActivityFeed';
 import { PlansSummary } from './PlansSummary';
 import { VerifyingCalendarsCard } from './VerifyingCalendarsCard';
 import type { SchoolStatus } from '@/lib/school-status';
@@ -129,7 +129,7 @@ export function ParentDashboard({
         <QuickActions locale={locale} />
       </div>
 
-      <KidActivityFeed initial={activity} locale={locale} />
+      <RecentActivityFeed initial={activity} locale={locale} />
     </div>
   );
 }

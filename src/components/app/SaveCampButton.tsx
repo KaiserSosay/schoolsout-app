@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 // kid_activity server-side, so we don't double-post. On 401 we roll back and
 // warn via toast. On success (next=true only) we trigger a sparkle burst,
 // fire a haptic on supported devices, and dispatch a `so-activity` CustomEvent
-// so the KidActivityFeed can optimistically prepend a row without waiting
+// so the RecentActivityFeed can optimistically prepend a row without waiting
 // for the next 30s poll.
 export function SaveCampButton({
   campId,
@@ -88,7 +88,7 @@ export function SaveCampButton({
         }
         if (next && campName) {
           showToast(tToast('saved', { name: campName }));
-          // Optimistic activity insert — picked up by KidActivityFeed.
+          // Optimistic activity insert — picked up by RecentActivityFeed.
           try {
             window.dispatchEvent(
               new CustomEvent('so-activity', {

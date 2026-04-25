@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
 import { UserMenuItems } from './UserMenu';
@@ -26,7 +26,6 @@ export function AppHeader({
   const pathname = usePathname() ?? '';
   const [menuOpen, setMenuOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Close menu on route change.
   useEffect(() => {
@@ -34,16 +33,13 @@ export function AppHeader({
     setBellOpen(false);
   }, [pathname]);
 
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener('mousedown', onClick);
-    return () => window.removeEventListener('mousedown', onClick);
-  }, [menuOpen]);
+  // DECISION (Phase 3.0 / Item 1.8): rely on the backdrop's onClick + the
+  // pathname-change effect above to close the menu. A previous window-level
+  // `mousedown` listener fired BEFORE the synthetic `click` on each menu Link
+  // in iOS Safari (touchstart → touchend → mousedown → click), unmounting the
+  // sheet between mousedown and click and swallowing the navigation. The
+  // backdrop's onClick covers all "tap outside" cases since it sits inset-0
+  // over the screen at z-40 (menu is z-50).
 
   const initial =
     (displayName?.trim().charAt(0) || email.charAt(0) || 'P').toUpperCase();
@@ -96,7 +92,7 @@ export function AppHeader({
                   🔔
                 </button>
 
-                <div className="relative" ref={menuRef}>
+                <div className="relative">
                   <button
                     type="button"
                     onClick={() => setMenuOpen((v) => !v)}
