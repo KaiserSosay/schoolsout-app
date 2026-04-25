@@ -1,0 +1,28 @@
+{
+  "note": "Hand-extracted from gulliver-prep-2025-2026.pdf via multimodal review (the multi-column grid layout defeats the regex parser — month annotations bleed across columns). Source PDF: https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf as of 03.19.25.",
+  "closures": [
+    { "name": "Grade 9 Orientation", "category": "orientation", "start_date": "2025-08-10", "end_date": "2025-08-11", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Middle School & Upper School Orientation Days", "category": "orientation", "start_date": "2025-08-10", "end_date": "2025-08-12", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Primary & Lower School Meet & Greet", "category": "orientation", "start_date": "2025-08-13", "end_date": "2025-08-13", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "First Day of School", "category": "first_day", "start_date": "2025-08-14", "end_date": "2025-08-14", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Labor Day Holiday", "category": "federal_holiday", "start_date": "2025-09-01", "end_date": "2025-09-01", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Rosh Hashanah Holiday", "category": "religious_holiday", "start_date": "2025-09-23", "end_date": "2025-09-23", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Yom Kippur Holiday", "category": "religious_holiday", "start_date": "2025-10-02", "end_date": "2025-10-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Teacher Workday – No Classes (PS/LS Parent Conferences)", "category": "teacher_workday", "start_date": "2025-10-17", "end_date": "2025-10-17", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Teacher Professional Development Day – No Classes", "category": "teacher_workday", "start_date": "2025-11-03", "end_date": "2025-11-03", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Thanksgiving Recess", "category": "break", "start_date": "2025-11-24", "end_date": "2025-11-28", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Early Dismissal (Half day)", "category": "other", "start_date": "2025-12-19", "end_date": "2025-12-19", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "Winter Recess", "category": "break", "start_date": "2025-12-22", "end_date": "2026-01-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Classes Resume", "category": "other", "start_date": "2026-01-05", "end_date": "2026-01-05", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Martin Luther King, Jr. Holiday", "category": "federal_holiday", "start_date": "2026-01-19", "end_date": "2026-01-19", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Presidents' Day Recess", "category": "federal_holiday", "start_date": "2026-02-16", "end_date": "2026-02-20", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No Classes for Primary & Lower School Students (PS/LS Parent Conferences)", "category": "parent_conference", "start_date": "2026-03-18", "end_date": "2026-03-18", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Spring Recess", "category": "break", "start_date": "2026-03-30", "end_date": "2026-04-03", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Teacher Professional Development Day – No Classes", "category": "teacher_workday", "start_date": "2026-04-06", "end_date": "2026-04-06", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Class of 2026 Graduation (tentative)", "category": "graduation", "start_date": "2026-05-21", "end_date": "2026-05-21", "closed_for_students": false, "is_early_release": false, "confidence": "medium" },
+    { "name": "Last Day of School, Gr PK-SK – Early Dismissal", "category": "last_day", "start_date": "2026-05-21", "end_date": "2026-05-21", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "Last Day of School, Gr 1-11 – Early Dismissal", "category": "last_day", "start_date": "2026-05-22", "end_date": "2026-05-22", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "Memorial Day Holiday", "category": "federal_holiday", "start_date": "2026-05-25", "end_date": "2026-05-25", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Teacher Workday – No Classes", "category": "teacher_workday", "start_date": "2026-05-26", "end_date": "2026-05-29", "closed_for_students": true, "is_early_release": false, "confidence": "high" }
+  ]
+}

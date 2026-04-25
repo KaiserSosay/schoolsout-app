@@ -1,0 +1,27 @@
+{
+  "note": "Hand-extracted from ransom-everglades-2025-2026.pdf via multimodal review (regex parser misattributed dates across the multi-column layout). Date ranges (Thanksgiving Nov 24-28, Holiday Break Dec 22-Jan 2, Winter Break Feb 13 + 16-20, Spring Break Mar 30-Apr 3) confirmed by yellow 'No Classes' highlighting in the source PDF. Source: https://www.ransomeverglades.org/news-and-events/calendar (PDF revised 12/16/24).",
+  "closures": [
+    { "name": "Faculty Orientation", "category": "teacher_workday", "start_date": "2025-08-06", "end_date": "2025-08-12", "closed_for_students": true, "is_early_release": false, "confidence": "medium" },
+    { "name": "Orientation – 6th, 9th, and new students", "category": "orientation", "start_date": "2025-08-19", "end_date": "2025-08-19", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "First Day of School for Students", "category": "first_day", "start_date": "2025-08-20", "end_date": "2025-08-20", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Labor Day – School Closed", "category": "federal_holiday", "start_date": "2025-09-01", "end_date": "2025-09-01", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Rosh Hashanah – School Closed", "category": "religious_holiday", "start_date": "2025-09-23", "end_date": "2025-09-23", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Yom Kippur – School Closed", "category": "religious_holiday", "start_date": "2025-10-02", "end_date": "2025-10-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Parent Conferences – No Classes", "category": "parent_conference", "start_date": "2025-10-17", "end_date": "2025-10-17", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Parent Conferences – No Classes", "category": "parent_conference", "start_date": "2025-10-20", "end_date": "2025-10-20", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Thanksgiving Break", "category": "break", "start_date": "2025-11-24", "end_date": "2025-11-28", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Last Day of 1st Semester", "category": "other", "start_date": "2025-12-19", "end_date": "2025-12-19", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Holiday Break", "category": "break", "start_date": "2025-12-22", "end_date": "2026-01-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Classes Resume – First Day of 2nd Semester", "category": "other", "start_date": "2026-01-05", "end_date": "2026-01-05", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Martin Luther King Jr. National Day of Service – No Classes", "category": "federal_holiday", "start_date": "2026-01-19", "end_date": "2026-01-19", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Winter Break (Presidents' Week)", "category": "break", "start_date": "2026-02-13", "end_date": "2026-02-20", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Spring Break", "category": "break", "start_date": "2026-03-30", "end_date": "2026-04-03", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Passover", "category": "religious_holiday", "start_date": "2026-04-02", "end_date": "2026-04-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Good Friday", "category": "religious_holiday", "start_date": "2026-04-03", "end_date": "2026-04-03", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Commencement", "category": "graduation", "start_date": "2026-05-22", "end_date": "2026-05-22", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Memorial Day – School Closed", "category": "federal_holiday", "start_date": "2026-05-25", "end_date": "2026-05-25", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Last Day of 2nd Semester", "category": "last_day", "start_date": "2026-06-02", "end_date": "2026-06-02", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Juneteenth – School Closed", "category": "federal_holiday", "start_date": "2026-06-19", "end_date": "2026-06-19", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Independence Day Observed – School Closed", "category": "federal_holiday", "start_date": "2026-07-03", "end_date": "2026-07-03", "closed_for_students": true, "is_early_release": false, "confidence": "high" }
+  ]
+}

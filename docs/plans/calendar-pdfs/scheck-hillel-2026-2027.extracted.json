@@ -1,0 +1,29 @@
+{
+  "note": "Hand-extracted from scheck-hillel-2026-2027.pdf via multimodal review. Source: https://www.ehillel.org/quicklinks/calendar (PDF as of January 14, 2026 — calendar may still change). Sukkot listed only on 9/25 (Erev) and 9/28 — Scheck appears to be in session 9/26-27 between Erev and main day; included only the explicit closed days. Yom HaShoah/HaZikaron/Ha'Atzmaut and Lag BaOmer are observances (school in session) — omitted.",
+  "closures": [
+    { "name": "First Day of School", "category": "first_day", "start_date": "2026-08-19", "end_date": "2026-08-19", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Labor Day", "category": "federal_holiday", "start_date": "2026-09-07", "end_date": "2026-09-07", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Erev Rosh Hashanah", "category": "religious_holiday", "start_date": "2026-09-11", "end_date": "2026-09-11", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Yom Kippur", "category": "religious_holiday", "start_date": "2026-09-21", "end_date": "2026-09-21", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "10 AM Late Start", "category": "other", "start_date": "2026-09-22", "end_date": "2026-09-22", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Erev Sukkot", "category": "religious_holiday", "start_date": "2026-09-25", "end_date": "2026-09-25", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Sukkot", "category": "religious_holiday", "start_date": "2026-09-28", "end_date": "2026-09-28", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Erev Shemini Atzeret & Simchat Torah", "category": "religious_holiday", "start_date": "2026-10-02", "end_date": "2026-10-02", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No Classes - Parent/Teacher Conferences", "category": "parent_conference", "start_date": "2026-11-23", "end_date": "2026-11-24", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Thanksgiving Break", "category": "break", "start_date": "2026-11-25", "end_date": "2026-11-27", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Winter Break", "category": "break", "start_date": "2026-12-21", "end_date": "2027-01-01", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No Classes - Professional Development", "category": "teacher_workday", "start_date": "2027-01-04", "end_date": "2027-01-04", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Martin Luther King, Jr. Day", "category": "federal_holiday", "start_date": "2027-01-18", "end_date": "2027-01-18", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Presidents' Day", "category": "federal_holiday", "start_date": "2027-02-15", "end_date": "2027-02-15", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No Classes - Parent/Teacher Conferences", "category": "parent_conference", "start_date": "2027-03-11", "end_date": "2027-03-11", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "12 PM Dismissal - Ta'anit Esther", "category": "religious_holiday", "start_date": "2027-03-22", "end_date": "2027-03-22", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "12 PM Dismissal - Purim", "category": "religious_holiday", "start_date": "2027-03-23", "end_date": "2027-03-23", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "Campus Closed - Passover Break", "category": "religious_holiday", "start_date": "2027-04-19", "end_date": "2027-04-30", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Tentative: Commencement", "category": "graduation", "start_date": "2027-05-23", "end_date": "2027-05-23", "closed_for_students": false, "is_early_release": false, "confidence": "medium" },
+    { "name": "Tentative: Commencement - 2 PM Dismissal", "category": "graduation", "start_date": "2027-05-26", "end_date": "2027-05-26", "closed_for_students": false, "is_early_release": true, "confidence": "medium" },
+    { "name": "Campus Closed - Memorial Day", "category": "federal_holiday", "start_date": "2027-05-31", "end_date": "2027-05-31", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "12 PM Dismissal - Last Day of School", "category": "last_day", "start_date": "2027-06-03", "end_date": "2027-06-03", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "Campus Closed - Erev Shavuot & Shavuot", "category": "religious_holiday", "start_date": "2027-06-10", "end_date": "2027-06-12", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Campus Closed - Juneteenth", "category": "federal_holiday", "start_date": "2027-06-18", "end_date": "2027-06-18", "closed_for_students": true, "is_early_release": false, "confidence": "high" }
+  ]
+}

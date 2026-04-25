@@ -1,0 +1,25 @@
+{
+  "note": "Hand-extracted from westminster-christian-2026-2027.pdf via multimodal review. Source: https://www.wcsmiami.org/news-and-events/key-dates-2025-26 (26-27 PDF). Christmas Break Dec 21-Jan 4 merged. NB: 2026-27 calendar adds Veterans Day (Nov 11) which the 25-26 calendar omitted. Spring Break is 22-29 (full week +).",
+  "closures": [
+    { "name": "Preschool Preview Day", "category": "orientation", "start_date": "2026-08-07", "end_date": "2026-08-07", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "First Day of School: Early Dismissal", "category": "first_day", "start_date": "2026-08-10", "end_date": "2026-08-10", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "First Day on Campus (HS)", "category": "first_day", "start_date": "2026-08-17", "end_date": "2026-08-17", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Labor Day", "category": "federal_holiday", "start_date": "2026-09-07", "end_date": "2026-09-07", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2026-10-09", "end_date": "2026-10-09", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Veterans Day", "category": "federal_holiday", "start_date": "2026-11-11", "end_date": "2026-11-11", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Early Dismissal", "category": "other", "start_date": "2026-11-20", "end_date": "2026-11-20", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Thanksgiving Break", "category": "break", "start_date": "2026-11-23", "end_date": "2026-11-27", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Early Dismissal", "category": "other", "start_date": "2026-12-18", "end_date": "2026-12-18", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Christmas Break", "category": "break", "start_date": "2026-12-21", "end_date": "2027-01-04", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Martin Luther King, Jr. Day", "category": "federal_holiday", "start_date": "2027-01-18", "end_date": "2027-01-18", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2027-02-12", "end_date": "2027-02-12", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Winter Break", "category": "break", "start_date": "2027-02-15", "end_date": "2027-02-16", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2027-03-12", "end_date": "2027-03-12", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Spring Break", "category": "break", "start_date": "2027-03-22", "end_date": "2027-03-29", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Grade 12: Last Day of School", "category": "last_day", "start_date": "2027-05-07", "end_date": "2027-05-07", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Grade 8: Last Day of School", "category": "last_day", "start_date": "2027-05-17", "end_date": "2027-05-17", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Grade 5: Last Day of School", "category": "last_day", "start_date": "2027-05-19", "end_date": "2027-05-19", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Last Day of School: Early Dismissal", "category": "last_day", "start_date": "2027-05-20", "end_date": "2027-05-20", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2027-05-21", "end_date": "2027-05-21", "closed_for_students": true, "is_early_release": false, "confidence": "high" }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "note": "PARSER FAILURE: basis-independent-brickell-2025-2026.pdf is actually BASIS INDEPENDENT BROOKLYN's calendar (header reads 'BASIS INDEPENDENT BROOKLYN' with NY addresses: 405 Gold Street and 556 Columbia Street, Brooklyn, NY). DevClawd downloaded the wrong PDF from basisindependent.com. The two campuses likely share a similar academic framework but their precise dates can differ. Importing Brooklyn's dates for Brickell would seed wrong data on /schools/basis-independent-brickell. Do NOT auto-import. Re-run DevClawd against https://basisindependent.com/brickell looking for a Brickell-specific PDF, or call/email the Brickell campus.",
+  "closures": []
+}

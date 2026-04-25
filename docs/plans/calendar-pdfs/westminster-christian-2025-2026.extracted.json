@@ -1,0 +1,25 @@
+{
+  "note": "Hand-extracted from westminster-christian-2025-2026.pdf via multimodal review. Source: https://www.wcsmiami.org/news-and-events/key-dates-2025-26. Christmas Break Dec 22-Jan 5 merged from the two listed ranges (Dec 22-31 + Jan 1-5). 'Last Day of School' is staggered by grade — 12th grade May 1, 8th grade May 18, 5th grade May 20, all-school last day May 21 with early dismissal.",
+  "closures": [
+    { "name": "Preschool Preview Day", "category": "orientation", "start_date": "2025-08-08", "end_date": "2025-08-08", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "First Day of School (ES/MS) – 11:30 a.m. dismissal", "category": "first_day", "start_date": "2025-08-11", "end_date": "2025-08-11", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "First Day on Campus (HS)", "category": "first_day", "start_date": "2025-08-18", "end_date": "2025-08-18", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Labor Day", "category": "federal_holiday", "start_date": "2025-09-01", "end_date": "2025-09-01", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2025-10-10", "end_date": "2025-10-10", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Early Dismissal: 11:30 a.m.", "category": "other", "start_date": "2025-11-21", "end_date": "2025-11-21", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Thanksgiving Break", "category": "break", "start_date": "2025-11-24", "end_date": "2025-11-28", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "Early Dismissal: 11:30 a.m.", "category": "other", "start_date": "2025-12-19", "end_date": "2025-12-19", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Christmas Break", "category": "break", "start_date": "2025-12-22", "end_date": "2026-01-05", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Martin Luther King, Jr. Day", "category": "federal_holiday", "start_date": "2026-01-19", "end_date": "2026-01-19", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2026-02-13", "end_date": "2026-02-13", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Winter Break", "category": "break", "start_date": "2026-02-16", "end_date": "2026-02-17", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2026-03-13", "end_date": "2026-03-13", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Spring Break", "category": "break", "start_date": "2026-03-23", "end_date": "2026-03-27", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "No School: Easter Break", "category": "religious_holiday", "start_date": "2026-04-03", "end_date": "2026-04-06", "closed_for_students": true, "is_early_release": false, "confidence": "high" },
+    { "name": "12th Grade: Last Day of School", "category": "last_day", "start_date": "2026-05-01", "end_date": "2026-05-01", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "8th Grade: Last Day of School", "category": "last_day", "start_date": "2026-05-18", "end_date": "2026-05-18", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "5th Grade: Last Day of School", "category": "last_day", "start_date": "2026-05-20", "end_date": "2026-05-20", "closed_for_students": false, "is_early_release": false, "confidence": "high" },
+    { "name": "Last Day of School: 11:30 a.m. Dismissal", "category": "last_day", "start_date": "2026-05-21", "end_date": "2026-05-21", "closed_for_students": false, "is_early_release": true, "confidence": "high" },
+    { "name": "No School: Faculty In-Service Day", "category": "teacher_workday", "start_date": "2026-05-22", "end_date": "2026-05-22", "closed_for_students": true, "is_early_release": false, "confidence": "high" }
+  ]
+}

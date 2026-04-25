@@ -1,0 +1,1917 @@
+{
+  "generated_at": "2026-04-25",
+  "source_dir": "docs/plans/calendar-pdfs/",
+  "schools": [
+    {
+      "slug": "basis-independent-brickell",
+      "name": "BASIS Independent Brickell",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "basis-independent-brickell-2025-2026.pdf",
+          "source_url": "https://basisindependent.com/brickell",
+          "parser": "pdf-sidecar",
+          "closures": [],
+          "warnings": [
+            "PARSER FAILURE: basis-independent-brickell-2025-2026.pdf is actually BASIS INDEPENDENT BROOKLYN's calendar (header reads 'BASIS INDEPENDENT BROOKLYN' with NY addresses: 405 Gold Street and 556 Columbia Street, Brooklyn, NY). DevClawd downloaded the wrong PDF from basisindependent.com. The two campuses likely share a similar academic framework but their precise dates can differ. Importing Brooklyn's dates for Brickell would seed wrong data on /schools/basis-independent-brickell. Do NOT auto-import. Re-run DevClawd against https://basisindependent.com/brickell looking for a Brickell-specific PDF, or call/email the Brickell campus."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "gulliver-preparatory",
+      "name": "Gulliver Preparatory School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "gulliver-prep-2025-2026.ics",
+          "source_url": "https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf",
+          "parser": "ics",
+          "closures": [],
+          "warnings": []
+        },
+        {
+          "school_year": "2025-2026",
+          "source_file": "gulliver-prep-2025-2026.pdf",
+          "source_url": "https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "Grade 9 Orientation",
+              "category": "orientation",
+              "start_date": "2025-08-10",
+              "end_date": "2025-08-11",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Middle School & Upper School Orientation Days",
+              "category": "orientation",
+              "start_date": "2025-08-10",
+              "end_date": "2025-08-12",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Primary & Lower School Meet & Greet",
+              "category": "orientation",
+              "start_date": "2025-08-13",
+              "end_date": "2025-08-13",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day of School",
+              "category": "first_day",
+              "start_date": "2025-08-14",
+              "end_date": "2025-08-14",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Labor Day Holiday",
+              "category": "federal_holiday",
+              "start_date": "2025-09-01",
+              "end_date": "2025-09-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Rosh Hashanah Holiday",
+              "category": "religious_holiday",
+              "start_date": "2025-09-23",
+              "end_date": "2025-09-23",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Yom Kippur Holiday",
+              "category": "religious_holiday",
+              "start_date": "2025-10-02",
+              "end_date": "2025-10-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Teacher Workday – No Classes (PS/LS Parent Conferences)",
+              "category": "teacher_workday",
+              "start_date": "2025-10-17",
+              "end_date": "2025-10-17",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Teacher Professional Development Day – No Classes",
+              "category": "teacher_workday",
+              "start_date": "2025-11-03",
+              "end_date": "2025-11-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Thanksgiving Recess",
+              "category": "break",
+              "start_date": "2025-11-24",
+              "end_date": "2025-11-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal (Half day)",
+              "category": "other",
+              "start_date": "2025-12-19",
+              "end_date": "2025-12-19",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Winter Recess",
+              "category": "break",
+              "start_date": "2025-12-22",
+              "end_date": "2026-01-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Classes Resume",
+              "category": "other",
+              "start_date": "2026-01-05",
+              "end_date": "2026-01-05",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Martin Luther King, Jr. Holiday",
+              "category": "federal_holiday",
+              "start_date": "2026-01-19",
+              "end_date": "2026-01-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Presidents' Day Recess",
+              "category": "federal_holiday",
+              "start_date": "2026-02-16",
+              "end_date": "2026-02-20",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes for Primary & Lower School Students (PS/LS Parent Conferences)",
+              "category": "parent_conference",
+              "start_date": "2026-03-18",
+              "end_date": "2026-03-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Spring Recess",
+              "category": "break",
+              "start_date": "2026-03-30",
+              "end_date": "2026-04-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Teacher Professional Development Day – No Classes",
+              "category": "teacher_workday",
+              "start_date": "2026-04-06",
+              "end_date": "2026-04-06",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Class of 2026 Graduation (tentative)",
+              "category": "graduation",
+              "start_date": "2026-05-21",
+              "end_date": "2026-05-21",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Last Day of School, Gr PK-SK – Early Dismissal",
+              "category": "last_day",
+              "start_date": "2026-05-21",
+              "end_date": "2026-05-21",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School, Gr 1-11 – Early Dismissal",
+              "category": "last_day",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Memorial Day Holiday",
+              "category": "federal_holiday",
+              "start_date": "2026-05-25",
+              "end_date": "2026-05-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Teacher Workday – No Classes",
+              "category": "teacher_workday",
+              "start_date": "2026-05-26",
+              "end_date": "2026-05-29",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from gulliver-prep-2025-2026.pdf via multimodal review (the multi-column grid layout defeats the regex parser — month annotations bleed across columns). Source PDF: https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf as of 03.19.25."
+          ]
+        },
+        {
+          "school_year": "2026-2027",
+          "source_file": "gulliver-prep-2026-2027.pdf",
+          "source_url": "https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf",
+          "parser": "pdf-regex",
+          "closures": [
+            {
+              "name": "Independence Day Observed-School Closed",
+              "category": "federal_holiday",
+              "start_date": "2026-07-03",
+              "end_date": "2026-07-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "New Staff Orientation",
+              "category": "orientation",
+              "start_date": "2026-08-06",
+              "end_date": "2026-08-07",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "MS & US Orientation Days",
+              "category": "orientation",
+              "start_date": "2026-08-17",
+              "end_date": "2026-08-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day of Classes",
+              "category": "first_day",
+              "start_date": "2026-08-20",
+              "end_date": "2026-08-20",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Labor Day-No School",
+              "category": "federal_holiday",
+              "start_date": "2026-09-07",
+              "end_date": "2026-09-07",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Rosh Hashanah",
+              "category": "religious_holiday",
+              "start_date": "2026-09-12",
+              "end_date": "2026-09-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Yom Kippur-No School",
+              "category": "religious_holiday",
+              "start_date": "2026-09-21",
+              "end_date": "2026-09-21",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Faculty Workday; PS/LS Parent Conferences",
+              "category": "teacher_workday",
+              "start_date": "2026-10-23",
+              "end_date": "2026-10-23",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Schoolwide PD Day-No School for Students",
+              "category": "other",
+              "start_date": "2026-11-02",
+              "end_date": "2026-11-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Thanksgiving Break-School Closed",
+              "category": "break",
+              "start_date": "2026-11-23",
+              "end_date": "2026-11-27",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal",
+              "category": "other",
+              "start_date": "2026-12-18",
+              "end_date": "2026-12-18",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Winter Break- School Closed",
+              "category": "break",
+              "start_date": "2026-12-21",
+              "end_date": "2027-01-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Martin Luther King Day-School Closed",
+              "category": "federal_holiday",
+              "start_date": "2027-01-18",
+              "end_date": "2027-01-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Spring Break-School Closed",
+              "category": "break",
+              "start_date": "2027-03-22",
+              "end_date": "2027-03-26",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Easter Sunday",
+              "category": "religious_holiday",
+              "start_date": "2027-03-28",
+              "end_date": "2027-03-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Faculty Workday-No School for Students",
+              "category": "teacher_workday",
+              "start_date": "2027-03-29",
+              "end_date": "2027-03-29",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "PS/LS Parent Conferences-No School for Students",
+              "category": "parent_conference",
+              "start_date": "2027-04-07",
+              "end_date": "2027-04-07",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Passover",
+              "category": "religious_holiday",
+              "start_date": "2027-04-21",
+              "end_date": "2027-04-29",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Schoolwide PD Day-No School for Students",
+              "category": "other",
+              "start_date": "2027-04-30",
+              "end_date": "2027-04-30",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Class of 2027 Graduation",
+              "category": "graduation",
+              "start_date": "2027-05-20",
+              "end_date": "2027-05-20",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School/End of Quarter Four (43 days)",
+              "category": "last_day",
+              "start_date": "2027-05-28",
+              "end_date": "2027-05-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Memorial Day-School Closed",
+              "category": "federal_holiday",
+              "start_date": "2027-05-31",
+              "end_date": "2027-05-31",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Juneteenth Observed-School Closed",
+              "category": "federal_holiday",
+              "start_date": "2027-06-18",
+              "end_date": "2027-06-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "slug": "lehrman-community-day-school",
+      "name": "Lehrman Community Day School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "lehrman-2025-2026.png",
+          "source_url": "https://www.lehrmanschool.org/parents/2025-26-calendar.cfm",
+          "parser": "png-sidecar",
+          "closures": [
+            {
+              "name": "Orientation",
+              "category": "orientation",
+              "start_date": "2025-08-18",
+              "end_date": "2025-08-18",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "First Day of School",
+              "category": "first_day",
+              "start_date": "2025-08-19",
+              "end_date": "2025-08-19",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Labor Day",
+              "category": "federal_holiday",
+              "start_date": "2025-09-01",
+              "end_date": "2025-09-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "1 PM Dismissal",
+              "category": "other",
+              "start_date": "2025-09-12",
+              "end_date": "2025-09-12",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "1 PM Dismissal",
+              "category": "other",
+              "start_date": "2025-09-22",
+              "end_date": "2025-09-22",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Rosh Hashanah",
+              "category": "religious_holiday",
+              "start_date": "2025-09-23",
+              "end_date": "2025-09-24",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Yom Kippur",
+              "category": "religious_holiday",
+              "start_date": "2025-10-01",
+              "end_date": "2025-10-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal",
+              "category": "other",
+              "start_date": "2025-10-06",
+              "end_date": "2025-10-06",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Sukkot",
+              "category": "religious_holiday",
+              "start_date": "2025-10-07",
+              "end_date": "2025-10-08",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Simchat Torah / Shemini Atzeret",
+              "category": "religious_holiday",
+              "start_date": "2025-10-13",
+              "end_date": "2025-10-15",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Thanksgiving Break",
+              "category": "break",
+              "start_date": "2025-11-26",
+              "end_date": "2025-11-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Parent/Teacher Conferences",
+              "category": "parent_conference",
+              "start_date": "2025-12-08",
+              "end_date": "2025-12-08",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "1 PM Dismissal",
+              "category": "other",
+              "start_date": "2025-12-14",
+              "end_date": "2025-12-14",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Winter Break",
+              "category": "break",
+              "start_date": "2025-12-24",
+              "end_date": "2026-01-06",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "School Resumes",
+              "category": "other",
+              "start_date": "2026-01-07",
+              "end_date": "2026-01-07",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "1 PM Dismissal",
+              "category": "other",
+              "start_date": "2026-01-12",
+              "end_date": "2026-01-14",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Martin Luther King Jr. Day",
+              "category": "federal_holiday",
+              "start_date": "2026-01-19",
+              "end_date": "2026-01-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "February Break",
+              "category": "break",
+              "start_date": "2026-02-16",
+              "end_date": "2026-02-17",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal",
+              "category": "other",
+              "start_date": "2026-03-03",
+              "end_date": "2026-03-03",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Professional Development Day",
+              "category": "teacher_workday",
+              "start_date": "2026-03-30",
+              "end_date": "2026-03-30",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Passover Break",
+              "category": "religious_holiday",
+              "start_date": "2026-03-31",
+              "end_date": "2026-04-10",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "School Resumes",
+              "category": "other",
+              "start_date": "2026-04-13",
+              "end_date": "2026-04-13",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Yom HaShoah",
+              "category": "religious_holiday",
+              "start_date": "2026-04-14",
+              "end_date": "2026-04-14",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Yom HaZikaron",
+              "category": "religious_holiday",
+              "start_date": "2026-04-21",
+              "end_date": "2026-04-21",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Yom Ha'Atzmaut",
+              "category": "religious_holiday",
+              "start_date": "2026-04-22",
+              "end_date": "2026-04-22",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "1 PM Dismissal",
+              "category": "other",
+              "start_date": "2026-05-21",
+              "end_date": "2026-05-21",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Classes End",
+              "category": "last_day",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Memorial Day",
+              "category": "federal_holiday",
+              "start_date": "2026-05-25",
+              "end_date": "2026-05-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School (Early Dismissal)",
+              "category": "last_day",
+              "start_date": "2026-06-09",
+              "end_date": "2026-06-09",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            }
+          ],
+          "warnings": [
+            "Extracted from lehrman-2025-2026.png by Claude (multimodal). Image is legible; major closures (Labor Day, Thanksgiving 11/26-28, Winter Break, MLK, Memorial Day) match known federal/Jewish dates which raises confidence. PTA / school events / testing weeks excluded — they are not closures. Filed under medium confidence per the vision-can-hallucinate rule unless the date is independently verifiable."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "ransom-everglades",
+      "name": "Ransom Everglades School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "ransom-everglades-2025-2026.ics",
+          "source_url": "https://www.ransomeverglades.org/news-and-events/calendar",
+          "parser": "ics",
+          "closures": [
+            {
+              "name": "Sundheim Humanities Center Groundbreaking",
+              "category": "break",
+              "start_date": "2026-04-27",
+              "end_date": "2026-04-27",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Middle School New Student Orientation",
+              "category": "orientation",
+              "start_date": "2026-04-29",
+              "end_date": "2026-04-29",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Seniors Last Day",
+              "category": "last_day",
+              "start_date": "2026-05-01",
+              "end_date": "2026-05-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "2026 Commencement - No Classes",
+              "category": "other",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of Bus Service",
+              "category": "last_day",
+              "start_date": "2026-06-01",
+              "end_date": "2026-06-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School",
+              "category": "last_day",
+              "start_date": "2026-06-02",
+              "end_date": "2026-06-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Summer Camp Staff Orientation",
+              "category": "break",
+              "start_date": "2026-06-08",
+              "end_date": "2026-06-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Summer Camp Closed - Juneteenth",
+              "category": "federal_holiday",
+              "start_date": "2026-06-19",
+              "end_date": "2026-06-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Summer Camp Closed - July 4 Weekend",
+              "category": "federal_holiday",
+              "start_date": "2026-07-03",
+              "end_date": "2026-07-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "2026 Ransom Everglades Teacher Institute",
+              "category": "teacher_workday",
+              "start_date": "2026-08-06",
+              "end_date": "2026-08-06",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "school_year": "2025-2026",
+          "source_file": "ransom-everglades-2025-2026.pdf",
+          "source_url": "https://www.ransomeverglades.org/news-and-events/calendar",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "Faculty Orientation",
+              "category": "teacher_workday",
+              "start_date": "2025-08-06",
+              "end_date": "2025-08-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Orientation – 6th, 9th, and new students",
+              "category": "orientation",
+              "start_date": "2025-08-19",
+              "end_date": "2025-08-19",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day of School for Students",
+              "category": "first_day",
+              "start_date": "2025-08-20",
+              "end_date": "2025-08-20",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Labor Day – School Closed",
+              "category": "federal_holiday",
+              "start_date": "2025-09-01",
+              "end_date": "2025-09-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Rosh Hashanah – School Closed",
+              "category": "religious_holiday",
+              "start_date": "2025-09-23",
+              "end_date": "2025-09-23",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Yom Kippur – School Closed",
+              "category": "religious_holiday",
+              "start_date": "2025-10-02",
+              "end_date": "2025-10-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Parent Conferences – No Classes",
+              "category": "parent_conference",
+              "start_date": "2025-10-17",
+              "end_date": "2025-10-17",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Parent Conferences – No Classes",
+              "category": "parent_conference",
+              "start_date": "2025-10-20",
+              "end_date": "2025-10-20",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Thanksgiving Break",
+              "category": "break",
+              "start_date": "2025-11-24",
+              "end_date": "2025-11-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of 1st Semester",
+              "category": "other",
+              "start_date": "2025-12-19",
+              "end_date": "2025-12-19",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Holiday Break",
+              "category": "break",
+              "start_date": "2025-12-22",
+              "end_date": "2026-01-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Classes Resume – First Day of 2nd Semester",
+              "category": "other",
+              "start_date": "2026-01-05",
+              "end_date": "2026-01-05",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Martin Luther King Jr. National Day of Service – No Classes",
+              "category": "federal_holiday",
+              "start_date": "2026-01-19",
+              "end_date": "2026-01-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Winter Break (Presidents' Week)",
+              "category": "break",
+              "start_date": "2026-02-13",
+              "end_date": "2026-02-20",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Spring Break",
+              "category": "break",
+              "start_date": "2026-03-30",
+              "end_date": "2026-04-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Passover",
+              "category": "religious_holiday",
+              "start_date": "2026-04-02",
+              "end_date": "2026-04-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Good Friday",
+              "category": "religious_holiday",
+              "start_date": "2026-04-03",
+              "end_date": "2026-04-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Commencement",
+              "category": "graduation",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Memorial Day – School Closed",
+              "category": "federal_holiday",
+              "start_date": "2026-05-25",
+              "end_date": "2026-05-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of 2nd Semester",
+              "category": "last_day",
+              "start_date": "2026-06-02",
+              "end_date": "2026-06-02",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Juneteenth – School Closed",
+              "category": "federal_holiday",
+              "start_date": "2026-06-19",
+              "end_date": "2026-06-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Independence Day Observed – School Closed",
+              "category": "federal_holiday",
+              "start_date": "2026-07-03",
+              "end_date": "2026-07-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from ransom-everglades-2025-2026.pdf via multimodal review (regex parser misattributed dates across the multi-column layout). Date ranges (Thanksgiving Nov 24-28, Holiday Break Dec 22-Jan 2, Winter Break Feb 13 + 16-20, Spring Break Mar 30-Apr 3) confirmed by yellow 'No Classes' highlighting in the source PDF. Source: https://www.ransomeverglades.org/news-and-events/calendar (PDF revised 12/16/24)."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "scheck-hillel-community-school",
+      "name": "Scheck Hillel Community School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "scheck-hillel-2025-2026.pdf",
+          "source_url": "https://www.ehillel.org/quicklinks/calendar",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "Tentative Orientation Days",
+              "category": "orientation",
+              "start_date": "2025-08-14",
+              "end_date": "2025-08-15",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "First Day of School",
+              "category": "first_day",
+              "start_date": "2025-08-18",
+              "end_date": "2025-08-18",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Labor Day",
+              "category": "federal_holiday",
+              "start_date": "2025-09-01",
+              "end_date": "2025-09-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Rosh Hashanah",
+              "category": "religious_holiday",
+              "start_date": "2025-09-22",
+              "end_date": "2025-09-24",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Yom Kippur",
+              "category": "religious_holiday",
+              "start_date": "2025-10-01",
+              "end_date": "2025-10-03",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Sukkot",
+              "category": "religious_holiday",
+              "start_date": "2025-10-06",
+              "end_date": "2025-10-08",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Shemini Atzeret & Simchat Torah",
+              "category": "religious_holiday",
+              "start_date": "2025-10-13",
+              "end_date": "2025-10-15",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Parent/Teacher Conferences",
+              "category": "parent_conference",
+              "start_date": "2025-11-24",
+              "end_date": "2025-11-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Thanksgiving Break",
+              "category": "break",
+              "start_date": "2025-11-26",
+              "end_date": "2025-11-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Winter Break",
+              "category": "break",
+              "start_date": "2025-12-22",
+              "end_date": "2026-01-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Professional Development",
+              "category": "teacher_workday",
+              "start_date": "2026-01-05",
+              "end_date": "2026-01-05",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Martin Luther King, Jr. Day",
+              "category": "federal_holiday",
+              "start_date": "2026-01-19",
+              "end_date": "2026-01-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Presidents' Day",
+              "category": "federal_holiday",
+              "start_date": "2026-02-16",
+              "end_date": "2026-02-16",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "2 PM Dismissal - Ta'anit Esther",
+              "category": "religious_holiday",
+              "start_date": "2026-03-02",
+              "end_date": "2026-03-02",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal - Purim",
+              "category": "religious_holiday",
+              "start_date": "2026-03-03",
+              "end_date": "2026-03-03",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Parent/Teacher Conferences",
+              "category": "parent_conference",
+              "start_date": "2026-03-16",
+              "end_date": "2026-03-16",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Passover Break",
+              "category": "religious_holiday",
+              "start_date": "2026-03-30",
+              "end_date": "2026-04-10",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "2 PM Dismissal: Commencement",
+              "category": "graduation",
+              "start_date": "2026-05-20",
+              "end_date": "2026-05-20",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal: Erev Shavuot",
+              "category": "religious_holiday",
+              "start_date": "2026-05-21",
+              "end_date": "2026-05-21",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Shavuot",
+              "category": "religious_holiday",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Memorial Day",
+              "category": "federal_holiday",
+              "start_date": "2026-05-25",
+              "end_date": "2026-05-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal - Last Day of School",
+              "category": "last_day",
+              "start_date": "2026-06-11",
+              "end_date": "2026-06-11",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Juneteenth",
+              "category": "federal_holiday",
+              "start_date": "2026-06-19",
+              "end_date": "2026-06-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from scheck-hillel-2025-2026.pdf via multimodal review. The 3-month-per-row grid + side annotations confused the regex parser into wrong months. Source: https://www.ehillel.org/quicklinks/calendar (PDF as of March 26, 2026). Yom HaShoah/HaZikaron/Ha'Atzmaut and Lag BaOmer flagged as observances (school in session) — only listed where Scheck explicitly closes campus. Chanukah Dec 14-22 is highlighted as the Jewish observance but does not close campus until Winter Break starts Dec 22."
+          ]
+        },
+        {
+          "school_year": "2026-2027",
+          "source_file": "scheck-hillel-2026-2027.pdf",
+          "source_url": "https://www.ehillel.org/quicklinks/calendar",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "First Day of School",
+              "category": "first_day",
+              "start_date": "2026-08-19",
+              "end_date": "2026-08-19",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Labor Day",
+              "category": "federal_holiday",
+              "start_date": "2026-09-07",
+              "end_date": "2026-09-07",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Erev Rosh Hashanah",
+              "category": "religious_holiday",
+              "start_date": "2026-09-11",
+              "end_date": "2026-09-11",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Yom Kippur",
+              "category": "religious_holiday",
+              "start_date": "2026-09-21",
+              "end_date": "2026-09-21",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "10 AM Late Start",
+              "category": "other",
+              "start_date": "2026-09-22",
+              "end_date": "2026-09-22",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Erev Sukkot",
+              "category": "religious_holiday",
+              "start_date": "2026-09-25",
+              "end_date": "2026-09-25",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Sukkot",
+              "category": "religious_holiday",
+              "start_date": "2026-09-28",
+              "end_date": "2026-09-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Erev Shemini Atzeret & Simchat Torah",
+              "category": "religious_holiday",
+              "start_date": "2026-10-02",
+              "end_date": "2026-10-02",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Parent/Teacher Conferences",
+              "category": "parent_conference",
+              "start_date": "2026-11-23",
+              "end_date": "2026-11-24",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Thanksgiving Break",
+              "category": "break",
+              "start_date": "2026-11-25",
+              "end_date": "2026-11-27",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Winter Break",
+              "category": "break",
+              "start_date": "2026-12-21",
+              "end_date": "2027-01-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Professional Development",
+              "category": "teacher_workday",
+              "start_date": "2027-01-04",
+              "end_date": "2027-01-04",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Martin Luther King, Jr. Day",
+              "category": "federal_holiday",
+              "start_date": "2027-01-18",
+              "end_date": "2027-01-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Presidents' Day",
+              "category": "federal_holiday",
+              "start_date": "2027-02-15",
+              "end_date": "2027-02-15",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No Classes - Parent/Teacher Conferences",
+              "category": "parent_conference",
+              "start_date": "2027-03-11",
+              "end_date": "2027-03-11",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal - Ta'anit Esther",
+              "category": "religious_holiday",
+              "start_date": "2027-03-22",
+              "end_date": "2027-03-22",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal - Purim",
+              "category": "religious_holiday",
+              "start_date": "2027-03-23",
+              "end_date": "2027-03-23",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Passover Break",
+              "category": "religious_holiday",
+              "start_date": "2027-04-19",
+              "end_date": "2027-04-30",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Tentative: Commencement",
+              "category": "graduation",
+              "start_date": "2027-05-23",
+              "end_date": "2027-05-23",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "medium"
+            },
+            {
+              "name": "Tentative: Commencement - 2 PM Dismissal",
+              "category": "graduation",
+              "start_date": "2027-05-26",
+              "end_date": "2027-05-26",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "medium"
+            },
+            {
+              "name": "Campus Closed - Memorial Day",
+              "category": "federal_holiday",
+              "start_date": "2027-05-31",
+              "end_date": "2027-05-31",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "12 PM Dismissal - Last Day of School",
+              "category": "last_day",
+              "start_date": "2027-06-03",
+              "end_date": "2027-06-03",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Erev Shavuot & Shavuot",
+              "category": "religious_holiday",
+              "start_date": "2027-06-10",
+              "end_date": "2027-06-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Campus Closed - Juneteenth",
+              "category": "federal_holiday",
+              "start_date": "2027-06-18",
+              "end_date": "2027-06-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from scheck-hillel-2026-2027.pdf via multimodal review. Source: https://www.ehillel.org/quicklinks/calendar (PDF as of January 14, 2026 — calendar may still change). Sukkot listed only on 9/25 (Erev) and 9/28 — Scheck appears to be in session 9/26-27 between Erev and main day; included only the explicit closed days. Yom HaShoah/HaZikaron/Ha'Atzmaut and Lag BaOmer are observances (school in session) — omitted."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "the-growing-place-school-coral-gables",
+      "name": "The Growing Place School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "the-growing-place-2025-2026.png",
+          "source_url": "https://www.thegrowingplace.school/school-calendar",
+          "parser": "png-sidecar",
+          "closures": [],
+          "warnings": [
+            "PARSER FAILURE: the-growing-place-2025-2026.png is a 404 'Page Not Found' screenshot from thegrowingplace.school, not a calendar. DevClawd captured the wrong URL. No closures extractable. Growing Place needs a fresh PDF (per _BLOCKED.txt the fallback was to call (305) 446-0846 to request one). Calendar status stays at needs_research."
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "westminster-christian-school-miami",
+      "name": "Westminster Christian School",
+      "calendars": [
+        {
+          "school_year": "2025-2026",
+          "source_file": "westminster-christian-2025-2026.pdf",
+          "source_url": "https://www.wcsmiami.org/news-and-events/key-dates-2025-26",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "Preschool Preview Day",
+              "category": "orientation",
+              "start_date": "2025-08-08",
+              "end_date": "2025-08-08",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day of School (ES/MS) – 11:30 a.m. dismissal",
+              "category": "first_day",
+              "start_date": "2025-08-11",
+              "end_date": "2025-08-11",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day on Campus (HS)",
+              "category": "first_day",
+              "start_date": "2025-08-18",
+              "end_date": "2025-08-18",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Labor Day",
+              "category": "federal_holiday",
+              "start_date": "2025-09-01",
+              "end_date": "2025-09-01",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2025-10-10",
+              "end_date": "2025-10-10",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal: 11:30 a.m.",
+              "category": "other",
+              "start_date": "2025-11-21",
+              "end_date": "2025-11-21",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Thanksgiving Break",
+              "category": "break",
+              "start_date": "2025-11-24",
+              "end_date": "2025-11-28",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal: 11:30 a.m.",
+              "category": "other",
+              "start_date": "2025-12-19",
+              "end_date": "2025-12-19",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Christmas Break",
+              "category": "break",
+              "start_date": "2025-12-22",
+              "end_date": "2026-01-05",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Martin Luther King, Jr. Day",
+              "category": "federal_holiday",
+              "start_date": "2026-01-19",
+              "end_date": "2026-01-19",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2026-02-13",
+              "end_date": "2026-02-13",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Winter Break",
+              "category": "break",
+              "start_date": "2026-02-16",
+              "end_date": "2026-02-17",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2026-03-13",
+              "end_date": "2026-03-13",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Spring Break",
+              "category": "break",
+              "start_date": "2026-03-23",
+              "end_date": "2026-03-27",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Easter Break",
+              "category": "religious_holiday",
+              "start_date": "2026-04-03",
+              "end_date": "2026-04-06",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "12th Grade: Last Day of School",
+              "category": "last_day",
+              "start_date": "2026-05-01",
+              "end_date": "2026-05-01",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "8th Grade: Last Day of School",
+              "category": "last_day",
+              "start_date": "2026-05-18",
+              "end_date": "2026-05-18",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "5th Grade: Last Day of School",
+              "category": "last_day",
+              "start_date": "2026-05-20",
+              "end_date": "2026-05-20",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School: 11:30 a.m. Dismissal",
+              "category": "last_day",
+              "start_date": "2026-05-21",
+              "end_date": "2026-05-21",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2026-05-22",
+              "end_date": "2026-05-22",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from westminster-christian-2025-2026.pdf via multimodal review. Source: https://www.wcsmiami.org/news-and-events/key-dates-2025-26. Christmas Break Dec 22-Jan 5 merged from the two listed ranges (Dec 22-31 + Jan 1-5). 'Last Day of School' is staggered by grade — 12th grade May 1, 8th grade May 18, 5th grade May 20, all-school last day May 21 with early dismissal."
+          ]
+        },
+        {
+          "school_year": "2026-2027",
+          "source_file": "westminster-christian-2026-2027.pdf",
+          "source_url": "https://www.wcsmiami.org/news-and-events/key-dates-2025-26",
+          "parser": "pdf-sidecar",
+          "closures": [
+            {
+              "name": "Preschool Preview Day",
+              "category": "orientation",
+              "start_date": "2026-08-07",
+              "end_date": "2026-08-07",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day of School: Early Dismissal",
+              "category": "first_day",
+              "start_date": "2026-08-10",
+              "end_date": "2026-08-10",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "First Day on Campus (HS)",
+              "category": "first_day",
+              "start_date": "2026-08-17",
+              "end_date": "2026-08-17",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Labor Day",
+              "category": "federal_holiday",
+              "start_date": "2026-09-07",
+              "end_date": "2026-09-07",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2026-10-09",
+              "end_date": "2026-10-09",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Veterans Day",
+              "category": "federal_holiday",
+              "start_date": "2026-11-11",
+              "end_date": "2026-11-11",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal",
+              "category": "other",
+              "start_date": "2026-11-20",
+              "end_date": "2026-11-20",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Thanksgiving Break",
+              "category": "break",
+              "start_date": "2026-11-23",
+              "end_date": "2026-11-27",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Early Dismissal",
+              "category": "other",
+              "start_date": "2026-12-18",
+              "end_date": "2026-12-18",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Christmas Break",
+              "category": "break",
+              "start_date": "2026-12-21",
+              "end_date": "2027-01-04",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Martin Luther King, Jr. Day",
+              "category": "federal_holiday",
+              "start_date": "2027-01-18",
+              "end_date": "2027-01-18",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2027-02-12",
+              "end_date": "2027-02-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Winter Break",
+              "category": "break",
+              "start_date": "2027-02-15",
+              "end_date": "2027-02-16",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2027-03-12",
+              "end_date": "2027-03-12",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Spring Break",
+              "category": "break",
+              "start_date": "2027-03-22",
+              "end_date": "2027-03-29",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Grade 12: Last Day of School",
+              "category": "last_day",
+              "start_date": "2027-05-07",
+              "end_date": "2027-05-07",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Grade 8: Last Day of School",
+              "category": "last_day",
+              "start_date": "2027-05-17",
+              "end_date": "2027-05-17",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Grade 5: Last Day of School",
+              "category": "last_day",
+              "start_date": "2027-05-19",
+              "end_date": "2027-05-19",
+              "closed_for_students": false,
+              "is_early_release": false,
+              "confidence": "high"
+            },
+            {
+              "name": "Last Day of School: Early Dismissal",
+              "category": "last_day",
+              "start_date": "2027-05-20",
+              "end_date": "2027-05-20",
+              "closed_for_students": false,
+              "is_early_release": true,
+              "confidence": "high"
+            },
+            {
+              "name": "No School: Faculty In-Service Day",
+              "category": "teacher_workday",
+              "start_date": "2027-05-21",
+              "end_date": "2027-05-21",
+              "closed_for_students": true,
+              "is_early_release": false,
+              "confidence": "high"
+            }
+          ],
+          "warnings": [
+            "Hand-extracted from westminster-christian-2026-2027.pdf via multimodal review. Source: https://www.wcsmiami.org/news-and-events/key-dates-2025-26 (26-27 PDF). Christmas Break Dec 21-Jan 4 merged. NB: 2026-27 calendar adds Veterans Day (Nov 11) which the 25-26 calendar omitted. Spring Break is 22-29 (full week +)."
+          ]
+        }
+      ]
+    }
+  ]
+}

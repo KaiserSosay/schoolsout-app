@@ -1,0 +1,55 @@
+# Schools Calendar Collection - April 25, 2026
+# Status: 10 downloaded, 5 blocked (require login/browser)
+
+## DOWNLOADED (10 files, 8 schools):
+
+### PDFs (8 files):
+1. gulliver-prep-2025-2026.pdf (172K) - direct PDF
+2. gulliver-prep-2026-2027.pdf (172K) - direct PDF
+3. ransom-everglades-2025-2026.pdf (136K) - Blackbaud FTP
+4. basis-independent-brickell-2025-2026.pdf (68K) - direct PDF
+5. scheck-hillel-2025-2026.pdf (160K) - At a Glance PDF
+6. scheck-hillel-2026-2027.pdf (152K) - At a Glance PDF
+7. westminster-christian-2025-2026.pdf (340K) - Key Dates PDF
+8. westminster-christian-2026-2027.pdf (356K) - Key Dates PDF
+
+### iCal files (2):
+- gulliver-prep-2025-2026.ics (12K) - live feed
+- ransom-everglades-2025-2026.ics (60K) - Blackbaud feed
+
+### Images (1):
+- lehrman-2025-2026.png (416K) - calendar image
+
+## BLOCKED - REQUIRE LOGIN OR BROWSER (5 schools):
+
+1. The Growing Place School
+   - https://www.thegrowingplace.school/school-calendar
+   - JS-rendered calendar, no PDF endpoint found
+   - Fallback: Call (305) 446-0846 to request PDF
+
+2. Carrollton School of the Sacred Heart
+   - https://www.carrollton.org/calendar
+   - JS calendar, calendarsEnabled=false in config
+   - No PDF link found
+
+3. Belen Jesuit Preparatory School
+   - https://www.belenjesuit.org/calendar
+   - Redirects to login page (belenjesuit.myschoolapp.com)
+   - Requires parent portal access
+
+4. Miami Country Day School
+   - https://www.miamicountryday.org/school-calendar
+   - Behind parent portal login
+   - No public calendar endpoint
+
+5. The Cushman School
+   - https://cushmanschool.org/parents/
+   - No public calendar PDF found
+   - Calendar likely in parent portal
+
+## WORKING URLS FOR FUTURE REFERENCE:
+
+### Blackbaud MySchoolApp iCal feeds (public):
+- Scheck Hillel: webcal://ehillel.myschoolapp.com/podium/feed/iCal.aspx?z=sCiwKWAydRzVAqWSm339PClFExPgzAeOZ9XXrnE3Wy5C6iqxmi0vjr0x4U9uL0bcL%2bOJc%2fQzocBnh0bfWk9UQA%3d%3d
+- Ransom Everglades: webcal://ransomeverglades.myschoolapp.com/podium/feed/iCal.aspx?z=Ro7Ri9A2B5d7mkiT8DfdC8QBByU1BXifUL6VGe1X2%2fc8Gm91c5EWMH3QKjRvn7WrgYJoUzNQ9L62vD9OMqz4ULnalUqBRhVgvkhSWeV3vz7Cx%2bhUD6dDM2x%2byS4m4gu9
+- Gulliver: https://www.gulliverprep.org/events/?ical=1
