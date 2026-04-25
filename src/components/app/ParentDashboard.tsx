@@ -11,6 +11,7 @@ import { QuickActions } from './QuickActions';
 import { RecentActivityFeed } from './RecentActivityFeed';
 import { PlansSummary } from './PlansSummary';
 import { VerifyingCalendarsCard } from './VerifyingCalendarsCard';
+import { NewDeviceKidReminderBanner } from './NewDeviceKidReminderBanner';
 import type { SchoolStatus } from '@/lib/school-status';
 
 type ClosureWithSchool = Closure & { schoolName: string | null };
@@ -66,6 +67,7 @@ export function ParentDashboard({
   savesCount,
   activity,
   plans,
+  userHasSubscriptions,
 }: {
   locale: string;
   displayName: string | null;
@@ -75,6 +77,7 @@ export function ParentDashboard({
   savesCount: number;
   activity: Activity[];
   plans: import('./PlansSummary').PlanCard[];
+  userHasSubscriptions: boolean;
 }) {
   const t = useTranslations('app.dashboard');
 
@@ -103,6 +106,11 @@ export function ParentDashboard({
         kidCount={profiles.length}
         closures={closures}
         savesCount={savesCount}
+        locale={locale}
+      />
+
+      <NewDeviceKidReminderBanner
+        userHasSubscriptions={userHasSubscriptions}
         locale={locale}
       />
 

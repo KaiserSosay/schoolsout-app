@@ -43,7 +43,7 @@ export default async function AppPage({
     .eq('user_id', user.id);
   if ((kidCount ?? 0) === 0) redirect(`/${locale}/app/onboarding`);
 
-  const [profilesResp, savesResp, activityResp, userResp] = await Promise.all([
+  const [profilesResp, savesResp, activityResp, userResp, subsCountResp] = await Promise.all([
     sb
       .from('kid_profiles')
       .select('id, school_id, age_range, ordinal, schools(id, name, district, type, calendar_status)')
@@ -64,6 +64,16 @@ export default async function AppPage({
       .order('created_at', { ascending: false })
       .limit(20),
     sb.from('users').select('display_name').eq('id', user.id).maybeSingle(),
+    // Phase 3.0 / Item 3.9: powers the new-device kid-name reminder
+    // banner. We only show the banner when a returning user has reminder
+    // subscriptions on file but their localStorage is empty (typical of
+    // a sign-in from a fresh device). Count-only HEAD select keeps the
+    // payload tiny.
+    sb
+      .from('reminder_subscriptions')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('enabled', true),
   ]);
 
   type JoinedSchool = {
@@ -211,6 +221,8 @@ export default async function AppPage({
     );
   }
 
+  const userHasSubscriptions = (subsCountResp.count ?? 0) > 0;
+
   return (
     <DashboardRouter
       locale={locale}
@@ -221,6 +233,7 @@ export default async function AppPage({
       savesCount={savesCount}
       activity={activityResp.data ?? []}
       plans={plans}
+      userHasSubscriptions={userHasSubscriptions}
     />
   );
 }

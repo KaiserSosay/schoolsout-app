@@ -703,6 +703,12 @@
         "parentMode": "Welcome to Parent Mode"
       },
       "subtitle": "Your family's plan at a glance — every closure, every camp, every countdown.",
+      "newDeviceBanner": {
+        "heading": "Welcome back from a new device?",
+        "body": "Your kids' names live on this device for privacy — they're never sent to our servers. Add them in Family to see your dashboard like before. Your saved camps and plans are still here.",
+        "cta": "Add my kids →",
+        "dismissAriaLabel": "Dismiss new-device reminder"
+      },
       "stats": {
         "kids": "Kids",
         "nextBreakIn": "Next break in",

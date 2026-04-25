@@ -703,6 +703,12 @@
         "parentMode": "Bienvenido al Modo Padres"
       },
       "subtitle": "El plan de tu familia de un vistazo — cada cierre, cada campamento, cada cuenta regresiva.",
+      "newDeviceBanner": {
+        "heading": "¿Vuelves desde otro dispositivo?",
+        "body": "Los nombres de tus hijos viven en este dispositivo por privacidad — nunca se envían a nuestros servidores. Agrégalos en Familia para ver tu panel como antes. Tus campamentos guardados y planes siguen aquí.",
+        "cta": "Agregar mis hijos →",
+        "dismissAriaLabel": "Cerrar recordatorio de dispositivo nuevo"
+      },
       "stats": {
         "kids": "Niños",
         "nextBreakIn": "Próxima vacación en",
