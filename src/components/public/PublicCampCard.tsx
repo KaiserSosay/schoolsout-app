@@ -21,8 +21,24 @@ export type PublicCampCard = CompletenessCampShape & {
   price_tier?: '$' | '$$' | '$$$' | null;
   neighborhood?: string | null;
   verified?: boolean;
+  last_verified_at?: string | null;
   is_featured?: boolean;
+  featured_until?: string | null;
 };
+
+const VERIFIED_FRESHNESS_MS = 90 * 24 * 60 * 60 * 1000;
+
+function isFreshlyVerified(c: PublicCampCard, now: number): boolean {
+  if (!c.verified) return false;
+  if (!c.last_verified_at) return false;
+  return now - new Date(c.last_verified_at).getTime() < VERIFIED_FRESHNESS_MS;
+}
+
+function isCurrentlyFeatured(c: PublicCampCard, now: number): boolean {
+  if (!c.is_featured) return false;
+  if (!c.featured_until) return false;
+  return new Date(c.featured_until).getTime() > now;
+}
 
 export async function PublicCampCard({
   camp,
@@ -32,10 +48,14 @@ export async function PublicCampCard({
   locale: string;
 }) {
   const t = await getTranslations({ locale, namespace: 'public.camps' });
+  const tApp = await getTranslations({ locale, namespace: 'app.camps' });
   const tCat = await getTranslations({ locale, namespace: 'app.camps.completeness.field' });
   const { score, missing } = computeCompleteness(camp);
   const band = bandFor(score);
   const pills = (camp.categories ?? []).slice(0, 2);
+  const now = Date.now();
+  const showVerified = isFreshlyVerified(camp, now);
+  const showFeatured = isCurrentlyFeatured(camp, now);
   return (
     <article className="relative rounded-2xl border border-cream-border bg-white p-4 transition-shadow hover:shadow-md">
       <Link
@@ -68,6 +88,32 @@ export async function PublicCampCard({
             : t('agesUnknown')}
           {camp.neighborhood ? ' · ' + camp.neighborhood : ''}
         </p>
+        {showVerified || showFeatured ? (
+          <div className="flex flex-wrap gap-1.5">
+            {showFeatured ? (
+              <span
+                className="inline-flex items-center gap-1 rounded-full bg-cta-yellow px-2 py-0.5 text-[10px] font-bold text-ink"
+                title={tApp('featured.tooltip')}
+                aria-label={tApp('featured.label')}
+                data-testid="public-camp-featured-badge"
+              >
+                <span aria-hidden="true">⭐</span>
+                {tApp('featured.label')}
+              </span>
+            ) : null}
+            {showVerified ? (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border border-success/40 bg-cream px-2 py-0.5 text-[10px] font-bold text-ink"
+                title={tApp('verified.tooltip')}
+                aria-label={tApp('verified.label')}
+                data-testid="public-camp-verified-badge"
+              >
+                <span aria-hidden="true">✓</span>
+                {tApp('verified.label')}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         {pills.length ? (
           <div className="mt-1 flex flex-wrap gap-1.5">
             {pills.map((c) => (

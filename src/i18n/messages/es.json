@@ -897,6 +897,14 @@
       "empty": "Ningún campamento coincide con esos filtros.",
       "ages": "Edades {min}–{max} · {price}",
       "pendingVerification": "Pendiente de verificación",
+      "verified": {
+        "label": "Verificado",
+        "tooltip": "Revisamos este campamento en los últimos 90 días."
+      },
+      "featured": {
+        "label": "Destacado",
+        "tooltip": "Elegido por Noah para el lanzamiento."
+      },
       "save": "Guardar",
       "saved": "Guardado",
       "visitWebsite": "Visitar sitio web",

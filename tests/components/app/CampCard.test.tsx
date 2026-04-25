@@ -66,4 +66,59 @@ describe('CampCard', () => {
     wrap(<CampCard camp={baseCamp} saved={false} locale="en" />);
     expect(screen.queryByLabelText('Pending verification')).toBeNull();
   });
+
+  it('shows the Verified badge when last_verified_at is within 90 days', () => {
+    const recent = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    wrap(
+      <CampCard
+        camp={{ ...baseCamp, last_verified_at: recent }}
+        saved={false}
+        locale="en"
+      />,
+    );
+    expect(screen.getByTestId('camp-verified-badge')).toBeInTheDocument();
+    expect(screen.getByLabelText('Verified')).toBeInTheDocument();
+  });
+
+  it('hides the Verified badge when last_verified_at is older than 90 days', () => {
+    const stale = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString();
+    wrap(
+      <CampCard
+        camp={{ ...baseCamp, last_verified_at: stale }}
+        saved={false}
+        locale="en"
+      />,
+    );
+    expect(screen.queryByTestId('camp-verified-badge')).toBeNull();
+  });
+
+  it('hides the Verified badge when last_verified_at is missing', () => {
+    wrap(<CampCard camp={baseCamp} saved={false} locale="en" />);
+    expect(screen.queryByTestId('camp-verified-badge')).toBeNull();
+  });
+
+  it('shows the Featured badge when is_featured=true and featured_until is in the future', () => {
+    const future = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    wrap(
+      <CampCard
+        camp={{ ...baseCamp, is_featured: true, featured_until: future }}
+        saved={false}
+        locale="en"
+      />,
+    );
+    expect(screen.getByTestId('camp-featured-badge')).toBeInTheDocument();
+    expect(screen.getByLabelText('Featured')).toBeInTheDocument();
+  });
+
+  it('hides the Featured badge when featured_until is in the past', () => {
+    const past = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    wrap(
+      <CampCard
+        camp={{ ...baseCamp, is_featured: true, featured_until: past }}
+        saved={false}
+        locale="en"
+      />,
+    );
+    expect(screen.queryByTestId('camp-featured-badge')).toBeNull();
+  });
 });

@@ -29,7 +29,12 @@ export type CampCardCamp = {
   categories: string[];
   neighborhood: string | null;
   verified: boolean;
+  // Verified badge gates: needs verified=true AND last_verified_at within 90d.
+  // Stale verifications hide the badge instead of falsely claiming freshness.
+  last_verified_at?: string | null;
   is_featured?: boolean;
+  // Featured badge gates: needs is_featured=true AND featured_until in future.
+  featured_until?: string | null;
   description?: string | null;
   distance_miles?: number | null;
   // DECISION (Phase 3.0 / Item 1.9): true when distance was computed from a
@@ -157,6 +162,8 @@ export function CampCard({
             </span>
           ) : null}
         </div>
+
+        <BadgeRow camp={camp} t={t} mode={mode} />
         <p className={'text-xs ' + mutedCls}>
           {t('ages', {
             min: camp.ages_min,
@@ -258,6 +265,80 @@ export function CampCard({
         <CompletenessCorner camp={camp} />
       </div>
     </article>
+  );
+}
+
+const VERIFIED_FRESHNESS_MS = 90 * 24 * 60 * 60 * 1000;
+
+export function isFreshlyVerified(
+  camp: Pick<CampCardCamp, 'verified' | 'last_verified_at'>,
+  now: number = Date.now(),
+): boolean {
+  if (!camp.verified) return false;
+  if (!camp.last_verified_at) return false;
+  return now - new Date(camp.last_verified_at).getTime() < VERIFIED_FRESHNESS_MS;
+}
+
+export function isCurrentlyFeatured(
+  camp: Pick<CampCardCamp, 'is_featured' | 'featured_until'>,
+  now: number = Date.now(),
+): boolean {
+  if (!camp.is_featured) return false;
+  if (!camp.featured_until) return false;
+  return new Date(camp.featured_until).getTime() > now;
+}
+
+function BadgeRow({
+  camp,
+  t,
+  mode,
+}: {
+  camp: CampCardCamp;
+  t: ReturnType<typeof useTranslations>;
+  mode: 'parents' | 'kids';
+}) {
+  const showVerified = isFreshlyVerified(camp);
+  const showFeatured = isCurrentlyFeatured(camp);
+  if (!showVerified && !showFeatured) return null;
+  const verifiedCls =
+    mode === 'parents'
+      ? 'border border-success/40 bg-cream text-ink'
+      : 'border border-white/20 bg-white/15 text-white';
+  const featuredCls =
+    mode === 'parents'
+      ? 'bg-cta-yellow text-ink'
+      : 'bg-cta-yellow text-ink';
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {showFeatured ? (
+        <span
+          className={
+            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ' +
+            featuredCls
+          }
+          title={t('featured.tooltip')}
+          aria-label={t('featured.label')}
+          data-testid="camp-featured-badge"
+        >
+          <span aria-hidden="true">⭐</span>
+          {t('featured.label')}
+        </span>
+      ) : null}
+      {showVerified ? (
+        <span
+          className={
+            'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ' +
+            verifiedCls
+          }
+          title={t('verified.tooltip')}
+          aria-label={t('verified.label')}
+          data-testid="camp-verified-badge"
+        >
+          <span aria-hidden="true">✓</span>
+          {t('verified.label')}
+        </span>
+      ) : null}
+    </div>
   );
 }
 

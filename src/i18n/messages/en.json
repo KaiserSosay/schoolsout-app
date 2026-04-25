@@ -897,6 +897,14 @@
       "empty": "No camps match those filters yet.",
       "ages": "Ages {min}–{max} · {price}",
       "pendingVerification": "Pending verification",
+      "verified": {
+        "label": "Verified",
+        "tooltip": "We re-checked this listing within the last 90 days."
+      },
+      "featured": {
+        "label": "Featured",
+        "tooltip": "Hand-picked by Noah for launch."
+      },
       "save": "Save",
       "saved": "Saved",
       "visitWebsite": "Visit website",

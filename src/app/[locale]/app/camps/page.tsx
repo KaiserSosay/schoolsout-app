@@ -8,6 +8,7 @@ import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
 import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
 import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
+import { sortByDistanceWithFeatured } from '@/lib/camps/sort';
 import { haversineMiles } from '@/lib/distance';
 import { neighborhoodCentroid } from '@/lib/neighborhoods';
 
@@ -62,7 +63,7 @@ export default async function CampsPage({
     svc
       .from('camps')
       .select(
-        'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at, price_min_cents, price_max_cents, registration_url, registration_deadline',
+        'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, featured_until, last_verified_at, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at, price_min_cents, price_max_cents, registration_url, registration_deadline',
       )
       .eq('verified', true)
       .neq('website_status', 'broken')
@@ -204,11 +205,7 @@ export default async function CampsPage({
   // Sort
   let sorted = annotated;
   if (activeSort === 'distance') {
-    sorted = [...annotated].sort((a, b) => {
-      const ad = a.distance_miles ?? Number.POSITIVE_INFINITY;
-      const bd = b.distance_miles ?? Number.POSITIVE_INFINITY;
-      return ad - bd;
-    });
+    sorted = sortByDistanceWithFeatured(annotated);
   } else if (activeSort === 'price') {
     const rank: Record<string, number> = { $: 1, $$: 2, $$$: 3 };
     sorted = [...annotated].sort((a, b) => rank[a.price_tier] - rank[b.price_tier]);

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { haversineMiles } from '@/lib/distance';
 import { applyFilters, parseFilters, type FilterableCamp } from '@/lib/camps/filters';
+import { sortByDistanceWithFeatured } from '@/lib/camps/sort';
 
 // Opt out of Next.js route caching. This API reads live DB state + respects
 // query-string filters; if it gets cached we end up serving stale camp lists
@@ -79,6 +80,8 @@ type CampRow = {
   logistics_verified: boolean;
   website_status: 'unchecked' | 'ok' | 'broken' | 'timeout';
   website_last_verified_at: string | null;
+  last_verified_at: string | null;
+  featured_until: string | null;
 };
 
 type CampSessionRow = {
@@ -142,7 +145,7 @@ export async function GET(req: Request) {
   let q = db
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified, created_at, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at',
+      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, featured_until, last_verified_at, verified, created_at, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at',
     )
     .order('is_featured', { ascending: false })
     .order('verified', { ascending: false })
@@ -272,11 +275,7 @@ export async function GET(req: Request) {
   }
 
   if (sort === 'distance') {
-    annotated = annotated.sort((a, b) => {
-      const ad = a.distance_miles ?? Number.POSITIVE_INFINITY;
-      const bd = b.distance_miles ?? Number.POSITIVE_INFINITY;
-      return ad - bd;
-    });
+    annotated = sortByDistanceWithFeatured(annotated);
   } else if (sort === 'price') {
     annotated = annotated.sort((a, b) => tierRank[a.price_tier] - tierRank[b.price_tier]);
   } else if (sort === 'name') {

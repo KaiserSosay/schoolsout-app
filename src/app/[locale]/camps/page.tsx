@@ -63,7 +63,7 @@ export default async function PublicCampsPage({
   const { data } = await svc
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, neighborhood, is_featured, verified, phone, address, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
+      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, neighborhood, is_featured, featured_until, last_verified_at, verified, phone, address, hours_start, hours_end, before_care_offered, before_care_start, after_care_offered, after_care_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
     )
     .eq('verified', true)
     .neq('website_status', 'broken')
