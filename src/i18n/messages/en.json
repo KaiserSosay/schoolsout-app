@@ -616,6 +616,14 @@
         "noResults": "No matches found. Try a more specific address."
       }
     },
+    "schoolAutocomplete": {
+      "placeholder": "Type your school's name…",
+      "searching": "Searching…",
+      "noResults": "No matches yet — keep typing.",
+      "addRequestPrefix": "+ Add \"{name}\" — we'll research it",
+      "requestSuccess": "Got it. We'll research {name} and email you when it's added.",
+      "requestFailed": "Couldn't save your request. Try again in a sec."
+    },
     "settings": {
       "title": "Settings",
       "eyebrow": "ACCOUNT",

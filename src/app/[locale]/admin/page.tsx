@@ -16,6 +16,11 @@ import {
   type EnrichmentCamp,
 } from '@/components/admin/EnrichmentPanel';
 import { UsersClient, type AdminUserRow } from '@/components/admin/UsersClient';
+import {
+  SchoolRequestsPanel,
+  type AdminSchoolRequest,
+  type SchoolOption,
+} from '@/components/admin/SchoolRequestsPanel';
 import type { SchoolStatus } from '@/lib/school-status';
 
 export const dynamic = 'force-dynamic';
@@ -26,6 +31,7 @@ const VALID_TABS = [
   'calendar-reviews',
   'enrichment',
   'integrity',
+  'school-requests',
   'users',
 ] as const;
 type Tab = (typeof VALID_TABS)[number];
@@ -39,7 +45,7 @@ function normalizeTab(raw: string | undefined): Tab {
 // --- Pill counts — cheap aggregate queries -----------------------------------
 async function fetchPillCounts(): Promise<PillCounts> {
   const db = createServiceSupabase();
-  const [fr, cr, sch, cl, brokenCamps, mismatched, users] = await Promise.all([
+  const [fr, cr, sch, cl, brokenCamps, mismatched, users, schoolReqs] = await Promise.all([
     db.from('feature_requests').select('*', { count: 'exact', head: true }).eq('status', 'new'),
     db.from('camp_applications').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
     db
@@ -54,6 +60,17 @@ async function fetchPillCounts(): Promise<PillCounts> {
       .eq('verified', true)
       .eq('logistics_verified', false),
     db.from('users').select('*', { count: 'exact', head: true }),
+    // school_requests count is schema-defensive: if migration 028 hasn't been
+    // applied yet the query throws, but we want the rest of the dashboard
+    // to keep working. Catch and surface 0.
+    db
+      .from('school_requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'pending')
+      .then(
+        (r) => r,
+        () => ({ count: 0 }) as { count: number | null },
+      ),
   ]);
   return {
     featureRequests: fr.count ?? 0,
@@ -61,7 +78,46 @@ async function fetchPillCounts(): Promise<PillCounts> {
     calendarReviews: (sch.count ?? 0) + (cl.count ?? 0),
     integrityWarnings: (brokenCamps.count ?? 0) + (mismatched.count ?? 0),
     users: users.count ?? 0,
+    schoolRequests: schoolReqs.count ?? 0,
   };
+}
+
+async function loadSchoolRequests(): Promise<AdminSchoolRequest[]> {
+  const db = createServiceSupabase();
+  try {
+    const { data } = await db
+      .from('school_requests')
+      .select(
+        'id, user_id, requested_name, city, notes, status, reviewed_by, reviewed_at, linked_school_id, created_at, users(display_name, email)',
+      )
+      .order('created_at', { ascending: false })
+      .limit(100);
+    const rows = (data ?? []) as unknown as Array<
+      Omit<AdminSchoolRequest, 'users'> & {
+        users:
+          | { display_name: string | null; email: string | null }
+          | Array<{ display_name: string | null; email: string | null }>
+          | null;
+      }
+    >;
+    return rows.map((r) => ({
+      ...r,
+      users: Array.isArray(r.users) ? (r.users[0] ?? null) : r.users,
+    }));
+  } catch {
+    // Migration 028 not yet applied — render empty state.
+    return [];
+  }
+}
+
+async function loadSchoolOptions(): Promise<SchoolOption[]> {
+  const db = createServiceSupabase();
+  const { data } = await db
+    .from('schools')
+    .select('id, name')
+    .order('name', { ascending: true })
+    .limit(2000);
+  return (data ?? []) as SchoolOption[];
 }
 
 // --- Per-tab data fetchers ---------------------------------------------------
@@ -464,6 +520,12 @@ export default async function AdminPage({
   } else if (activeTab === 'integrity') {
     const data = await loadIntegrityData();
     panel = <IntegrityPanel data={data} />;
+  } else if (activeTab === 'school-requests') {
+    const [rows, schools] = await Promise.all([
+      loadSchoolRequests(),
+      loadSchoolOptions(),
+    ]);
+    panel = <SchoolRequestsPanel initialRequests={rows} schools={schools} />;
   } else if (activeTab === 'users') {
     const { users, total } = await loadUsersData();
     panel = <UsersClient initialUsers={users} initialTotal={total} initialSearch={''} />;

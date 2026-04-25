@@ -5,6 +5,7 @@ export type PillCounts = {
   campRequests: number;
   calendarReviews: number;
   integrityWarnings: number;
+  schoolRequests: number;
   users: number;
 };
 
@@ -20,6 +21,7 @@ const PILLS: Pill[] = [
   { key: 'campRequests', tab: 'camp-requests', emoji: '🏕️', label: 'Camp requests' },
   { key: 'calendarReviews', tab: 'calendar-reviews', emoji: '📅', label: 'Calendar reviews' },
   { key: 'integrityWarnings', tab: 'integrity', emoji: '⚠️', label: 'Integrity warnings' },
+  { key: 'schoolRequests', tab: 'school-requests', emoji: '🏫', label: 'School requests' },
   { key: 'users', tab: 'users', emoji: '👥', label: 'Users' },
 ];
 
@@ -33,7 +35,7 @@ export function AdminPillStrip({
   activeTab: string;
 }) {
   return (
-    <ul className="grid grid-cols-2 gap-2 md:grid-cols-5">
+    <ul className="grid grid-cols-2 gap-2 md:grid-cols-6">
       {PILLS.map((p) => {
         const count = counts[p.key];
         const isHot = count > 0;

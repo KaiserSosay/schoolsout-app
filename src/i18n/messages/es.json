@@ -616,6 +616,14 @@
         "noResults": "Sin coincidencias. Prueba con una dirección más específica."
       }
     },
+    "schoolAutocomplete": {
+      "placeholder": "Escribe el nombre de tu escuela…",
+      "searching": "Buscando…",
+      "noResults": "Sin coincidencias aún — sigue escribiendo.",
+      "addRequestPrefix": "+ Agregar \"{name}\" — la investigaremos",
+      "requestSuccess": "Recibido. Investigaremos {name} y te avisaremos por correo cuando esté agregada.",
+      "requestFailed": "No pudimos guardar tu pedido. Intenta de nuevo en un momento."
+    },
     "settings": {
       "title": "Ajustes",
       "eyebrow": "CUENTA",

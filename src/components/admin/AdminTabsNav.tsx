@@ -8,6 +8,7 @@ const TABS: Tab[] = [
   { key: 'calendar-reviews', label: 'Calendar reviews' },
   { key: 'enrichment', label: 'Enrichment' },
   { key: 'integrity', label: 'Integrity' },
+  { key: 'school-requests', label: 'School requests' },
   { key: 'users', label: 'Users' },
 ];
 

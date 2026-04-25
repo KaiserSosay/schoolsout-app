@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { SchoolAutocomplete } from './SchoolAutocomplete';
 
 // DECISION: Shared presentation for one kid's fields (name / grade / school).
 // Lives as a dumb controlled component — the parent owns the kids[] array and
@@ -178,18 +179,14 @@ export function KidForm({
           </button>
         </div>
         {kid.school_other ? (
-          <select
-            value={kid.school_id ?? ''}
-            onChange={(e) => onChange({ school_id: e.target.value || null })}
-            className="mt-3 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink focus:border-brand-purple focus:outline-none"
-          >
-            <option value="">—</option>
-            {schools.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <div className="mt-3">
+            <SchoolAutocomplete
+              schools={schools}
+              value={kid.school_id}
+              onSelect={(id) => onChange({ school_id: id })}
+              testIdSuffix={`-${ordinal}`}
+            />
+          </div>
         ) : null}
       </div>
     </fieldset>
