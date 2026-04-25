@@ -5,6 +5,12 @@
 export const closureHref = (locale: string, id: string) =>
   `/${locale}/app/closures/${id}`;
 
+// Public-facing closure detail page (no auth required). Used on
+// `/[locale]/schools/[slug]` where anonymous parents land. The auth-gated
+// `closureHref` above belongs to the dashboard surface.
+export const publicClosureHref = (locale: string, id: string) =>
+  `/${locale}/breaks/${id}`;
+
 export const campHref = (locale: string, slug: string) =>
   `/${locale}/app/camps/${slug}`;
 

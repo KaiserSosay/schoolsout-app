@@ -14,6 +14,7 @@ import {
   SITE_URL,
 } from '@/lib/seo';
 import { deriveSchoolFraming } from '@/lib/schools/calendar-status';
+import { publicClosureHref, focusRing } from '@/lib/links';
 
 export const dynamic = 'force-dynamic';
 
@@ -282,33 +283,46 @@ export default async function PublicSchoolPage({
               </p>
             ) : (
               <ul className="space-y-2">
-                {closures.map((c) => (
-                  <li key={c.id}>
-                    <Link
-                      href={`/${locale}/breaks/${c.id}`}
-                      className="flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-cream px-4 py-3 transition-colors hover:border-brand-purple/40"
-                    >
-                      <div>
-                        <p className="text-sm font-black text-ink">
-                          {c.emoji} {c.name}
-                        </p>
-                        <p className="text-xs text-muted">
-                          {formatDateRange(c.start_date, c.end_date, locale)}
-                        </p>
-                      </div>
-                      <span
+                {closures.map((c) => {
+                  const dateLabel = formatDateRange(c.start_date, c.end_date, locale);
+                  return (
+                    <li key={c.id}>
+                      <Link
+                        href={publicClosureHref(locale, c.id)}
+                        aria-label={`Open ${c.name} on ${dateLabel}`}
                         className={
-                          'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
-                          (c.status === 'verified'
-                            ? 'bg-emerald-100 text-emerald-900'
-                            : 'bg-amber-100 text-amber-900')
+                          'group flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-cream px-4 py-3 transition-[border-color,box-shadow] duration-[var(--duration-micro)] ease-[var(--ease-premium)] hover:border-brand-purple/40 hover:shadow-sm ' +
+                          focusRing
                         }
                       >
-                        {c.status === 'verified' ? t('verified') : t('pending')}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                        <div>
+                          <p className="text-sm font-black text-ink">
+                            {c.emoji} {c.name}
+                          </p>
+                          <p className="text-xs text-muted">{dateLabel}</p>
+                        </div>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className={
+                              'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+                              (c.status === 'verified'
+                                ? 'bg-emerald-100 text-emerald-900'
+                                : 'bg-amber-100 text-amber-900')
+                            }
+                          >
+                            {c.status === 'verified' ? t('verified') : t('pending')}
+                          </span>
+                          <span
+                            aria-hidden
+                            className="text-muted transition-transform duration-[var(--duration-micro)] ease-[var(--ease-premium)] group-hover:translate-x-0.5 group-hover:text-brand-purple"
+                          >
+                            →
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </section>
@@ -337,33 +351,46 @@ export default async function PublicSchoolPage({
               </p>
             ) : (
               <ul className="space-y-2">
-                {closures.map((c) => (
-                  <li key={c.id}>
-                    <Link
-                      href={`/${locale}/breaks/${c.id}`}
-                      className="flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-white px-4 py-3 transition-colors hover:border-brand-purple/40"
-                    >
-                      <div>
-                        <p className="text-sm font-black text-ink">
-                          {c.emoji} {c.name}
-                        </p>
-                        <p className="text-xs text-muted">
-                          {formatDateRange(c.start_date, c.end_date, locale)}
-                        </p>
-                      </div>
-                      <span
+                {closures.map((c) => {
+                  const dateLabel = formatDateRange(c.start_date, c.end_date, locale);
+                  return (
+                    <li key={c.id}>
+                      <Link
+                        href={publicClosureHref(locale, c.id)}
+                        aria-label={`Open ${c.name} on ${dateLabel}`}
                         className={
-                          'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
-                          (c.status === 'verified'
-                            ? 'bg-emerald-100 text-emerald-900'
-                            : 'bg-amber-100 text-amber-900')
+                          'group flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-white px-4 py-3 transition-[border-color,box-shadow] duration-[var(--duration-micro)] ease-[var(--ease-premium)] hover:border-brand-purple/40 hover:shadow-sm ' +
+                          focusRing
                         }
                       >
-                        {c.status === 'verified' ? t('verified') : t('pending')}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                        <div>
+                          <p className="text-sm font-black text-ink">
+                            {c.emoji} {c.name}
+                          </p>
+                          <p className="text-xs text-muted">{dateLabel}</p>
+                        </div>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className={
+                              'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+                              (c.status === 'verified'
+                                ? 'bg-emerald-100 text-emerald-900'
+                                : 'bg-amber-100 text-amber-900')
+                            }
+                          >
+                            {c.status === 'verified' ? t('verified') : t('pending')}
+                          </span>
+                          <span
+                            aria-hidden
+                            className="text-muted transition-transform duration-[var(--duration-micro)] ease-[var(--ease-premium)] group-hover:translate-x-0.5 group-hover:text-brand-purple"
+                          >
+                            →
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </>
