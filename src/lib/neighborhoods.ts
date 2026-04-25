@@ -25,6 +25,10 @@ export const NEIGHBORHOOD_CENTROIDS: Record<string, Centroid> = {
   'Coral Gables':            { lat: 25.7211, lng: -80.2683 },
   'Coral Way':               { lat: 25.7510, lng: -80.2400 },
   'Cutler Bay':              { lat: 25.5808, lng: -80.3473 },
+  // Broward-county neighborhoods — some research camps are north of the
+  // Miami-Dade line. Including them so distance sort still works for parents
+  // willing to commute up I-95.
+  'Davie':                   { lat: 26.0765, lng: -80.2521 },
   'Doral':                   { lat: 25.8195, lng: -80.3553 },
   'Downtown':                { lat: 25.7743, lng: -80.1937 },
   'Downtown Miami':          { lat: 25.7743, lng: -80.1937 },
@@ -32,8 +36,10 @@ export const NEIGHBORHOOD_CENTROIDS: Record<string, Centroid> = {
   'El Portal':               { lat: 25.8551, lng: -80.1959 },
   'Fisher Island':           { lat: 25.7625, lng: -80.1430 },
   'Florida City':            { lat: 25.4476, lng: -80.4793 },
+  'Fort Lauderdale':         { lat: 26.1224, lng: -80.1373 },
   'Hialeah':                 { lat: 25.8576, lng: -80.2781 },
   'Hialeah Gardens':         { lat: 25.8612, lng: -80.3247 },
+  'Hollywood':               { lat: 26.0112, lng: -80.1495 },
   'Homestead':               { lat: 25.4687, lng: -80.4776 },
   'Indian Creek':            { lat: 25.8780, lng: -80.1364 },
   'Kendall':                 { lat: 25.6793, lng: -80.3173 },
@@ -56,7 +62,9 @@ export const NEIGHBORHOOD_CENTROIDS: Record<string, Centroid> = {
   'Opa-locka':               { lat: 25.9026, lng: -80.2503 },
   'Overtown':                { lat: 25.7866, lng: -80.1992 },
   'Palmetto Bay':            { lat: 25.6220, lng: -80.3251 },
+  'Pembroke Pines':          { lat: 26.0034, lng: -80.2237 },
   'Pinecrest':               { lat: 25.6679, lng: -80.3079 },
+  'Plantation':              { lat: 26.1276, lng: -80.2331 },
   'South Miami':             { lat: 25.7076, lng: -80.2933 },
   'Sunny Isles Beach':       { lat: 25.9434, lng: -80.1234 },
   'Surfside':                { lat: 25.8773, lng: -80.1259 },
@@ -67,6 +75,7 @@ export const NEIGHBORHOOD_CENTROIDS: Record<string, Centroid> = {
   'Virginia Gardens':        { lat: 25.8062, lng: -80.3045 },
   'West Miami':              { lat: 25.7611, lng: -80.2967 },
   'Westchester':             { lat: 25.7548, lng: -80.3399 },
+  'Weston':                  { lat: 26.1003, lng: -80.4000 },
   'Wynwood':                 { lat: 25.8011, lng: -80.1990 },
 };
 
