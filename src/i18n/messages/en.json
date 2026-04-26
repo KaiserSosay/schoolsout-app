@@ -97,7 +97,20 @@
     "successTitle": "Check your email ✓",
     "successSubtitle": "We sent a sign-in link to {email}. Tap it to come back in.",
     "successHintReturning": "Welcome back. The link works for one hour — open it on the same device for the smoothest hop in.",
-    "successHintNew": "Looks like you're new. Tap the link to set up your free account."
+    "successHintNew": "Looks like you're new. Tap the link to set up your free account.",
+    "tabs": {
+      "magicLink": "Email me a link",
+      "password": "Use my password"
+    },
+    "password": {
+      "passwordLabel": "Your password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "wrongPassword": "That password didn't work — try again or send a magic link instead.",
+      "useMagicLinkInstead": "Send a magic link instead →",
+      "noPasswordHint": "Don't have a password yet? Use the magic-link tab and set one up after you sign in."
+    }
   },
   "reminderSignup": {
     "headline": "Get reminded before every school closure",

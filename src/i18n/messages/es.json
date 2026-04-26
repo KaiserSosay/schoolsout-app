@@ -97,7 +97,20 @@
     "successTitle": "Revisa tu correo ✓",
     "successSubtitle": "Te enviamos un enlace de acceso a {email}. Tócalo para entrar.",
     "successHintReturning": "Bienvenido de vuelta. El enlace funciona por una hora — ábrelo en el mismo dispositivo para entrar más rápido.",
-    "successHintNew": "Parece que eres nuevo aquí. Toca el enlace para crear tu cuenta gratis."
+    "successHintNew": "Parece que eres nuevo aquí. Toca el enlace para crear tu cuenta gratis.",
+    "tabs": {
+      "magicLink": "Enviar enlace por correo",
+      "password": "Usar mi contraseña"
+    },
+    "password": {
+      "passwordLabel": "Tu contraseña",
+      "passwordPlaceholder": "Tu contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión…",
+      "wrongPassword": "Esa contraseña no funcionó — intenta de nuevo o envía un enlace por correo.",
+      "useMagicLinkInstead": "Enviar enlace por correo →",
+      "noPasswordHint": "¿Aún no tienes contraseña? Usa la pestaña de enlace por correo y configura una después de iniciar sesión."
+    }
   },
   "reminderSignup": {
     "headline": "Recibe un aviso antes de cada día sin escuela",
