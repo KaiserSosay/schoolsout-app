@@ -1028,6 +1028,18 @@
         "body": "Próximamente: recordatorios, mensajes de campamentos y actualizaciones de actividad."
       }
     },
+    "kids": {
+      "birthDate": {
+        "monthLabel": "Mes de nacimiento",
+        "yearLabel": "Año de nacimiento",
+        "monthPlaceholder": "Elige un mes",
+        "yearPlaceholder": "Elige un año",
+        "softPromptHeadline": "Ayúdanos a encontrar campamentos para {kidName}",
+        "softPromptBody": "¿Cuándo nació {kidName}? Mes y año es suficiente — nunca necesitamos la fecha exacta.",
+        "softPromptSkip": "Más tarde",
+        "softPromptSubmit": "Guardar"
+      }
+    },
     "family": {
       "title": "Tu Familia",
       "subtitle": "Tus hijos, sus escuelas y las próximas vacaciones que les afectan.",

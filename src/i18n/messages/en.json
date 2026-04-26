@@ -1028,6 +1028,18 @@
         "body": "Coming soon: reminders, messages from camps, and activity updates."
       }
     },
+    "kids": {
+      "birthDate": {
+        "monthLabel": "Birth month",
+        "yearLabel": "Birth year",
+        "monthPlaceholder": "Pick a month",
+        "yearPlaceholder": "Pick a year",
+        "softPromptHeadline": "Help us match camps to {kidName}",
+        "softPromptBody": "When was {kidName} born? Month + year is enough — we'll never need the exact date.",
+        "softPromptSkip": "Skip for now",
+        "softPromptSubmit": "Save"
+      }
+    },
     "family": {
       "title": "Your Family",
       "subtitle": "Kids, their schools, and the next closures affecting each one.",

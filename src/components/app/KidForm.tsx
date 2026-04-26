@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { SchoolAutocomplete } from './SchoolAutocomplete';
 
 // DECISION: Shared presentation for one kid's fields (name / grade / school).
@@ -16,6 +16,11 @@ export type KidState = {
   grade: string; // localStorage only — one of GRADES or ''
   school_id: string | null;
   school_other: boolean;
+  // Phase 3.5+ hybrid kid model (migration 038). Server-side. Optional
+  // here because returning parents who saved kids before this shipped
+  // have nothing to fill in until the soft-prompt banner asks.
+  birth_month?: number | null;
+  birth_year?: number | null;
 };
 
 // DECISION: Fixed ordered list of grade options + the grade→age_range map.
@@ -70,7 +75,37 @@ export function gradeToAge(grade: string): AgeRange {
 }
 
 export function blankKid(): KidState {
-  return { name: '', grade: '', school_id: null, school_other: false };
+  return {
+    name: '',
+    grade: '',
+    school_id: null,
+    school_other: false,
+    birth_month: null,
+    birth_year: null,
+  };
+}
+
+// Years presented in the birth-year dropdown. Mirrors the migration-038
+// CHECK constraint (2005..2025). Returned newest-first so parents picking
+// for a 7-year-old don't have to scroll.
+export function birthYearOptions(): number[] {
+  const years: number[] = [];
+  for (let y = 2025; y >= 2005; y -= 1) years.push(y);
+  return years;
+}
+
+// Month-name lookup for the birth-month dropdown. Locale-aware: the
+// caller passes `locale` and gets the right copy. Indexed 1-12 to match
+// the schema; index 0 is the placeholder.
+export function birthMonthLabels(locale: string): string[] {
+  const intl = locale === 'es' ? 'es-US' : 'en-US';
+  const labels = ['—'];
+  for (let m = 1; m <= 12; m += 1) {
+    labels.push(
+      new Date(2024, m - 1, 1).toLocaleDateString(intl, { month: 'long' }),
+    );
+  }
+  return labels;
 }
 
 export function KidForm({
@@ -89,6 +124,10 @@ export function KidForm({
   onDelete?: () => void;
 }) {
   const t = useTranslations('app.onboarding');
+  const tBirth = useTranslations('app.kids.birthDate');
+  const locale = useLocale();
+  const monthLabels = birthMonthLabels(locale);
+  const yearOptions = birthYearOptions();
 
   const suggestedSchools = suggestedIds
     .map((id) => schools.find((s) => s.id === id))
@@ -136,6 +175,53 @@ export function KidForm({
             {GRADES.map((g) => (
               <option key={g} value={g}>
                 {t(`grades.${g}` as const)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="mt-3 grid gap-3 md:grid-cols-2">
+        <label className="block">
+          <span className="text-xs font-bold text-muted">
+            {tBirth('monthLabel')}
+          </span>
+          <select
+            value={kid.birth_month ?? ''}
+            onChange={(e) =>
+              onChange({
+                birth_month: e.target.value ? parseInt(e.target.value, 10) : null,
+              })
+            }
+            className="mt-1 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink focus:border-brand-purple focus:outline-none"
+            data-testid={`kid-birth-month-${ordinal}`}
+          >
+            <option value="">{tBirth('monthPlaceholder')}</option>
+            {monthLabels.slice(1).map((label, i) => (
+              <option key={label} value={i + 1}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="text-xs font-bold text-muted">
+            {tBirth('yearLabel')}
+          </span>
+          <select
+            value={kid.birth_year ?? ''}
+            onChange={(e) =>
+              onChange({
+                birth_year: e.target.value ? parseInt(e.target.value, 10) : null,
+              })
+            }
+            className="mt-1 w-full rounded-xl border border-cream-border bg-cream px-3 py-2 text-sm text-ink focus:border-brand-purple focus:outline-none"
+            data-testid={`kid-birth-year-${ordinal}`}
+          >
+            <option value="">{tBirth('yearPlaceholder')}</option>
+            {yearOptions.map((y) => (
+              <option key={y} value={y}>
+                {y}
               </option>
             ))}
           </select>
