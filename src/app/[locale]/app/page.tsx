@@ -221,7 +221,14 @@ export default async function AppPage({
     );
   }
 
-  const userHasSubscriptions = (subsCountResp.count ?? 0) > 0;
+  // Phase 3.5: widened from "has subscriptions" to "has any history" so
+  // returning parents who used the plan flow but never subscribed to
+  // email reminders still see the new-device banner. Mom-tested fix.
+  const userHasAppHistory =
+    (subsCountResp.count ?? 0) > 0 ||
+    savesCount > 0 ||
+    plans.length > 0 ||
+    (activityResp.data ?? []).length > 0;
 
   return (
     <DashboardRouter
@@ -233,7 +240,7 @@ export default async function AppPage({
       savesCount={savesCount}
       activity={activityResp.data ?? []}
       plans={plans}
-      userHasSubscriptions={userHasSubscriptions}
+      userHasAppHistory={userHasAppHistory}
     />
   );
 }

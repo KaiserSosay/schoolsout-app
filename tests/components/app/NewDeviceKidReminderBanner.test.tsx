@@ -6,10 +6,11 @@ import messages from '@/i18n/messages/en.json';
 
 // Phase 3.0 / Item 3.9 — banner is the parent-side reassurance for the
 // COPPA tradeoff (kid names local-only). Critical that it renders only
-// when ALL three conditions hold: empty localStorage kids, user has
-// reminder subscriptions on file, and not dismissed in the last 30 days.
-// Wrong on any of those = either annoying nag (bad) or silent failure
-// to reassure a confused returning user (worse).
+// when ALL three conditions hold: empty localStorage kids, user has any
+// app history (subscription, save, plan, activity), and not dismissed in
+// the last 30 days. Phase 3.5 widened "subscriptions only" to "any
+// history signal" because mom signed up via the plan flow without
+// subscribing to email reminders, so the old condition skipped her.
 
 beforeEach(() => {
   // Fresh localStorage per test
@@ -37,7 +38,7 @@ function wrap(props: Partial<React.ComponentProps<typeof NewDeviceKidReminderBan
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
       <NewDeviceKidReminderBanner
-        userHasSubscriptions
+        userHasAppHistory
         locale="en"
         {...props}
       />
@@ -46,12 +47,35 @@ function wrap(props: Partial<React.ComponentProps<typeof NewDeviceKidReminderBan
 }
 
 describe('NewDeviceKidReminderBanner', () => {
-  it('renders when localStorage is empty AND userHasSubscriptions=true', async () => {
+  it('renders when localStorage is empty AND userHasAppHistory=true', async () => {
     await act(async () => {
       wrap();
     });
     expect(screen.getByTestId('new-device-banner')).toBeInTheDocument();
-    expect(screen.getByText(/Welcome back from a new device/i)).toBeInTheDocument();
+    expect(screen.getByText(/Welcome back/i)).toBeInTheDocument();
+  });
+
+  it('mom-tested copy leads with "for your family\'s privacy"', async () => {
+    await act(async () => {
+      wrap();
+    });
+    expect(
+      screen.getByText(/for your family's privacy/i),
+    ).toBeInTheDocument();
+  });
+
+  it('mom-tested copy reassures that everything else is preserved', async () => {
+    await act(async () => {
+      wrap();
+    });
+    // The reassurance line must mention saved camps + plans + reminders
+    // are still there. If a future copy edit drops one, this fails so
+    // the regression is visible before it ships.
+    expect(
+      screen.getByText(
+        /saved camps[\s\S]*plans[\s\S]*reminders/i,
+      ),
+    ).toBeInTheDocument();
   });
 
   it('does NOT render when localStorage already has kids', async () => {
@@ -62,9 +86,9 @@ describe('NewDeviceKidReminderBanner', () => {
     expect(screen.queryByTestId('new-device-banner')).not.toBeInTheDocument();
   });
 
-  it('does NOT render when userHasSubscriptions=false (brand new user)', async () => {
+  it('does NOT render when userHasAppHistory=false (brand new user)', async () => {
     await act(async () => {
-      wrap({ userHasSubscriptions: false });
+      wrap({ userHasAppHistory: false });
     });
     expect(screen.queryByTestId('new-device-banner')).not.toBeInTheDocument();
   });

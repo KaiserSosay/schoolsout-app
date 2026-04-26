@@ -59,14 +59,14 @@ export function DashboardRouter(props: {
   savesCount: number;
   activity: Activity[];
   plans: PlanCard[];
-  userHasSubscriptions: boolean;
+  userHasAppHistory: boolean;
 }) {
   const { mode } = useMode();
   if (mode === 'kids') {
     // Kid mode dashboard doesn't show the parent-facing reminder banner
     // — strip the prop on the way down.
     const {
-      userHasSubscriptions: _drop,
+      userHasAppHistory: _drop,
       ...kidProps
     } = props;
     void _drop;

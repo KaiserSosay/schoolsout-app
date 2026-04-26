@@ -67,7 +67,7 @@ export function ParentDashboard({
   savesCount,
   activity,
   plans,
-  userHasSubscriptions,
+  userHasAppHistory,
 }: {
   locale: string;
   displayName: string | null;
@@ -77,7 +77,7 @@ export function ParentDashboard({
   savesCount: number;
   activity: Activity[];
   plans: import('./PlansSummary').PlanCard[];
-  userHasSubscriptions: boolean;
+  userHasAppHistory: boolean;
 }) {
   const t = useTranslations('app.dashboard');
 
@@ -110,7 +110,7 @@ export function ParentDashboard({
       />
 
       <NewDeviceKidReminderBanner
-        userHasSubscriptions={userHasSubscriptions}
+        userHasAppHistory={userHasAppHistory}
         locale={locale}
       />
 

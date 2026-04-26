@@ -2,11 +2,18 @@
 
 // Returning-on-new-device privacy reminder.
 //
-// Phase 3.0 / Item 3.9. When a parent signs in successfully and lands at
-// /app but their localStorage `so-kids` is empty AND they have at least
-// one enabled reminder subscription on file, show a small banner
-// explaining that kid names are local-only by design (COPPA) and offer
-// to add them in Settings/Family.
+// Phase 3.0 / Item 3.9 — original. Phase 3.5 (mom-test 2026-04-26) —
+// widened the trigger. The original check was "user has at least one
+// reminder_subscriptions row" which skipped mom because she signed up
+// via the plan flow without subscribing to email reminders. The
+// widened check is "user has ANY history" — saves, plans, activity, or
+// subscriptions — so any returning parent on a fresh browser sees the
+// banner.
+//
+// Mom-tested copy now leads with "for your family's privacy" and
+// reassures that everything else (saves, plans, reminders) is exactly
+// where they left it, so a returning parent doesn't read the empty
+// kid list as data loss.
 //
 // The banner self-suppresses for 30 days after dismissal (per ground
 // rule: don't be naggy, parents are tired).
@@ -20,14 +27,17 @@ const DISMISSED_KEY = 'so-new-device-banner-dismissed-at';
 const DISMISS_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function NewDeviceKidReminderBanner({
-  userHasSubscriptions,
+  userHasAppHistory,
   locale,
   // override hooks for tests — production callers should leave these alone.
   storageKey = KIDS_KEY,
   dismissedKey = DISMISSED_KEY,
   ttlMs = DISMISS_TTL_MS,
 }: {
-  userHasSubscriptions: boolean;
+  // True when the user has any subscriptions, saved camps, plans, or
+  // recent activity — any signal that they've used the app before. The
+  // banner only fires for returning parents, never brand-new users.
+  userHasAppHistory: boolean;
   locale: string;
   storageKey?: string;
   dismissedKey?: string;
@@ -37,7 +47,7 @@ export function NewDeviceKidReminderBanner({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!userHasSubscriptions) return;
+    if (!userHasAppHistory) return;
     try {
       const raw = localStorage.getItem(storageKey);
       const kids = raw ? (JSON.parse(raw) as unknown[]) : [];
@@ -52,7 +62,7 @@ export function NewDeviceKidReminderBanner({
       // localStorage may throw in private mode / sandboxed iframes — fail
       // closed: don't show the banner.
     }
-  }, [userHasSubscriptions, storageKey, dismissedKey, ttlMs]);
+  }, [userHasAppHistory, storageKey, dismissedKey, ttlMs]);
 
   if (!visible) return null;
 

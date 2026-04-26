@@ -712,8 +712,8 @@
       },
       "subtitle": "Your family's plan at a glance — every closure, every camp, every countdown.",
       "newDeviceBanner": {
-        "heading": "Welcome back from a new device?",
-        "body": "Your kids' names live on this device for privacy — they're never sent to our servers. Add them in Family to see your dashboard like before. Your saved camps and plans are still here.",
+        "heading": "Welcome back!",
+        "body": "Quick heads-up: for your family's privacy, we keep your kids' names on just your device, never on our servers. So when you switch phones or browsers, you'll need to re-add their names — but everything else (saved camps, plans, reminders) is exactly where you left it.",
         "cta": "Add my kids →",
         "dismissAriaLabel": "Dismiss new-device reminder"
       },
