@@ -1,0 +1,160 @@
+{
+  "note": "Curated from the-growing-place-calendar-2025-2026.pdf (official 2026-27 family calendar). DevClawd extracted the .txt sibling via pdftotext on 2026-04-26; this JSON is the human-verified pass that resolves dates against the 2026-27 academic year (Aug 2026 entries → 2026; Jan-May entries → 2027). PTG events from doc1.pdf and doc2.pdf are deliberately excluded — those are family-attended events while school is open, not closures.",
+  "source": "https://www.thegrowingplace.school/calendar",
+  "schoolYear": "2026-2027",
+  "closures": [
+    {
+      "name": "First Day of School",
+      "category": "first_day",
+      "start_date": "2026-08-18",
+      "end_date": "2026-08-18",
+      "closed_for_students": false,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "School Closed for Labor Day",
+      "category": "holiday",
+      "start_date": "2026-09-07",
+      "end_date": "2026-09-07",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Professional Development Day / School Closed",
+      "category": "teacher_workday",
+      "start_date": "2026-10-09",
+      "end_date": "2026-10-09",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "School Closed for Veterans Day",
+      "category": "holiday",
+      "start_date": "2026-11-11",
+      "end_date": "2026-11-11",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Noon Dismissal (pre-Thanksgiving)",
+      "category": "early_release",
+      "start_date": "2026-11-20",
+      "end_date": "2026-11-20",
+      "closed_for_students": false,
+      "is_early_release": true,
+      "confidence": "high"
+    },
+    {
+      "name": "Thanksgiving Break",
+      "category": "break",
+      "start_date": "2026-11-23",
+      "end_date": "2026-11-27",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Noon Dismissal (pre-Christmas Break)",
+      "category": "early_release",
+      "start_date": "2026-12-18",
+      "end_date": "2026-12-18",
+      "closed_for_students": false,
+      "is_early_release": true,
+      "confidence": "high"
+    },
+    {
+      "name": "Christmas Break",
+      "category": "break",
+      "start_date": "2026-12-21",
+      "end_date": "2027-01-01",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Teacher Work Day / School Closed",
+      "category": "teacher_workday",
+      "start_date": "2027-01-04",
+      "end_date": "2027-01-04",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "School Closed for MLK Day",
+      "category": "holiday",
+      "start_date": "2027-01-18",
+      "end_date": "2027-01-18",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Professional Development Day / School Closed",
+      "category": "teacher_workday",
+      "start_date": "2027-02-12",
+      "end_date": "2027-02-12",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "School Closed for Presidents' Day",
+      "category": "holiday",
+      "start_date": "2027-02-15",
+      "end_date": "2027-02-15",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Noon Dismissal (pre-Spring Break)",
+      "category": "early_release",
+      "start_date": "2027-03-19",
+      "end_date": "2027-03-19",
+      "closed_for_students": false,
+      "is_early_release": true,
+      "confidence": "high"
+    },
+    {
+      "name": "Spring Break",
+      "category": "break",
+      "start_date": "2027-03-22",
+      "end_date": "2027-03-26",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "School Closed for Easter Monday",
+      "category": "religious_holiday",
+      "start_date": "2027-03-29",
+      "end_date": "2027-03-29",
+      "closed_for_students": true,
+      "is_early_release": false,
+      "confidence": "high"
+    },
+    {
+      "name": "Noon Dismissal (mid-April)",
+      "category": "early_release",
+      "start_date": "2027-04-16",
+      "end_date": "2027-04-16",
+      "closed_for_students": false,
+      "is_early_release": true,
+      "confidence": "high"
+    },
+    {
+      "name": "Last Day of School / Noon Dismissal",
+      "category": "last_day",
+      "start_date": "2027-05-27",
+      "end_date": "2027-05-27",
+      "closed_for_students": false,
+      "is_early_release": true,
+      "confidence": "high"
+    }
+  ]
+}

@@ -127,9 +127,13 @@ const SCHOOL_REGISTRY: Record<
     },
   },
   'the-growing-place': {
-    slug: 'the-growing-place-school-coral-gables',
-    name: 'The Growing Place School',
-    sourceUrl: 'https://www.thegrowingplace.school/school-calendar',
+    // Verified against prod 2026-04-26: the actual TGP slug is just
+    // `the-growing-place`, not `the-growing-place-school-coral-gables` as
+    // an earlier guess assumed. Fixed so the parser's emitted JSON lines
+    // up with the schools row that migrations 029 / 035 select against.
+    slug: 'the-growing-place',
+    name: 'The Growing Place',
+    sourceUrl: 'https://www.thegrowingplace.school/calendar',
   },
 };
 
