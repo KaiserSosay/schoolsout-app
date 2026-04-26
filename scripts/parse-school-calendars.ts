@@ -40,19 +40,42 @@ const OUT_PATH = join(
 );
 
 // Map file-prefix → DB slug + display name + canonical source URL.
-// Slugs verified against data/schools/miami-schools-research-2026-04-24.schools.json.
+// Slugs verified against PROD via Supabase Studio on 2026-04-25 — they
+// differ from data/schools/miami-schools-research-2026-04-24.schools.json
+// (the research import normalized them slightly when it ran).
+//
+// `ensure` is set when the school does NOT yet exist in prod and the
+// migration must INSERT it before attaching closures. Lehrman + Scheck
+// Hillel were missed by the 316-school import.
+type EnsureSchool = {
+  district: string;
+  city: string;
+  state: string;
+  type: string;
+  is_mdcps: boolean;
+  religious_affiliation?: string;
+  address?: string;
+  phone?: string;
+  website?: string;
+  data_source?: string;
+};
 const SCHOOL_REGISTRY: Record<
   string,
-  { slug: string; name: string; sourceUrl: string }
+  {
+    slug: string;
+    name: string;
+    sourceUrl: string;
+    ensure?: EnsureSchool;
+  }
 > = {
   'gulliver-prep': {
-    slug: 'gulliver-preparatory',
+    slug: 'gulliver-preparatory-school',
     name: 'Gulliver Preparatory School',
     sourceUrl:
       'https://www.gulliverprep.org/wp-content/uploads/academic_calendar.pdf',
   },
   'ransom-everglades': {
-    slug: 'ransom-everglades',
+    slug: 'ransom-everglades-school',
     name: 'Ransom Everglades School',
     sourceUrl:
       'https://www.ransomeverglades.org/news-and-events/calendar',
@@ -66,9 +89,21 @@ const SCHOOL_REGISTRY: Record<
     slug: 'scheck-hillel-community-school',
     name: 'Scheck Hillel Community School',
     sourceUrl: 'https://www.ehillel.org/quicklinks/calendar',
+    ensure: {
+      district: 'Miami-Dade Private',
+      city: 'North Miami Beach',
+      state: 'FL',
+      type: 'private',
+      is_mdcps: false,
+      religious_affiliation: 'Jewish',
+      address: '19000 NE 25th Avenue, North Miami Beach, FL 33180',
+      phone: '(305) 931-2831',
+      website: 'https://www.eHillel.org',
+      data_source: 'calendar-import-2026-04-25',
+    },
   },
   'westminster-christian': {
-    slug: 'westminster-christian-school-miami',
+    slug: 'westminster-christian-school',
     name: 'Westminster Christian School',
     sourceUrl:
       'https://www.wcsmiami.org/news-and-events/key-dates-2025-26',
@@ -78,6 +113,18 @@ const SCHOOL_REGISTRY: Record<
     name: 'Lehrman Community Day School',
     sourceUrl:
       'https://www.lehrmanschool.org/parents/2025-26-calendar.cfm',
+    ensure: {
+      district: 'Miami-Dade Private',
+      city: 'Miami Beach',
+      state: 'FL',
+      type: 'private',
+      is_mdcps: false,
+      religious_affiliation: 'Jewish',
+      address: '727 77th Street, Miami Beach, FL 33141',
+      phone: '(305) 866-2771',
+      website: 'https://www.lehrmanschool.org',
+      data_source: 'calendar-import-2026-04-25',
+    },
   },
   'the-growing-place': {
     slug: 'the-growing-place-school-coral-gables',
@@ -1118,6 +1165,45 @@ function renderMigration(root: ParsedRoot): string {
   lines.push(`begin`);
   for (const e of eligible) {
     const v = slugToVar(e.school.slug);
+    // If this school is missing from prod, INSERT it first (idempotent via
+    // ON CONFLICT DO NOTHING) then SELECT its id back. Otherwise just SELECT.
+    const ensure = ensureForSlug(e.school.slug);
+    if (ensure) {
+      const cols = [
+        'slug',
+        'name',
+        'district',
+        'city',
+        'state',
+        'type',
+        'is_mdcps',
+        'religious_affiliation',
+        'address',
+        'phone',
+        'website',
+        'data_source',
+      ];
+      const vals = [
+        pgString(e.school.slug),
+        pgString(e.school.name),
+        pgString(ensure.district),
+        pgString(ensure.city),
+        pgString(ensure.state),
+        pgString(ensure.type),
+        String(ensure.is_mdcps),
+        ensure.religious_affiliation
+          ? pgString(ensure.religious_affiliation)
+          : 'null',
+        ensure.address ? pgString(ensure.address) : 'null',
+        ensure.phone ? pgString(ensure.phone) : 'null',
+        ensure.website ? pgString(ensure.website) : 'null',
+        ensure.data_source ? pgString(ensure.data_source) : 'null',
+      ];
+      lines.push(`  -- Insert ${e.school.name} if missing (was not in 316-school import).`);
+      lines.push(`  insert into public.schools (${cols.join(', ')})`);
+      lines.push(`    values (${vals.join(', ')})`);
+      lines.push(`    on conflict (slug) do nothing;`);
+    }
     lines.push(
       `  select id into ${v} from public.schools where slug = '${e.school.slug}';`,
     );
@@ -1181,6 +1267,13 @@ function renderMigration(root: ParsedRoot): string {
   lines.push(`end $$;`);
   lines.push(``);
   return lines.join('\n');
+}
+
+function ensureForSlug(slug: string): EnsureSchool | null {
+  for (const reg of Object.values(SCHOOL_REGISTRY)) {
+    if (reg.slug === slug && reg.ensure) return reg.ensure;
+  }
+  return null;
 }
 
 function pgString(s: string): string {

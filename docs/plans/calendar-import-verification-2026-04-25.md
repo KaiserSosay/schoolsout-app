@@ -33,7 +33,7 @@ Slug: `basis-independent-brickell`
 
 ## Gulliver Preparatory School
 
-Slug: `gulliver-preparatory`
+Slug: `gulliver-preparatory-school`
 
 ### 2025-2026
 
@@ -165,7 +165,7 @@ Slug: `lehrman-community-day-school`
 
 ## Ransom Everglades School
 
-Slug: `ransom-everglades`
+Slug: `ransom-everglades-school`
 
 ### 2025-2026
 
@@ -291,7 +291,7 @@ Slug: `the-growing-place-school-coral-gables`
 
 ## Westminster Christian School
 
-Slug: `westminster-christian-school-miami`
+Slug: `westminster-christian-school`
 
 ### 2025-2026
 
