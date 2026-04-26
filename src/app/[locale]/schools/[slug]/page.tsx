@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { HelpVerifyCalendarCta } from '@/components/public/HelpVerifyCalendarCta';
+import { UnverifiedSchoolCalendarPlaceholder } from '@/components/public/UnverifiedSchoolCalendarPlaceholder';
 import {
   publicPageMetadata,
   breadcrumbListJsonLd,
@@ -269,7 +270,17 @@ export default async function PublicSchoolPage({
           )}
         </header>
 
-        {!framing.isVerified ? (
+        {!framing.isVerified && closures.length === 0 ? (
+          <UnverifiedSchoolCalendarPlaceholder
+            locale={locale}
+            schoolName={school.name}
+            schoolSlug={school.slug}
+            schoolId={school.id}
+            phone={school.phone}
+          />
+        ) : null}
+
+        {!framing.isVerified && closures.length > 0 ? (
           <section
             data-testid="confirmed-dates"
             className="mb-6 rounded-3xl border border-cream-border bg-white p-5 md:p-6"
@@ -277,13 +288,8 @@ export default async function PublicSchoolPage({
             <h2 className="mb-3 text-base font-black text-ink md:text-lg">
               {t('unofficialFrame.confirmedTitle')}
             </h2>
-            {closures.length === 0 ? (
-              <p className="text-sm text-muted">
-                {t('unofficialFrame.confirmedEmpty', { name: school.name })}
-              </p>
-            ) : (
-              <ul className="space-y-2">
-                {closures.map((c) => {
+            <ul className="space-y-2">
+              {closures.map((c) => {
                   const dateLabel = formatDateRange(c.start_date, c.end_date, locale);
                   return (
                     <li key={c.id}>
@@ -323,8 +329,7 @@ export default async function PublicSchoolPage({
                     </li>
                   );
                 })}
-              </ul>
-            )}
+            </ul>
           </section>
         ) : null}
 

@@ -1398,6 +1398,21 @@
         "linksAddress": "Dirección",
         "metaDescription": "¿Cuándo está cerrada {name} en 2025-26? Recesos, días feriados y días de planificación verificados para familias de {neighborhood}."
       },
+      "unverifiedPlaceholder": {
+        "headline": "Aún estamos verificando el calendario de {name}",
+        "body": "Cada calendario en School's Out! se verifica antes de aparecer aquí. El de {name} todavía no está publicado en un lugar que podamos leer — pero debería estar. Ayúdanos a agregarlo para que otras familias de {name} también puedan planificar sus vacaciones.",
+        "tgpNote": "Hola de parte de Noah y su papá. The Growing Place también es nuestra escuela. Hemos estado trabajando para conseguir el calendario — está detrás de un portal para padres que no podemos leer desde afuera. Si eres papá/mamá de TGP y tienes el PDF, por favor envíanoslo. Lo tendremos en esta página en 24 horas. Gracias. 🎒",
+        "intermeantime": "Mientras conseguimos las fechas verificadas de {name}, esto puede ayudar mientras tanto:",
+        "mdcpsLinkLabel": "Consulta el calendario de Miami-Dade Public Schools →",
+        "mdcpsLinkSub": "La mayoría de las escuelas privadas siguen semanas de descanso similares.",
+        "callSchool": "Llama directamente a {name}: {phone}",
+        "emailPdfTitle": "Envíanos el PDF del calendario de tu escuela",
+        "emailPdfBody": "Lo verificaremos y actualizaremos esta página en 2 días hábiles.",
+        "emailPdfButton": "Envíanos el PDF del calendario",
+        "notifyTitle": "Recibe un aviso cuando se verifique el calendario de {name}",
+        "notifyButton": "Avísame",
+        "notifySignedOutHint": "Inicia sesión primero — te enviaremos un enlace y volverás aquí para suscribirte."
+      },
       "helpVerify": {
         "title": "Ayúdanos a verificar el calendario de {name}",
         "body": "¿Tienes una copia del calendario oficial de {name}? Envíalo a hi@schoolsout.net o toca el botón de abajo. Verificamos y actualizamos esta página en 2 días hábiles.",

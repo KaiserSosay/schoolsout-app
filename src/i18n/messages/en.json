@@ -1398,6 +1398,21 @@
         "linksAddress": "Address",
         "metaDescription": "When is {name} closed in 2025-26? Verified school breaks, holidays, and teacher workdays for {neighborhood} families."
       },
+      "unverifiedPlaceholder": {
+        "headline": "We're still verifying {name}'s calendar",
+        "body": "Every calendar on School's Out! gets verified before it shows up here. {name}'s isn't published in a place we can read yet — but it should be. Help us get it added so other {name} families can plan their breaks too.",
+        "tgpNote": "Hi from Noah & his dad. The Growing Place is our school too. We've been working to get the calendar — it's behind a parent portal we can't read from outside. If you're a TGP parent and have the PDF, please send it our way. We'll have it on this page within 24 hours. Thank you. 🎒",
+        "intermeantime": "While we work on getting verified dates from {name}, here's what might help in the meantime:",
+        "mdcpsLinkLabel": "Look up the Miami-Dade Public Schools calendar →",
+        "mdcpsLinkSub": "Most private schools follow similar break weeks.",
+        "callSchool": "Call {name} directly: {phone}",
+        "emailPdfTitle": "Email us your school's calendar PDF",
+        "emailPdfBody": "We'll verify and update this page within 2 business days.",
+        "emailPdfButton": "Email us your calendar PDF",
+        "notifyTitle": "Get notified the moment {name}'s calendar is verified",
+        "notifyButton": "Notify me",
+        "notifySignedOutHint": "Sign in first — we'll email you a link, then return you here to subscribe."
+      },
       "helpVerify": {
         "title": "Help us verify {name}'s calendar",
         "body": "Do you have a copy of {name}'s official calendar? Email it to hi@schoolsout.net or tap the button below. We'll verify and update this page within 2 business days.",
