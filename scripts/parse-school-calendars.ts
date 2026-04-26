@@ -454,10 +454,118 @@ export function categorize(summary: string): {
   return { category, isEarlyRelease, closedForStudents };
 }
 
+// V4 allowlist — see R6 in docs/SHIPPING_RULES.md (added in this commit).
+// An event is a closure ONLY if its SUMMARY contains a strong, unambiguous
+// closure signal. Three iterations of negative-keyword filters between
+// 14:00 and 18:00 ET on 2026-04-26 kept letting non-closure iCal events
+// through (graduations, ceremonies, summer programs, sports). The
+// blocklist is infinite; the allowlist is bounded.
+const CLOSURE_ALLOWLIST = [
+  // Strong closure signals (school explicitly closed)
+  'no school',
+  'school closed',
+  'no classes',
+  'closed -', // "Closed - Labor Day", "Closed - Spring Break"
+
+  // Named breaks (multi-day, well-defined)
+  'thanksgiving break',
+  'thanksgiving recess',
+  'winter break',
+  'winter recess',
+  'christmas break',
+  'spring break',
+  'spring recess',
+  'fall break',
+  'fall recess',
+  'mid-winter break',
+  'february break',
+  'easter break',
+  'passover break',
+
+  // Federal holidays (standalone usage almost always means school closed).
+  // Bare "holiday" is intentionally NOT in the list — it's too ambiguous
+  // ("Holiday Concert" is the canonical false positive).
+  'labor day',
+  'memorial day',
+  'martin luther king',
+  'mlk day',
+  'presidents day',
+  "presidents' day",
+  'veterans day',
+  'juneteenth',
+  'columbus day',
+  'indigenous peoples day',
+  'thanksgiving',
+  'independence day',
+
+  // Religious holidays (Catholic / Christian)
+  'good friday',
+  'easter monday',
+  'holy thursday',
+  'ash wednesday',
+
+  // Religious holidays (Jewish)
+  'rosh hashanah',
+  'yom kippur',
+  'sukkot',
+  'shemini atzeret',
+  'simchat torah',
+  'passover',
+  'shavuot',
+
+  // Teacher / professional days (school not in session for students)
+  'teacher workday',
+  'teacher work day',
+  'professional development day',
+  'pd day',
+  'staff development day',
+  'in-service day',
+  'in service day',
+  'faculty in-service',
+
+  // First / last day markers — these ARE closures from a parent perspective
+  'first day of school',
+  'last day of school',
+  'last day of classes',
+
+  // Half-day / early-release patterns. Bare "half day" is NOT enough —
+  // many schools publish those for parent-conference days where the
+  // event isn't really a "closure." Require a hyphen-suffix qualifier.
+  'early dismissal -',
+  'noon dismissal -',
+  'half day -',
+];
+
+// Soft-deny: even if an allowlist phrase matches, reject if the SUMMARY
+// also contains one of these. These are the "but actually" patterns —
+// events that mention a closure-sounding word but aren't actually closures
+// (Holiday Concert, Holy Thursday Mass, Veterans Day Observance).
+const SOFT_DENY = [
+  'concert',
+  'recital',
+  'performance',
+  'rehearsal',
+  'celebration',
+  'service',
+  'mass',
+  'observance',
+  'liturgy',
+];
+
+export function isClosureEvent(summary: string): boolean {
+  const normalized = summary.toLowerCase().trim();
+  const allowlistMatch = CLOSURE_ALLOWLIST.some((p) => normalized.includes(p));
+  if (!allowlistMatch) return false;
+  for (const denyPhrase of SOFT_DENY) {
+    if (normalized.includes(denyPhrase)) return false;
+  }
+  return true;
+}
+
+// Back-compat alias. Existing call sites (parseIcsString, the older
+// parser tests) already import this name; no need to churn them.
 export function looksLikeClosure(summary: string): boolean {
-  const s = summary.toLowerCase();
-  if (NEGATIVE_KEYWORDS.some((k) => s.includes(k))) return false;
-  return CLOSURE_KEYWORDS.some((k) => s.includes(k));
+  return isClosureEvent(summary);
 }
 
 // ---------------------------------------------------------------------------
