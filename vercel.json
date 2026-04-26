@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/check-camp-links",
       "schedule": "0 13 * * 1"
+    },
+    {
+      "path": "/api/cron/sync-ical-feeds",
+      "schedule": "0 5 * * *"
     }
   ]
 }

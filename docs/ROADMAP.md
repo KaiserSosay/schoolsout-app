@@ -74,6 +74,31 @@ Sub-tasks (all ✅):
 - **3.1.5** Closure-coverage checklist on the dashboard with debounced per-row save to `camp_closure_coverage`
 - **3.1.6** Parent-side surfacing — `/breaks/{id}` floats explicitly-open camps to the top, drops explicitly-closed camps, renders a green "✓ Open this day" pill on the matching cards
 
+### ✅ Phase 3.6 — Live iCal Feed Sync 📡 (shipped 2026-04-26)
+Three anchor schools (Gulliver, Ransom Everglades, Scheck Hillel) publish
+live iCal feeds. This phase wires nightly sync so calendar updates land in
+our DB without a re-pull. Bigger long-term win than another one-time PDF
+import.
+
+Sub-tasks (all ✅ except #4):
+- **3.6.1** Migration 032 — `ical_feed_url`, `ical_last_synced_at`,
+  `ical_sync_error` columns on `schools`, plus seeded URLs for the three
+  feed-publishing schools (NOT applied — Rasheid review first)
+- **3.6.2** `src/lib/ical/sync.ts` — testable per-school sync helper that
+  reuses `parseIcsString()` and the closure-keyword filter from migration
+  029's parser, UPSERTs onto the closures unique index, records errors on
+  the school row
+- **3.6.3** `/api/cron/sync-ical-feeds` route + `vercel.json` schedule
+  `0 5 * * *` (5am UTC daily), bearer-auth via `CRON_SECRET`
+- **3.6.4** Manual `scripts/sync-ical-feeds.ts` for one-shot runs (slug
+  filter optional)
+- **3.6.5** ⏸️ Admin UI surface for sync status (deferred — covered by
+  the existing schools panel; promote to a follow-up if dogfooding shows
+  it's needed)
+- **3.6.6** Tests in `tests/lib/ical-sync.test.ts` cover happy path,
+  HTTP error, network throw, no-feed no-op, and the negative-keyword
+  filter (so "Holiday Concert" never imports as a closure)
+
 ### ✅ Phase 3.5 — Admin Dashboard Accuracy Fixes 🐛 (shipped 2026-04-26)
 Sunday-morning bug fix. Pill counts on `/admin` had drifted from what each tab actually rendered, eroding trust in the dashboard.
 
