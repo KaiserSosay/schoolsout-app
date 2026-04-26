@@ -203,3 +203,62 @@ rows:**
 - [ ] Are stub-shaped prod values (short address strings, etc.)
       flagged for manual review rather than silently preserved?
 ```
+
+## R6 — Allowlist filters for trust-sensitive imports
+
+**Rule:** When importing data that becomes a trust signal to users
+(calendar closures, verified addresses, school identity), use a
+positive allowlist, not a negative blocklist. The list of "things that
+aren't closures" is infinite; the list of "things that ARE closures"
+is bounded.
+
+**Why:** Between 14:00 and 18:00 ET on 2026-04-26, three iterations of
+negative-keyword filters tried to exclude non-closure iCal events. The
+first pass missed sports games. The second missed graduations and
+ceremonies. The third missed summer programs and extracurricular
+classes. Each pass let a new pattern through because schools publish
+endless varieties of non-closure events on iCal feeds. Switching to
+an allowlist (`scripts/parse-school-calendars.ts:isClosureEvent`) +
+a small soft-deny list eliminated the regression class entirely.
+Migration 041 cleaned up the rows the prior blocklist passes had
+already let through.
+
+**How to apply:**
+
+- A new event passes the filter ONLY when its SUMMARY contains a
+  phrase from the allowlist (named breaks, federal holidays,
+  religious holidays, teacher-workday markers, first/last day
+  markers, etc.). Default-rejected.
+- After an allowlist match, a small soft-deny list (`concert`,
+  `recital`, `mass`, `observance`, `liturgy`, etc.) catches the
+  "but actually" cases — events that name a closure-sounding word
+  while being something else (Holiday Concert, Veterans Day
+  Observance, Holy Thursday Mass).
+- The migration cleanup step uses the SAME allowlist — never invent
+  a parallel cleanup pattern that diverges from the runtime filter.
+
+**Trade-off accepted:** False negatives (a real closure missed
+because the school used unusual wording — "Hurricane Day" alone, or
+a brand-new local term) are recoverable. An admin can manually add
+the closure or extend the allowlist for a known pattern. False
+positives (parents seeing junk events as verified closures) destroy
+trust and aren't recoverable through automated fixes.
+
+**Applies to:**
+- iCal closure detection (current case)
+- Future: school identity field validation
+- Future: camp data quality gates
+- Future: any import where a record is treated as "verified" once it
+  lands in prod
+
+**Pre-merge checklist for any trust-sensitive import filter:**
+
+```
+- [ ] Is the filter positive-allowlist, not negative-blocklist?
+- [ ] Are the allowlist phrases bounded and reviewable?
+- [ ] Is there a soft-deny list for unambiguous "but actually" cases?
+- [ ] Does any associated cleanup migration use the same allowlist
+      (not a parallel/divergent one)?
+- [ ] After cleanup, does any single source drop to 0 rows? (Suggests
+      an allowlist gap — investigate before applying.)
+```
