@@ -91,6 +91,29 @@ describe('syncIcalForSchool', () => {
     expect(opts).toMatchObject({ onConflict: 'school_id,start_date,name' });
   });
 
+  it('every upserted row has school_year set (no NULLs land in the DB anymore)', async () => {
+    const { syncIcalForSchool } = await import('@/lib/ical/sync');
+    await syncIcalForSchool({
+      db: dbMock,
+      fetch: fetchMock as unknown as typeof fetch,
+      school: {
+        id: 'school-uuid-gulliver',
+        slug: 'gulliver-preparatory-school',
+        ical_feed_url: 'https://example/feed.ics',
+      },
+    });
+    const rowList = upsertCalls[0].rows as Array<{
+      name: string;
+      start_date: string;
+      school_year: string;
+    }>;
+    // Thanksgiving Break starts Nov 25 2026 → academic year 2026-2027.
+    // Winter Break starts Dec 22 2026 → same.
+    expect(rowList.every((r) => /^\d{4}-\d{4}$/.test(r.school_year))).toBe(true);
+    const thanksgiving = rowList.find((r) => r.name === 'Thanksgiving Break');
+    expect(thanksgiving?.school_year).toBe('2026-2027');
+  });
+
   it('updates the school row with last_synced_at on success', async () => {
     const { syncIcalForSchool } = await import('@/lib/ical/sync');
     await syncIcalForSchool({

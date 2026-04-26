@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { parseIcsString } from '../../../scripts/parse-school-calendars';
+import { deriveSchoolYear } from '@/lib/schools/derive-school-year';
 
 // Live-feed iCal sync for one school. Designed to be called from:
 //   - scripts/sync-ical-feeds.ts (one-shot manual run)
@@ -61,6 +62,11 @@ export async function syncIcalForSchool({
       is_early_release: c.is_early_release,
       status: 'verified',
       source: `ical:${school.slug}`,
+      // Required: 2026-04-26 incident. Without this, the renderer
+      // buckets every iCal closure into a __UNKNOWN__ section, and the
+      // year-coverage helper can't see them. Derived from start_date —
+      // U.S. academic year flips Aug 1.
+      school_year: deriveSchoolYear(c.start_date),
     }));
     const { error } = await db
       .from('closures')
