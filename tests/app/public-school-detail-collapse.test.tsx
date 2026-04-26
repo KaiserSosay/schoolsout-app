@@ -101,11 +101,26 @@ describe('SchoolCalendarList — past-breaks collapse', () => {
     expect(screen.queryByText(/past breaks hidden/i)).toBeNull();
   });
 
-  it('renders the year-ended message when EVERY closure is past', () => {
+  it('renders the year-ended message when every closure is past AND today is past July 1 of the second year', () => {
     const allPast = TGP_LIKE.filter((c) => c.end_date < '2026-04-26');
-    renderList(allPast, '2026-04-26', '2025–2026');
+    // Today July 15 2026 is past the 2025-2026 school year's end (July 1
+    // of second year). The yearLabel uses a hyphen — the format the DB
+    // school_year column actually carries through to this component.
+    renderList(allPast, '2026-07-15', '2025-2026');
     expect(screen.getByTestId('school-calendar-year-ended')).toHaveTextContent(
-      /2025–2026 school year has ended/i,
+      /2025-2026 school year has ended/i,
+    );
+  });
+
+  it('renders the year-EMPTY message when every closure is past but the school year has NOT ended yet', () => {
+    // 2026-04-26 evening fix: Palmer Trinity's page falsely showed
+    // "year ended" mid-school-year. The fix routes empty sections to
+    // a "we don't have verified dates yet" message until July 1+.
+    const allPast = TGP_LIKE.filter((c) => c.end_date < '2026-04-26');
+    renderList(allPast, '2026-04-26', '2025-2026');
+    expect(screen.queryByTestId('school-calendar-year-ended')).toBeNull();
+    expect(screen.getByTestId('school-calendar-year-empty')).toHaveTextContent(
+      /don't have verified dates.*2025-2026/i,
     );
   });
 });

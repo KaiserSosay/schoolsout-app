@@ -53,3 +53,27 @@ export function groupClosuresByYear<T extends ClosureForGrouping>(
 export function spansYearBoundary(c: ClosureForGrouping): boolean {
   return c.start_date.slice(0, 4) !== c.end_date.slice(0, 4);
 }
+
+// True when an academic-year section is functionally over — today is past
+// the end of that school year. Used by SchoolCalendarList to decide
+// whether to render the "school year has ended" message vs the "no
+// verified dates yet" message when a section is empty.
+//
+// 2026-04-26 evening: Palmer Trinity's page falsely showed "year ended"
+// in April 2026 because the previous logic fired on any empty section
+// regardless of date. The U.S. school year wraps ~end of May; July 1 of
+// the second year is a safe "everyone's out by now" boundary.
+//
+// Returns false for multi-year labels and any malformed input — only
+// single-year sections like '2025-2026' can meaningfully "end."
+export function shouldShowYearEnded(
+  yearLabel: string,
+  today: Date = new Date(),
+): boolean {
+  const m = yearLabel.match(/^(\d{4})-(\d{4})$/);
+  if (!m) return false;
+  const secondYear = parseInt(m[2], 10);
+  if (!Number.isFinite(secondYear)) return false;
+  const yearEndBoundary = new Date(Date.UTC(secondYear, 6, 1)); // July 1 UTC
+  return today.getTime() >= yearEndBoundary.getTime();
+}

@@ -1450,6 +1450,7 @@
         "hidePast": "Ocultar vacaciones pasadas",
         "pastPill": "(pasada)",
         "yearEnded": "✓ El año escolar {years} terminó. Las nuevas fechas aparecerán aquí cuando {schoolName} las publique.",
+        "yearEmpty": "No tenemos fechas verificadas del año escolar {years} de {schoolName} todavía. Si tienes el calendario, avísanos.",
         "yearDivider": "{year}"
       },
       "unverifiedPlaceholder": {

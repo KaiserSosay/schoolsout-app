@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   groupClosuresByYear,
+  shouldShowYearEnded,
   spansYearBoundary,
   type ClosureForGrouping,
 } from '@/lib/schools/group-closures-by-year';
@@ -66,15 +67,33 @@ export function SchoolCalendarList({
     0,
   );
 
-  // Edge case: every closure is past. The school year is over for this
-  // page; nudge the parent to come back later instead of showing nothing.
+  // Edge case: every closure is past. Two sub-cases:
+  //   - Today is past the end of this school year (July 1+ of second
+  //     year): show "year has ended" copy.
+  //   - Today is still mid-year but we have no upcoming events: the
+  //     calendar is effectively incomplete. Nudge the parent toward the
+  //     "tell us" CTA without claiming the year is over.
   if (closures.length > 0 && upcomingCount === 0) {
+    const todayDate = new Date(today + 'T12:00:00Z');
+    if (shouldShowYearEnded(schoolYearLabel, todayDate)) {
+      return (
+        <p
+          data-testid="school-calendar-year-ended"
+          className="rounded-2xl border border-cream-border bg-white p-6 text-center text-sm text-muted"
+        >
+          {tCal('yearEnded', {
+            years: schoolYearLabel || 'current',
+            schoolName,
+          })}
+        </p>
+      );
+    }
     return (
       <p
-        data-testid="school-calendar-year-ended"
+        data-testid="school-calendar-year-empty"
         className="rounded-2xl border border-cream-border bg-white p-6 text-center text-sm text-muted"
       >
-        {tCal('yearEnded', {
+        {tCal('yearEmpty', {
           years: schoolYearLabel || 'current',
           schoolName,
         })}

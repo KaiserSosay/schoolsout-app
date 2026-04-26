@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   groupClosuresByYear,
+  shouldShowYearEnded,
   spansYearBoundary,
 } from '@/lib/schools/group-closures-by-year';
 
@@ -110,6 +111,49 @@ describe('groupClosuresByYear', () => {
     // the order so a future "let me sort here" change doesn't accidentally
     // override the SQL contract.
     expect(result.byYear.get(2026)).toEqual([d, a, b]);
+  });
+});
+
+describe('shouldShowYearEnded', () => {
+  // 2026-04-26 evening fix: Palmer Trinity's page rendered "✓ The
+  // 2025-2026 school year has ended" while it was still April 2026.
+  // The U.S. school year ends ~end of May; July 1 is the safe boundary
+  // for "all schools have wrapped up by now."
+
+  it('today April 26 2026 + year 2025-2026 → false (year not over yet)', () => {
+    expect(shouldShowYearEnded('2025-2026', new Date('2026-04-26T12:00:00Z'))).toBe(false);
+  });
+
+  it('today July 15 2026 + year 2025-2026 → true (year is over)', () => {
+    expect(shouldShowYearEnded('2025-2026', new Date('2026-07-15T12:00:00Z'))).toBe(true);
+  });
+
+  it('today April 26 2026 + year 2026-2027 → false (year not even started)', () => {
+    expect(shouldShowYearEnded('2026-2027', new Date('2026-04-26T12:00:00Z'))).toBe(false);
+  });
+
+  it('today July 15 2027 + year 2026-2027 → true', () => {
+    expect(shouldShowYearEnded('2026-2027', new Date('2027-07-15T12:00:00Z'))).toBe(true);
+  });
+
+  it('boundary: June 30 of second year → false (still in school year)', () => {
+    expect(shouldShowYearEnded('2025-2026', new Date('2026-06-30T12:00:00Z'))).toBe(false);
+  });
+
+  it('boundary: July 1 of second year → true', () => {
+    expect(shouldShowYearEnded('2025-2026', new Date('2026-07-01T12:00:00Z'))).toBe(true);
+  });
+
+  it('returns false for malformed year labels (defensive)', () => {
+    expect(shouldShowYearEnded('not-a-year', new Date('2030-01-01T12:00:00Z'))).toBe(false);
+    expect(shouldShowYearEnded('', new Date('2030-01-01T12:00:00Z'))).toBe(false);
+    expect(shouldShowYearEnded('2026', new Date('2030-01-01T12:00:00Z'))).toBe(false);
+  });
+
+  it('returns false for multi-year labels (only single-year sections can "end")', () => {
+    expect(
+      shouldShowYearEnded('2025–2026 · 2026–2027', new Date('2030-01-01T12:00:00Z')),
+    ).toBe(false);
   });
 });
 

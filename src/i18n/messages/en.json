@@ -1450,6 +1450,7 @@
         "hidePast": "Hide past breaks",
         "pastPill": "(past)",
         "yearEnded": "✓ The {years} school year has ended. New dates will appear here once {schoolName} publishes them.",
+        "yearEmpty": "We don't have verified dates for {schoolName}'s {years} school year yet. If you have the calendar, tell us.",
         "yearDivider": "{year}"
       },
       "unverifiedPlaceholder": {

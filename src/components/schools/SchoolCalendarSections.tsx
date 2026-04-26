@@ -29,7 +29,10 @@ export function SchoolCalendarSections({
   today,
   schoolName,
   schoolSlug,
-  schoolYearLabel,
+  // schoolYearLabel was passed by callers for the old __unknown__ fallback.
+  // After Fix 5 (2026-04-26 evening) we filter malformed school_year rows
+  // entirely and label each section with its own year, so the prop is
+  // legacy-only — accepted for back-compat with the page but unused.
   variant = 'verified',
 }: {
   locale: string;
@@ -37,7 +40,7 @@ export function SchoolCalendarSections({
   today: string;
   schoolName: string;
   schoolSlug: string;
-  schoolYearLabel: string;
+  schoolYearLabel?: string;
   variant?: 'verified' | 'unofficial';
 }) {
   const tCov = useTranslations('public.school.yearCoverage');
@@ -45,34 +48,42 @@ export function SchoolCalendarSections({
   const todayDate = new Date(today + 'T12:00:00Z');
   const [currentCov, nextCov] = computeYearCoverage(closures, todayDate);
 
-  // Group closures by school_year. Closures missing school_year fall
-  // through to a synthetic 'unknown' bucket that renders LAST and only
-  // when present — covers any imported rows that predate migrations
-  // setting school_year explicitly.
+  // Group closures by school_year. Rows whose school_year is null or
+  // doesn't match YYYY-YYYY are SKIPPED — they used to fall into a
+  // synthetic '__unknown__' bucket that surfaced as gibberish on the
+  // page (Palmer Trinity 2026-04-26 incident). The 2026-04-26 ical-
+  // hardening pass set school_year on every iCal row + cleaned up the
+  // existing NULLs in migration 040, so the skip path should be empty
+  // in healthy data. Defensive logging so future drift is visible.
+  const validYearPattern = /^\d{4}-\d{4}$/;
   const buckets = new Map<string, SchoolCalendarSectionsClosure[]>();
+  let skippedMalformed = 0;
   for (const c of closures) {
-    const key = c.school_year && /^\d{4}-\d{4}$/.test(c.school_year)
-      ? c.school_year
-      : '__unknown__';
-    const arr = buckets.get(key) ?? [];
+    if (!c.school_year || !validYearPattern.test(c.school_year)) {
+      skippedMalformed += 1;
+      continue;
+    }
+    const arr = buckets.get(c.school_year) ?? [];
     arr.push(c);
-    buckets.set(key, arr);
+    buckets.set(c.school_year, arr);
+  }
+  if (skippedMalformed > 0 && typeof console !== 'undefined') {
+    console.warn(
+      `[SchoolCalendarSections] Skipped ${skippedMalformed} closures with malformed school_year (school: ${schoolSlug})`,
+    );
   }
 
   // Render order: current year first, then next, then any other years
-  // present (older imports), then unknown bucket if any.
+  // present (older imports).
   const orderedKeys: string[] = [];
   for (const k of [currentCov.year, nextCov.year]) {
     if (buckets.has(k)) orderedKeys.push(k);
   }
   for (const k of Array.from(buckets.keys()).sort()) {
-    if (k === '__unknown__') continue;
     if (!orderedKeys.includes(k)) orderedKeys.push(k);
   }
-  if (buckets.has('__unknown__')) orderedKeys.push('__unknown__');
 
   function headerFor(year: string): string {
-    if (year === '__unknown__') return year;
     if (year === currentCov.year) {
       return tCov('yearSectionCurrent', { year });
     }
@@ -109,7 +120,7 @@ export function SchoolCalendarSections({
               closures={rows}
               today={today}
               schoolName={schoolName}
-              schoolYearLabel={year === '__unknown__' ? schoolYearLabel : year}
+              schoolYearLabel={year}
               variant={variant}
             />
           </section>
