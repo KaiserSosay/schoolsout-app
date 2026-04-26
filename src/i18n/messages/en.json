@@ -1059,6 +1059,7 @@
       "notificationsTitle": "Recent activity"
     },
     "userMenu": {
+      "adminLink": "Admin",
       "logOutEverywhere": "Log out of all devices",
       "logOutEverywhereConfirm": {
         "title": "Log out everywhere?",

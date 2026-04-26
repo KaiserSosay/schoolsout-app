@@ -15,11 +15,15 @@ export function UserMenuItems({
   locale,
   email,
   displayName,
+  isAdmin = false,
   onAction,
 }: {
   locale: string;
   email: string;
   displayName: string | null;
+  // True when users.role is 'admin' or 'superadmin'. Surfaces a quiet menu
+  // entry to /admin so Rasheid doesn't have to type the URL.
+  isAdmin?: boolean;
   // called after any action that should close the enclosing menu
   onAction: () => void;
 }) {
@@ -117,6 +121,13 @@ export function UserMenuItems({
       </button>
 
       <div className="border-t border-cream-border" />
+
+      {isAdmin ? (
+        <Link href={`/${locale}/admin`} className={itemCls} onClick={onAction}>
+          <span aria-hidden>🛡️</span>
+          <span>{tMenu('adminLink')}</span>
+        </Link>
+      ) : null}
 
       <Link href={`/${locale}/about`} className={itemCls} onClick={onAction}>
         <span aria-hidden>ℹ️</span>

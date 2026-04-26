@@ -105,6 +105,44 @@ describe('app/SideNav', () => {
     expect(screen.getByText('Got an idea?')).toBeInTheDocument();
   });
 
+  it('does NOT show the Admin link in the user menu when isAdmin is false', async () => {
+    mockPathname = '/en/app';
+    const { container } = renderWithIntl(
+      <SideNav locale="en" email="parent@example.com" displayName="Ada" />,
+    );
+    const userTrigger = Array.from(
+      container.querySelectorAll('button[aria-haspopup="menu"]'),
+    ).find((b) => !b.hasAttribute('aria-label')) as
+      | HTMLButtonElement
+      | undefined;
+    await act(async () => {
+      userTrigger!.click();
+    });
+    expect(screen.queryByRole('link', { name: /^admin$/i })).toBeNull();
+  });
+
+  it('shows the Admin link in the user menu when isAdmin is true', async () => {
+    mockPathname = '/en/app';
+    const { container } = renderWithIntl(
+      <SideNav
+        locale="en"
+        email="rasheid@example.com"
+        displayName="Rasheid"
+        isAdmin
+      />,
+    );
+    const userTrigger = Array.from(
+      container.querySelectorAll('button[aria-haspopup="menu"]'),
+    ).find((b) => !b.hasAttribute('aria-label')) as
+      | HTMLButtonElement
+      | undefined;
+    await act(async () => {
+      userTrigger!.click();
+    });
+    const link = screen.getByRole('link', { name: /^admin$/i });
+    expect(link.getAttribute('href')).toBe('/en/admin');
+  });
+
   it('opens the user menu popover on avatar-block click', async () => {
     mockPathname = '/en/app';
     const { container } = renderWithIntl(

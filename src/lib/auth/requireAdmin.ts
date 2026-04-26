@@ -14,6 +14,16 @@ export type AdminRole = 'admin' | 'superadmin';
 // but the env allowlist is a break-glass that works even if the users table
 // is corrupted or RLS is misconfigured. Whichever matches first, we log
 // which path granted access.
+// Exported variant of resolveAdminRole. Callers (e.g. /app layout) use this
+// to surface admin-only UI without redirecting non-admins. Returns the role
+// when the user has one, otherwise null. Never throws.
+export async function getAdminRole(
+  userId: string,
+  email: string | null,
+): Promise<AdminRole | null> {
+  return resolveAdminRole(userId, email);
+}
+
 async function resolveAdminRole(
   userId: string,
   email: string | null,

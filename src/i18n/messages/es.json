@@ -1059,6 +1059,7 @@
       "notificationsTitle": "Actividad reciente"
     },
     "userMenu": {
+      "adminLink": "Admin",
       "logOutEverywhere": "Cerrar sesión en todos los dispositivos",
       "logOutEverywhereConfirm": {
         "title": "¿Cerrar sesión en todas partes?",

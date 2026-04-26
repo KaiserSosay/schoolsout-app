@@ -17,10 +17,12 @@ export function SideNav({
   locale,
   email,
   displayName,
+  isAdmin = false,
 }: {
   locale: string;
   email: string;
   displayName: string | null;
+  isAdmin?: boolean;
 }) {
   const tNav = useTranslations('app.nav');
   const { mode, isKidLocked } = useMode();
@@ -177,6 +179,7 @@ export function SideNav({
               locale={locale}
               email={email}
               displayName={displayName}
+              isAdmin={isAdmin}
               onAction={() => setMenuOpen(false)}
             />
           </div>

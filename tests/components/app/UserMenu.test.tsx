@@ -22,7 +22,10 @@ vi.mock('@/components/app/PwaInstallButton', () => ({
 import { ModeProvider } from '@/components/app/ModeProvider';
 import { UserMenuItems } from '@/components/app/UserMenu';
 
-function renderMenu(onAction = vi.fn()) {
+function renderMenu(
+  onAction = vi.fn(),
+  opts: { isAdmin?: boolean } = {},
+) {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
       <ModeProvider>
@@ -30,6 +33,7 @@ function renderMenu(onAction = vi.fn()) {
           locale="en"
           email="parent@example.com"
           displayName="Parent"
+          isAdmin={opts.isAdmin ?? false}
           onAction={onAction}
         />
       </ModeProvider>
@@ -79,5 +83,16 @@ describe('UserMenuItems', () => {
     fireEvent.click(screen.getByRole('button', { name: /^log out$/i }));
     await waitFor(() => expect(signOutMock).toHaveBeenCalled());
     expect(signOutMock).toHaveBeenCalledWith();
+  });
+
+  it('hides the admin link by default', () => {
+    renderMenu();
+    expect(screen.queryByRole('link', { name: /admin/i })).toBeNull();
+  });
+
+  it('renders an admin link to /{locale}/admin when isAdmin is true', () => {
+    renderMenu(undefined, { isAdmin: true });
+    const link = screen.getByRole('link', { name: /admin/i });
+    expect(link.getAttribute('href')).toBe('/en/admin');
   });
 });

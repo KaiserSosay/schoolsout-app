@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { getAdminRole } from '@/lib/auth/requireAdmin';
 import { ModeProvider } from '@/components/app/ModeProvider';
 import { AppShell } from '@/components/app/AppShell';
 
@@ -25,12 +26,15 @@ export default async function AppLayout({
     .eq('id', user.id)
     .maybeSingle();
 
+  const adminRole = await getAdminRole(user.id, user.email ?? null);
+
   return (
     <ModeProvider>
       <AppShell
         locale={locale}
         email={user.email ?? ''}
         displayName={userRow?.display_name ?? null}
+        isAdmin={adminRole !== null}
       >
         {children}
       </AppShell>

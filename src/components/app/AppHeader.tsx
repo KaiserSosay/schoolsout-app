@@ -15,10 +15,12 @@ export function AppHeader({
   locale,
   email,
   displayName,
+  isAdmin = false,
 }: {
   locale: string;
   email: string;
   displayName: string | null;
+  isAdmin?: boolean;
 }) {
   const tExit = useTranslations('app.dashboard.exitKidLock');
   const tNav = useTranslations('app.nav');
@@ -127,6 +129,7 @@ export function AppHeader({
               locale={locale}
               email={email}
               displayName={displayName}
+              isAdmin={isAdmin}
               onAction={() => setMenuOpen(false)}
             />
           </div>

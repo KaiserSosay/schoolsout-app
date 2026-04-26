@@ -11,18 +11,30 @@ export function AppShell({
   locale,
   email,
   displayName,
+  isAdmin = false,
   children,
 }: {
   locale: string;
   email: string;
   displayName: string | null;
+  isAdmin?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="md:flex md:min-h-screen">
-      <SideNav locale={locale} email={email} displayName={displayName} />
+      <SideNav
+        locale={locale}
+        email={email}
+        displayName={displayName}
+        isAdmin={isAdmin}
+      />
       <div className="flex min-h-screen flex-1 flex-col">
-        <AppHeader locale={locale} email={email} displayName={displayName} />
+        <AppHeader
+          locale={locale}
+          email={email}
+          displayName={displayName}
+          isAdmin={isAdmin}
+        />
         <main className="animate-page-in flex-1 pb-24 md:pb-12">{children}</main>
         <BottomNav locale={locale} />
       </div>
