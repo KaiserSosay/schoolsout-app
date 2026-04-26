@@ -63,8 +63,16 @@ The big list of fixes and features Noah came up with after looking at the live s
 
 **Still to come:**
 
-### 📋 Phase 3.1 — Camp Operator Dashboard (NEXT BIG THING)
+### ✅ Phase 3.1 — Camp Operator Dashboard (shipped 2026-04-26 overnight)
 Right now, when a camp wants to update their info, they have to email us. That's slow. This builds them their own login where they can update hours, photos, sessions, AND check off "we're open" or "we're closed" for every Miami school holiday. **This is the feature that makes the whole business work** — camps with good info get parents, camps with bad info don't.
+
+Sub-tasks (all ✅):
+- **3.1.1** Migration 030 — `camp_operators` + `camp_closure_coverage` tables + RLS
+- **3.1.2** Migration 031 — operator-editable columns on `camps` (`scholarships_notes`, `accommodations`, `photo_urls`)
+- **3.1.3** OperatorWelcomeEmail template (EN + ES) + magic-link invite on application approve (gated behind `ALLOW_OPERATOR_INVITE_EMAILS=true` so no real applicants get emailed yet)
+- **3.1.4** `/{locale}/operator/{slug}` server-component dashboard with 404-on-anything-else access gate, edit form for every editable camp field, and listing-quality meter
+- **3.1.5** Closure-coverage checklist on the dashboard with debounced per-row save to `camp_closure_coverage`
+- **3.1.6** Parent-side surfacing — `/breaks/{id}` floats explicitly-open camps to the top, drops explicitly-closed camps, renders a green "✓ Open this day" pill on the matching cards
 
 ### 📋 Phase 3.2 — Per-Kid Plans
 Right now if you save a "Memorial Day plan," it's for the whole family. But what if Noah goes to one camp and his sister goes somewhere else? This makes plans work per-kid, with a dashboard grid showing who's covered when.

@@ -1139,3 +1139,54 @@ SchoolAutocomplete "+ Add" affordance returns a friendly error toast,
 the admin "School requests" tab renders empty, and the pill count
 shows 0. After apply, the feature lights up automatically with no
 redeploy needed.
+
+
+## Phase 3.1 shipped — 2026-04-26 overnight
+
+**Camp Operator Self-Edit Dashboard** — the feature the spec called the
+"single highest-leverage unblocked piece on the roadmap" because it's what
+makes Phase 4 (paying camps) actually work. Camps with bad info don't
+get parent saves; this gives camps a way to fix their own info instead of
+emailing us.
+
+Five commits, all pushed to `origin/main`:
+1. `3cadb96` — migration 030 (`camp_operators` + `camp_closure_coverage`
+   tables + RLS) and TypeScript types in `src/types/operator.ts`
+2. `14f6f12` — magic-link operator invite on application approve +
+   `OperatorWelcomeEmail` template (EN + ES, ES flagged for native review).
+   Email sending gated behind `ALLOW_OPERATOR_INVITE_EMAILS=true` so no
+   real applicant got emailed tonight. `/api/auth/sign-in` detects when
+   the caller is an operator and defaults `next` to `/operator/{slug}`.
+3. `1256de1` — `/[locale]/operator/[slug]` server-component dashboard with
+   `checkOperatorAccess` 404-on-anything-else gate, edit form covering
+   every editable camp column, listing-quality meter reading
+   `data_completeness`. Migration 031 added the missing camp columns
+   (`scholarships_notes`, `accommodations`, `photo_urls`).
+4. `1b67932` — closure-coverage checklist on the dashboard. 12-month
+   forward-looking closures with Open/Closed radios + notes. Per-row
+   debounced save through `PUT /api/operator/{slug}/coverage`.
+5. `8132642` — parent-side surfacing. `/breaks/{id}` floats explicitly-open
+   camps to the top, drops explicitly-closed camps, renders a green
+   "✓ Open this day" pill on matching cards. Ranking extracted into a
+   pure helper (`src/lib/closures/coverage-ranking.ts`) with 5 cases.
+
+**Test count: 445 → 492** (47 net new across the 5 commits, 100% green).
+
+**Migrations applied to prod:** 030 + 031. Both no-data-touching (additive
+columns + new tables), both verified by `supabase db push --include-all`
+returning clean.
+
+**Outstanding manual actions for the morning:**
+- **Mom:** none — no parent-facing UX changes she needs to validate. The
+  closure-detail page got new sorting + a green pill, but the page
+  structure is unchanged. (Worth her eyes if she's curious — load
+  `/en/breaks/{any-uuid}` and confirm the page still feels right.)
+- **Noah:** none — no design-system or layout changes that need his eye.
+  Once a real operator (his choice) gets invited via the approve flow,
+  he can sit with them while they fill in their listing.
+- **Rasheid:** flip `ALLOW_OPERATOR_INVITE_EMAILS=true` in the Vercel
+  environment **only** when ready to email a real applicant. Until then
+  the approve flow provisions the operator row + token without sending
+  the email — perfect for testing the dashboard ourselves with a known
+  email/camp pair. Also: review the morning report at
+  `docs/overnight-2026-04-26-report.md` for the full SHA list.
