@@ -1415,6 +1415,22 @@
         "linksAddress": "Address",
         "metaDescription": "When is {name} closed in 2025-26? Verified school breaks, holidays, and teacher workdays for {neighborhood} families."
       },
+      "yearCoverage": {
+        "bothVerified": "✓ Both school years verified. Showing {currentYear} (current) and {nextYear} (next).",
+        "currentVerifiedNextMissingHeadline": "We have {currentYear} verified, but {nextYear} isn't published yet.",
+        "currentVerifiedNextMissingBody": "Most schools publish next year's calendar in May or June. Check back, or tell us when it's ready.",
+        "currentMissingNextVerifiedHeadline": "We have {nextYear} verified, but {currentYear} dates aren't published in a place we can read.",
+        "currentMissingNextVerifiedBody": "If you have the current school year's calendar, please email it to us — we'll verify and add it within 2 business days.",
+        "partialCurrentHeadline": "{count, plural, one {We have # verified date} other {We have # verified dates}} for {currentYear}, but the calendar may be incomplete.",
+        "partialCurrentBody": "If you spot a missing closure, tell us and we'll add it.",
+        "partialNextHeadline": "{count, plural, one {We have # verified date} other {We have # verified dates}} for {nextYear}, but the calendar may be incomplete.",
+        "partialNextBody": "If you spot a missing closure, tell us and we'll add it.",
+        "currentEnded": "✓ The {year} school year has ended. Showing {nextYear} dates.",
+        "yearSectionCurrent": "{year} (current school year)",
+        "yearSectionNext": "{year} (next school year)",
+        "emailPdfButton": "Email us your school's PDF",
+        "tellUsButton": "Tell us"
+      },
       "calendarList": {
         "upcomingCount": "{count, plural, =0 {No upcoming breaks} one {Showing # upcoming break} other {Showing # upcoming breaks}}",
         "pastCount": "{count, plural, one {# past break hidden} other {# past breaks hidden}}",

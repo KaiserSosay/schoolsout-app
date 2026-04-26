@@ -1415,6 +1415,22 @@
         "linksAddress": "Dirección",
         "metaDescription": "¿Cuándo está cerrada {name} en 2025-26? Recesos, días feriados y días de planificación verificados para familias de {neighborhood}."
       },
+      "yearCoverage": {
+        "bothVerified": "✓ Ambos años escolares verificados. Mostrando {currentYear} (actual) y {nextYear} (próximo).",
+        "currentVerifiedNextMissingHeadline": "Tenemos {currentYear} verificado, pero {nextYear} aún no se ha publicado.",
+        "currentVerifiedNextMissingBody": "La mayoría de las escuelas publican el calendario del próximo año en mayo o junio. Vuelve pronto, o avísanos cuando esté listo.",
+        "currentMissingNextVerifiedHeadline": "Tenemos {nextYear} verificado, pero las fechas de {currentYear} no están publicadas en un lugar que podamos leer.",
+        "currentMissingNextVerifiedBody": "Si tienes el calendario del año escolar actual, envíalo por correo — lo verificaremos y lo agregaremos en 2 días hábiles.",
+        "partialCurrentHeadline": "{count, plural, one {Tenemos # fecha verificada} other {Tenemos # fechas verificadas}} para {currentYear}, pero el calendario puede estar incompleto.",
+        "partialCurrentBody": "Si ves una fecha faltante, avísanos y la agregaremos.",
+        "partialNextHeadline": "{count, plural, one {Tenemos # fecha verificada} other {Tenemos # fechas verificadas}} para {nextYear}, pero el calendario puede estar incompleto.",
+        "partialNextBody": "Si ves una fecha faltante, avísanos y la agregaremos.",
+        "currentEnded": "✓ El año escolar {year} ha terminado. Mostrando fechas de {nextYear}.",
+        "yearSectionCurrent": "{year} (año escolar actual)",
+        "yearSectionNext": "{year} (próximo año escolar)",
+        "emailPdfButton": "Envíanos el PDF de tu escuela",
+        "tellUsButton": "Avísanos"
+      },
       "calendarList": {
         "upcomingCount": "{count, plural, =0 {Sin próximas vacaciones} one {Mostrando # próxima vacación} other {Mostrando # próximas vacaciones}}",
         "pastCount": "{count, plural, one {# vacación pasada oculta} other {# vacaciones pasadas ocultas}}",

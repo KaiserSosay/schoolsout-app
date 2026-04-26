@@ -6,7 +6,7 @@ import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { HelpVerifyCalendarCta } from '@/components/public/HelpVerifyCalendarCta';
 import { UnverifiedSchoolCalendarPlaceholder } from '@/components/public/UnverifiedSchoolCalendarPlaceholder';
-import { SchoolCalendarList } from '@/components/schools/SchoolCalendarList';
+import { SchoolCalendarSections } from '@/components/schools/SchoolCalendarSections';
 import {
   publicPageMetadata,
   breadcrumbListJsonLd,
@@ -318,11 +318,12 @@ export default async function PublicSchoolPage({
             <h2 className="mb-3 text-base font-black text-ink md:text-lg">
               {t('unofficialFrame.confirmedTitle')}
             </h2>
-            <SchoolCalendarList
+            <SchoolCalendarSections
               locale={locale}
               closures={closures}
               today={today}
               schoolName={school.name}
+              schoolSlug={school.slug}
               schoolYearLabel={yearsLabel}
               variant="unofficial"
             />
@@ -351,11 +352,12 @@ export default async function PublicSchoolPage({
                 {t('empty')}
               </p>
             ) : (
-              <SchoolCalendarList
+              <SchoolCalendarSections
                 locale={locale}
                 closures={closures}
                 today={today}
                 schoolName={school.name}
+                schoolSlug={school.slug}
                 schoolYearLabel={yearsLabel}
                 variant="verified"
               />
