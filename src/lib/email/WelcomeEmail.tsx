@@ -44,6 +44,8 @@ const copy = {
     p1: "You're officially on the list. Welcome in.",
     p2: 'Tap the button to confirm your email and jump in:',
     cta: 'Sign me in →',
+    browserHint:
+      "Tip: For the best experience, open this in Safari or Chrome rather than your email app's built-in browser.",
     bulletsEyebrow: 'A couple things worth knowing:',
     bullets: [
       "Every time you come back, you'll use **this** email. No password, ever. Just type it and we'll send you a fresh link.",
@@ -67,6 +69,8 @@ const copy = {
     p1: 'Ya estás oficialmente en la lista. Bienvenido.',
     p2: 'Toca el botón para confirmar tu correo y entrar:',
     cta: 'Iniciar sesión →',
+    browserHint:
+      'Consejo: Para la mejor experiencia, abre esto en Safari o Chrome en lugar del navegador integrado de tu app de correo.',
     bulletsEyebrow: 'Un par de cosas que vale la pena saber:',
     bullets: [
       'Cada vez que vuelvas, vas a usar **este** correo. Sin contraseña, nunca. Solo escríbelo y te mandamos un enlace nuevo.',
@@ -176,6 +180,17 @@ export function WelcomeEmail({ locale, magicLinkUrl, unsubscribeUrl }: Props) {
             >
               {c.cta}
             </Button>
+
+            <Text
+              style={{
+                fontSize: 12,
+                lineHeight: 1.55,
+                color: tokens.muted,
+                margin: '12px 0 0 0',
+              }}
+            >
+              {c.browserHint}
+            </Text>
 
             <Section style={{ marginTop: 32 }}>
               <Text

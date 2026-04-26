@@ -38,6 +38,8 @@ const copy = {
     heading: 'Hey again,',
     p1: 'Knew it was you.',
     cta: 'Sign me in →',
+    browserHint:
+      "Tip: For the best experience, open this in Safari or Chrome rather than your email app's built-in browser.",
     p2: "We kept your spot warm. Your schools, your kids' ages, your saved camps — all waiting exactly where you left them.",
     p3: "If you're here because a day off is coming up, don't worry. I got you.",
     signature: 'Noah',
@@ -52,6 +54,8 @@ const copy = {
     heading: 'Hola de nuevo,',
     p1: 'Sabía que eras tú.',
     cta: 'Iniciar sesión →',
+    browserHint:
+      'Consejo: Para la mejor experiencia, abre esto en Safari o Chrome en lugar del navegador integrado de tu app de correo.',
     p2: 'Te guardamos tu lugar calientito. Tus escuelas, las edades de tus hijos, tus campamentos guardados — todo esperándote justo donde lo dejaste.',
     p3: 'Si estás aquí porque se acerca un día libre, tranqui. Yo te cubro.',
     signature: 'Noah',
@@ -132,6 +136,17 @@ export function WelcomeBackEmail({ locale, magicLinkUrl, unsubscribeUrl }: Props
             >
               {c.cta}
             </Button>
+
+            <Text
+              style={{
+                fontSize: 12,
+                lineHeight: 1.55,
+                color: tokens.muted,
+                margin: '12px 0 0 0',
+              }}
+            >
+              {c.browserHint}
+            </Text>
 
             <Text style={{ fontSize: 16, lineHeight: 1.55, margin: '24px 0 12px 0' }}>
               {c.p2}
