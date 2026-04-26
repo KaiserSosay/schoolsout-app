@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { operatorCopy, type OperatorLocale } from '@/lib/operator/copy';
 
 // The shape of the camps row the dashboard renders. Only includes the
@@ -38,6 +38,22 @@ export type OperatorCamp = {
   accommodations: string | null;
   photo_urls: string[] | null;
   data_completeness: number | null;
+  closed_on_holidays: boolean | null;
+};
+
+export type ClosureRow = {
+  id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  category: string | null;
+  school_name: string | null;
+};
+
+export type CoverageRow = {
+  closure_id: string;
+  is_open: boolean;
+  notes: string | null;
 };
 
 type Props = {
@@ -45,6 +61,8 @@ type Props = {
   camp: OperatorCamp;
   campSlug: string;
   operatorEmail: string | null;
+  closures?: ClosureRow[];
+  coverage?: CoverageRow[];
 };
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -66,6 +84,8 @@ export function OperatorDashboard({
   camp: initialCamp,
   campSlug,
   operatorEmail,
+  closures = [],
+  coverage = [],
 }: Props) {
   const c = operatorCopy[locale];
   const [camp, setCamp] = useState<OperatorCamp>(initialCamp);
@@ -401,6 +421,14 @@ export function OperatorDashboard({
           </Field>
         </Section>
 
+        <CoverageSection
+          locale={locale}
+          campSlug={campSlug}
+          closures={closures}
+          coverage={coverage}
+          defaultIsOpen={!camp.closed_on_holidays}
+        />
+
         <div style={layout.actions}>
           <button type="submit" style={layout.saveButton} disabled={saveState === 'saving'}>
             {saveState === 'saving' ? c.saving : c.save}
@@ -570,6 +598,256 @@ function trimOrNull(s: string | null | undefined): string | null {
   const trimmed = s.trim();
   return trimmed === '' ? null : trimmed;
 }
+
+// ---------------------------------------------------------------------------
+// Coverage section — Phase 3.1.4 closure-by-closure open/closed checklist.
+// Saves are debounced 500ms per closure; each row tracks its own save state
+// so toggling row A doesn't smear the "Saved" indicator onto row B.
+// ---------------------------------------------------------------------------
+
+type CoverageState = {
+  is_open: boolean;
+  notes: string;
+  status: 'idle' | 'pending' | 'saved' | 'error';
+};
+
+function buildInitialCoverage(
+  closures: ClosureRow[],
+  saved: CoverageRow[],
+  defaultIsOpen: boolean,
+): Record<string, CoverageState> {
+  const byId: Record<string, CoverageState> = {};
+  for (const cl of closures) {
+    const match = saved.find((s) => s.closure_id === cl.id);
+    byId[cl.id] = {
+      is_open: match ? match.is_open : defaultIsOpen,
+      notes: match?.notes ?? '',
+      status: 'idle',
+    };
+  }
+  return byId;
+}
+
+function CoverageSection({
+  locale,
+  campSlug,
+  closures,
+  coverage,
+  defaultIsOpen,
+}: {
+  locale: OperatorLocale;
+  campSlug: string;
+  closures: ClosureRow[];
+  coverage: CoverageRow[];
+  defaultIsOpen: boolean;
+}) {
+  const c = operatorCopy[locale];
+  const [state, setState] = useState<Record<string, CoverageState>>(() =>
+    buildInitialCoverage(closures, coverage, defaultIsOpen),
+  );
+  // One debounce timer per closure_id. Stored in a ref so re-renders don't
+  // wipe the pending save.
+  const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  useEffect(() => {
+    return () => {
+      // On unmount, flush any pending timers (best-effort; page nav usually
+      // beats this anyway).
+      for (const t of Object.values(timersRef.current)) clearTimeout(t);
+    };
+  }, []);
+
+  function scheduleSave(closureId: string, next: CoverageState) {
+    const existing = timersRef.current[closureId];
+    if (existing) clearTimeout(existing);
+    timersRef.current[closureId] = setTimeout(async () => {
+      setState((prev) => ({
+        ...prev,
+        [closureId]: { ...prev[closureId], status: 'pending' },
+      }));
+      try {
+        const res = await fetch(
+          `/api/operator/${encodeURIComponent(campSlug)}/coverage`,
+          {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              closure_id: closureId,
+              is_open: next.is_open,
+              notes: next.notes.trim() === '' ? null : next.notes.trim(),
+            }),
+          },
+        );
+        setState((prev) => ({
+          ...prev,
+          [closureId]: {
+            ...prev[closureId],
+            status: res.ok ? 'saved' : 'error',
+          },
+        }));
+        if (res.ok) {
+          setTimeout(() => {
+            setState((prev) =>
+              prev[closureId]?.status === 'saved'
+                ? { ...prev, [closureId]: { ...prev[closureId], status: 'idle' } }
+                : prev,
+            );
+          }, 1500);
+        }
+      } catch {
+        setState((prev) => ({
+          ...prev,
+          [closureId]: { ...prev[closureId], status: 'error' },
+        }));
+      }
+    }, 500);
+  }
+
+  function setOpen(closureId: string, isOpen: boolean) {
+    setState((prev) => {
+      const next = { ...prev[closureId], is_open: isOpen };
+      scheduleSave(closureId, next);
+      return { ...prev, [closureId]: next };
+    });
+  }
+  function setNotes(closureId: string, notes: string) {
+    setState((prev) => {
+      const next = { ...prev[closureId], notes };
+      scheduleSave(closureId, next);
+      return { ...prev, [closureId]: next };
+    });
+  }
+
+  return (
+    <Section title={c.sectionCoverage}>
+      <p style={{ ...layout.fieldHelp, margin: 0 }}>{c.coverageHelp}</p>
+      {closures.length === 0 ? (
+        <p style={{ ...layout.fieldHelp, margin: '12px 0 0' }}>
+          —
+        </p>
+      ) : (
+        <ul style={layoutCoverage.list}>
+          {closures.map((cl) => {
+            const row = state[cl.id];
+            const dateLabel =
+              cl.start_date === cl.end_date
+                ? cl.start_date
+                : `${cl.start_date} → ${cl.end_date}`;
+            return (
+              <li key={cl.id} style={layoutCoverage.item}>
+                <div style={layoutCoverage.itemHead}>
+                  <div>
+                    <strong style={layoutCoverage.itemDate}>{dateLabel}</strong>
+                    <span style={layoutCoverage.itemName}>
+                      {' · '}
+                      {cl.name}
+                      {cl.school_name ? ` (${cl.school_name})` : ''}
+                    </span>
+                  </div>
+                  <div style={layoutCoverage.itemControls}>
+                    <label style={layoutCoverage.radio}>
+                      <input
+                        type="radio"
+                        name={`cov-${cl.id}`}
+                        checked={row?.is_open === true}
+                        onChange={() => setOpen(cl.id, true)}
+                      />
+                      <span>{c.coverageLabels.open}</span>
+                    </label>
+                    <label style={layoutCoverage.radio}>
+                      <input
+                        type="radio"
+                        name={`cov-${cl.id}`}
+                        checked={row?.is_open === false}
+                        onChange={() => setOpen(cl.id, false)}
+                      />
+                      <span>{c.coverageLabels.closed}</span>
+                    </label>
+                    <CoverageStatus status={row?.status ?? 'idle'} copy={c} />
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  placeholder={c.coverageLabels.notes}
+                  value={row?.notes ?? ''}
+                  onChange={(e) => setNotes(cl.id, e.target.value)}
+                  style={layoutCoverage.notesInput}
+                  maxLength={280}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Section>
+  );
+}
+
+function CoverageStatus({
+  status,
+  copy,
+}: {
+  status: CoverageState['status'];
+  copy: (typeof operatorCopy)[OperatorLocale];
+}) {
+  if (status === 'pending')
+    return <span style={{ fontSize: 12, color: '#71717A' }}>{copy.saving}</span>;
+  if (status === 'saved')
+    return <span style={{ fontSize: 12, color: '#16A34A' }}>{copy.saved}</span>;
+  if (status === 'error')
+    return <span style={{ fontSize: 12, color: '#DC2626' }}>{copy.error}</span>;
+  return null;
+}
+
+const layoutCoverage = {
+  list: {
+    listStyle: 'none',
+    padding: 0,
+    margin: '12px 0 0',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 8,
+  } as React.CSSProperties,
+  item: {
+    padding: 12,
+    border: '1px solid #E8E4DA',
+    borderRadius: 12,
+    background: '#FBF8F1',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 8,
+  } as React.CSSProperties,
+  itemHead: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 12,
+    flexWrap: 'wrap' as const,
+  } as React.CSSProperties,
+  itemDate: { fontSize: 14, fontWeight: 700 } as React.CSSProperties,
+  itemName: { fontSize: 14, color: '#1A1A1A' } as React.CSSProperties,
+  itemControls: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    fontSize: 14,
+  } as React.CSSProperties,
+  radio: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  notesInput: {
+    padding: '6px 10px',
+    border: '1px solid #E8E4DA',
+    borderRadius: 8,
+    fontSize: 13,
+    fontFamily: 'inherit',
+    background: '#FFFFFF',
+    width: '100%',
+  } as React.CSSProperties,
+};
 
 // ---------------------------------------------------------------------------
 // Inline styles. Kept local — Tailwind isn't wired into operator-only routes
