@@ -99,19 +99,20 @@ export async function generateMetadata({
       description: '',
     });
   }
-  const framing = deriveSchoolFraming(school);
   // Pull just the school_year column so the meta title can name the
   // actual academic-year span the school has closures for, not a
-  // hardcoded calendar year that drifts every August.
+  // hardcoded calendar year that drifts every August. The closure
+  // count also drives the empty-calendar gate inside deriveSchoolFraming
+  // (mom-test 2026-04-26: trust-signal without data is misleading).
   const today = new Date().toISOString().slice(0, 10);
   const { data: yearRows } = await createServiceSupabase()
     .from('closures')
     .select('school_year')
     .eq('school_id', school.id)
     .gte('end_date', today);
-  const yearsLabel = yearsLabelForClosures(
-    (yearRows ?? []) as Array<{ school_year: string | null }>,
-  );
+  const closureRows = (yearRows ?? []) as Array<{ school_year: string | null }>;
+  const framing = deriveSchoolFraming(school, closureRows.length);
+  const yearsLabel = yearsLabelForClosures(closureRows);
   const description = framing.isVerified
     ? `Upcoming school breaks and holiday calendar for ${school.name} (${[school.district, school.city]
         .filter(Boolean)
@@ -199,8 +200,6 @@ export default async function PublicSchoolPage({
   const school = await loadSchool(slug);
   if (!school) notFound();
 
-  const framing = deriveSchoolFraming(school);
-
   const today = new Date().toISOString().slice(0, 10);
   // Pull the last ~13 months of closures alongside upcoming ones so the
   // "show past breaks" toggle has something to reveal when a parent
@@ -221,6 +220,12 @@ export default async function PublicSchoolPage({
     .limit(80);
   const closures = (closuresData ?? []) as ClosureRow[];
   void tBreaks; // currently unused — kept ready for the district-fan-out section
+
+  // Closure-count gate: a school renders as "verified" ONLY when it has
+  // closure data on file. The trust-signal-without-data case (Academir
+  // Charter School East showing "✓ Verified by M-DCPS" with empty list)
+  // was the mom-test failure on 2026-04-26.
+  const framing = deriveSchoolFraming(school, closures.length);
 
   const ldItems = [
     schoolJsonLd({
