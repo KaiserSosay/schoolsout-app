@@ -17,6 +17,23 @@
  *   pnpm dlx tsx scripts/parse-school-calendars.ts --school gulliver-prep
  */
 
+// IMPORTANT: This script writes to a NEW migration file each run. It will
+// REFUSE to overwrite an existing file. To regenerate output, pass an
+// explicit --output=path argument with a new filename.
+//
+// Never run this script and overwrite an applied migration. Migration
+// files are source-of-truth for production schema; replacing one after
+// it's applied causes silent data drift.
+//
+// Phase 3.5 / 2026-04-26 incident: an earlier run of this script was
+// silently regenerating supabase/migrations/029_anchor_schools_calendars
+// .sql from scratch on every invocation. Migration 029 was already
+// applied to prod. A subsequent rerun + commit could have shrunk it
+// from 262 lines to 22, leaving prod's closures table out of sync with
+// the migration file. The protections below — explicit --output flag,
+// refuse-to-overwrite, automatic next-migration-number selection, and a
+// determinism test — make the failure impossible going forward.
+
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
@@ -38,6 +55,37 @@ const OUT_PATH = join(
   'plans',
   'parsed-school-calendars-2026-04-25.json',
 );
+const MIGRATIONS_DIR = join(ROOT, 'supabase', 'migrations');
+
+// Inspect supabase/migrations/ and return the next available 3-digit
+// number (highest existing + 1, padded). Used as the default migration
+// output filename when --output is not supplied so the script never
+// overwrites an applied migration file.
+export function nextMigrationNumber(
+  migrationsDir: string = MIGRATIONS_DIR,
+): string {
+  if (!existsSync(migrationsDir)) return '001';
+  const numbers = readdirSync(migrationsDir)
+    .map((f) => f.match(/^(\d{3})_/))
+    .filter((m): m is RegExpMatchArray => m !== null)
+    .map((m) => parseInt(m[1], 10))
+    .filter((n) => Number.isFinite(n));
+  if (numbers.length === 0) return '001';
+  const next = Math.max(...numbers) + 1;
+  return next.toString().padStart(3, '0');
+}
+
+// Pull --foo=value or --foo value flags out of process.argv. Skips
+// positional args. Returns the value or undefined.
+function flag(name: string): string | undefined {
+  const argv = process.argv;
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === `--${name}` && i + 1 < argv.length) return argv[i + 1];
+    if (a.startsWith(`--${name}=`)) return a.slice(name.length + 3);
+  }
+  return undefined;
+}
 
 // Map file-prefix → DB slug + display name + canonical source URL.
 // Slugs verified against PROD via Supabase Studio on 2026-04-25 — they
@@ -899,17 +947,26 @@ function main() {
   );
   console.log(`Wrote docs/plans/calendar-import-verification-2026-04-25.md`);
 
-  writeFileSync(
-    join(
-      ROOT,
-      'supabase',
-      'migrations',
-      '029_anchor_schools_calendars.sql',
-    ),
-    renderMigration(out),
-  );
+  // Migration output path. Default: NEXT available migration number, so
+  // a fresh run never overwrites an applied file. Override via --output=
+  // for a known-safe explicit path. Refuse to write if the destination
+  // file already exists — see top-of-file warning + R1 in shipping rules.
+  const explicitOutput = flag('output');
+  const migrationPath = explicitOutput
+    ? (explicitOutput.startsWith('/') ? explicitOutput : join(ROOT, explicitOutput))
+    : join(
+        MIGRATIONS_DIR,
+        `${nextMigrationNumber()}_parsed_school_calendars.sql`,
+      );
+  if (existsSync(migrationPath)) {
+    throw new Error(
+      `Migration file ${migrationPath} already exists. Pass --output=new_filename to write a new one. ` +
+        'NEVER overwrite an applied migration — production data drift will result.',
+    );
+  }
+  writeFileSync(migrationPath, renderMigration(out));
   console.log(
-    `Wrote supabase/migrations/029_anchor_schools_calendars.sql (NOT applied)`,
+    `Wrote ${migrationPath.replace(ROOT + '/', '')} (NOT applied)`,
   );
 }
 
