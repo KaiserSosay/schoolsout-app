@@ -13,6 +13,10 @@ import {
 } from '@/components/admin/CampRequestsPanel';
 import { CalendarReviewClient } from '@/components/admin/CalendarReviewClient';
 import {
+  NotifySubscribersPanel,
+  type PendingSchoolBlock,
+} from '@/components/admin/NotifySubscribersPanel';
+import {
   EnrichmentPanel,
   type EnrichmentCamp,
 } from '@/components/admin/EnrichmentPanel';
@@ -122,6 +126,40 @@ async function loadCampRequests(): Promise<AdminCampRequest[]> {
     .order('created_at', { ascending: false })
     .limit(100);
   return (data ?? []) as AdminCampRequest[];
+}
+
+// Round-3 notify-subscribers panel data. Lists every school with at least
+// one school_calendar_notifications row whose notified_at IS NULL, so the
+// admin can see who is waiting before the calendar even flips. Schema-
+// defensive — if migration 033 hasn't shipped, returns empty.
+async function loadPendingNotifySchools(): Promise<PendingSchoolBlock[]> {
+  const db = createServiceSupabase();
+  try {
+    const { data: pending } = await db
+      .from('school_calendar_notifications')
+      .select('school_id')
+      .is('notified_at', null);
+    const counts = new Map<string, number>();
+    for (const row of (pending ?? []) as Array<{ school_id: string }>) {
+      counts.set(row.school_id, (counts.get(row.school_id) ?? 0) + 1);
+    }
+    if (counts.size === 0) return [];
+    const ids = Array.from(counts.keys());
+    const { data: schools } = await db
+      .from('schools')
+      .select('id, slug, name, calendar_status')
+      .in('id', ids);
+    type S = { id: string; slug: string; name: string; calendar_status: string };
+    return ((schools ?? []) as S[]).map((s) => ({
+      schoolId: s.id,
+      slug: s.slug,
+      name: s.name,
+      pendingCount: counts.get(s.id) ?? 0,
+      calendarStatus: s.calendar_status,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 async function loadCalendarData() {
@@ -525,7 +563,13 @@ export default async function AdminPage({
     panel = <CampRequestsPanel initialRequests={rows} />;
   } else if (activeTab === 'calendar-reviews') {
     const blocks = await loadCalendarData();
-    panel = <CalendarReviewClient schools={blocks} />;
+    const pending = await loadPendingNotifySchools();
+    panel = (
+      <div className="space-y-6">
+        <NotifySubscribersPanel schools={pending} />
+        <CalendarReviewClient schools={blocks} />
+      </div>
+    );
   } else if (activeTab === 'enrichment') {
     const camps = await loadEnrichmentData();
     panel = <EnrichmentPanel initialCamps={camps} />;
