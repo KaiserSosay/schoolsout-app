@@ -43,8 +43,7 @@ describe('GET /api/reminders/unsubscribe', () => {
     singleSelectMock.mockClear();
     fetchMock.mockReset();
     fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
-    // @ts-expect-error -- jsdom global fetch override is fine for tests
-    global.fetch = fetchMock;
+    global.fetch = fetchMock as unknown as typeof fetch;
   });
 
   it('rejects missing token', async () => {
