@@ -62,6 +62,24 @@ describe('isClosureEvent — soft-deny rejects events that mention closure words
     expect(isClosureEvent('Holy Thursday Mass')).toBe(false));
   it('rejects "Veterans Day Observance"', () =>
     expect(isClosureEvent('Veterans Day Observance')).toBe(false));
+
+  // v4.1 (2026-04-26 evening) — Palmer Trinity rendered "Veterans Day
+  // Program and Breakfast" as a closure. School-day events that name a
+  // holiday but happen DURING school.
+  it('rejects "Veterans Day Program and Breakfast"', () =>
+    expect(isClosureEvent('Veterans Day Program and Breakfast')).toBe(false));
+  it('rejects "Holiday Fair"', () =>
+    expect(isClosureEvent('Holiday Fair')).toBe(false));
+  it('rejects "Memorial Day Ceremony"', () =>
+    expect(isClosureEvent('Memorial Day Ceremony')).toBe(false));
+  it('rejects "Thanksgiving Luncheon"', () =>
+    expect(isClosureEvent('Thanksgiving Luncheon')).toBe(false));
+  it('rejects "MLK Assembly"', () =>
+    expect(isClosureEvent('MLK Assembly')).toBe(false));
+  it('rejects "Veterans Day Parade"', () =>
+    expect(isClosureEvent('Veterans Day Parade')).toBe(false));
+  it('rejects "Holiday Workshop"', () =>
+    expect(isClosureEvent('Holiday Workshop')).toBe(false));
 });
 
 describe('isClosureEvent — unusual but legitimate closure patterns', () => {

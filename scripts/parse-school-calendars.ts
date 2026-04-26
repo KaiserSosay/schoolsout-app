@@ -541,6 +541,11 @@ const CLOSURE_ALLOWLIST = [
 // also contains one of these. These are the "but actually" patterns —
 // events that mention a closure-sounding word but aren't actually closures
 // (Holiday Concert, Holy Thursday Mass, Veterans Day Observance).
+//
+// v4.1 (2026-04-26 evening): Palmer Trinity rendered "Veterans Day Program
+// and Breakfast" as a closure. School-day events that name a holiday but
+// happen DURING school: program, breakfast, luncheon, assembly, ceremony,
+// fair, parade, workshop. Added below.
 const SOFT_DENY = [
   'concert',
   'recital',
@@ -551,6 +556,15 @@ const SOFT_DENY = [
   'mass',
   'observance',
   'liturgy',
+  // v4.1 additions — school-day holiday-themed events
+  'program',
+  'breakfast',
+  'luncheon',
+  'assembly',
+  'ceremony',
+  'fair',
+  'parade',
+  'workshop',
 ];
 
 export function isClosureEvent(summary: string): boolean {

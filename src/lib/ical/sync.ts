@@ -51,8 +51,9 @@ export async function syncIcalForSchool({
 
   const { closures } = parseIcsString(body);
 
+  let upsertedCount = 0;
   if (closures.length > 0) {
-    const rows = closures.map((c) => ({
+    const rawRows = closures.map((c) => ({
       school_id: school.id,
       name: c.name,
       start_date: c.start_date,
@@ -68,6 +69,13 @@ export async function syncIcalForSchool({
       // U.S. academic year flips Aug 1.
       school_year: deriveSchoolYear(c.start_date),
     }));
+    // v4.1 (2026-04-26 evening): Palmer Trinity rendered "Labor Day" +
+    // "Labor Day - No School" both as closures because the iCal feed
+    // published two events on the same day. Dedupe by (school_id,
+    // start_date, end_date) BEFORE the upsert so the unique index isn't
+    // the only thing standing between us and parent confusion.
+    const rows = dedupeSameDate(rawRows);
+    upsertedCount = rows.length;
     const { error } = await db
       .from('closures')
       .upsert(rows, { onConflict: 'school_id,start_date,name' });
@@ -85,7 +93,42 @@ export async function syncIcalForSchool({
     })
     .eq('id', school.id);
 
-  return { ok: true, closuresUpserted: closures.length };
+  return { ok: true, closuresUpserted: upsertedCount };
+}
+
+// Same-(school_id, start_date, end_date) dedupe for iCal-imported
+// closures. Picks the row with the strongest closure signal — names
+// containing "no school" / "school closed" / "no classes" win over
+// ambiguous ones ("Labor Day - No School" wins over "Labor Day"). On
+// a tie, prefer the longer (more specific) name; final tiebreak is
+// alphabetical so the result is deterministic.
+type DedupeRow = {
+  school_id: string;
+  start_date: string;
+  end_date: string;
+  name: string;
+};
+const STRONG_CLOSURE_RE = /no school|school closed|no classes|no class/i;
+
+function pickStronger<T extends DedupeRow>(a: T, b: T): T {
+  const aStrong = STRONG_CLOSURE_RE.test(a.name);
+  const bStrong = STRONG_CLOSURE_RE.test(b.name);
+  if (aStrong && !bStrong) return a;
+  if (bStrong && !aStrong) return b;
+  if (a.name.length !== b.name.length) {
+    return a.name.length > b.name.length ? a : b;
+  }
+  return a.name < b.name ? a : b;
+}
+
+export function dedupeSameDate<T extends DedupeRow>(rows: T[]): T[] {
+  const byKey = new Map<string, T>();
+  for (const row of rows) {
+    const key = `${row.school_id}|${row.start_date}|${row.end_date}`;
+    const existing = byKey.get(key);
+    byKey.set(key, existing ? pickStronger(existing, row) : row);
+  }
+  return Array.from(byKey.values());
 }
 
 async function markSyncError(

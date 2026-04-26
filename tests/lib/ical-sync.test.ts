@@ -91,6 +91,104 @@ describe('syncIcalForSchool', () => {
     expect(opts).toMatchObject({ onConflict: 'school_id,start_date,name' });
   });
 
+  it('dedupes same-(school, date) rows and keeps the strongest closure name', async () => {
+    // v4.1: Palmer Trinity rendered "Labor Day" + "Labor Day - No School"
+    // both as closures because the iCal feed published two events on the
+    // same day. Sync now dedupes by (school_id, start_date, end_date) —
+    // keeps the row with the stronger "no school"/"school closed"
+    // marker, falls back to longer name on a tie, alphabetical last.
+    const dupeIcs = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:Labor Day
+DTSTART:20250901
+DTEND:20250902
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Labor Day - No School
+DTSTART:20250901
+DTEND:20250902
+END:VEVENT
+END:VCALENDAR`;
+    fetchMock.mockResolvedValueOnce(new Response(dupeIcs, { status: 200 }));
+    const { syncIcalForSchool } = await import('@/lib/ical/sync');
+    const result = await syncIcalForSchool({
+      db: dbMock,
+      fetch: fetchMock as unknown as typeof fetch,
+      school: {
+        id: 'school-uuid-x',
+        slug: 'palmer-trinity-school',
+        ical_feed_url: 'https://example/feed.ics',
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error('expected ok');
+    expect(result.closuresUpserted).toBe(1);
+    const rowList = upsertCalls[upsertCalls.length - 1].rows as Array<{
+      name: string;
+    }>;
+    expect(rowList).toHaveLength(1);
+    expect(rowList[0].name).toBe('Labor Day - No School');
+  });
+
+  it('preserves different-school same-(date, name) — dedupe is per school_id', async () => {
+    const { dedupeSameDate } = await import('@/lib/ical/sync');
+    const out = dedupeSameDate([
+      {
+        school_id: 's1',
+        start_date: '2025-09-01',
+        end_date: '2025-09-01',
+        name: 'Labor Day',
+      },
+      {
+        school_id: 's2',
+        start_date: '2025-09-01',
+        end_date: '2025-09-01',
+        name: 'Labor Day',
+      },
+    ]);
+    expect(out).toHaveLength(2);
+  });
+
+  it('preserves same-name events on different dates', async () => {
+    const { dedupeSameDate } = await import('@/lib/ical/sync');
+    const out = dedupeSameDate([
+      {
+        school_id: 's1',
+        start_date: '2025-08-13',
+        end_date: '2025-08-13',
+        name: 'First Day of School',
+      },
+      {
+        school_id: 's1',
+        start_date: '2025-08-14',
+        end_date: '2025-08-14',
+        name: 'First Day of School',
+      },
+    ]);
+    expect(out).toHaveLength(2);
+  });
+
+  it('uses longer-name as the tiebreak when neither row has a strong closure signal', async () => {
+    const { dedupeSameDate } = await import('@/lib/ical/sync');
+    const out = dedupeSameDate([
+      {
+        school_id: 's1',
+        start_date: '2025-09-15',
+        end_date: '2025-09-15',
+        name: 'Rosh Hashanah',
+      },
+      {
+        school_id: 's1',
+        start_date: '2025-09-15',
+        end_date: '2025-09-15',
+        name: 'Rosh Hashanah (observed)',
+      },
+    ]);
+    expect(out).toHaveLength(1);
+    expect(out[0].name).toBe('Rosh Hashanah (observed)');
+  });
+
   it('every upserted row has school_year set (no NULLs land in the DB anymore)', async () => {
     const { syncIcalForSchool } = await import('@/lib/ical/sync');
     await syncIcalForSchool({
