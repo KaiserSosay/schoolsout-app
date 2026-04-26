@@ -6,6 +6,7 @@ import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { HelpVerifyCalendarCta } from '@/components/public/HelpVerifyCalendarCta';
 import { UnverifiedSchoolCalendarPlaceholder } from '@/components/public/UnverifiedSchoolCalendarPlaceholder';
+import { SchoolCalendarSubmissionForm } from '@/components/public/SchoolCalendarSubmissionForm';
 import { SchoolCalendarSections } from '@/components/schools/SchoolCalendarSections';
 import {
   publicPageMetadata,
@@ -382,6 +383,15 @@ export default async function PublicSchoolPage({
             />
           </div>
         ) : null}
+
+        {/* Phase 4.7.1 — public submission form. Renders on every school
+            detail page (verified or not) so anyone with the school's
+            calendar PDF can propose updates. Admin reviews before any
+            data lands in the closures table. */}
+        <SchoolCalendarSubmissionForm
+          schoolSlug={school.slug}
+          schoolName={school.name}
+        />
 
         {school.website || school.phone || school.address ? (
           <section

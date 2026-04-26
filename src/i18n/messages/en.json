@@ -1443,6 +1443,36 @@
         "emailPdfButton": "Email us your school's PDF",
         "tellUsButton": "Tell us"
       },
+      "calendarSubmission": {
+        "cta": "Update this school's calendar →",
+        "cta.aria": "Open the form to send a calendar update for {schoolName}",
+        "intro": "Help us keep {schoolName}'s calendar accurate. We'll review your submission within 2 business days.",
+        "emailLabel": "Your email",
+        "emailPlaceholder": "you@example.com",
+        "nameLabel": "Your name",
+        "nameOptional": "(optional)",
+        "roleLabel": "Your role at this school",
+        "role": {
+          "principal": "Principal / Head of School",
+          "teacher": "Teacher",
+          "office_manager": "Office Manager / Admin Staff",
+          "parent": "Parent",
+          "other": "Other"
+        },
+        "updatesLabel": "What's changing?",
+        "updatesPlaceholder": "Paste dates from your school's calendar, or describe what's changing…",
+        "notesLabel": "Anything else?",
+        "notesOptional": "(optional)",
+        "submit": "Send to School's Out!",
+        "submitting": "Sending…",
+        "success": {
+          "title": "✓ Got it!",
+          "body": "We'll review and email {email} within 2 business days.",
+          "domainVerified": "Your email matches {schoolName}'s domain — fast-tracked for review."
+        },
+        "error": "Hmm, something went wrong. Try again?",
+        "rateLimited": "Slow down — you've sent a few submissions recently. Try again in an hour, or email hi@schoolsout.net."
+      },
       "calendarList": {
         "upcomingCount": "{count, plural, =0 {No upcoming breaks} one {Showing # upcoming break} other {Showing # upcoming breaks}}",
         "pastCount": "{count, plural, one {# past break hidden} other {# past breaks hidden}}",

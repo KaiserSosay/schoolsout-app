@@ -1443,6 +1443,36 @@
         "emailPdfButton": "Envíanos el PDF de tu escuela",
         "tellUsButton": "Avísanos"
       },
+      "calendarSubmission": {
+        "cta": "Actualizar el calendario de esta escuela →",
+        "cta.aria": "Abrir el formulario para enviar una actualización del calendario de {schoolName}",
+        "intro": "Ayúdanos a mantener el calendario de {schoolName} preciso. Revisaremos tu solicitud en 2 días hábiles.",
+        "emailLabel": "Tu correo",
+        "emailPlaceholder": "tu@ejemplo.com",
+        "nameLabel": "Tu nombre",
+        "nameOptional": "(opcional)",
+        "roleLabel": "Tu rol en esta escuela",
+        "role": {
+          "principal": "Director(a)",
+          "teacher": "Maestro(a)",
+          "office_manager": "Personal administrativo",
+          "parent": "Padre / Madre / Tutor",
+          "other": "Otro"
+        },
+        "updatesLabel": "¿Qué está cambiando?",
+        "updatesPlaceholder": "Pega las fechas del calendario de tu escuela, o describe qué cambia…",
+        "notesLabel": "¿Algo más?",
+        "notesOptional": "(opcional)",
+        "submit": "Enviar a School's Out!",
+        "submitting": "Enviando…",
+        "success": {
+          "title": "✓ ¡Recibido!",
+          "body": "Lo revisaremos y enviaremos un correo a {email} en 2 días hábiles.",
+          "domainVerified": "Tu correo coincide con el dominio de {schoolName} — vía rápida para revisión."
+        },
+        "error": "Mmm, algo salió mal. ¿Lo intentas de nuevo?",
+        "rateLimited": "Espera un poco — has enviado varias solicitudes recientemente. Intenta en una hora, o escribe a hi@schoolsout.net."
+      },
       "calendarList": {
         "upcomingCount": "{count, plural, =0 {Sin próximas vacaciones} one {Mostrando # próxima vacación} other {Mostrando # próximas vacaciones}}",
         "pastCount": "{count, plural, one {# vacación pasada oculta} other {# vacaciones pasadas ocultas}}",
