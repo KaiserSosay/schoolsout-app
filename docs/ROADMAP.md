@@ -80,6 +80,25 @@ Right now if you save a "Memorial Day plan," it's for the whole family. But what
 ### 📋 Phase 3.3 — Better Camp Data
 The 108 camps don't all have addresses. This phase fills in the gaps.
 
+### 📋 Phase 3.4 — Beyond Closures: half days, school events, theme days 🌟 (NOAH'S IDEA, 2026-04-26)
+Right now we only show parents the days school is **fully** closed. But kids miss out because of the OTHER days too:
+
+- 🕐 **Half days** — early dismissal. Parents need to plan early pickup or after-care.
+- 🎨 **Theme days / dress-up days** — "Crazy Hair Day," "Pajama Day," "Spirit Week."
+- 🌊 **Special school events** — Water Day at TGP, Field Day, Picture Day, International Day.
+- 🎒 **Things to bring** — "bring water clothes," "bring a stuffed animal," "wear red."
+
+**Why this matters (Noah's exact example):** It's Water Day at The Growing Place. The grown-up forgets. The kid shows up in regular uniform. Every other kid is in swim clothes. The kid can't participate. The kid is sad. **This is the feature parents will tell their friends about** — it's the difference between an app that knows when school is closed and an app that prevents bad mornings.
+
+**What we'll build:**
+- Schema: extend `closures` (or add a sibling table `school_events`) with a `kind` enum (`closure | half_day | event | theme_day`) and an `attire_or_bring` text field.
+- UI: each kind gets its own color + badge so half days don't visually blend into closures, and events stand out with their own emoji.
+- **Notifications: if a parent has installed the PWA on their phone, push a reminder the night before AND the morning of any event that has an `attire_or_bring` instruction.** (Powered by Phase 5.3 push notifications.)
+
+**Why it's Phase 3.4 (not Phase 5):** It builds directly on the closure pipeline we already have — same calendar source, same admin review workflow, same email-template system. Mostly schema + UI + one new push-subscription endpoint. ~1 week of build once Dad is free from 3.1 / 3.2.
+
+**Depends on:** Phase 5.3 push notifications (browser Web Push + iOS Add-to-Home-Screen install acceptance + a server-sent-events pipe). The half-day and event UI pieces can ship without 5.3; only the proactive reminders need it.
+
 ---
 
 ## 📋 PHASE 4 — Launch + Make Real Money
@@ -113,7 +132,7 @@ Mom's biggest frustration: some camps register kids over WhatsApp, others have h
 Educated guesses about what might land here:
 - **5.1** Co-parent invite (share plans with your partner)
 - **5.2** Sync to Google Calendar / Apple Calendar
-- **5.3** Push notifications
+- **5.3** Push notifications (powers the Phase 3.4 "don't miss Water Day" reminders)
 - **5.4** Side-by-side camp comparison
 - **5.5** Native iPhone app
 - **5.6** AI chat ("when does my kid have school next month?")
