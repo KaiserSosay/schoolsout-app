@@ -224,7 +224,10 @@ const CLOSURE_KEYWORDS = [
   'eid',
   'ramadan',
   'juneteenth',
-  'orientation',
+  // 'orientation' intentionally NOT in the positive list — most school
+  // orientations (new-student, technology, 9th grade) are days students
+  // attend. Faculty Orientation IS a closure but the negative-keyword
+  // pass would let a clearly-tagged version through. Net win.
   'parent conference',
   'parent/teacher',
   'in-service',
@@ -246,13 +249,30 @@ const CLOSURE_KEYWORDS = [
 
 // SUMMARYs containing any of these are dropped even if they hit a closure
 // keyword (e.g. "Holiday Concert" is a Christmas concert, not a closure).
+// Negative wins over positive — see looksLikeClosure below.
+//
+// 2026-04-26 evening: extended after Palmer Trinity's iCal sync inserted
+// 136 sports / orientations / launch events as closures. The brief's
+// failure list informs the additions below.
 const NEGATIVE_KEYWORDS = [
+  // Performances + creative
   'concert',
+  'recital',
+  'performance',
   'fundraiser',
   'gala',
   'auction',
   'rehearsal',
   'audition',
+  'showcase',
+  'play',
+  'production',
+  'musical',
+  'art show',
+  'science fair',
+  'spelling bee',
+  'exhibition',
+  // Admissions + open events
   'open house',
   'social',
   'tour',
@@ -264,15 +284,70 @@ const NEGATIVE_KEYWORDS = [
   'apply',
   'admissions',
   'webinar',
-  'showcase',
-  'fair',
-  'play',
-  'production',
-  'musical',
+  'town hall',
+  'q&a',
+  // Orientations / preview / parent nights — students attend, not a closure
+  'orientation',
+  'launch |',
+  'welcome day',
+  'meet & greet',
+  'preview day',
+  'parent night',
+  'curriculum night',
+  'new student',
+  'new family',
+  'back to school',
+  // Sports — school in session during games
   'sports',
   'game',
+  'match',
+  'tournament',
+  'scrimmage',
+  'vs.',
+  ' vs ',
+  'varsity',
+  ' jv ',
+  'baseball',
+  'basketball',
+  'football',
+  'soccer',
+  'volleyball',
+  'lacrosse',
+  ' tennis',
+  'tennis ',
+  'swim meet',
+  ' track ',
+  'cross country',
+  ' golf',
+  'wrestling',
+  'rugby',
+  'softball',
+  'pep rally',
+  'spirit day',
+  // Trips / college events — kids elsewhere, not a parent-side closure
   'trip',
+  'field trip',
+  'college visit',
+  'college fair',
+  'campus tour',
   'overnight',
+  // Religious services for religious schools (school IS in session)
+  'mass ',
+  ' mass',
+  'chapel service',
+  'communion',
+  'bar mitzvah',
+  'bat mitzvah',
+  // Tests + assessments — kids attend
+  ' sat',
+  'psat',
+  'ap exam',
+  'final exam',
+  'midterm',
+  'standardized test',
+  'assessment',
+  // Social
+  'fair',
   'dance',
   'birthday',
   'club',
@@ -281,6 +356,10 @@ const NEGATIVE_KEYWORDS = [
   'dinner',
   'reception',
   'photo',
+  'movie night',
+  'family night',
+  'picture day',
+  'yearbook',
 ];
 
 // ---------------------------------------------------------------------------

@@ -22,6 +22,9 @@ describe('looksLikeClosure', () => {
     expect(looksLikeClosure('Thanksgiving Break')).toBe(true);
     expect(looksLikeClosure('Yom Kippur Holiday')).toBe(true);
     expect(looksLikeClosure('First Day of School')).toBe(true);
+    expect(looksLikeClosure('Spring Break - No School')).toBe(true);
+    expect(looksLikeClosure('MLK Day Holiday')).toBe(true);
+    expect(looksLikeClosure('Last Day of School')).toBe(true);
   });
   it('rejects non-closure school events', () => {
     expect(looksLikeClosure('Holiday Concert')).toBe(false); // 'concert' negative
@@ -32,6 +35,65 @@ describe('looksLikeClosure', () => {
   it('rejects bare unrelated strings', () => {
     expect(looksLikeClosure('Spirit Week')).toBe(false);
     expect(looksLikeClosure('PTA Meeting')).toBe(false);
+  });
+
+  // Palmer Trinity 2026-04-26 incident — these slipped through and
+  // were inserted as closures. The negative-keyword pass tightens
+  // each into a non-closure.
+  it('rejects orientations (students attend; school in session)', () => {
+    expect(looksLikeClosure('Technology Orientation')).toBe(false);
+    expect(looksLikeClosure('New Student Orientation')).toBe(false);
+    expect(looksLikeClosure('New Family Orientation')).toBe(false);
+    expect(looksLikeClosure('9th Grade Orientation')).toBe(false);
+  });
+
+  it('rejects "Launch | ..." style events', () => {
+    expect(looksLikeClosure('Launch | 9th Grade Students & Teachers')).toBe(
+      false,
+    );
+  });
+
+  it('rejects sports games / matches / tournaments', () => {
+    expect(looksLikeClosure('Varsity Football vs. Pinecrest')).toBe(false);
+    expect(looksLikeClosure('JV Basketball Game')).toBe(false);
+    expect(looksLikeClosure('Volleyball Tournament')).toBe(false);
+    expect(looksLikeClosure('Swim Meet')).toBe(false);
+    expect(looksLikeClosure('Lacrosse Scrimmage')).toBe(false);
+  });
+
+  it('rejects parent / curriculum / preview nights', () => {
+    expect(looksLikeClosure('Parent Night')).toBe(false);
+    expect(looksLikeClosure('Curriculum Night')).toBe(false);
+    expect(looksLikeClosure('Preview Day')).toBe(false);
+    expect(looksLikeClosure('Back to School Night')).toBe(false);
+  });
+
+  it('rejects Welcome Day (parent-attended; kids do not have class)', () => {
+    expect(looksLikeClosure('Welcome Day')).toBe(false);
+    expect(looksLikeClosure('Meet & Greet')).toBe(false);
+  });
+
+  it('rejects standardized tests (school open, kids attend)', () => {
+    expect(looksLikeClosure('AP Exam: Calculus')).toBe(false);
+    expect(looksLikeClosure('PSAT Testing')).toBe(false);
+    expect(looksLikeClosure('Final Exam Week')).toBe(false);
+    expect(looksLikeClosure('Midterm Exams')).toBe(false);
+  });
+
+  it('rejects field trips / college visits', () => {
+    expect(looksLikeClosure('8th Grade Field Trip')).toBe(false);
+    expect(looksLikeClosure('College Fair')).toBe(false);
+    expect(looksLikeClosure('Campus Tour')).toBe(false);
+  });
+
+  it('rejects performances / recitals / rehearsals', () => {
+    expect(looksLikeClosure('Drama Rehearsal')).toBe(false);
+    expect(looksLikeClosure('Spring Recital')).toBe(false);
+    expect(looksLikeClosure('Senior Performance')).toBe(false);
+  });
+
+  it('negative wins over positive (Holiday Concert vs Holiday)', () => {
+    expect(looksLikeClosure('Holiday Concert')).toBe(false);
   });
 });
 
