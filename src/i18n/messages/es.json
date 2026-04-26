@@ -1392,13 +1392,17 @@
         "badge": "✓ Calendario verificado",
         "mdcpsBadge": "✓ Verificado por Miami-Dade County Public Schools",
         "sectionTitle": "Fechas confirmadas",
-        "eyebrowMdcps": "Calendario oficial 2025–2026 de Miami-Dade County Public Schools",
-        "eyebrow": "Calendario oficial 2025–2026"
+        "eyebrowMdcpsWithYears": "Calendario oficial {years} de Miami-Dade County Public Schools",
+        "eyebrowMdcps": "Calendario oficial de Miami-Dade County Public Schools",
+        "eyebrowWithYears": "Calendario oficial {years}",
+        "eyebrow": "Calendario oficial"
       },
       "unofficialFrame": {
         "eyebrow": "Calendario no oficial",
-        "titleMain": "2025–2026 de {name}",
-        "h1": "El calendario no oficial 2025–2026 de {name}",
+        "titleMainWithYears": "Calendario {years} de {name}",
+        "titleMain": "Calendario de {name}",
+        "h1WithYears": "El calendario no oficial {years} de {name}",
+        "h1": "El calendario no oficial de {name}",
         "title": "Calendario no oficial de {name} — School's Out!",
         "subhead": "Estamos trabajando para conseguir las fechas verificadas de {name}. Esto es lo que sabemos hasta ahora.",
         "confirmedTitle": "Fechas confirmadas",

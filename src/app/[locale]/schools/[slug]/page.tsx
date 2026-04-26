@@ -15,6 +15,7 @@ import {
   SITE_URL,
 } from '@/lib/seo';
 import { deriveSchoolFraming } from '@/lib/schools/calendar-status';
+import { yearsLabelForClosures } from '@/lib/schools/calendar-years';
 import { publicClosureHref, focusRing } from '@/lib/links';
 
 export const dynamic = 'force-dynamic';
@@ -46,6 +47,7 @@ type ClosureRow = {
   status: string;
   source: string;
   category: string | null;
+  school_year: string | null;
 };
 
 const RICH_SELECT =
@@ -98,6 +100,18 @@ export async function generateMetadata({
     });
   }
   const framing = deriveSchoolFraming(school);
+  // Pull just the school_year column so the meta title can name the
+  // actual academic-year span the school has closures for, not a
+  // hardcoded calendar year that drifts every August.
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: yearRows } = await createServiceSupabase()
+    .from('closures')
+    .select('school_year')
+    .eq('school_id', school.id)
+    .gte('end_date', today);
+  const yearsLabel = yearsLabelForClosures(
+    (yearRows ?? []) as Array<{ school_year: string | null }>,
+  );
   const description = framing.isVerified
     ? `Upcoming school breaks and holiday calendar for ${school.name} (${[school.district, school.city]
         .filter(Boolean)
@@ -107,7 +121,7 @@ export async function generateMetadata({
         neighborhood: school.city ?? 'Miami-Dade',
       });
   const title = framing.isVerified
-    ? `${school.name} calendar — Miami school breaks 2026 | School's Out!`
+    ? `${school.name} calendar${yearsLabel ? ` ${yearsLabel}` : ''} — Miami school breaks | School's Out!`
     : t('unofficialFrame.title', { name: school.name });
   return publicPageMetadata({
     locale,
@@ -191,7 +205,7 @@ export default async function PublicSchoolPage({
   const svc = createServiceSupabase();
   const { data: closuresData } = await svc
     .from('closures')
-    .select('id, name, start_date, end_date, emoji, status, source, category')
+    .select('id, name, start_date, end_date, emoji, status, source, category, school_year')
     .eq('school_id', school.id)
     .gte('end_date', today)
     .order('start_date')
@@ -221,14 +235,21 @@ export default async function PublicSchoolPage({
   // ("The unofficial" / "Official 2025–2026 calendar from M-DCPS") sits
   // above the big title. Verified non-MDCPS schools use a generic
   // "Official 2025–2026 calendar" eyebrow over the school name.
+  const yearsLabel = yearsLabelForClosures(closures);
   const eyebrow = framing.isVerified
     ? framing.reason === 'mdcps'
-      ? t('verifiedFrame.eyebrowMdcps')
-      : t('verifiedFrame.eyebrow')
+      ? yearsLabel
+        ? t('verifiedFrame.eyebrowMdcpsWithYears', { years: yearsLabel })
+        : t('verifiedFrame.eyebrowMdcps')
+      : yearsLabel
+        ? t('verifiedFrame.eyebrowWithYears', { years: yearsLabel })
+        : t('verifiedFrame.eyebrow')
     : t('unofficialFrame.eyebrow');
   const titleMain = framing.isVerified
     ? school.name
-    : t('unofficialFrame.titleMain', { name: school.name });
+    : yearsLabel
+      ? t('unofficialFrame.titleMainWithYears', { name: school.name, years: yearsLabel })
+      : t('unofficialFrame.titleMain', { name: school.name });
 
   const showDistrictBanner =
     !framing.isVerified && school.follows_district_pattern === true;
