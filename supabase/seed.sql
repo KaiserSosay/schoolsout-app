@@ -25,3 +25,11 @@ on conflict do nothing;
 -- Phase 2.6 Goal 1: promote Rasheid to superadmin. Idempotent (noop if
 -- no row matches yet — user must sign up first, then rerun).
 update public.users set role = 'superadmin' where email = 'rkscarlett@gmail.com';
+
+-- Phase 3.5 — promote Noah (product owner) and Sophia (domain-expert mom)
+-- to admin (not superadmin — only Rasheid is superadmin). Same idempotent
+-- pattern: rerun after they sign up if they aren't in users yet.
+update public.users
+  set role = 'admin'
+  where lower(email) in ('noahrscarlett@gmail.com', 'sophia.solano@yahoo.com')
+    and role not in ('admin', 'superadmin');
