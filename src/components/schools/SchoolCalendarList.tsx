@@ -35,6 +35,11 @@ export type SchoolCalendarListClosure = ClosureForGrouping & {
   emoji: string;
   status: string;
   category?: string | null;
+  // Phase 4.7.x — federal-holiday-derived rows render with a 📅 pill
+  // instead of the green Verified pill so parents can tell at a glance
+  // which dates the school confirmed vs which we derived from the
+  // federal holiday calendar.
+  source?: string | null;
 };
 
 export function SchoolCalendarList({
@@ -146,6 +151,7 @@ export function SchoolCalendarList({
                 statusLabel={
                   c.status === 'verified' ? t('verified') : t('pending')
                 }
+                federalHolidayLabel={t('federalHolidayPill')}
                 muted
               />
             </li>
@@ -182,6 +188,7 @@ export function SchoolCalendarList({
                   statusLabel={
                     c.status === 'verified' ? t('verified') : t('pending')
                   }
+                  federalHolidayLabel={t('federalHolidayPill')}
                 />
               </li>
             ))}
@@ -199,6 +206,7 @@ function ClosureRow({
   showYearBecauseFirstInGroup,
   pastPill,
   statusLabel,
+  federalHolidayLabel,
   muted = false,
 }: {
   closure: SchoolCalendarListClosure;
@@ -207,8 +215,10 @@ function ClosureRow({
   showYearBecauseFirstInGroup: boolean;
   pastPill: string | null;
   statusLabel: string;
+  federalHolidayLabel: string;
   muted?: boolean;
 }) {
+  const isFederalHoliday = closure.source === 'federal_holiday_calendar';
   const dateLabel = formatRangeWithYearWhenNeeded({
     start: closure.start_date,
     end: closure.end_date,
@@ -242,14 +252,19 @@ function ClosureRow({
       </div>
       <span className="flex items-center gap-2">
         <span
+          data-testid={
+            isFederalHoliday ? 'closure-pill-federal-holiday' : undefined
+          }
           className={
             'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
-            (closure.status === 'verified'
-              ? 'bg-emerald-100 text-emerald-900'
-              : 'bg-amber-100 text-amber-900')
+            (isFederalHoliday
+              ? 'bg-amber-100 text-amber-900'
+              : closure.status === 'verified'
+                ? 'bg-emerald-100 text-emerald-900'
+                : 'bg-amber-100 text-amber-900')
           }
         >
-          {statusLabel}
+          {isFederalHoliday ? federalHolidayLabel : statusLabel}
         </span>
         <span
           aria-hidden

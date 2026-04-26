@@ -1395,6 +1395,8 @@
       "empty": "No upcoming breaks on file.",
       "verified": "Verified",
       "pending": "Pending",
+      "federalHolidayPill": "📅 Federal holiday",
+      "federalHolidayDisclosure": "ℹ Some dates on this calendar (marked 📅) are derived from the federal holiday calendar — most schools observe these but always confirm with {schoolName} directly.",
       "cta": {
         "heading": "Get reminders for this school.",
         "sub": "Free account. One email before every break on this school's calendar.",

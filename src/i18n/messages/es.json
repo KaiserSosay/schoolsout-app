@@ -1395,6 +1395,8 @@
       "empty": "No hay recesos próximos en el archivo.",
       "verified": "Verificado",
       "pending": "Pendiente",
+      "federalHolidayPill": "📅 Feriado federal",
+      "federalHolidayDisclosure": "ℹ Algunas fechas en este calendario (marcadas 📅) provienen del calendario de feriados federales — la mayoría de las escuelas las observan, pero siempre confirma con {schoolName} directamente.",
       "cta": {
         "heading": "Recibe recordatorios para esta escuela.",
         "sub": "Cuenta gratis. Un correo antes de cada receso del calendario.",

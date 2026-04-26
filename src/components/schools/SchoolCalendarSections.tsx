@@ -44,9 +44,14 @@ export function SchoolCalendarSections({
   variant?: 'verified' | 'unofficial';
 }) {
   const tCov = useTranslations('public.school.yearCoverage');
+  const tSchool = useTranslations('public.school');
 
   const todayDate = new Date(today + 'T12:00:00Z');
   const [currentCov, nextCov] = computeYearCoverage(closures, todayDate);
+
+  const hasFederalHolidayDerived = closures.some(
+    (c) => c.source === 'federal_holiday_calendar',
+  );
 
   // Group closures by school_year. Rows whose school_year is null or
   // doesn't match YYYY-YYYY are SKIPPED — they used to fall into a
@@ -102,6 +107,15 @@ export function SchoolCalendarSections({
         schoolName={schoolName}
         schoolSlug={schoolSlug}
       />
+
+      {hasFederalHolidayDerived ? (
+        <p
+          data-testid="federal-holiday-disclosure"
+          className="rounded-2xl border border-amber-200 bg-amber-50/60 px-4 py-3 text-xs text-amber-900"
+        >
+          {tSchool('federalHolidayDisclosure', { schoolName })}
+        </p>
+      ) : null}
 
       {orderedKeys.map((year) => {
         const rows = buckets.get(year) ?? [];
