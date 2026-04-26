@@ -1415,6 +1415,15 @@
         "linksAddress": "Address",
         "metaDescription": "When is {name} closed in 2025-26? Verified school breaks, holidays, and teacher workdays for {neighborhood} families."
       },
+      "calendarList": {
+        "upcomingCount": "{count, plural, =0 {No upcoming breaks} one {Showing # upcoming break} other {Showing # upcoming breaks}}",
+        "pastCount": "{count, plural, one {# past break hidden} other {# past breaks hidden}}",
+        "showPast": "Show past breaks",
+        "hidePast": "Hide past breaks",
+        "pastPill": "(past)",
+        "yearEnded": "✓ The {years} school year has ended. New dates will appear here once {schoolName} publishes them.",
+        "yearDivider": "{year}"
+      },
       "unverifiedPlaceholder": {
         "headline": "We're still verifying {name}'s calendar",
         "body": "Every calendar on School's Out! gets verified before it shows up here. {name}'s isn't published in a place we can read yet — but it should be. Help us get it added so other {name} families can plan their breaks too.",

@@ -1415,6 +1415,15 @@
         "linksAddress": "Dirección",
         "metaDescription": "¿Cuándo está cerrada {name} en 2025-26? Recesos, días feriados y días de planificación verificados para familias de {neighborhood}."
       },
+      "calendarList": {
+        "upcomingCount": "{count, plural, =0 {Sin próximas vacaciones} one {Mostrando # próxima vacación} other {Mostrando # próximas vacaciones}}",
+        "pastCount": "{count, plural, one {# vacación pasada oculta} other {# vacaciones pasadas ocultas}}",
+        "showPast": "Mostrar vacaciones pasadas",
+        "hidePast": "Ocultar vacaciones pasadas",
+        "pastPill": "(pasada)",
+        "yearEnded": "✓ El año escolar {years} terminó. Las nuevas fechas aparecerán aquí cuando {schoolName} las publique.",
+        "yearDivider": "{year}"
+      },
       "unverifiedPlaceholder": {
         "headline": "Aún estamos verificando el calendario de {name}",
         "body": "Cada calendario en School's Out! se verifica antes de aparecer aquí. El de {name} todavía no está publicado en un lugar que podamos leer — pero debería estar. Ayúdanos a agregarlo para que otras familias de {name} también puedan planificar sus vacaciones.",

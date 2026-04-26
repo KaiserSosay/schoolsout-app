@@ -6,6 +6,7 @@ import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { HelpVerifyCalendarCta } from '@/components/public/HelpVerifyCalendarCta';
 import { UnverifiedSchoolCalendarPlaceholder } from '@/components/public/UnverifiedSchoolCalendarPlaceholder';
+import { SchoolCalendarList } from '@/components/schools/SchoolCalendarList';
 import {
   publicPageMetadata,
   breadcrumbListJsonLd,
@@ -16,7 +17,6 @@ import {
 } from '@/lib/seo';
 import { deriveSchoolFraming } from '@/lib/schools/calendar-status';
 import { yearsLabelForClosures } from '@/lib/schools/calendar-years';
-import { publicClosureHref, focusRing } from '@/lib/links';
 
 export const dynamic = 'force-dynamic';
 
@@ -202,14 +202,23 @@ export default async function PublicSchoolPage({
   const framing = deriveSchoolFraming(school);
 
   const today = new Date().toISOString().slice(0, 10);
+  // Pull the last ~13 months of closures alongside upcoming ones so the
+  // "show past breaks" toggle has something to reveal when a parent
+  // wants to scroll back to remember when MLK fell. Bounds the fetch
+  // size — we don't need 5 years of historical breaks on every render.
+  const oneYearAgo = (() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - 13);
+    return d.toISOString().slice(0, 10);
+  })();
   const svc = createServiceSupabase();
   const { data: closuresData } = await svc
     .from('closures')
     .select('id, name, start_date, end_date, emoji, status, source, category, school_year')
     .eq('school_id', school.id)
-    .gte('end_date', today)
+    .gte('end_date', oneYearAgo)
     .order('start_date')
-    .limit(40);
+    .limit(80);
   const closures = (closuresData ?? []) as ClosureRow[];
   void tBreaks; // currently unused — kept ready for the district-fan-out section
 
@@ -309,48 +318,14 @@ export default async function PublicSchoolPage({
             <h2 className="mb-3 text-base font-black text-ink md:text-lg">
               {t('unofficialFrame.confirmedTitle')}
             </h2>
-            <ul className="space-y-2">
-              {closures.map((c) => {
-                  const dateLabel = formatDateRange(c.start_date, c.end_date, locale);
-                  return (
-                    <li key={c.id}>
-                      <Link
-                        href={publicClosureHref(locale, c.id)}
-                        aria-label={`Open ${c.name} on ${dateLabel}`}
-                        className={
-                          'group flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-cream px-4 py-3 transition-[border-color,box-shadow] duration-[var(--duration-micro)] ease-[var(--ease-premium)] hover:border-brand-purple/40 hover:shadow-sm ' +
-                          focusRing
-                        }
-                      >
-                        <div>
-                          <p className="text-sm font-black text-ink">
-                            {c.emoji} {c.name}
-                          </p>
-                          <p className="text-xs text-muted">{dateLabel}</p>
-                        </div>
-                        <span className="flex items-center gap-2">
-                          <span
-                            className={
-                              'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
-                              (c.status === 'verified'
-                                ? 'bg-emerald-100 text-emerald-900'
-                                : 'bg-amber-100 text-amber-900')
-                            }
-                          >
-                            {c.status === 'verified' ? t('verified') : t('pending')}
-                          </span>
-                          <span
-                            aria-hidden
-                            className="text-muted transition-transform duration-[var(--duration-micro)] ease-[var(--ease-premium)] group-hover:translate-x-0.5 group-hover:text-brand-purple"
-                          >
-                            →
-                          </span>
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-            </ul>
+            <SchoolCalendarList
+              locale={locale}
+              closures={closures}
+              today={today}
+              schoolName={school.name}
+              schoolYearLabel={yearsLabel}
+              variant="unofficial"
+            />
           </section>
         ) : null}
 
@@ -376,48 +351,14 @@ export default async function PublicSchoolPage({
                 {t('empty')}
               </p>
             ) : (
-              <ul className="space-y-2">
-                {closures.map((c) => {
-                  const dateLabel = formatDateRange(c.start_date, c.end_date, locale);
-                  return (
-                    <li key={c.id}>
-                      <Link
-                        href={publicClosureHref(locale, c.id)}
-                        aria-label={`Open ${c.name} on ${dateLabel}`}
-                        className={
-                          'group flex items-center justify-between gap-3 rounded-2xl border border-cream-border bg-white px-4 py-3 transition-[border-color,box-shadow] duration-[var(--duration-micro)] ease-[var(--ease-premium)] hover:border-brand-purple/40 hover:shadow-sm ' +
-                          focusRing
-                        }
-                      >
-                        <div>
-                          <p className="text-sm font-black text-ink">
-                            {c.emoji} {c.name}
-                          </p>
-                          <p className="text-xs text-muted">{dateLabel}</p>
-                        </div>
-                        <span className="flex items-center gap-2">
-                          <span
-                            className={
-                              'rounded-full px-2 py-0.5 text-[11px] font-bold ' +
-                              (c.status === 'verified'
-                                ? 'bg-emerald-100 text-emerald-900'
-                                : 'bg-amber-100 text-amber-900')
-                            }
-                          >
-                            {c.status === 'verified' ? t('verified') : t('pending')}
-                          </span>
-                          <span
-                            aria-hidden
-                            className="text-muted transition-transform duration-[var(--duration-micro)] ease-[var(--ease-premium)] group-hover:translate-x-0.5 group-hover:text-brand-purple"
-                          >
-                            →
-                          </span>
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+              <SchoolCalendarList
+                locale={locale}
+                closures={closures}
+                today={today}
+                schoolName={school.name}
+                schoolYearLabel={yearsLabel}
+                variant="verified"
+              />
             )}
           </>
         ) : null}
