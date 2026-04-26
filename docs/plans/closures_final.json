@@ -1,0 +1,722 @@
+[
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "First Day of School",
+    "category": "first_day",
+    "start_date": "2025-08-14",
+    "end_date": "2025-08-14",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Opening Day for Students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Labor Day",
+    "category": "federal_holiday",
+    "start_date": "2025-09-01",
+    "end_date": "2025-09-01",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2025-09-23",
+    "end_date": "2025-09-23",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Coincides with Rosh Hashanah. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2025-10-02",
+    "end_date": "2025-10-02",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Coincides with Yom Kippur. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "District Professional Learning Day",
+    "category": "teacher_workday",
+    "start_date": "2025-11-03",
+    "end_date": "2025-11-03",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "District-wide Professional Learning Day. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Veterans Day",
+    "category": "federal_holiday",
+    "start_date": "2025-11-11",
+    "end_date": "2025-11-11",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Thanksgiving Recess",
+    "category": "school_break",
+    "start_date": "2025-11-24",
+    "end_date": "2025-11-28",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Full week. Includes Thanksgiving Day and the Friday after.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Winter Recess",
+    "category": "school_break",
+    "start_date": "2025-12-22",
+    "end_date": "2026-01-02",
+    "day_count": 10,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "10 school days. Classes resume Monday, January 5, 2026.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2026-01-16",
+    "end_date": "2026-01-16",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "End of first semester planning day. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Martin Luther King Jr. Day",
+    "category": "federal_holiday",
+    "start_date": "2026-01-19",
+    "end_date": "2026-01-19",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Presidents' Day",
+    "category": "federal_holiday",
+    "start_date": "2026-02-16",
+    "end_date": "2026-02-16",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2026-03-20",
+    "end_date": "2026-03-20",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Friday before Spring Recess. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Spring Recess",
+    "category": "school_break",
+    "start_date": "2026-03-23",
+    "end_date": "2026-03-27",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Teacher Planning Day (Good Friday)",
+    "category": "teacher_workday",
+    "start_date": "2026-04-03",
+    "end_date": "2026-04-03",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Additional teacher planning day coinciding with Good Friday. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Memorial Day",
+    "category": "federal_holiday",
+    "start_date": "2026-05-25",
+    "end_date": "2026-05-25",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2025-2026",
+    "name": "Last Day of School",
+    "category": "last_day",
+    "start_date": "2026-06-04",
+    "end_date": "2026-06-04",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Last day for students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "First Day of School",
+    "category": "first_day",
+    "start_date": "2026-08-13",
+    "end_date": "2026-08-13",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Opening Day for Students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Labor Day",
+    "category": "federal_holiday",
+    "start_date": "2026-09-07",
+    "end_date": "2026-09-07",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2026-09-21",
+    "end_date": "2026-09-21",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Coincides with Rosh Hashanah observance. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "District Professional Learning Day",
+    "category": "teacher_workday",
+    "start_date": "2026-11-03",
+    "end_date": "2026-11-03",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "District-wide Professional Learning Day. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Veterans Day",
+    "category": "federal_holiday",
+    "start_date": "2026-11-11",
+    "end_date": "2026-11-11",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Thanksgiving Recess",
+    "category": "school_break",
+    "start_date": "2026-11-23",
+    "end_date": "2026-11-27",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Full week off.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2026-12-18",
+    "end_date": "2026-12-18",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Friday before Winter Recess. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Winter Recess",
+    "category": "school_break",
+    "start_date": "2026-12-21",
+    "end_date": "2027-01-01",
+    "day_count": 10,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Classes resume Monday, January 4, 2027.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2027-01-15",
+    "end_date": "2027-01-15",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "End of first semester planning day.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Martin Luther King Jr. Day",
+    "category": "federal_holiday",
+    "start_date": "2027-01-18",
+    "end_date": "2027-01-18",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Presidents' Day",
+    "category": "federal_holiday",
+    "start_date": "2027-02-15",
+    "end_date": "2027-02-15",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2027-03-10",
+    "end_date": "2027-03-10",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Mid-semester planning day. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Spring Recess",
+    "category": "school_break",
+    "start_date": "2027-03-22",
+    "end_date": "2027-03-26",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Teacher Planning Day",
+    "category": "teacher_workday",
+    "start_date": "2027-03-29",
+    "end_date": "2027-03-29",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Monday after Spring Recess. No students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Memorial Day",
+    "category": "federal_holiday",
+    "start_date": "2027-05-31",
+    "end_date": "2027-05-31",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": null,
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "mdcps-district",
+    "school_year": "2026-2027",
+    "name": "Last Day of School",
+    "category": "last_day",
+    "start_date": "2027-06-03",
+    "end_date": "2027-06-03",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Last day for students.",
+    "verification": {
+      "source_url": "https://api.dadeschools.net/WMSFiles/392/calendars/25-26/School-Calendars-2026-2027-Elementary.pdf",
+      "source_type": "district_pdf",
+      "confidence": "high"
+    }
+  },
+  {
+    "school_slug": "palmer-trinity-school",
+    "school_year": "2025-2026",
+    "name": "First Day of School",
+    "category": "first_day",
+    "start_date": "2025-08-14",
+    "end_date": "2025-08-14",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Derived from official Palmer Trinity School 2025-26 PDF calendar as surfaced in search snippet.",
+    "verification": {
+      "source_url": "https://www.palmertrinity.org/userfiles/palmertrinityschoolmvc/07-Community/PTS%20Calendar%2025-26%20Final%20(1).pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "palmer-trinity-school",
+    "school_year": "2025-2026",
+    "name": "Labor Day",
+    "category": "federal_holiday",
+    "start_date": "2025-09-01",
+    "end_date": "2025-09-01",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Search snippet from official PDF cited 'Labor Day (No School) is September 2' - however US Labor Day 2025 is September 1 (first Monday). Treating as Sep 1; re-verify via PDF.",
+    "verification": {
+      "source_url": "https://www.palmertrinity.org/userfiles/palmertrinityschoolmvc/07-Community/PTS%20Calendar%2025-26%20Final%20(1).pdf",
+      "source_type": "school_pdf",
+      "confidence": "low"
+    }
+  },
+  {
+    "school_slug": "palmer-trinity-school",
+    "school_year": "2025-2026",
+    "name": "Thanksgiving Break",
+    "category": "school_break",
+    "start_date": "2025-11-25",
+    "end_date": "2025-11-29",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": null,
+    "is_early_release": false,
+    "notes": "Derived from official Palmer Trinity 2025-26 PDF (search snippet: 'Thanksgiving Break runs from November 25-29 with no school').",
+    "verification": {
+      "source_url": "https://www.palmertrinity.org/userfiles/palmertrinityschoolmvc/07-Community/PTS%20Calendar%2025-26%20Final%20(1).pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "riviera-day-school",
+    "school_year": "2025-2026",
+    "name": "Labor Day",
+    "category": "federal_holiday",
+    "start_date": "2025-09-01",
+    "end_date": "2025-09-01",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Confirmed via Riviera Schools 2025-26 official calendar PDF (search snippet).",
+    "verification": {
+      "source_url": "https://resources.finalsite.net/images/v1738879590/rivieraschoolscom/arbwg5hrepdptna09hgh/RivieraSchools2025-2026SchoolYearCalendar1.pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "riviera-day-school",
+    "school_year": "2025-2026",
+    "name": "Spring Recess",
+    "category": "school_break",
+    "start_date": "2026-03-23",
+    "end_date": "2026-03-27",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": null,
+    "is_early_release": false,
+    "notes": "Confirmed via Riviera Schools 2025-26 official PDF (search snippet).",
+    "verification": {
+      "source_url": "https://resources.finalsite.net/images/v1738879590/rivieraschoolscom/arbwg5hrepdptna09hgh/RivieraSchools2025-2026SchoolYearCalendar1.pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "riviera-preparatory-school",
+    "school_year": "2025-2026",
+    "name": "Labor Day",
+    "category": "federal_holiday",
+    "start_date": "2025-09-01",
+    "end_date": "2025-09-01",
+    "day_count": 1,
+    "closed_for_students": true,
+    "closed_for_staff": true,
+    "is_early_release": false,
+    "notes": "Shares unified Riviera Schools calendar.",
+    "verification": {
+      "source_url": "https://resources.finalsite.net/images/v1738879590/rivieraschoolscom/arbwg5hrepdptna09hgh/RivieraSchools2025-2026SchoolYearCalendar1.pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "riviera-preparatory-school",
+    "school_year": "2025-2026",
+    "name": "Spring Recess",
+    "category": "school_break",
+    "start_date": "2026-03-23",
+    "end_date": "2026-03-27",
+    "day_count": 5,
+    "closed_for_students": true,
+    "closed_for_staff": null,
+    "is_early_release": false,
+    "notes": "Shares unified Riviera Schools calendar.",
+    "verification": {
+      "source_url": "https://resources.finalsite.net/images/v1738879590/rivieraschoolscom/arbwg5hrepdptna09hgh/RivieraSchools2025-2026SchoolYearCalendar1.pdf",
+      "source_type": "school_pdf",
+      "confidence": "medium"
+    }
+  },
+  {
+    "school_slug": "scheck-hillel-community-school",
+    "school_year": "2025-2026",
+    "name": "Lionpalooza Back-to-School Expo (not a closure - orientation event)",
+    "category": "other",
+    "start_date": "2025-08-17",
+    "end_date": "2025-08-17",
+    "day_count": 1,
+    "closed_for_students": false,
+    "closed_for_staff": false,
+    "is_early_release": false,
+    "notes": "Orientation event on a Sunday 10am-12pm per school's Back-to-School page. Not a closure - included for completeness since it's one of the only dates verifiable from the school's own site.",
+    "verification": {
+      "source_url": "https://www.ehillel.org/back-to-school",
+      "source_type": "school_website_calendar_page",
+      "confidence": "high"
+    }
+  }
+]
