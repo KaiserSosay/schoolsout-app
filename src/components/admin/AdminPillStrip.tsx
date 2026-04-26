@@ -4,6 +4,7 @@ export type PillCounts = {
   featureRequests: number;
   campRequests: number;
   calendarReviews: number;
+  calendarSubmissions: number;
   integrityWarnings: number;
   schoolRequests: number;
   dataQuality: number;
@@ -21,6 +22,7 @@ const PILLS: Pill[] = [
   { key: 'featureRequests', tab: 'feature-requests', emoji: '💡', label: 'Feature requests' },
   { key: 'campRequests', tab: 'camp-requests', emoji: '🏕️', label: 'Camp applications' },
   { key: 'calendarReviews', tab: 'calendar-reviews', emoji: '📅', label: 'Calendar drafts' },
+  { key: 'calendarSubmissions', tab: 'calendar-submissions', emoji: '📨', label: 'Calendar submissions' },
   { key: 'integrityWarnings', tab: 'integrity', emoji: '⚠️', label: 'Integrity issues' },
   { key: 'schoolRequests', tab: 'school-requests', emoji: '🏫', label: 'School requests' },
   { key: 'dataQuality', tab: 'data-quality', emoji: '🩺', label: 'Data quality' },

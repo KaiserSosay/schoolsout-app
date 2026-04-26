@@ -13,6 +13,10 @@ import {
 } from '@/components/admin/CampRequestsPanel';
 import { CalendarReviewClient } from '@/components/admin/CalendarReviewClient';
 import {
+  CalendarSubmissionsPanel,
+  type AdminCalendarSubmission,
+} from '@/components/admin/CalendarSubmissionsPanel';
+import {
   NotifySubscribersPanel,
   type PendingSchoolBlock,
 } from '@/components/admin/NotifySubscribersPanel';
@@ -39,6 +43,7 @@ const VALID_TABS = [
   'feature-requests',
   'camp-requests',
   'calendar-reviews',
+  'calendar-submissions',
   'enrichment',
   'integrity',
   'school-requests',
@@ -215,6 +220,50 @@ async function loadCalendarData() {
     drafts: draftsBySchool.get(s.id) ?? [],
     verifiedCount: verifiedBySchool.get(s.id) ?? 0,
   }));
+}
+
+// Phase 4.7.1 — public submissions awaiting admin triage. Domain-verified
+// rows (school staff) bubble to the top so we can fast-track real-school
+// updates. Schema-defensive — if migration 043 hasn't shipped, returns [].
+async function loadCalendarSubmissions(): Promise<AdminCalendarSubmission[]> {
+  const db = createServiceSupabase();
+  try {
+    const { data } = await db
+      .from('school_calendar_submissions')
+      .select(
+        'id, school_id, submitter_email, submitter_name, submitter_role, proposed_updates, notes, domain_verified, status, reviewed_by, reviewed_at, review_notes, created_at, schools(slug, name)',
+      )
+      .order('domain_verified', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(200);
+    type Row = Omit<AdminCalendarSubmission, 'school'> & {
+      schools:
+        | { slug: string; name: string }
+        | Array<{ slug: string; name: string }>
+        | null;
+    };
+    return ((data ?? []) as unknown as Row[]).map((r) => {
+      const s = Array.isArray(r.schools) ? (r.schools[0] ?? null) : r.schools;
+      return {
+        id: r.id,
+        school_id: r.school_id,
+        submitter_email: r.submitter_email,
+        submitter_name: r.submitter_name,
+        submitter_role: r.submitter_role,
+        proposed_updates: r.proposed_updates,
+        notes: r.notes,
+        domain_verified: r.domain_verified,
+        status: r.status,
+        reviewed_by: r.reviewed_by,
+        reviewed_at: r.reviewed_at,
+        review_notes: r.review_notes,
+        created_at: r.created_at,
+        school: s,
+      };
+    });
+  } catch {
+    return [];
+  }
 }
 
 async function loadUsersData() {
@@ -570,6 +619,9 @@ export default async function AdminPage({
         <CalendarReviewClient schools={blocks} />
       </div>
     );
+  } else if (activeTab === 'calendar-submissions') {
+    const rows = await loadCalendarSubmissions();
+    panel = <CalendarSubmissionsPanel locale={locale} initialSubmissions={rows} />;
   } else if (activeTab === 'enrichment') {
     const camps = await loadEnrichmentData();
     panel = <EnrichmentPanel initialCamps={camps} />;

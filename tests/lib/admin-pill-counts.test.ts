@@ -20,6 +20,7 @@ type Fixture = {
   };
   users: number;
   school_requests: { all: number };
+  school_calendar_submissions: { pending: number };
 };
 
 let fixture: Fixture;
@@ -30,6 +31,7 @@ function makeBuilder(table: string) {
   let logisticsVerified: boolean | null = null;
   let calendarStatusIn: string[] | null = null;
   let closureStatus: string | null = null;
+  let submissionStatus: string | null = null;
   let dqOr: boolean = false;
 
   const builder: {
@@ -48,6 +50,7 @@ function makeBuilder(table: string) {
       if (col === 'verified' && val === true) verified = true;
       if (col === 'logistics_verified' && val === false) logisticsVerified = false;
       if (col === 'status' && val === 'ai_draft') closureStatus = 'ai_draft';
+      if (col === 'status' && val === 'pending') submissionStatus = 'pending';
       return builder;
     },
     in: (col: string, vals: string[]) => {
@@ -80,6 +83,12 @@ function makeBuilder(table: string) {
         count = fixture.camps.data_quality_distinct;
       } else if (table === 'users') count = fixture.users;
       else if (table === 'school_requests') count = fixture.school_requests.all;
+      else if (
+        table === 'school_calendar_submissions' &&
+        submissionStatus === 'pending'
+      ) {
+        count = fixture.school_calendar_submissions.pending;
+      }
       return Promise.resolve({ count, error: null }).then(onFulfilled);
     },
   };
@@ -106,6 +115,7 @@ describe('computePillCounts', () => {
       },
       users: 200,
       school_requests: { all: 9 },
+      school_calendar_submissions: { pending: 6 },
     };
   });
 
@@ -145,6 +155,12 @@ describe('computePillCounts', () => {
     expect(counts.dataQuality).toBe(22);
   });
 
+  it('calendar submissions pill counts pending school_calendar_submissions only', async () => {
+    const { computePillCounts } = await import('@/lib/admin/pill-counts');
+    const counts = await computePillCounts(dbMock);
+    expect(counts.calendarSubmissions).toBe(6);
+  });
+
   it('users pill is total user count', async () => {
     const { computePillCounts } = await import('@/lib/admin/pill-counts');
     const counts = await computePillCounts(dbMock);
@@ -181,6 +197,7 @@ describe('computePillCounts', () => {
       featureRequests: 0,
       campRequests: 0,
       calendarReviews: 0,
+      calendarSubmissions: 0,
       integrityWarnings: 0,
       users: 0,
       schoolRequests: 0,

@@ -34,6 +34,7 @@ export async function computePillCounts(
     campRequestsCount,
     schoolsNeedingReviewCount,
     aiDraftClosuresCount,
+    calendarSubmissionsCount,
     brokenWebsitesCount,
     missingLogisticsCount,
     usersCount,
@@ -65,6 +66,15 @@ export async function computePillCounts(
         .from('closures')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'ai_draft'),
+    ),
+    // Pending calendar submissions awaiting admin triage. Counts only
+    // status='pending' so the pill drops to 0 once the queue is cleared.
+    // Schema-defensive: migration 043 may not be applied yet.
+    safeCount(
+      db
+        .from('school_calendar_submissions')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending'),
     ),
     // Integrity panel renders broken websites + camps with logistics_verified
     // = false. Pill counts each separately so the math matches what's
@@ -110,6 +120,7 @@ export async function computePillCounts(
     featureRequests: featureRequestsCount,
     campRequests: campRequestsCount,
     calendarReviews: schoolsNeedingReviewCount + aiDraftClosuresCount,
+    calendarSubmissions: calendarSubmissionsCount,
     integrityWarnings: brokenWebsitesCount + missingLogisticsCount,
     users: usersCount,
     schoolRequests: schoolRequestsCount,

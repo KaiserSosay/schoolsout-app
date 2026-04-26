@@ -161,6 +161,9 @@ Mom's biggest frustration: some camps register kids over WhatsApp, others have h
 ### 4.7 — School Operator Dashboard 🏫
 Same shape as Phase 3.1 (camp operator dashboard) but for schools. A school admin logs in, edits their school's calendar directly on our platform, uploads photos, manages their listing. The first 10% of this — a public submission form anyone can fill out to propose calendar updates with email-domain auto-verification — ships earlier (see `docs/plans/sunday-evening-three-buckets.md` Bucket 3).
 
+### ✅ 4.7.1 — Public Calendar Submission Form (SHIPPED 2026-04-26)
+First slice of Phase 4.7. Every school detail page now carries a collapsed "Update this school's calendar →" CTA that expands inline into a form open to anyone — parent, teacher, principal, or anonymous. Submissions land in a new `school_calendar_submissions` table (migration 043), trigger an ack email to the submitter and a notify to admin, and surface in `/admin?tab=calendar-submissions`. Email-domain auto-verification compares the submitter's email host to the school's website host — matches bubble to the top of the admin queue. **No row ever auto-writes to `closures`** — admin marks `approved` then later `incorporated` once the dates land via a normal migration. Same R6 trust posture as the iCal pipeline.
+
 **Wording graduation path:** Until Phase 4.7 ships, all hosted school
 calendars are labeled "Verified" — meaning we imported and validated
 them against the school's published source. After Phase 4.7 ships and
