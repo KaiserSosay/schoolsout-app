@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
+import { render } from '@react-email/render';
+import { randomUUID } from 'node:crypto';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { requireAdminApi } from '@/lib/auth/requireAdmin';
 import { env } from '@/lib/env';
+import {
+  OperatorWelcomeEmail,
+  operatorWelcomeSubject,
+} from '@/lib/email/OperatorWelcomeEmail';
 
 const paramSchema = z.object({ id: z.string().guid() });
 
@@ -124,37 +130,106 @@ export async function POST(
     );
   }
 
-  // Fire-and-forget email. Don't let send failures block the approval.
-  if (process.env.RESEND_API_KEY) {
-    try {
-      const resend = new Resend(env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: "School's Out! <hello@schoolsout.net>",
-        to: app.email,
-        subject: 'Your camp listing is approved!',
-        html: `
-<!doctype html>
-<html>
-  <body style="font-family: system-ui, sans-serif; background: #FBF8F1; color: #1A1A1A; padding: 24px;">
-    <h1 style="font-size: 24px; margin: 0 0 16px;">${camp_data.name} is live.</h1>
-    <p style="font-size: 15px; line-height: 1.5; margin: 0 0 12px;">
-      Thanks for applying to School&apos;s Out! Your listing is now published on the catalog.
-      Parents in Coral Gables will start seeing it when they browse camps for the age range you submitted.
-    </p>
-    <p style="font-size: 15px; line-height: 1.5; margin: 0 0 12px;">
-      We may reach out shortly to confirm logistics (hours, before/after-care, drop-off).
-      That second review stamps your listing with a green "verified" badge parents trust.
-    </p>
-    <p style="font-size: 13px; color: #71717A; margin-top: 24px;">
-      — Noah & dad, School&apos;s Out!
-    </p>
-  </body>
-</html>`,
-      });
-    } catch (err) {
-      console.error('[approve] resend failed', err);
+  // Phase 3.1: provision a camp_operators invite row so the applicant can
+  // self-edit their listing once they sign in. The user_id may not exist
+  // yet — Supabase auth.users gets created on first magic-link sign-in. We
+  // resolve the user_id by email; if the user is brand new we INSERT a
+  // public.users row eagerly (mirrors handle_new_user semantics) so the
+  // operator row has a real foreign key to point at.
+  const inviteToken = randomUUID();
+  const invitedAtIso = new Date().toISOString();
+  const expiresAtIso = new Date(
+    Date.now() + 14 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+  const operatorEmail = app.email.toLowerCase();
+
+  let operatorUserId: string | null = null;
+  const { data: existingUser } = await db
+    .from('users')
+    .select('id')
+    .eq('email', operatorEmail)
+    .maybeSingle();
+  if (existingUser?.id) {
+    operatorUserId = existingUser.id;
+  } else {
+    // Eager-create an auth shadow row so the operator's invite has a place
+    // to land. Real Supabase auth.users will get created on magic-link
+    // sign-in; the public.users row gets re-bound by handle_new_user via
+    // ON CONFLICT (id) DO NOTHING. For now we generate a stable UUID and
+    // the operator can sign in normally.
+    const provisionalId = randomUUID();
+    const { data: insertedUser, error: userErr } = await db
+      .from('users')
+      .insert({
+        id: provisionalId,
+        email: operatorEmail,
+        coppa_consent_at: invitedAtIso,
+        role: 'operator',
+      })
+      .select('id')
+      .maybeSingle();
+    if (userErr || !insertedUser) {
+      // Non-fatal — the camp + application updates already succeeded.
+      // Surface as a warning so the admin knows to invite manually.
+      console.error('[approve] could not provision operator user', userErr);
+    } else {
+      operatorUserId = insertedUser.id;
     }
   }
 
-  return NextResponse.json({ ok: true, camp_id: newCamp.id, slug: newCamp.slug });
+  if (operatorUserId) {
+    const { error: opErr } = await db.from('camp_operators').insert({
+      camp_id: newCamp.id,
+      user_id: operatorUserId,
+      role: 'owner',
+      invited_at: invitedAtIso,
+      invite_token: inviteToken,
+      invite_expires_at: expiresAtIso,
+    });
+    if (opErr) {
+      console.error('[approve] camp_operators insert failed', opErr);
+    }
+  }
+
+  // Send the operator welcome email. The magic-link uses the standard
+  // sign-in flow with `next` pointed at the new operator dashboard, so the
+  // recipient lands on /en/operator/{slug} after auth.
+  // ENV gate: ALLOW_OPERATOR_INVITE_EMAILS=true must be explicitly set.
+  // Without it, the email is built but never sent — Phase 3.1 ships the
+  // template + endpoint without spamming real applicants tonight.
+  const sendEnabled =
+    process.env.RESEND_API_KEY &&
+    process.env.ALLOW_OPERATOR_INVITE_EMAILS === 'true';
+  if (sendEnabled) {
+    try {
+      const resend = new Resend(env.RESEND_API_KEY);
+      const magicLinkUrl = `${env.APP_URL}/en/auth/sign-in?next=${encodeURIComponent(
+        `/en/operator/${newCamp.slug}`,
+      )}&email=${encodeURIComponent(operatorEmail)}`;
+      const html = await render(
+        OperatorWelcomeEmail({
+          locale: 'en',
+          campName: camp_data.name,
+          magicLinkUrl,
+          expiresAtIso,
+        }),
+      );
+      await resend.emails.send({
+        from: "School's Out! <hello@schoolsout.net>",
+        to: operatorEmail,
+        subject: operatorWelcomeSubject('en', camp_data.name),
+        html,
+      });
+    } catch (err) {
+      console.error('[approve] operator welcome resend failed', err);
+    }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    camp_id: newCamp.id,
+    slug: newCamp.slug,
+    operator_invited: Boolean(operatorUserId),
+    operator_email_sent: Boolean(sendEnabled && operatorUserId),
+  });
 }

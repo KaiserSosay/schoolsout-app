@@ -11,6 +11,9 @@ vi.stubEnv('ADMIN_EMAILS', 'admin@example.com');
 const getUserMock = vi.fn();
 const insertCamp = vi.fn();
 const updateApp = vi.fn();
+const insertOperator = vi.fn();
+const insertUser = vi.fn();
+const userLookupResult: { data: { id: string } | null } = { data: null };
 const sendEmailMock = vi.fn().mockResolvedValue({ data: { id: 'mail-1' }, error: null });
 
 vi.mock('resend', () => ({
@@ -70,6 +73,37 @@ vi.mock('@/lib/supabase/service', () => ({
           },
         };
       }
+      if (table === 'users') {
+        return {
+          // Lookup by email for operator-invite resolution
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve(userLookupResult),
+            }),
+          }),
+          // Provisional insert when the operator's email isn't a user yet
+          insert: (payload: Record<string, unknown>) => {
+            insertUser(payload);
+            return {
+              select: () => ({
+                maybeSingle: () =>
+                  Promise.resolve({
+                    data: { id: (payload as { id: string }).id },
+                    error: null,
+                  }),
+              }),
+            };
+          },
+        };
+      }
+      if (table === 'camp_operators') {
+        return {
+          insert: (payload: Record<string, unknown>) => {
+            insertOperator(payload);
+            return Promise.resolve({ data: null, error: null });
+          },
+        };
+      }
       return {};
     },
   }),
@@ -79,6 +113,9 @@ beforeEach(() => {
   getUserMock.mockReset();
   insertCamp.mockReset();
   updateApp.mockReset();
+  insertOperator.mockReset();
+  insertUser.mockReset();
+  userLookupResult.data = null;
 });
 
 describe('POST /api/admin/camp-applications/[id]/approve', () => {
@@ -142,6 +179,55 @@ describe('POST /api/admin/camp-applications/[id]/approve', () => {
     const updatePatch = updateApp.mock.calls[0][0] as Record<string, unknown>;
     expect(updatePatch.status).toBe('approved');
     expect(updatePatch.reviewed_at).toBeTypeOf('string');
+
+    // Phase 3.1: provisions a camp_operators row pointing at the new camp
+    // and at a freshly-created users row for the applicant's email.
+    expect(insertUser).toHaveBeenCalledTimes(1);
+    const userPayload = insertUser.mock.calls[0][0] as Record<string, unknown>;
+    expect(userPayload.email).toBe('operator@example.com');
+    expect(userPayload.role).toBe('operator');
+
+    expect(insertOperator).toHaveBeenCalledTimes(1);
+    const opPayload = insertOperator.mock.calls[0][0] as Record<string, unknown>;
+    expect(opPayload.camp_id).toBe('camp-new');
+    expect(opPayload.role).toBe('owner');
+    expect(opPayload.invite_token).toBeTypeOf('string');
+    expect(typeof opPayload.invite_expires_at).toBe('string');
+    // Email isn't sent unless ALLOW_OPERATOR_INVITE_EMAILS=true.
+    expect(body.operator_invited).toBe(true);
+    expect(body.operator_email_sent).toBe(false);
+  });
+
+  it('reuses existing users row when applicant email already has one', async () => {
+    userLookupResult.data = { id: 'existing-user-id' };
+    getUserMock.mockResolvedValueOnce({
+      data: { user: { id: 'admin', email: 'admin@example.com' } },
+    });
+    const { POST } = await import(
+      '@/app/api/admin/camp-applications/[id]/approve/route'
+    );
+    await POST(
+      new Request('http://localhost/approve', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          camp_data: {
+            name: 'Reuse Camp',
+            slug: 'reuse-camp',
+            ages_min: 5,
+            ages_max: 12,
+            price_tier: '$',
+            categories: [],
+          },
+        }),
+      }),
+      { params: { id: '00000000-0000-0000-0000-000000000001' } },
+    );
+    // No new users row when the applicant already has one — operator just
+    // points at the existing user_id.
+    expect(insertUser).not.toHaveBeenCalled();
+    expect(insertOperator).toHaveBeenCalledTimes(1);
+    expect(insertOperator.mock.calls[0][0].user_id).toBe('existing-user-id');
   });
 
   it('422s ages_max < ages_min', async () => {

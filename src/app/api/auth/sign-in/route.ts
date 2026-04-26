@@ -31,18 +31,36 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: 'invalid_body' }, { status: 400 });
 
   const { email, locale } = parsed.data;
-  const safeNext = parsed.data.next && NEXT_RE.test(parsed.data.next)
-    ? parsed.data.next
-    : `/${locale}/app`;
 
   const db = createServiceSupabase();
 
   const { data: existingRow } = await db
     .from('users')
     .select('id')
-    .eq('email', email)
+    .eq('email', email.toLowerCase())
     .maybeSingle();
   const isReturning = Boolean(existingRow?.id);
+
+  // Phase 3.1: if this email is associated with one or more camp_operators
+  // rows AND the caller didn't pass an explicit `next`, default the post-
+  // auth destination to the operator's dashboard. Picks the most-recently-
+  // created camp when there's more than one (operators with multiple
+  // camps can switch from there).
+  let operatorNext: string | null = null;
+  if (existingRow?.id) {
+    const { data: opRows } = await db
+      .from('camp_operators')
+      .select('camp_id, created_at, camps:camp_id (slug)')
+      .eq('user_id', existingRow.id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+    const slug = opRows?.[0]?.camps as { slug?: string } | null;
+    if (slug?.slug) operatorNext = `/${locale}/operator/${slug.slug}`;
+  }
+
+  const safeNext = parsed.data.next && NEXT_RE.test(parsed.data.next)
+    ? parsed.data.next
+    : (operatorNext ?? `/${locale}/app`);
 
   const buildCallbackUrl = (hash: string, t: string) =>
     `${env.APP_URL}/auth/callback?token_hash=${encodeURIComponent(hash)}&type=${encodeURIComponent(
