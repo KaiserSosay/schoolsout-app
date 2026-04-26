@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { statusBadge, type SchoolStatus } from '@/lib/school-status';
 import { daysUntil } from '@/lib/countdown';
+import { BirthDateSoftPrompt } from './BirthDateSoftPrompt';
 
 export type FamilyKid = {
   id: string;
@@ -15,6 +16,11 @@ export type FamilyKid = {
   school_name: string;
   school_district: string;
   calendar_status: SchoolStatus;
+  // Optional — populated when the parent has filled in the hybrid
+  // model (migration 038). The soft-prompt banner asks for it when
+  // null. Both columns come from kid_profiles.
+  birth_month?: number | null;
+  birth_year?: number | null;
 };
 
 export type FamilyClosure = {
@@ -122,6 +128,20 @@ export function FamilyClient({
         </header>
 
         <p className={isKids ? 'text-white/80' : 'text-muted'}>{t('app.family.subtitle')}</p>
+
+        <BirthDateSoftPrompt
+          kids={kids.map((k) => ({
+            id: k.id,
+            ordinal: k.ordinal,
+            birth_month: k.birth_month,
+            birth_year: k.birth_year,
+          }))}
+          nameByOrdinal={Object.fromEntries(
+            localKids
+              .filter((lk) => lk.name)
+              .map((lk) => [lk.ordinal, lk.name as string]),
+          )}
+        />
 
         <ul className="space-y-4">
           {kids.map((kid, idx) => {

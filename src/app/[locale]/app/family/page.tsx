@@ -18,7 +18,9 @@ export default async function FamilyPage({
 
   const { data: profiles } = await supabase
     .from('kid_profiles')
-    .select('id, school_id, age_range, ordinal, schools(id, name, district, type, calendar_status)')
+    .select(
+      'id, school_id, age_range, ordinal, birth_month, birth_year, schools(id, name, district, type, calendar_status)',
+    )
     .eq('user_id', user.id)
     .order('ordinal');
 
@@ -34,6 +36,8 @@ export default async function FamilyPage({
       school_name: schoolObj?.name ?? '',
       school_district: schoolObj?.district ?? '',
       calendar_status: (schoolObj?.calendar_status ?? 'needs_research') as FamilyKid['calendar_status'],
+      birth_month: (p.birth_month as number | null) ?? null,
+      birth_year: (p.birth_year as number | null) ?? null,
     };
   });
 
