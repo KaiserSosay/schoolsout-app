@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -24,14 +25,29 @@ export function UserMenuItems({
 }) {
   const t = useTranslations('app.nav');
   const tHeader = useTranslations('app.header');
+  const tMenu = useTranslations('app.userMenu');
   const router = useRouter();
   const { mode, setMode } = useMode();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const signOut = async () => {
     try {
       const sb = createBrowserSupabase();
       await sb.auth.signOut();
     } finally {
+      onAction();
+      router.push(`/${locale}`);
+      router.refresh();
+    }
+  };
+
+  const signOutEverywhere = async () => {
+    try {
+      const sb = createBrowserSupabase();
+      await sb.auth.signOut({ scope: 'global' });
+      showSignedOutToast(tMenu('signedOutToast'));
+    } finally {
+      setConfirmOpen(false);
       onAction();
       router.push(`/${locale}`);
       router.refresh();
@@ -129,6 +145,102 @@ export function UserMenuItems({
         <span aria-hidden>🚪</span>
         <span>{t('logout')}</span>
       </button>
+
+      <button
+        type="button"
+        onClick={() => setConfirmOpen(true)}
+        className={itemCls + ' text-left text-muted'}
+      >
+        <span aria-hidden>🌐</span>
+        <span>{tMenu('logOutEverywhere')}</span>
+      </button>
+
+      {confirmOpen ? (
+        <LogOutEverywhereDialog
+          onCancel={() => setConfirmOpen(false)}
+          onConfirm={signOutEverywhere}
+        />
+      ) : null}
     </div>
   );
+}
+
+function LogOutEverywhereDialog({
+  onCancel,
+  onConfirm,
+}: {
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const tMenu = useTranslations('app.userMenu');
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 z-50 bg-ink/50 backdrop-blur-sm"
+        onClick={onCancel}
+        aria-hidden
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="log-out-everywhere-title"
+        className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md rounded-t-3xl border border-cream-border bg-cream p-6 shadow-2xl sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
+      >
+        <h2
+          id="log-out-everywhere-title"
+          className="text-lg font-black text-ink"
+          style={{ letterSpacing: '-0.01em' }}
+        >
+          {tMenu('logOutEverywhereConfirm.title')}
+        </h2>
+        <p className="mt-3 text-sm text-ink/80">
+          {tMenu('logOutEverywhereConfirm.body')}
+        </p>
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-cream-border bg-white px-5 py-3 text-sm font-bold text-ink hover:bg-cream"
+          >
+            {tMenu('logOutEverywhereConfirm.cancelButton')}
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-black text-cream hover:-translate-y-0.5 hover:shadow-lg"
+          >
+            {tMenu('logOutEverywhereConfirm.confirmButton')}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function showSignedOutToast(msg: string) {
+  if (typeof document === 'undefined') return;
+  let host = document.getElementById('so-toast-host');
+  if (!host) {
+    host = document.createElement('div');
+    host.id = 'so-toast-host';
+    host.className =
+      'fixed bottom-24 left-0 right-0 z-[100] flex flex-col items-center gap-2 px-4 pointer-events-none';
+    document.body.appendChild(host);
+  }
+  const el = document.createElement('div');
+  el.className =
+    'rounded-2xl px-4 py-3 text-sm font-semibold shadow-lg bg-ink text-white pointer-events-auto';
+  el.textContent = msg;
+  el.setAttribute('role', 'status');
+  host.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
 }

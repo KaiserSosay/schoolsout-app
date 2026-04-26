@@ -1057,6 +1057,16 @@
       "openUserMenu": "Abrir menú",
       "notificationsEmpty": "Sin notificaciones aún. Los recordatorios por correo aparecerán aquí.",
       "notificationsTitle": "Actividad reciente"
+    },
+    "userMenu": {
+      "logOutEverywhere": "Cerrar sesión en todos los dispositivos",
+      "logOutEverywhereConfirm": {
+        "title": "¿Cerrar sesión en todas partes?",
+        "body": "Esto cerrará tu sesión en todos los dispositivos — teléfono, tablet, otros navegadores. Necesitarás un nuevo enlace de inicio de sesión para volver.",
+        "confirmButton": "Sí, cerrar sesión",
+        "cancelButton": "Cancelar"
+      },
+      "signedOutToast": "Cerraste sesión en todas partes. Estás a salvo."
     }
   },
   "kidInvalid": {

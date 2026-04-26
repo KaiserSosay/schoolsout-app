@@ -1057,6 +1057,16 @@
       "openUserMenu": "Open menu",
       "notificationsEmpty": "No notifications yet. Reminder emails you get will show up here.",
       "notificationsTitle": "Recent activity"
+    },
+    "userMenu": {
+      "logOutEverywhere": "Log out of all devices",
+      "logOutEverywhereConfirm": {
+        "title": "Log out everywhere?",
+        "body": "This signs you out on every device — phone, tablet, other browsers. You'll need a new sign-in link to come back.",
+        "confirmButton": "Yes, sign me out",
+        "cancelButton": "Cancel"
+      },
+      "signedOutToast": "Signed out everywhere. You're safe."
     }
   },
   "kidInvalid": {
