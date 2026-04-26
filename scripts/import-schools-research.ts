@@ -270,23 +270,51 @@ function supaAdmin(): SupabaseClient {
 
 // Build the patch by applying null-preservation: never overwrite a non-null
 // existing value with a research null/empty.
+// R5 (docs/SHIPPING_RULES.md, codified 2026-04-26): bulk imports fill
+// gaps, never overwrite. A non-null prod value represents intentional
+// state — manual entry, admin correction, app-derived from real data —
+// that automation cannot reliably second-guess. This patch builder
+// preserves any non-null/non-empty prod field by default. Fields tagged
+// in `researchManagedKeys` are the narrow exception (provenance metadata
+// like `data_source`).
+export const DEFAULT_RESEARCH_MANAGED_KEYS = new Set(['data_source']);
+
+function isEmpty(v: unknown): boolean {
+  if (v === null || v === undefined) return true;
+  if (Array.isArray(v) && v.length === 0) return true;
+  return false;
+}
+
 export function buildPatch(
   row: Record<string, unknown>,
   exist: Record<string, unknown>,
   preservedKeys: { count: number; keys: string[] },
+  researchManagedKeys: Set<string> = DEFAULT_RESEARCH_MANAGED_KEYS,
 ): Record<string, unknown> {
   const patch: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(row)) {
+    // Slug + id are caller-managed (R4 — slugs are immutable on UPDATE).
     if (k === 'slug' || k === 'id') continue;
-    const existingVal = exist[k];
-    if (v === null || v === undefined || (Array.isArray(v) && v.length === 0)) {
-      if (existingVal !== null && existingVal !== undefined) {
-        preservedKeys.count++;
-        preservedKeys.keys.push(k);
-        continue;
-      }
+
+    // Research-managed keys always take the research value. This is the
+    // narrow R5 exception — provenance metadata benefits from being
+    // current, and there's no manual workflow that touches it.
+    if (researchManagedKeys.has(k)) {
+      patch[k] = v;
+      continue;
     }
-    patch[k] = v;
+
+    // R5: if prod has any non-null/non-empty value, preserve it regardless
+    // of what research says. The "research has fresher data" judgment is
+    // out of scope for an unattended bulk import.
+    if (!isEmpty(exist[k])) {
+      preservedKeys.count++;
+      preservedKeys.keys.push(k);
+      continue;
+    }
+
+    // Prod is empty. Fill the gap if research has something.
+    if (!isEmpty(v)) patch[k] = v;
   }
   return patch;
 }
@@ -448,6 +476,10 @@ async function main() {
     existingSlug: string | null;
     slugWouldHaveChanged: boolean;
     researchName: string;
+    // Stashed alongside the patch so --show-updates can flag stub-shaped
+    // prod addresses against the longer research value (R5 preserves the
+    // prod stub by default, but the operator should eyeball the case).
+    researchAddress: string | null;
   };
   const updates: SchoolUpdate[] = [];
   const preservedDetail: Record<string, number> = {};
@@ -509,6 +541,7 @@ async function main() {
         existingSlug: existSlug,
         slugWouldHaveChanged,
         researchName: s.name,
+        researchAddress: s.address ?? null,
       });
       report.schoolsUpdate++;
       if (slugWouldHaveChanged) report.slugRewriteSkipped++;
@@ -552,6 +585,10 @@ async function main() {
   // before/after for the fields most likely to overwrite human-curated
   // values (data_source, district, address, phone, neighborhood,
   // calendar_status). Slug is shown but flagged as preserved per R4.
+  // Under R5 the diff is short by design — any non-null prod field is
+  // preserved, so the bulk of the visible changes are gap-fills. Stub-
+  // shaped prod addresses (short string) get a `STUB?` flag so a
+  // reviewer can decide per row whether to manually patch.
   if (SHOW_UPDATES && updates.length > 0) {
     const DIFF_FIELDS = [
       'data_source',
@@ -561,6 +598,7 @@ async function main() {
       'neighborhood',
       'calendar_status',
     ] as const;
+    const STUB_ADDRESS_MAX_LEN = 30;
     console.log(`\n  --show-updates: per-row diff for ${updates.length} UPDATE candidates`);
     for (const u of updates) {
       const slugLine = u.slugWouldHaveChanged
@@ -570,17 +608,32 @@ async function main() {
       console.log(`      ${slugLine}`);
       let changedCount = 0;
       for (const field of DIFF_FIELDS) {
-        const oldVal = u.existing[field];
         const newVal = u.patch[field];
-        if (newVal === undefined) continue; // patch skipped this field (preserved)
+        if (newVal === undefined) continue; // R5: prod had a value, preserved
+        const oldVal = u.existing[field];
         const oldStr = oldVal === null || oldVal === undefined ? '∅' : String(oldVal);
         const newStr = newVal === null || newVal === undefined ? '∅' : String(newVal);
-        if (oldStr === newStr) continue; // no actual change
+        if (oldStr === newStr) continue;
         changedCount++;
-        console.log(`      ${field}: ${oldStr} → ${newStr}`);
+        console.log(`      ${field}: ${oldStr} → ${newStr}  (gap-fill)`);
+      }
+      // Address-stub flag: prod has a short address string (e.g. "Coral
+      // Gables, FL") that R5 preserves, but research has a longer value.
+      // Surface for per-row operator review rather than auto-overwrite.
+      const prodAddr = u.existing.address;
+      if (
+        typeof prodAddr === 'string' &&
+        prodAddr.length > 0 &&
+        prodAddr.length < STUB_ADDRESS_MAX_LEN &&
+        u.researchAddress &&
+        u.researchAddress.length > prodAddr.length
+      ) {
+        console.log(
+          `      address: STUB? prod="${prodAddr}" (${prodAddr.length} chars) — research had "${u.researchAddress}" (PRESERVED per R5; flag for review)`,
+        );
       }
       if (changedCount === 0) {
-        console.log('      (no changes to inspected fields — pure preserve / metadata-only update)');
+        console.log('      (no gap-fills — every research field skipped per R5)');
       }
     }
   }

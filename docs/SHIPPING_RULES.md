@@ -145,3 +145,61 @@ with a `slug` column:**
 - [ ] Does the dry-run output count slug-rewrite-skips so operators
       see when the script DECLINED to rewrite (vs silently allowing it)?
 ```
+
+## R5 — Bulk imports fill gaps, never overwrite
+
+**Rule:** When a bulk import script encounters an existing prod row, it
+MUST update only fields that are NULL or empty in prod. Non-null prod
+values represent intentional state — manual entry, admin correction,
+app-derived from real verified data — that automation cannot reliably
+second-guess. The only exceptions are provenance metadata fields
+explicitly tagged as research-managed.
+
+This generalizes R4 (slug-immutability) to all user-facing fields.
+
+**Why:** Same dry-run incident as R4. After fixing the slug issue, the
+2026-04-26 dry-run revealed the import was about to REGRESS
+`calendar_status` on 6 schools — TGP from `verified_current` to
+`unavailable`, Gulliver/Westminster/Scheck Hillel/Lehrman/Ransom from
+`verified_*` to `needs_research` — because the research JSON snapshot
+predated migrations 029/032/035 that imported actual verified
+calendars and bumped each school to verified. The research data was
+older than prod state, but the script had no way to know that.
+
+**How to apply:**
+
+- The default `buildPatch` in any import script preserves any non-
+  null/non-empty prod field, regardless of what research has.
+  Implementation: see `scripts/import-schools-research.ts` and its
+  `DEFAULT_RESEARCH_MANAGED_KEYS` set.
+- Provenance metadata is the narrow exception. Today only
+  `data_source` is research-managed. Adding more requires a documented
+  reason — fields where research is reliably authoritative AND the app
+  has no manual-entry workflow that touches them.
+- Stub-shaped non-null prod values (e.g. `address = "Coral Gables, FL"`
+  with no street) are still treated as non-null under strict R5.
+  They're surfaced inline in the `--show-updates` dry-run output as
+  `STUB?` flags so a reviewer can decide per row whether to manually
+  patch the research JSON or accept the gap.
+
+**UPDATE behavior under R5:**
+
+| Prod | Research | Result |
+|------|----------|--------|
+| `null` / empty | non-null | research wins (gap fill) |
+| `null` / empty | `null` / empty | no-op |
+| non-null | anything | prod preserved |
+| (research-managed key) | any | research wins |
+
+**Pre-merge checklist for any bulk import that writes to existing
+rows:**
+
+```
+- [ ] Does this script touch fields other than the research-managed
+      allowlist on existing rows?
+- [ ] If yes: does it preserve non-null prod values by default?
+- [ ] Does the dry-run output show, per row, which fields would be
+      filled (gap-fill) vs preserved (R5)?
+- [ ] Are stub-shaped prod values (short address strings, etc.)
+      flagged for manual review rather than silently preserved?
+```

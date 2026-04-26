@@ -243,24 +243,55 @@ describe('buildClosureRow', () => {
   });
 });
 
-describe('buildPatch null preservation', () => {
+describe('buildPatch — R5 (bulk imports fill gaps, never overwrite)', () => {
   it('preserves existing non-null phone when research has null', () => {
-    const research = { phone: null, name: 'Foo' };
-    const exist = { phone: '305-555-1212', name: 'Foo' };
+    const research = { phone: null };
+    const exist = { phone: '305-555-1212' };
     const preserved = { count: 0, keys: [] as string[] };
     const patch = buildPatch(research, exist, preserved);
     expect(patch.phone).toBeUndefined();
     expect(preserved.count).toBe(1);
     expect(preserved.keys).toContain('phone');
   });
-  it('overwrites existing fields with non-null research values', () => {
+
+  it('R5: preserves prod value even when research has fresher-looking data', () => {
+    // R5 explicitly inverts the older "overwrite when research has a value"
+    // behavior. Non-null prod = intentional state, automation cannot reliably
+    // judge whether research is fresher / older / wronger. Always preserve.
     const research = { phone: '305-NEW' };
     const exist = { phone: '305-OLD' };
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved);
+    expect(patch.phone).toBeUndefined();
+    expect(preserved.count).toBe(1);
+    expect(preserved.keys).toContain('phone');
+  });
+
+  it('fills an empty prod field with research value (gap fill)', () => {
+    const research = { phone: '305-NEW' };
+    const exist = { phone: null };
     const preserved = { count: 0, keys: [] as string[] };
     const patch = buildPatch(research, exist, preserved);
     expect(patch.phone).toBe('305-NEW');
     expect(preserved.count).toBe(0);
   });
+
+  it('fills an undefined prod field with research value', () => {
+    const research = { phone: '305-NEW' };
+    const exist = {} as Record<string, unknown>;
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved);
+    expect(patch.phone).toBe('305-NEW');
+  });
+
+  it('treats an empty array in prod as a fillable gap', () => {
+    const research = { verified_fields: ['name', 'phone'] };
+    const exist = { verified_fields: [] };
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved);
+    expect(patch.verified_fields).toEqual(['name', 'phone']);
+  });
+
   it('preserves existing arrays when research is empty array', () => {
     const research = { verified_fields: [] };
     const exist = { verified_fields: ['name', 'phone'] };
@@ -269,6 +300,39 @@ describe('buildPatch null preservation', () => {
     expect(patch.verified_fields).toBeUndefined();
     expect(preserved.keys).toContain('verified_fields');
   });
+
+  it('R5 exception: data_source ALWAYS takes the research value (provenance)', () => {
+    // Provenance metadata is internal and benefits from being current. The
+    // exception is explicit, narrow, and lives in the function default.
+    const research = { data_source: 'research-2026-04-24' };
+    const exist = { data_source: 'manual-curated' };
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved);
+    expect(patch.data_source).toBe('research-2026-04-24');
+    expect(preserved.count).toBe(0);
+  });
+
+  it('researchManagedKeys param lets callers opt extra fields into the exception list', () => {
+    const research = { phone: '305-NEW', notes: 'fresh' };
+    const exist = { phone: '305-OLD', notes: 'stale' };
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved, new Set(['notes']));
+    expect(patch.phone).toBeUndefined(); // R5 default — preserve
+    expect(patch.notes).toBe('fresh'); // explicitly research-managed
+  });
+
+  it('treats a stub-string prod value as non-null (preserved) — surfaces the address-stub edge case', () => {
+    // A "Coral Gables, FL" address is technically non-null but functionally
+    // useless. R5 strict-mode preserves it. The dry-run output is responsible
+    // for flagging stub-vs-full mismatches so an operator can decide per row.
+    const research = { address: '536 Coral Way, Coral Gables, FL 33134' };
+    const exist = { address: 'Coral Gables, FL' };
+    const preserved = { count: 0, keys: [] as string[] };
+    const patch = buildPatch(research, exist, preserved);
+    expect(patch.address).toBeUndefined();
+    expect(preserved.keys).toContain('address');
+  });
+
   it('skips slug + id keys (managed by caller)', () => {
     const research = { slug: 'new-slug', id: 'x', name: 'Y' };
     const exist = { slug: 'old-slug', id: 'y', name: 'Y' };
@@ -276,7 +340,9 @@ describe('buildPatch null preservation', () => {
     const patch = buildPatch(research, exist, preserved);
     expect(patch.slug).toBeUndefined();
     expect(patch.id).toBeUndefined();
-    expect(patch.name).toBe('Y');
+    // R5: prod 'Y' is preserved even when research also has 'Y' (no-op,
+    // since the values match — the patch just doesn't mention name).
+    expect(patch.name).toBeUndefined();
   });
 });
 
