@@ -31,16 +31,24 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Schema-defensive helpers (R1 / R2 compliant). Each query is wrapped so
-// a single missing column doesn't crash the whole report.
+// a single missing column doesn't crash the whole report. The filter
+// callback is intentionally `any`-typed: postgrest-js exposes a
+// QueryBuilder for the initial `.from(...).select()` and returns a
+// FilterBuilder from `.eq` / `.lt` / `.is` / `.or`, but those types
+// don't unify cleanly across versions, so we lean on the runtime
+// shape — every variant is awaitable and returns `{ count, error }`.
+//
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyQuery = any;
 async function safeCount(
   sb: SupabaseClient,
   table: string,
-  filter?: (q: ReturnType<SupabaseClient['from']>) => unknown,
+  filter?: (q: AnyQuery) => AnyQuery,
 ): Promise<{ count: number | null; error?: string }> {
   try {
-    let q = sb.from(table).select('*', { count: 'exact', head: true });
+    let q: AnyQuery = sb.from(table).select('*', { count: 'exact', head: true });
     if (filter) {
-      q = filter(q) as typeof q;
+      q = filter(q);
     }
     const { count, error } = await q;
     if (error) return { count: null, error: error.message };
@@ -131,33 +139,31 @@ export async function buildReport(sb: SupabaseClient | null): Promise<string> {
 
   const totalCamps = await safeCount(sb, 'camps');
   const verifiedCamps = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('verified', true),
+    q.eq('verified', true),
   );
   const noAddress = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).or('address.is.null,address.eq.'),
+    q.or('address.is.null,address.eq.'),
   );
   const noPhone = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).or('phone.is.null,phone.eq.'),
+    q.or('phone.is.null,phone.eq.'),
   );
   const noWebsite = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).or(
+    q.or(
       'website_url.is.null,website_url.eq.',
     ),
   );
   const noHours = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).is('hours_start', null),
+    q.is('hours_start', null),
   );
   const lowCompleteness = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).lt('data_completeness', 0.5),
+    q.lt('data_completeness', 0.5),
   );
 
   // Stale verifications: verified=true AND last_verified_at older than 60d.
   const sixtyDaysAgo = new Date();
   sixtyDaysAgo.setUTCDate(sixtyDaysAgo.getUTCDate() - 60);
   const staleVerifications = await safeCount(sb, 'camps', (q) =>
-    (q as ReturnType<SupabaseClient['from']>)
-      .eq('verified', true)
-      .lt('last_verified_at', sixtyDaysAgo.toISOString()),
+    q.eq('verified', true).lt('last_verified_at', sixtyDaysAgo.toISOString()),
   );
 
   lines.push(`- **Total camps:** ${totalCamps.count ?? '—'}`);
@@ -231,10 +237,10 @@ export async function buildReport(sb: SupabaseClient | null): Promise<string> {
 
   const totalSchools = await safeCount(sb, 'schools');
   const verifiedSchools = await safeCount(sb, 'schools', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('verified', true),
+    q.eq('verified', true),
   );
   const mdcpsSchools = await safeCount(sb, 'schools', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('is_mdcps', true),
+    q.eq('is_mdcps', true),
   );
 
   lines.push(`- **Total schools:** ${totalSchools.count ?? '—'}`);
@@ -306,17 +312,13 @@ export async function buildReport(sb: SupabaseClient | null): Promise<string> {
 
   const totalClosures = await safeCount(sb, 'closures');
   const verified25 = await safeCount(sb, 'closures', (q) =>
-    (q as ReturnType<SupabaseClient['from']>)
-      .eq('status', 'verified')
-      .eq('school_year', '2025-2026'),
+    q.eq('status', 'verified').eq('school_year', '2025-2026'),
   );
   const verified26 = await safeCount(sb, 'closures', (q) =>
-    (q as ReturnType<SupabaseClient['from']>)
-      .eq('status', 'verified')
-      .eq('school_year', '2026-2027'),
+    q.eq('status', 'verified').eq('school_year', '2026-2027'),
   );
   const aiDraft = await safeCount(sb, 'closures', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('status', 'ai_draft'),
+    q.eq('status', 'ai_draft'),
   );
 
   lines.push(`- **Total closures:** ${totalClosures.count ?? '—'}`);
@@ -344,18 +346,18 @@ export async function buildReport(sb: SupabaseClient | null): Promise<string> {
 
   const subsTotal = await safeCount(sb, 'reminder_subscriptions');
   const subsEnabled = await safeCount(sb, 'reminder_subscriptions', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('enabled', true),
+    q.eq('enabled', true),
   );
   lines.push(`- **Reminder subscriptions:** ${subsTotal.count ?? '—'} (${subsEnabled.count ?? '—'} enabled)`);
 
   const featureNew = await safeCount(sb, 'feature_requests', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('status', 'new'),
+    q.eq('status', 'new'),
   );
   const featureTotal = await safeCount(sb, 'feature_requests');
   lines.push(`- **Feature requests:** ${featureTotal.count ?? '—'} total (${featureNew.count ?? '—'} new)`);
 
   const appsPending = await safeCount(sb, 'camp_applications', (q) =>
-    (q as ReturnType<SupabaseClient['from']>).eq('status', 'pending'),
+    q.eq('status', 'pending'),
   );
   const appsTotal = await safeCount(sb, 'camp_applications');
   lines.push(

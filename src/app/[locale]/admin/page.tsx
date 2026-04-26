@@ -21,6 +21,11 @@ import {
   type AdminSchoolRequest,
   type SchoolOption,
 } from '@/components/admin/SchoolRequestsPanel';
+import {
+  DataQualityPanel,
+  type DataQualityData,
+  type DataQualityCamp,
+} from '@/components/admin/DataQualityPanel';
 import type { SchoolStatus } from '@/lib/school-status';
 
 export const dynamic = 'force-dynamic';
@@ -32,6 +37,7 @@ const VALID_TABS = [
   'enrichment',
   'integrity',
   'school-requests',
+  'data-quality',
   'users',
 ] as const;
 type Tab = (typeof VALID_TABS)[number];
@@ -45,7 +51,20 @@ function normalizeTab(raw: string | undefined): Tab {
 // --- Pill counts — cheap aggregate queries -----------------------------------
 async function fetchPillCounts(): Promise<PillCounts> {
   const db = createServiceSupabase();
-  const [fr, cr, sch, cl, brokenCamps, mismatched, users, schoolReqs] = await Promise.all([
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 86400000).toISOString();
+  const [
+    fr,
+    cr,
+    sch,
+    cl,
+    brokenCamps,
+    mismatched,
+    users,
+    schoolReqs,
+    dqNoAddr,
+    dqNoPhone,
+    dqStale,
+  ] = await Promise.all([
     db.from('feature_requests').select('*', { count: 'exact', head: true }).eq('status', 'new'),
     db.from('camp_applications').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
     db
@@ -71,6 +90,34 @@ async function fetchPillCounts(): Promise<PillCounts> {
         (r) => r,
         () => ({ count: 0 }) as { count: number | null },
       ),
+    // Data quality buckets — same schema-defensive pattern.
+    db
+      .from('camps')
+      .select('*', { count: 'exact', head: true })
+      .eq('verified', true)
+      .or('address.is.null,address.eq.')
+      .then(
+        (r) => r,
+        () => ({ count: 0 }) as { count: number | null },
+      ),
+    db
+      .from('camps')
+      .select('*', { count: 'exact', head: true })
+      .eq('verified', true)
+      .or('phone.is.null,phone.eq.')
+      .then(
+        (r) => r,
+        () => ({ count: 0 }) as { count: number | null },
+      ),
+    db
+      .from('camps')
+      .select('*', { count: 'exact', head: true })
+      .eq('verified', true)
+      .lt('last_verified_at', sixtyDaysAgo)
+      .then(
+        (r) => r,
+        () => ({ count: 0 }) as { count: number | null },
+      ),
   ]);
   return {
     featureRequests: fr.count ?? 0,
@@ -79,6 +126,8 @@ async function fetchPillCounts(): Promise<PillCounts> {
     integrityWarnings: (brokenCamps.count ?? 0) + (mismatched.count ?? 0),
     users: users.count ?? 0,
     schoolRequests: schoolReqs.count ?? 0,
+    dataQuality:
+      (dqNoAddr.count ?? 0) + (dqNoPhone.count ?? 0) + (dqStale.count ?? 0),
   };
 }
 
@@ -287,6 +336,51 @@ async function loadUsersData() {
     isAdmin: adminEmails.has(r.email.toLowerCase()),
   }));
   return { users, total: count ?? users.length };
+}
+
+// Data quality triage — three buckets of verified camps that need
+// admin attention. All schema-defensive (missing column → empty list).
+const STALE_VERIFICATION_DAYS = 60;
+
+async function loadDataQualityData(): Promise<DataQualityData> {
+  const db = createServiceSupabase();
+  const sixtyDaysAgo = new Date(
+    Date.now() - STALE_VERIFICATION_DAYS * 86400000,
+  ).toISOString();
+  const cols =
+    'id, slug, name, address, phone, last_verified_at, data_completeness';
+  try {
+    const [noAddrResp, noPhoneResp, staleResp] = await Promise.all([
+      db
+        .from('camps')
+        .select(cols)
+        .eq('verified', true)
+        .or('address.is.null,address.eq.')
+        .order('name', { ascending: true })
+        .limit(200),
+      db
+        .from('camps')
+        .select(cols)
+        .eq('verified', true)
+        .or('phone.is.null,phone.eq.')
+        .order('name', { ascending: true })
+        .limit(200),
+      db
+        .from('camps')
+        .select(cols)
+        .eq('verified', true)
+        .lt('last_verified_at', sixtyDaysAgo)
+        .order('last_verified_at', { ascending: true, nullsFirst: true })
+        .limit(200),
+    ]);
+    return {
+      noAddress: (noAddrResp.data ?? []) as DataQualityCamp[],
+      noPhone: (noPhoneResp.data ?? []) as DataQualityCamp[],
+      staleVerifications: (staleResp.data ?? []) as DataQualityCamp[],
+    };
+  } catch {
+    return { noAddress: [], noPhone: [], staleVerifications: [] };
+  }
 }
 
 async function loadEnrichmentData(): Promise<EnrichmentCamp[]> {
@@ -526,6 +620,9 @@ export default async function AdminPage({
       loadSchoolOptions(),
     ]);
     panel = <SchoolRequestsPanel initialRequests={rows} schools={schools} />;
+  } else if (activeTab === 'data-quality') {
+    const data = await loadDataQualityData();
+    panel = <DataQualityPanel locale={locale} data={data} />;
   } else if (activeTab === 'users') {
     const { users, total } = await loadUsersData();
     panel = <UsersClient initialUsers={users} initialTotal={total} initialSearch={''} />;
