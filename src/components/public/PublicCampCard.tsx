@@ -24,6 +24,10 @@ export type PublicCampCard = CompletenessCampShape & {
   last_verified_at?: string | null;
   is_featured?: boolean;
   featured_until?: string | null;
+  // Phase 3.1: when the parent is browsing camps for a specific closure,
+  // the page passes this through to mark camps that the operator confirmed
+  // are open that day. Drives the green "✓ Open this day" pill.
+  is_open_this_closure?: boolean;
 };
 
 const VERIFIED_FRESHNESS_MS = 90 * 24 * 60 * 60 * 1000;
@@ -88,8 +92,25 @@ export async function PublicCampCard({
             : t('agesUnknown')}
           {camp.neighborhood ? ' · ' + camp.neighborhood : ''}
         </p>
-        {showVerified || showFeatured ? (
+        {showVerified || showFeatured || camp.is_open_this_closure ? (
           <div className="flex flex-wrap gap-1.5">
+            {camp.is_open_this_closure ? (
+              <span
+                className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-900"
+                title={
+                  locale === 'es'
+                    ? 'Este campamento confirmó que estará abierto este día'
+                    : 'This camp confirmed they are open on this day'
+                }
+                aria-label={
+                  locale === 'es' ? 'Abierto este día' : 'Open this day'
+                }
+                data-testid="public-camp-open-this-day-pill"
+              >
+                <span aria-hidden="true">✓</span>
+                {locale === 'es' ? 'Abierto este día' : 'Open this day'}
+              </span>
+            ) : null}
             {showFeatured ? (
               <span
                 className="inline-flex items-center gap-1 rounded-full bg-cta-yellow px-2 py-0.5 text-[10px] font-bold text-ink"

@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { PublicCampCard, type PublicCampCard as PublicCampCardShape } from '@/components/public/PublicCampCard';
+import { rankCampsForClosure, type CoverageRow } from '@/lib/closures/coverage-ranking';
 import {
   publicPageMetadata,
   breadcrumbListJsonLd,
@@ -88,20 +89,32 @@ export default async function PublicClosureDetailPage({
   if (!closure) notFound();
   const c = closure as ClosureRow;
 
-  const [{ data: schoolData }, { data: matchedCamps }] = await Promise.all([
-    svc.from('schools').select('id, name, slug').eq('id', c.school_id).maybeSingle(),
-    svc
-      .from('camps')
-      .select(
-        'id, slug, name, description, ages_min, ages_max, price_tier, categories, neighborhood, verified, is_featured, phone, address, website_url, hours_start, hours_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
-      )
-      .eq('verified', true)
-      .neq('website_status', 'broken')
-      .order('is_featured', { ascending: false })
-      .limit(6),
-  ]);
+  const [{ data: schoolData }, { data: matchedCamps }, { data: coverageRows }] =
+    await Promise.all([
+      svc.from('schools').select('id, name, slug').eq('id', c.school_id).maybeSingle(),
+      svc
+        .from('camps')
+        .select(
+          'id, slug, name, description, ages_min, ages_max, price_tier, categories, neighborhood, verified, is_featured, phone, address, website_url, hours_start, hours_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
+        )
+        .eq('verified', true)
+        .neq('website_status', 'broken')
+        .order('is_featured', { ascending: false })
+        .limit(24),
+      svc
+        .from('camp_closure_coverage')
+        .select('camp_id, is_open')
+        .eq('closure_id', c.id),
+    ]);
   const school = schoolData as SchoolRow | null;
-  const camps = (matchedCamps ?? []) as PublicCampCardShape[];
+
+  // Phase 3.1: re-rank camps. See lib/closures/coverage-ranking — pure
+  // function so the rule is locked in tests rather than buried in JSX.
+  const camps = rankCampsForClosure(
+    (matchedCamps ?? []) as PublicCampCardShape[],
+    (coverageRows ?? []) as unknown as CoverageRow[],
+    6,
+  ) as unknown as PublicCampCardShape[];
   const daysOff = dayCount(c.start_date, c.end_date);
 
   const pageUrl = `${SITE_URL}/${locale}/breaks/${c.id}`;
