@@ -95,3 +95,53 @@ file under public/icons/.
 **Doesn't apply to:**
 - Programmatically generated content (charts, screenshot OG images, etc.)
 - Asset variations where any reasonable rendering is fine
+
+## R4 — User-facing slugs are immutable once shipped
+
+**Rule:** If a record (school, camp, school_request, anything else with a
+public URL keyed by slug) has a slug that has been live in production
+for any period of time, that slug must NEVER be rewritten by automation.
+
+URLs are promises to users — bookmarks, shared links, search engine
+indexes, internal references in copy, conditional code paths keyed on
+slug. Every one of those silently breaks the moment a slug shifts under
+them.
+
+**Why:** On 2026-04-26 a dry-run of `scripts/import-schools-research.ts`
+revealed it was about to UPDATE 9 of the 12 manual-curated schools and
+rewrite their slugs to whatever the research JSON specified. The
+research had `the-growing-place-school-coral-gables` for TGP; prod had
+`the-growing-place`. If the import had been applied, Mom's bookmarked
+URL `/en/schools/the-growing-place` would have 404'd, the `schoolSlug
+=== 'the-growing-place'` check inside `UnverifiedSchoolCalendarPlaceholder`
+would have stopped firing the Noah-personal-note path, and migration
+035's TGP closures would have been orphaned from the URL parents reach.
+The original "always rewrite slug" comment in the script
+(`scripts/import-schools-research.ts` line 466) was correct in
+2026-04-23 when prod was empty; it was silently wrong forever after.
+
+**How to apply:**
+
+- **Bulk imports may set slugs on INSERT but must skip slug field on
+  UPDATE.** The single best place to enforce this is wherever the
+  patch object is built — `buildPatch` should never include `slug`,
+  and there should be no `patch.slug = …` assignments downstream of
+  it. Make this part of the script's top-line contract comment.
+- **Always print a "slug-rewrite skips" count alongside update
+  counts.** A dry-run should surface this metric prominently so an
+  operator can tell whether the import is touching prod identifiers.
+- **The only acceptable slug change is a manual SQL UPDATE
+  accompanied by a 301 redirect** from the old URL to the new one
+  AND a documented decision in `docs/`. Treat slug rename like a
+  schema migration: deliberate, reviewed, and reversible.
+
+**Pre-merge checklist for any import / migration that touches a row
+with a `slug` column:**
+
+```
+- [ ] Does this code touch slug values on existing rows?
+- [ ] If yes: is the change explicit, reviewed, and accompanied by a
+      redirect from the old slug?
+- [ ] Does the dry-run output count slug-rewrite-skips so operators
+      see when the script DECLINED to rewrite (vs silently allowing it)?
+```

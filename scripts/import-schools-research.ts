@@ -14,9 +14,15 @@
  * Re-runs are idempotent: dedupe key for closures is (school_id, start_date,
  * name); existing rows are UPDATEd in place rather than re-inserted.
  *
- * Run:
- *   pnpm dlx tsx scripts/import-schools-research.ts --dry-run
+ * Slug policy (R4 in docs/SHIPPING_RULES.md, codified 2026-04-26 after
+ * the dry-run nearly clobbered TGP's prod URL): INSERTs use the research
+ * slug; UPDATEs NEVER rewrite slug. URLs are promises to users — once a
+ * row is in prod, its slug is immutable to this script.
+ *
+ * Run (default is dry-run; --apply is REQUIRED for any DB write):
  *   pnpm dlx tsx scripts/import-schools-research.ts
+ *   pnpm dlx tsx scripts/import-schools-research.ts --show-updates
+ *   pnpm dlx tsx scripts/import-schools-research.ts --apply
  *
  * Env: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (source
  * .deploy-secrets/env.sh first).
@@ -26,7 +32,11 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const DRY = process.argv.includes('--dry-run');
+const APPLY = process.argv.includes('--apply');
+// Default is dry-run unless --apply is passed. The old --dry-run flag is
+// accepted as a no-op for back-compat with anyone who muscle-memories it.
+const DRY = !APPLY;
+const SHOW_UPDATES = process.argv.includes('--show-updates');
 const DATA_DIR = join(process.cwd(), 'data', 'schools');
 const SCHOOLS_PATH = join(DATA_DIR, 'miami-schools-research-2026-04-24.schools.json');
 const CLOSURES_PATH = join(DATA_DIR, 'miami-schools-research-2026-04-24.closures.json');
@@ -366,6 +376,9 @@ type ImportReport = {
   schoolsInsert: number;
   schoolsUpdate: number;
   schoolsPreservedFields: number;
+  // Count of UPDATE rows where the research slug differs from the prod
+  // slug. Always logged but never acted on — see R4 (slugs are immutable).
+  slugRewriteSkipped: number;
   schoolsByType: Map<string, number>;
   schoolsByStatus: Map<string, number>;
   schoolsByNeighborhood: Map<string, number>;
@@ -378,6 +391,12 @@ type ImportReport = {
 };
 
 async function main() {
+  console.log(
+    APPLY
+      ? '\n*** --apply mode: this run WILL write to the database. ***\n'
+      : '\nDry-run (default). No DB writes will be performed. Pass --apply to actually import.\n',
+  );
+
   const schoolsRaw = JSON.parse(readFileSync(SCHOOLS_PATH, 'utf8')) as ResearchSchool[];
   const closuresRaw = JSON.parse(readFileSync(CLOSURES_PATH, 'utf8')) as ResearchClosure[];
   console.log(
@@ -407,6 +426,7 @@ async function main() {
     schoolsInsert: 0,
     schoolsUpdate: 0,
     schoolsPreservedFields: 0,
+    slugRewriteSkipped: 0,
     schoolsByType: new Map(),
     schoolsByStatus: new Map(),
     schoolsByNeighborhood: new Map(),
@@ -420,7 +440,16 @@ async function main() {
 
   // ---------------------- Pass 1: schools upsert ---------------------------
   const inserts: Record<string, unknown>[] = [];
-  const updates: Array<{ id: string; patch: Record<string, unknown> }> = [];
+  type SchoolUpdate = {
+    id: string;
+    patch: Record<string, unknown>;
+    existing: Record<string, unknown>;
+    researchSlug: string;
+    existingSlug: string | null;
+    slugWouldHaveChanged: boolean;
+    researchName: string;
+  };
+  const updates: SchoolUpdate[] = [];
   const preservedDetail: Record<string, number> = {};
 
   for (const s of schoolsRaw) {
@@ -461,13 +490,28 @@ async function main() {
     } else {
       const preserved = { count: 0, keys: [] as string[] };
       const patch = buildPatch(row, exist as unknown as Record<string, unknown>, preserved);
-      // Always rewrite slug to the research-chosen one; this is the whole
-      // point of the migration that dropped the GENERATED constraint.
-      patch.slug = s.slug;
+      // R4 / docs/SHIPPING_RULES.md (2026-04-26): UPDATEs NEVER rewrite slug.
+      // URLs are promises to users — bookmarks, shared links, internal code
+      // paths keyed on slug must not silently shift under them. INSERTs use
+      // the research slug (above); UPDATEs leave the existing slug alone.
+      // buildPatch already filters slug out of its output; no patch.slug
+      // assignment lives here on purpose.
       report.schoolsPreservedFields += preserved.count;
       for (const k of preserved.keys) preservedDetail[k] = (preservedDetail[k] ?? 0) + 1;
-      updates.push({ id: exist.id, patch });
+      const existSlug = (exist as { slug?: string | null }).slug ?? null;
+      const slugWouldHaveChanged =
+        existSlug !== null && existSlug !== s.slug;
+      updates.push({
+        id: exist.id,
+        patch,
+        existing: exist as unknown as Record<string, unknown>,
+        researchSlug: s.slug,
+        existingSlug: existSlug,
+        slugWouldHaveChanged,
+        researchName: s.name,
+      });
       report.schoolsUpdate++;
+      if (slugWouldHaveChanged) report.slugRewriteSkipped++;
     }
   }
 
@@ -476,6 +520,9 @@ async function main() {
   console.log(`  Insert:              ${report.schoolsInsert}`);
   console.log(`  Update:              ${report.schoolsUpdate}`);
   console.log(`  Preserved fields:    ${report.schoolsPreservedFields}`);
+  console.log(
+    `  Slug-rewrite skips:  ${report.slugRewriteSkipped} (R4 — slugs immutable on UPDATE)`,
+  );
   console.log('  By type:');
   for (const [k, v] of [...report.schoolsByType.entries()].sort((a, b) => b[1] - a[1])) {
     console.log(`    ${v.toString().padStart(4)}  ${k}`);
@@ -498,6 +545,43 @@ async function main() {
     console.log('  Preserved-field breakdown:');
     for (const [k, v] of Object.entries(preservedDetail).sort((a, b) => b[1] - a[1])) {
       console.log(`    ${v.toString().padStart(4)}  ${k}`);
+    }
+  }
+
+  // --show-updates: per-row diff for every UPDATE candidate. Prints the
+  // before/after for the fields most likely to overwrite human-curated
+  // values (data_source, district, address, phone, neighborhood,
+  // calendar_status). Slug is shown but flagged as preserved per R4.
+  if (SHOW_UPDATES && updates.length > 0) {
+    const DIFF_FIELDS = [
+      'data_source',
+      'district',
+      'address',
+      'phone',
+      'neighborhood',
+      'calendar_status',
+    ] as const;
+    console.log(`\n  --show-updates: per-row diff for ${updates.length} UPDATE candidates`);
+    for (const u of updates) {
+      const slugLine = u.slugWouldHaveChanged
+        ? `slug: ${u.existingSlug} (research wanted "${u.researchSlug}" — SKIPPED per R4)`
+        : `slug: ${u.existingSlug} (matches research)`;
+      console.log(`\n  • ${u.researchName}`);
+      console.log(`      ${slugLine}`);
+      let changedCount = 0;
+      for (const field of DIFF_FIELDS) {
+        const oldVal = u.existing[field];
+        const newVal = u.patch[field];
+        if (newVal === undefined) continue; // patch skipped this field (preserved)
+        const oldStr = oldVal === null || oldVal === undefined ? '∅' : String(oldVal);
+        const newStr = newVal === null || newVal === undefined ? '∅' : String(newVal);
+        if (oldStr === newStr) continue; // no actual change
+        changedCount++;
+        console.log(`      ${field}: ${oldStr} → ${newStr}`);
+      }
+      if (changedCount === 0) {
+        console.log('      (no changes to inspected fields — pure preserve / metadata-only update)');
+      }
     }
   }
 
