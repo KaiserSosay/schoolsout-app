@@ -74,6 +74,16 @@ Sub-tasks (all ✅):
 - **3.1.5** Closure-coverage checklist on the dashboard with debounced per-row save to `camp_closure_coverage`
 - **3.1.6** Parent-side surfacing — `/breaks/{id}` floats explicitly-open camps to the top, drops explicitly-closed camps, renders a green "✓ Open this day" pill on the matching cards
 
+### ✅ Phase 3.5 — Admin Dashboard Accuracy Fixes 🐛 (shipped 2026-04-26)
+Sunday-morning bug fix. Pill counts on `/admin` had drifted from what each tab actually rendered, eroding trust in the dashboard.
+
+Sub-tasks (all ✅):
+- **3.5.1** Extracted `computePillCounts()` to `src/lib/admin/pill-counts.ts` so the same query that backs the pill is the only thing the dashboard reads — no parallel-truth math in `page.tsx`
+- **3.5.2** Dropped the `status='new'`/`status='pending'` filters that made `featureRequests`, `campRequests`, and `schoolRequests` pills undercount the rows their tabs render
+- **3.5.3** Switched `dataQuality` pill to a single distinct-camps query so camps with multiple gaps stop being double- and triple-counted
+- **3.5.4** Renamed pill labels for honesty: "Camp requests" → "Camp applications" (matches DB), "Calendar reviews" → "Calendar drafts", "Integrity warnings" → "Integrity issues"
+- **3.5.5** Fixture-based `tests/lib/admin-pill-counts.test.ts` proves each pill matches the loader query for its tab and the helper is schema-defensive against missing migrations
+
 ### 📋 Phase 3.2 — Per-Kid Plans
 Right now if you save a "Memorial Day plan," it's for the whole family. But what if Noah goes to one camp and his sister goes somewhere else? This makes plans work per-kid, with a dashboard grid showing who's covered when.
 

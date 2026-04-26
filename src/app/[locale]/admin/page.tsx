@@ -1,6 +1,7 @@
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { env } from '@/lib/env';
-import { AdminPillStrip, type PillCounts } from '@/components/admin/AdminPillStrip';
+import { AdminPillStrip } from '@/components/admin/AdminPillStrip';
+import { computePillCounts } from '@/lib/admin/pill-counts';
 import { AdminTabsNav } from '@/components/admin/AdminTabsNav';
 import {
   FeatureRequestsPanel,
@@ -46,89 +47,6 @@ function normalizeTab(raw: string | undefined): Tab {
   return (VALID_TABS as readonly string[]).includes(raw ?? '')
     ? (raw as Tab)
     : 'feature-requests';
-}
-
-// --- Pill counts — cheap aggregate queries -----------------------------------
-async function fetchPillCounts(): Promise<PillCounts> {
-  const db = createServiceSupabase();
-  const sixtyDaysAgo = new Date(Date.now() - 60 * 86400000).toISOString();
-  const [
-    fr,
-    cr,
-    sch,
-    cl,
-    brokenCamps,
-    mismatched,
-    users,
-    schoolReqs,
-    dqNoAddr,
-    dqNoPhone,
-    dqStale,
-  ] = await Promise.all([
-    db.from('feature_requests').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-    db.from('camp_applications').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-    db
-      .from('schools')
-      .select('*', { count: 'exact', head: true })
-      .in('calendar_status', ['needs_research', 'ai_draft']),
-    db.from('closures').select('*', { count: 'exact', head: true }).eq('status', 'ai_draft'),
-    db.from('camps').select('*', { count: 'exact', head: true }).eq('website_status', 'broken'),
-    db
-      .from('camps')
-      .select('*', { count: 'exact', head: true })
-      .eq('verified', true)
-      .eq('logistics_verified', false),
-    db.from('users').select('*', { count: 'exact', head: true }),
-    // school_requests count is schema-defensive: if migration 028 hasn't been
-    // applied yet the query throws, but we want the rest of the dashboard
-    // to keep working. Catch and surface 0.
-    db
-      .from('school_requests')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'pending')
-      .then(
-        (r) => r,
-        () => ({ count: 0 }) as { count: number | null },
-      ),
-    // Data quality buckets — same schema-defensive pattern.
-    db
-      .from('camps')
-      .select('*', { count: 'exact', head: true })
-      .eq('verified', true)
-      .or('address.is.null,address.eq.')
-      .then(
-        (r) => r,
-        () => ({ count: 0 }) as { count: number | null },
-      ),
-    db
-      .from('camps')
-      .select('*', { count: 'exact', head: true })
-      .eq('verified', true)
-      .or('phone.is.null,phone.eq.')
-      .then(
-        (r) => r,
-        () => ({ count: 0 }) as { count: number | null },
-      ),
-    db
-      .from('camps')
-      .select('*', { count: 'exact', head: true })
-      .eq('verified', true)
-      .lt('last_verified_at', sixtyDaysAgo)
-      .then(
-        (r) => r,
-        () => ({ count: 0 }) as { count: number | null },
-      ),
-  ]);
-  return {
-    featureRequests: fr.count ?? 0,
-    campRequests: cr.count ?? 0,
-    calendarReviews: (sch.count ?? 0) + (cl.count ?? 0),
-    integrityWarnings: (brokenCamps.count ?? 0) + (mismatched.count ?? 0),
-    users: users.count ?? 0,
-    schoolRequests: schoolReqs.count ?? 0,
-    dataQuality:
-      (dqNoAddr.count ?? 0) + (dqNoPhone.count ?? 0) + (dqStale.count ?? 0),
-  };
 }
 
 async function loadSchoolRequests(): Promise<AdminSchoolRequest[]> {
@@ -596,7 +514,7 @@ export default async function AdminPage({
   const { locale } = await params;
   const sp = await searchParams;
   const activeTab = normalizeTab(sp.tab);
-  const counts = await fetchPillCounts();
+  const counts = await computePillCounts(createServiceSupabase());
 
   let panel: React.ReactNode = null;
   if (activeTab === 'feature-requests') {

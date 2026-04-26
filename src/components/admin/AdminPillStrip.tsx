@@ -19,9 +19,9 @@ type Pill = {
 
 const PILLS: Pill[] = [
   { key: 'featureRequests', tab: 'feature-requests', emoji: '💡', label: 'Feature requests' },
-  { key: 'campRequests', tab: 'camp-requests', emoji: '🏕️', label: 'Camp requests' },
-  { key: 'calendarReviews', tab: 'calendar-reviews', emoji: '📅', label: 'Calendar reviews' },
-  { key: 'integrityWarnings', tab: 'integrity', emoji: '⚠️', label: 'Integrity warnings' },
+  { key: 'campRequests', tab: 'camp-requests', emoji: '🏕️', label: 'Camp applications' },
+  { key: 'calendarReviews', tab: 'calendar-reviews', emoji: '📅', label: 'Calendar drafts' },
+  { key: 'integrityWarnings', tab: 'integrity', emoji: '⚠️', label: 'Integrity issues' },
   { key: 'schoolRequests', tab: 'school-requests', emoji: '🏫', label: 'School requests' },
   { key: 'dataQuality', tab: 'data-quality', emoji: '🩺', label: 'Data quality' },
   { key: 'users', tab: 'users', emoji: '👥', label: 'Users' },
