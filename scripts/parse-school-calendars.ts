@@ -465,6 +465,7 @@ const CLOSURE_ALLOWLIST = [
   'no school',
   'school closed',
   'no classes',
+  'no class', // singular form used by some schools (Belen iCal: "NO CLASS")
   'closed -', // "Closed - Labor Day", "Closed - Spring Break"
 
   // Named breaks (multi-day, well-defined)
