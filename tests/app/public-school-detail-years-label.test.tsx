@@ -84,6 +84,33 @@ describe('school detail page — years-label i18n contract', () => {
       expect(json.includes('2026–2027')).toBe(false);
       expect(json.includes('2026-2027')).toBe(false);
     });
+
+    it(`uses "Verified" (not "Official") in every verifiedFrame eyebrow key for ${name}`, () => {
+      // Mom-test 2026-04-26 evening: "Official" overstates what we do.
+      // We're a third-party directory that imports + validates each
+      // school's published source. "Verified" is honest. After Phase
+      // 4.7 ships and schools maintain calendars directly on our
+      // platform, those graduate to "Official" — but until then, no
+      // eyebrow key may use the word.
+      const ns = dig(messages, 'public.school');
+      for (const key of [
+        'verifiedFrame.eyebrow',
+        'verifiedFrame.eyebrowWithYears',
+        'verifiedFrame.eyebrowMdcps',
+        'verifiedFrame.eyebrowMdcpsWithYears',
+      ]) {
+        const val = dig(ns, key) as string | undefined;
+        expect(typeof val).toBe('string');
+        expect(
+          (val as string).toLowerCase().includes('official'),
+          `public.school.${key} in ${name} must NOT contain "Official"`,
+        ).toBe(false);
+        expect(
+          (val as string).toLowerCase().includes('oficial'),
+          `public.school.${key} in ${name} must NOT contain "oficial"`,
+        ).toBe(false);
+      }
+    });
   }
 });
 

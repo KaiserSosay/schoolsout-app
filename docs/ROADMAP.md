@@ -158,6 +158,19 @@ Set up monitoring so we know if the site goes down. Set up backups. Boring but c
 ### 4.6 — Trusted Registration Badge 🛡️ (MOM'S OTHER IDEA)
 Mom's biggest frustration: some camps register kids over WhatsApp, others have hidden fees. We can't process payments yet (that's Phase 7), but we CAN give camps a 🛡️ badge if they meet a transparency standard: real registration form, HTTPS, clear pricing, real refund policy, etc. Parents see the badge and know which camps to trust.
 
+### 4.7 — School Operator Dashboard 🏫
+Same shape as Phase 3.1 (camp operator dashboard) but for schools. A school admin logs in, edits their school's calendar directly on our platform, uploads photos, manages their listing. The first 10% of this — a public submission form anyone can fill out to propose calendar updates with email-domain auto-verification — ships earlier (see `docs/plans/sunday-evening-three-buckets.md` Bucket 3).
+
+**Wording graduation path:** Until Phase 4.7 ships, all hosted school
+calendars are labeled "Verified" — meaning we imported and validated
+them against the school's published source. After Phase 4.7 ships and
+a school admin actively maintains their calendar directly on our
+platform, that school's calendar graduates to "Official." This
+distinction is honest about who owns the data at any given time. The
+i18n keys at `public.school.verifiedFrame.eyebrow*` use "Verified"
+today; when 4.7 lands, add a parallel `officialFrame.*` set and
+gate which one renders on the school's `operator_managed` flag.
+
 ---
 
 ## 📋 PHASE 5 — Whatever Real Parents Tell Us

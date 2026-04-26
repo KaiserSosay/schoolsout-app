@@ -245,10 +245,13 @@ export default async function PublicSchoolPage({
     ]),
   ];
 
-  // DECISION (Phase 3.0 / Item 1.4): stacked header. Small eyebrow
-  // ("The unofficial" / "Official 2025–2026 calendar from M-DCPS") sits
-  // above the big title. Verified non-MDCPS schools use a generic
-  // "Official 2025–2026 calendar" eyebrow over the school name.
+  // DECISION (Phase 3.0 / Item 1.4, copy refresh 2026-04-26 evening):
+  // stacked header. Small eyebrow ("The unofficial" / "Verified 2025–2026
+  // calendar from M-DCPS") sits above the big title. Verified non-MDCPS
+  // schools use a generic "Verified 2025–2026 calendar" eyebrow over the
+  // school name. We use "Verified" (not "Official") because we're a
+  // third-party directory that imports + validates each school's
+  // published source — see Phase 4.7 graduation note in docs/ROADMAP.md.
   const yearsLabel = yearsLabelForClosures(closures);
   const eyebrow = framing.isVerified
     ? framing.reason === 'mdcps'

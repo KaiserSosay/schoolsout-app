@@ -1404,10 +1404,10 @@
         "badge": "✓ Calendario verificado",
         "mdcpsBadge": "✓ Verificado por Miami-Dade County Public Schools",
         "sectionTitle": "Fechas confirmadas",
-        "eyebrowMdcpsWithYears": "Calendario oficial {years} de Miami-Dade County Public Schools",
-        "eyebrowMdcps": "Calendario oficial de Miami-Dade County Public Schools",
-        "eyebrowWithYears": "Calendario oficial {years}",
-        "eyebrow": "Calendario oficial"
+        "eyebrowMdcpsWithYears": "Calendario verificado {years} de Miami-Dade County Public Schools",
+        "eyebrowMdcps": "Calendario verificado de Miami-Dade County Public Schools",
+        "eyebrowWithYears": "Calendario verificado {years}",
+        "eyebrow": "Calendario verificado"
       },
       "unofficialFrame": {
         "eyebrow": "Calendario no oficial",
