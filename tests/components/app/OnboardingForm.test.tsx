@@ -106,6 +106,12 @@ describe('OnboardingForm', () => {
           school_id: '00000000-0000-0000-0000-000000000001',
           age_range: '4-6',
           ordinal: 1,
+          // Migration 038 added optional birth_month + birth_year. The
+          // onboarding form sends nulls when the parent didn't pick a
+          // birthday — the API accepts and the soft-prompt banner on
+          // /app/family asks for it on the next visit.
+          birth_month: null,
+          birth_year: null,
         },
       ],
     });

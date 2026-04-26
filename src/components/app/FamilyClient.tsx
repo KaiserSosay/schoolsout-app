@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { statusBadge, type SchoolStatus } from '@/lib/school-status';
 import { daysUntil } from '@/lib/countdown';
+import { displayKidAge } from '@/lib/kids/age';
 import { BirthDateSoftPrompt } from './BirthDateSoftPrompt';
 
 export type FamilyKid = {
@@ -162,9 +163,29 @@ export function FamilyClient({
                     </p>
                     <h2 className="text-xl font-extrabold truncate">{displayName}</h2>
                     <div className={'mt-1 flex flex-wrap gap-2 text-xs ' + (isKids ? 'text-white/80' : 'text-muted')}>
-                      <span className={'rounded-full px-2 py-0.5 ' + (isKids ? 'bg-white/10' : 'bg-purple-soft text-brand-purple font-semibold')}>
-                        {t(`app.family.ageRange.${kid.age_range}`)}
-                      </span>
+                      {(() => {
+                        // Prefer the computed age from birth_month + birth_year
+                        // (migration 038); fall back to the grade-derived
+                        // age_range bucket when the parent hasn't filled in
+                        // a birth date yet.
+                        const computed = displayKidAge({
+                          birth_month: kid.birth_month ?? null,
+                          birth_year: kid.birth_year ?? null,
+                          grade: grade ?? '',
+                        });
+                        if (computed) {
+                          return (
+                            <span className={'rounded-full px-2 py-0.5 ' + (isKids ? 'bg-white/10' : 'bg-purple-soft text-brand-purple font-semibold')}>
+                              {computed}
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className={'rounded-full px-2 py-0.5 ' + (isKids ? 'bg-white/10' : 'bg-purple-soft text-brand-purple font-semibold')}>
+                            {t(`app.family.ageRange.${kid.age_range}`)}
+                          </span>
+                        );
+                      })()}
                       {grade && (
                         <span className={'rounded-full px-2 py-0.5 ' + (isKids ? 'bg-white/10' : 'bg-cream border border-cream-border')}>
                           {t('app.family.gradeLabel', { grade })}

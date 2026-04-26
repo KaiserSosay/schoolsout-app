@@ -13,6 +13,7 @@ import {
   gradeToAge,
   type KidState,
 } from './KidForm';
+import { ageToAgeRange, computeKidAge } from '@/lib/kids/age';
 import { AddressPicker, type GeoResult } from './AddressPicker';
 
 // DECISION: COPPA-aligned. Kid NAME and exact GRADE are kept in localStorage
@@ -191,8 +192,16 @@ export function OnboardingForm({
 
       const profiles = visibleKids.map((k, i) => ({
         school_id: k.school_id!,
-        age_range: gradeToAge(k.grade),
+        // Prefer the real-age-derived bucket (migration 038); fall back
+        // to the legacy grade-derived bucket when the parent hasn't
+        // filled in a birth date.
+        age_range:
+          k.birth_month && k.birth_year
+            ? ageToAgeRange(computeKidAge(k.birth_month, k.birth_year))
+            : gradeToAge(k.grade),
         ordinal: i + 1,
+        birth_month: k.birth_month ?? null,
+        birth_year: k.birth_year ?? null,
       }));
 
       const [mePatch, kidPost] = await Promise.all([

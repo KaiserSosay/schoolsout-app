@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   computeKidAge,
   ageToAgeRange,
+  displayKidAge,
   gradeToExpectedAge,
 } from '@/lib/kids/age';
 
@@ -35,15 +36,17 @@ describe('computeKidAge', () => {
 });
 
 describe('ageToAgeRange', () => {
-  it('maps the canonical Miami camp filter buckets', () => {
+  it('maps to the prod schema buckets — boundary at age 14', () => {
+    // Bucket LABEL "10-12" actually catches ages 10-13 (legacy schema
+    // naming); the 14+ bucket starts at high-school entry.
     expect(ageToAgeRange(4)).toBe('4-6');
     expect(ageToAgeRange(6)).toBe('4-6');
     expect(ageToAgeRange(7)).toBe('7-9');
     expect(ageToAgeRange(9)).toBe('7-9');
-    expect(ageToAgeRange(10)).toBe('10-13');
-    expect(ageToAgeRange(13)).toBe('10-13');
-    expect(ageToAgeRange(14)).toBe('14+');
-    expect(ageToAgeRange(17)).toBe('14+');
+    expect(ageToAgeRange(10)).toBe('10-12');
+    expect(ageToAgeRange(13)).toBe('10-12');
+    expect(ageToAgeRange(14)).toBe('13+');
+    expect(ageToAgeRange(17)).toBe('13+');
   });
 
   it("Noah (age 8, 2nd grade) ends up in '7-9' — fixes the off-by-one mom found", () => {
@@ -56,6 +59,54 @@ describe('ageToAgeRange', () => {
   it('handles ages below the youngest bucket gracefully', () => {
     expect(ageToAgeRange(0)).toBe('4-6');
     expect(ageToAgeRange(3)).toBe('4-6');
+  });
+});
+
+describe('displayKidAge', () => {
+  // Display helper for the family page + plan wizard. Mom-test 2026-04-26
+  // pick: real age when we have birth date, estimated-from-grade fallback
+  // with a "~" prefix when we only have grade, empty when we have neither.
+
+  it('returns "Age N" when birth_month + birth_year are populated', () => {
+    expect(
+      displayKidAge(
+        { birth_month: 8, birth_year: 2017, grade: '2' },
+        new Date('2026-04-26T12:00:00Z'),
+      ),
+    ).toBe('Age 8');
+  });
+
+  it('returns "~Age N" estimated from grade when birth date is missing', () => {
+    expect(
+      displayKidAge(
+        { birth_month: null, birth_year: null, grade: '2' },
+        new Date('2026-04-26T12:00:00Z'),
+      ),
+    ).toBe('~Age 7');
+  });
+
+  it('falls back to grade when only birth_month is set (partial data is no data)', () => {
+    expect(
+      displayKidAge(
+        { birth_month: 8, birth_year: null, grade: '3' },
+        new Date('2026-04-26T12:00:00Z'),
+      ),
+    ).toBe('~Age 8');
+  });
+
+  it('returns empty string when neither birth date nor a known grade is set', () => {
+    expect(displayKidAge({ birth_month: null, birth_year: null, grade: '' })).toBe(
+      '',
+    );
+    expect(displayKidAge({ birth_month: null, birth_year: null, grade: 'PreK' })).toBe(
+      '',
+    );
+  });
+
+  it('does not crash when given an unknown grade (returns empty)', () => {
+    expect(
+      displayKidAge({ birth_month: null, birth_year: null, grade: 'foo' }),
+    ).toBe('');
   });
 });
 
