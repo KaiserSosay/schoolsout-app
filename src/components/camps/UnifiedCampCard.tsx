@@ -149,10 +149,12 @@ function PublicCard({
 }) {
   const t = useTranslations('public.camps');
   const tApp = useTranslations('app.camps');
+  const tBadge = useTranslations('camps.religiousBadge');
   const tCat = useTranslations('app.camps.completeness.field');
   const { score, missing } = computeCompleteness(camp);
   const band = bandFor(score);
   const pills = (camp.categories ?? []).slice(0, 2);
+  const isReligious = (camp.categories ?? []).includes('religious');
   const now = Date.now();
   const showVerified = isFreshlyVerified(camp, now);
   const showFeatured = isCurrentlyFeatured(camp, now);
@@ -190,7 +192,7 @@ function PublicCard({
             : t('agesUnknown')}
           {camp.neighborhood ? ' · ' + camp.neighborhood : ''}
         </p>
-        {showVerified || showFeatured || camp.is_open_this_closure ? (
+        {showVerified || showFeatured || camp.is_open_this_closure || isReligious ? (
           <div className="flex flex-wrap gap-1.5">
             {camp.is_open_this_closure ? (
               <span
@@ -227,6 +229,17 @@ function PublicCard({
               >
                 <span aria-hidden="true">✓</span>
                 {tApp('verified.label')}
+              </span>
+            ) : null}
+            {isReligious ? (
+              <span
+                className="inline-flex items-center gap-1 rounded-full border border-cream-border bg-white px-2 py-0.5 text-[10px] font-bold text-ink"
+                title={tBadge('tooltip')}
+                aria-label={tBadge('label')}
+                data-testid="camp-religious-badge"
+              >
+                <span aria-hidden="true">🙏</span>
+                {tBadge('label')}
               </span>
             ) : null}
           </div>
@@ -284,6 +297,7 @@ function AppCard({
   isSaved: boolean;
 }) {
   const t = useTranslations('app.camps');
+  const tBadge = useTranslations('camps.religiousBadge');
   const { mode } = useMode();
 
   const containerCls =
@@ -323,6 +337,7 @@ function AppCard({
 
   const showVerified = isFreshlyVerified(camp);
   const showFeatured = isCurrentlyFeatured(camp);
+  const isReligious = (camp.categories ?? []).includes('religious');
 
   return (
     <article
@@ -356,7 +371,7 @@ function AppCard({
           <span aria-hidden className="invisible shrink-0 h-11 w-11" />
         </div>
 
-        {showVerified || showFeatured ? (
+        {showVerified || showFeatured || isReligious ? (
           <div className="flex flex-wrap gap-1.5">
             {showFeatured ? (
               <span
@@ -388,6 +403,22 @@ function AppCard({
               >
                 <span aria-hidden="true">✓</span>
                 {t('verified.label')}
+              </span>
+            ) : null}
+            {isReligious ? (
+              <span
+                className={
+                  'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ' +
+                  (mode === 'parents'
+                    ? 'border border-cream-border bg-white text-ink'
+                    : 'border border-white/20 bg-white/10 text-white')
+                }
+                title={tBadge('tooltip')}
+                aria-label={tBadge('label')}
+                data-testid="camp-religious-badge"
+              >
+                <span aria-hidden="true">🙏</span>
+                {tBadge('label')}
               </span>
             ) : null}
           </div>

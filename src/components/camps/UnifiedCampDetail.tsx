@@ -188,6 +188,8 @@ function PublicDetail({
 }) {
   const t = useTranslations('public.campDetail');
   const tApp = useTranslations('public.camps');
+  const tBadge = useTranslations('camps.religiousBadge');
+  const isReligious = (camp.categories ?? []).includes('religious');
   const completeness = computeCompleteness({
     ...camp,
     // computeCompleteness expects a CompletenessCampShape — pass through the
@@ -251,6 +253,19 @@ function PublicDetail({
             </h1>
             {camp.neighborhood ? (
               <p className="text-sm text-muted">{camp.neighborhood}</p>
+            ) : null}
+            {isReligious ? (
+              <p className="mt-2">
+                <span
+                  className="inline-flex items-center gap-1 rounded-full border border-cream-border bg-white px-2 py-0.5 text-[11px] font-bold text-ink"
+                  title={tBadge('tooltip')}
+                  aria-label={tBadge('label')}
+                  data-testid="camp-detail-religious-badge"
+                >
+                  <span aria-hidden="true">🙏</span>
+                  {tBadge('label')}
+                </span>
+              </p>
             ) : null}
             {camp.categories && camp.categories.length ? (
               <div className="mt-2 flex flex-wrap gap-1.5">
@@ -334,8 +349,10 @@ function AppDetail({
   const t = useTranslations('public.campDetail');
   const tCamps = useTranslations('app.camps');
   const tNav = useTranslations('app.nav');
+  const tBadge = useTranslations('camps.religiousBadge');
   const { mode } = useMode();
   const isParents = mode === 'parents';
+  const isReligious = (camp.categories ?? []).includes('religious');
 
   const cardCls = isParents
     ? 'border border-cream-border bg-white'
@@ -386,6 +403,24 @@ function AppDetail({
             </h1>
             {camp.neighborhood ? (
               <p className={'mt-1 text-sm ' + mutedCls}>📍 {camp.neighborhood}</p>
+            ) : null}
+            {isReligious ? (
+              <p className="mt-2">
+                <span
+                  className={
+                    'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+                    (isParents
+                      ? 'border border-cream-border bg-white text-ink'
+                      : 'border border-white/20 bg-white/10 text-white')
+                  }
+                  title={tBadge('tooltip')}
+                  aria-label={tBadge('label')}
+                  data-testid="camp-detail-religious-badge"
+                >
+                  <span aria-hidden="true">🙏</span>
+                  {tBadge('label')}
+                </span>
+              </p>
             ) : null}
             {camp.categories && camp.categories.length ? (
               <div className="mt-2 flex flex-wrap gap-1.5">

@@ -177,6 +177,10 @@
         "title": "No camps match those filters.",
         "body": "Try <clear>clearing filters</clear> or <search>searching by name instead</search>."
       }
+    },
+    "religiousBadge": {
+      "label": "Religious",
+      "tooltip": "Religious program — see camp description for details"
     }
   },
   "errors": {

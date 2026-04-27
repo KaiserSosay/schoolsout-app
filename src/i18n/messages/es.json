@@ -177,6 +177,10 @@
         "title": "Ningún campamento coincide.",
         "body": "Prueba <clear>quitar filtros</clear> o <search>buscar por nombre</search>."
       }
+    },
+    "religiousBadge": {
+      "label": "Religioso",
+      "tooltip": "Programa religioso — ver descripción del campamento para más detalles"
     }
   },
   "errors": {
