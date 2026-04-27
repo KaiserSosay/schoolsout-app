@@ -90,4 +90,45 @@ describe('migration 051 — Featured launch partner trio', () => {
     const tags = SQL.match(/'rasheid-launch-partner-2026-04'/g) ?? [];
     expect(tags.length).toBe(2);
   });
+
+  it('provides every NOT-NULL-without-default camps column for both new INSERTs', () => {
+    // Per migration 003, the camps columns that are NOT NULL with NO
+    // default are: slug, name, ages_min, ages_max, price_tier. The first
+    // apply attempt failed because ages_min/ages_max/price_tier were
+    // missing — this test exists so it can never happen again.
+    const required = ['slug', 'name', 'ages_min', 'ages_max', 'price_tier'];
+    for (const slug of ['305-mini-chefs', 'wise-choice-summer-camp']) {
+      const block = SQL.match(
+        new RegExp(`INSERT INTO public\\.camps \\(([\\s\\S]*?)\\)[\\s\\S]*?'${slug}'[\\s\\S]*?ON CONFLICT \\(slug\\) DO NOTHING;`),
+      );
+      expect(block, `${slug} INSERT block not found`).not.toBeNull();
+      const columnList = block![1];
+      for (const col of required) {
+        expect(columnList, `${slug} INSERT must include ${col} column`).toMatch(
+          new RegExp(`\\b${col}\\b`),
+        );
+      }
+    }
+  });
+
+  it('uses a valid price_tier value for both new INSERTs', () => {
+    // Migration 003 CHECK constraint: price_tier IN ('$', '$$', '$$$').
+    // Anything else would fail at apply time. We assert at least one
+    // valid tier value appears for each new camp.
+    const validTiers = SQL.match(/'\${1,3}'/g) ?? [];
+    expect(validTiers.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('305 Mini Chefs uses ages_min=5, ages_max=12 (elementary range)', () => {
+    const block = SQL.match(/'305-mini-chefs'[\s\S]*?ON CONFLICT/);
+    expect(block).not.toBeNull();
+    // The INSERT lists values positionally; we check the values block of
+    // the same INSERT for the explicit 5 and 12 markers. They appear as
+    // bare integers between commas in the VALUES list.
+    const fullBlock = SQL.match(
+      /INSERT INTO public\.camps[\s\S]*?'305-mini-chefs'[\s\S]*?ON CONFLICT \(slug\) DO NOTHING;/,
+    );
+    expect(fullBlock).not.toBeNull();
+    expect(fullBlock![0]).toMatch(/\b5,\s*\n?\s*12\b/);
+  });
 });

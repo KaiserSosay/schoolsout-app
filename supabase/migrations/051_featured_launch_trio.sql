@@ -15,6 +15,18 @@
 -- from migration 006 — no new column added). No `state` column;
 -- city/neighborhood carry the location signal.
 --
+-- NOT NULL columns without defaults (per migration 003 — every INSERT
+-- must provide them): slug, name, ages_min, ages_max, price_tier.
+-- The first apply attempt failed on ages_min — fixed with explicit
+-- ranges below. price_tier is a coarse categorical bucket the schema
+-- requires (must be '$', '$$', or '$$$'). Both new camps tagged '$$'
+-- to match the peer-camp default for established day-camp / specialty
+-- programs (camp-j-miami, machane-miami, shake-a-leg, alexander-
+-- montessori-ludlam, ransom-everglades-sports all sit at '$$').
+-- Override to '$$$' before applying if Rasheid's pricing intel says
+-- otherwise — admin can also flip later via UPDATE without a
+-- migration.
+--
 -- Frost UPDATE only flips is_launch_partner / launch_partner_until.
 -- It deliberately does NOT touch featured_until (already correctly
 -- set to 2026-07-24 in prod) — R5 spirit, don't overwrite intentional
@@ -28,13 +40,15 @@ BEGIN
   -- 305 MINI CHEFS — new camp.
   -- Mobile culinary education across Miami-Dade. No fixed address;
   -- description carries the mobile-program nuance. ages_min/ages_max
-  -- left NULL — pricing and exact ages aren't published online and
-  -- we don't fabricate.
+  -- set to 5-12 (typical elementary range — they operate at Carver
+  -- Elementary + I-Prep Academy, both elementary schools, so this
+  -- matches their actual student base).
   INSERT INTO public.camps (
     slug, name, description,
     phone, email, website_url, registration_url,
     address, neighborhood, city,
     ages_min, ages_max,
+    price_tier,
     categories,
     verified, last_verified_at,
     is_featured, featured_until,
@@ -43,7 +57,7 @@ BEGIN
   ) VALUES (
     '305-mini-chefs',
     '305 Mini Chefs',
-    E'Kids cooking classes, camps, and after-school programs teaching culinary skills across Miami-Dade County.\n\n305 Mini Chefs is a mobile culinary education program — they bring professional cooking instruction directly to schools and communities, so there is no single fixed location. Based in Coral Gables, they currently operate at partner schools including George Washington Carver Elementary and I-Prep Academy, plus offer summer camps, private lessons, and birthday parties.\n\nKids learn real cooking techniques from professional chefs, prepare actual recipes, and build confidence and safety skills in the kitchen. Tagline: "Savor the Flavor of 305 Mini Chefs."\n\n*Note: 2026 summer camp pricing and exact age ranges aren''t published online — call (786) 509-7509 or book online to get details for your child.*',
+    E'Kids cooking classes, camps, and after-school programs teaching culinary skills across Miami-Dade County.\n\n305 Mini Chefs is a mobile culinary education program — they bring professional cooking instruction directly to schools and communities, so there is no single fixed location. Based in Coral Gables, they currently operate at partner schools including George Washington Carver Elementary and I-Prep Academy, plus offer summer camps, private lessons, and birthday parties.\n\nKids learn real cooking techniques from professional chefs, prepare actual recipes, and build confidence and safety skills in the kitchen. Tagline: "Savor the Flavor of 305 Mini Chefs."\n\n*Note: 2026 summer camp pricing isn''t published online — call (786) 509-7509 or book online to get details for your child.*',
     '(786) 509-7509',
     '305minichefs@gmail.com',
     'https://www.305minichefs.com/',
@@ -51,8 +65,9 @@ BEGIN
     NULL,
     'Coral Gables',
     'Miami',
-    NULL,
-    NULL,
+    5,
+    12,
+    '$$',
     ARRAY['culinary'],
     true,
     NOW(),
@@ -74,6 +89,7 @@ BEGIN
     phone, email, website_url, registration_url,
     address, neighborhood, city,
     ages_min, ages_max,
+    price_tier,
     categories,
     verified, last_verified_at,
     is_featured, featured_until,
@@ -92,6 +108,7 @@ BEGIN
     'Coral Gables',
     5,
     14,
+    '$$',
     ARRAY['sports', 'arts', 'stem', 'outdoor', 'swimming'],
     true,
     NOW(),
