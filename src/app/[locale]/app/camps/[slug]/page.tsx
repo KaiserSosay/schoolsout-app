@@ -1,25 +1,12 @@
 import { notFound } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { CampDetailView } from '@/components/app/CampDetailView';
+import {
+  UnifiedCampDetail,
+  type UnifiedCampDetailCamp,
+} from '@/components/camps/UnifiedCampDetail';
 
 export const dynamic = 'force-dynamic';
-
-type CampFull = {
-  id: string;
-  slug: string;
-  name: string;
-  description: string | null;
-  ages_min: number;
-  ages_max: number;
-  price_tier: '$' | '$$' | '$$$';
-  categories: string[];
-  website_url: string | null;
-  image_url: string | null;
-  neighborhood: string | null;
-  is_featured: boolean;
-  verified: boolean;
-};
 
 export default async function CampDetailPage({
   params,
@@ -28,17 +15,19 @@ export default async function CampDetailPage({
 }) {
   const { locale, slug } = await params;
 
-  // Camps are public — service role read. Then auth'd client for the saved check.
+  // Camps are public — service role read. Then auth'd client for the saved
+  // check. Per Q6: dashboard detail SELECT now matches the public detail's
+  // 21-column shape so a parent never sees less info after signing in.
   const svc = createServiceSupabase();
   const { data: camp } = await svc
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, verified',
+      'id, slug, name, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
     )
     .eq('slug', slug)
     .maybeSingle();
   if (!camp) notFound();
-  const c = camp as CampFull;
+  const c = camp as UnifiedCampDetailCamp;
 
   const sb = createServerSupabase();
   const {
@@ -67,5 +56,5 @@ export default async function CampDetailPage({
       .then(() => undefined, () => undefined);
   }
 
-  return <CampDetailView camp={c} saved={saved} locale={locale} />;
+  return <UnifiedCampDetail camp={c} mode="app" locale={locale} isSaved={saved} />;
 }
