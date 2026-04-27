@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   AGE_BANDS,
@@ -12,6 +12,8 @@ import {
   type CampsFilters,
   type PriceTier,
 } from '@/lib/camps/filters';
+import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
+import { EntitySearchBar } from '@/components/shared/EntitySearchBar';
 
 // 11 seeded categories — same set CampFilters used pre-Goal-3. Living here so
 // the public + app pages can both render the chip strip from one source.
@@ -53,22 +55,6 @@ export function CampsFilterBar({ mode, hoods, matchEnabled = false }: Props) {
     [searchParams],
   );
 
-  // DECISION: keep an isolated input state for the search box so we can
-  // debounce 300ms before pushing to the URL. Without this, every keystroke
-  // forces a server-side re-render of the camps grid.
-  const [qInput, setQInput] = useState(filters.q);
-  useEffect(() => {
-    setQInput(filters.q);
-  }, [filters.q]);
-  useEffect(() => {
-    if (qInput === filters.q) return;
-    const id = window.setTimeout(() => {
-      push({ ...filters, q: qInput });
-    }, 300);
-    return () => window.clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qInput]);
-
   function push(next: CampsFilters) {
     const qs = serializeFilters(next);
     startTransition(() => {
@@ -80,42 +66,17 @@ export function CampsFilterBar({ mode, hoods, matchEnabled = false }: Props) {
     return arr.includes(value) ? arr.filter((x) => x !== value) : [...arr, value];
   }
 
-  const chipBase =
-    'inline-flex min-h-9 items-center rounded-full border px-3 py-1.5 text-xs font-bold transition-colors';
-  const chipActive = 'bg-brand-purple text-white border-brand-purple';
-  const chipInactive =
-    'bg-white text-ink border-cream-border hover:border-brand-purple/40';
-
   return (
     <div className="space-y-3">
       {/* Row 1: search + categories + (app) match-my-kids */}
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative w-full md:w-60">
-          <span aria-hidden className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
-            🔍
-          </span>
-          <input
-            type="search"
-            value={qInput}
-            onChange={(e) => setQInput(e.target.value)}
-            aria-label={t('search.label')}
-            placeholder={t('search.placeholder')}
-            className="block w-full min-h-11 rounded-full border border-cream-border bg-white pl-9 pr-9 py-2 text-sm text-ink placeholder:text-muted outline-none focus:border-ink/40 focus:ring-2 focus:ring-ink/20"
-          />
-          {qInput ? (
-            <button
-              type="button"
-              aria-label={t('search.clear')}
-              onClick={() => {
-                setQInput('');
-                push({ ...filters, q: '' });
-              }}
-              className="absolute inset-y-0 right-2 flex items-center px-2 text-muted hover:text-ink"
-            >
-              ✕
-            </button>
-          ) : null}
-        </div>
+        <EntitySearchBar
+          value={filters.q}
+          onChange={(next) => push({ ...filters, q: next })}
+          ariaLabel={t('search.label')}
+          placeholder={t('search.placeholder')}
+          clearLabel={t('search.clear')}
+        />
 
         {mode === 'app' && matchEnabled ? (
           <button

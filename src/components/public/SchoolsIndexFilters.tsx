@@ -3,6 +3,7 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
+import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
 
 // Type chips + neighborhood multi-select for /schools.
 // URL state shape:
@@ -55,12 +56,6 @@ export function SchoolsIndexFilters({
   function toggle(arr: string[], v: string): string[] {
     return arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
   }
-
-  const chipBase =
-    'inline-flex min-h-9 items-center rounded-full border px-3 py-1.5 text-xs font-bold transition-colors';
-  const chipActive = 'bg-brand-purple text-white border-brand-purple';
-  const chipInactive =
-    'bg-white text-ink border-cream-border hover:border-brand-purple/40';
 
   return (
     <div className="space-y-3">
