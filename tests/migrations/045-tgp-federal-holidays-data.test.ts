@@ -2,24 +2,28 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-// Static-analysis tests on migration 044's SQL. The migration isn't
+// Static-analysis tests on migration 045's SQL. The migration isn't
 // applied against a real DB in CI (we don't run a Supabase instance
 // in tests), so these assertions catch the failures we can catch
 // without one: row count, exact date set, idempotency-by-construction,
 // and that the verification block expects the same count.
+//
+// 045 is the data half of the federal-holidays pair — its companion
+// 044 adds the 'derived' value to the closure_status enum. The split
+// is forced by Postgres' SQLSTATE 55P04 ("unsafe use of new value")
+// when ALTER TYPE ADD VALUE shares a transaction with an INSERT that
+// uses the new value.
 
 const MIG_PATH = path.join(
   process.cwd(),
-  'supabase/migrations/044_tgp_2025_2026_federal_holidays.sql',
+  'supabase/migrations/045_tgp_federal_holidays_data.sql',
 );
 
 const SQL = readFileSync(MIG_PATH, 'utf8');
 
-describe('migration 044 — TGP 2025-2026 federal holidays', () => {
-  it('extends the closure_status enum with "derived"', () => {
-    expect(SQL).toMatch(
-      /alter type closure_status add value if not exists 'derived'/i,
-    );
+describe('migration 045 — TGP 2025-2026 federal holidays (data)', () => {
+  it('does NOT contain ALTER TYPE — that lives in pair migration 044', () => {
+    expect(SQL).not.toMatch(/alter type/i);
   });
 
   it('inserts exactly 5 federal-holiday rows (the universally-observed subset)', () => {

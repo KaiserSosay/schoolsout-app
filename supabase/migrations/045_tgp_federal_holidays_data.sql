@@ -1,43 +1,39 @@
 -- Phase 4.7.x — bridge data for TGP's missing 2025-2026 calendar.
 --
--- TGP has 17 verified closures for 2026-2027 (migration 035) but ZERO
--- for the current 2025-2026 school year — the school's PDF for the
--- current year isn't published in a place we can read. Until it is,
--- we ship the federal-holiday subset that ALL American K-5 schools
--- universally observe: Labor Day, Thanksgiving Day, Christmas Day,
--- New Year's Day, Memorial Day. Five dates, deterministic math, all
--- attributed as `derived` from the federal holiday calendar.
+-- Pair migration: 044_tgp_federal_holidays_enum.sql adds the
+-- 'derived' value to the closure_status enum that this migration
+-- uses. Splitting the two is mandatory — Postgres rejects ALTER
+-- TYPE ADD VALUE + a query that uses the new value within a single
+-- transaction (SQLSTATE 55P04). Supabase runs each migration file
+-- in its own transaction, so 044 commits before 045 starts.
 --
--- Why not the full 8 (Veterans Day, MLK Day, Presidents' Day too)?
--- Small private K-5 schools commonly stay open on those three. Per
--- R6, false positives destroy trust — a "closed" pill on a day TGP
--- is actually open is the exact Water-Day failure mode the app
--- exists to prevent. The 5-date subset is the universally-observed
--- floor; the variable 3 wait for Mom's PDF tomorrow.
+-- TGP has 17 verified closures for 2026-2027 (migration 035) but
+-- ZERO for the current 2025-2026 school year — the school's PDF
+-- for the current year isn't published in a place we can read.
+-- Until it is, we ship the federal-holiday subset every American
+-- K-5 universally observes: Labor Day, Thanksgiving Day, Christmas
+-- Day, New Year's Day, Memorial Day. Five rows, deterministic
+-- dates, all attributed source=federal_holiday_calendar /
+-- status=derived / confidence=medium.
 --
--- When the real PDF lands and migration 045 imports it with
--- source='official_pdf', the unique index on (school_id, start_date,
--- name) lets ON CONFLICT DO NOTHING preserve these rows if the PDF
--- repeats them, or upgrade them if the names match exactly. Either
--- way the bridge value is preserved through cutover.
+-- Why only 5 of the 8 federal holidays? Small private K-5 schools
+-- commonly stay open on Veterans Day, MLK Day, and Presidents'
+-- Day. Importing those would create exactly the false-positive
+-- class R6 was written to prevent — a "closed" pill on a day TGP
+-- is actually open is the Water-Day bad-morning failure mode the
+-- app exists to solve. The 5-date subset is the universally-
+-- observed floor; the variable 3 wait for the school's actual PDF.
 --
--- Schema notes (per R2, verified before writing):
---   * closure_status enum (mig 001) only had ai_draft|verified|rejected.
---     Extended here to include 'derived' so federal-holiday rows are
---     filterable + visually differentiable from school-confirmed.
---   * source / source_type / confidence / category are all unconstrained
---     text columns (mig 022 added them as `add column if not exists`),
---     so the new string values write without further constraint changes.
+-- Schema notes (verified per R2 against the actual migration files):
+--   * closure_status enum gains 'derived' in mig 044 (pair).
+--   * source / source_type / confidence / category are unconstrained
+--     text columns (mig 022), so the new string values write straight.
 --   * Unique index closures_school_start_name_unique (mig 029) backs
---     ON CONFLICT.
-
-alter type closure_status add value if not exists 'derived';
-
--- ALTER TYPE ADD VALUE can't run in the same transaction as a query
--- that uses the new value on some Postgres versions. Supabase's
--- migrate runner applies each migration as its own statement-batch,
--- which is fine — but to belt-and-suspender it, the inserts go in
--- a DO block that re-resolves the enum at exec time.
+--     the ON CONFLICT DO NOTHING — re-running is idempotent.
+--
+-- When the real PDF lands, mig 046+ imports it with source='official_pdf'
+-- and the unique index either preserves or upgrades these rows
+-- depending on name match. Bridge value is preserved through cutover.
 
 do $$
 declare

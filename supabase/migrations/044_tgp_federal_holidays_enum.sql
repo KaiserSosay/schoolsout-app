@@ -1,0 +1,24 @@
+-- Phase 4.7.x — extend closure_status enum with 'derived'.
+--
+-- Pair migration: 045_tgp_federal_holidays_data.sql inserts the rows
+-- that USE this new enum value. The two MUST be separate files —
+-- Postgres rejects "ALTER TYPE ... ADD VALUE" + a query that uses
+-- the new value inside a single transaction (SQLSTATE 55P04, "unsafe
+-- use of new value"), and Supabase runs each migration file as one
+-- transaction. Initial attempt at 2026-04-26 evening tried both in
+-- one file and hit exactly that error on prod push.
+--
+-- IF NOT EXISTS so re-running this migration in dev / staging /
+-- shadow DBs is idempotent. Production already failed once on the
+-- combined version, so the enum value WAS NOT added — this migration
+-- is what actually adds it.
+--
+-- Why a new enum value at all? Federal-holiday-derived closures are
+-- materially different from school-confirmed closures: the data
+-- comes from federal-calendar math, not from the school's PDF or
+-- iCal. The 'derived' status keeps them queryable as a separate
+-- bucket and lets the public UI render a 📅 pill instead of the
+-- standard ✓ Verified pill. R6 trust posture — false positives
+-- destroy trust, so we surface the data with the right signal.
+
+alter type closure_status add value if not exists 'derived';
