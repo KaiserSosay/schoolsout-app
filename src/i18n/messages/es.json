@@ -1534,6 +1534,9 @@
       "filters": {
         "typeLabel": "Filtrar por tipo de escuela",
         "hoodLabel": "Filtrar por vecindario",
+        "neighborhoodsHeader": "Vecindarios",
+        "neighborhoodsAriaExpand": "Mostrar todos los vecindarios",
+        "neighborhoodsAriaCollapse": "Ocultar vecindarios",
         "types": {
           "public": "Pública",
           "charter": "Chárter",

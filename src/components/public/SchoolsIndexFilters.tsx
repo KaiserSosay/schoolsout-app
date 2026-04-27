@@ -84,25 +84,58 @@ export function SchoolsIndexFilters({
         })}
       </div>
       {hoods.length ? (
-        <div role="group" aria-label={t('filters.hoodLabel')} className="flex flex-wrap gap-2" data-testid="schools-hood-filters">
-          {hoods.map((h) => {
-            const isActive = activeHoods.includes(h);
-            return (
-              <button
-                key={h}
-                type="button"
-                aria-pressed={isActive}
-                data-hood={h}
-                onClick={() =>
-                  push({ types: activeTypes, hoods: toggle(activeHoods, h) })
-                }
-                className={chipBase + ' ' + (isActive ? chipActive : chipInactive)}
-              >
-                {h}
-              </button>
-            );
-          })}
-        </div>
+        <details
+          className="group rounded-2xl border border-cream-border bg-white"
+          // Auto-open when a neighborhood filter is active so the user can see
+          // their selection without an extra tap. Pure render-time prop — no
+          // local state, so the URL stays the source of truth on reload/share.
+          open={activeHoods.length > 0}
+          data-testid="schools-hood-accordion"
+        >
+          <summary
+            className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-2.5 text-sm font-bold text-ink"
+          >
+            <span>
+              {t('filters.neighborhoodsHeader')}{' '}
+              <span className="font-normal text-muted">({hoods.length})</span>
+              {activeHoods.length > 0 ? (
+                <span className="ml-2 font-normal text-brand-purple">
+                  · {activeHoods.length}
+                </span>
+              ) : null}
+            </span>
+            <span
+              aria-hidden="true"
+              className="text-muted transition-transform group-open:rotate-180"
+            >
+              ▾
+            </span>
+          </summary>
+          <div
+            role="group"
+            aria-label={t('filters.hoodLabel')}
+            className="flex flex-wrap gap-2 px-4 pb-4 pt-1"
+            data-testid="schools-hood-filters"
+          >
+            {hoods.map((h) => {
+              const isActive = activeHoods.includes(h);
+              return (
+                <button
+                  key={h}
+                  type="button"
+                  aria-pressed={isActive}
+                  data-hood={h}
+                  onClick={() =>
+                    push({ types: activeTypes, hoods: toggle(activeHoods, h) })
+                  }
+                  className={chipBase + ' ' + (isActive ? chipActive : chipInactive)}
+                >
+                  {h}
+                </button>
+              );
+            })}
+          </div>
+        </details>
       ) : null}
     </div>
   );

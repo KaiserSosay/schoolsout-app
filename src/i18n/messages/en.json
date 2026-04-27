@@ -1534,6 +1534,9 @@
       "filters": {
         "typeLabel": "Filter by school type",
         "hoodLabel": "Filter by neighborhood",
+        "neighborhoodsHeader": "Neighborhoods",
+        "neighborhoodsAriaExpand": "Show all neighborhoods",
+        "neighborhoodsAriaCollapse": "Hide neighborhoods",
         "types": {
           "public": "Public",
           "charter": "Charter",
