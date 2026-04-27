@@ -119,6 +119,22 @@ Sub-tasks (all ✅):
 - **`<UnifiedCampDetail>` + dashboard data parity** — fixed Q6 data-shape divergence so the logged-in detail no longer drops hours, address, registration deadline, or price range; both detail surfaces share one component; regression test at `tests/app/camps-detail-data-shape.test.tsx` locks parity
 - **Public sort with locked Distance** — `/camps` gets the same sort toggle as `/app/camps`, with Distance disabled + 🔒 + tooltip so logged-out parents can SEE that signing in unlocks distance-from-home sorting
 
+### ✅ Phase 3.5.X — TGP Summer Camp + featured swap (shipped 2026-04-27)
+
+- The Growing Place Summer Camp 2026 added with full flyer data (Session 1: June 15–July 2, Session 2: July 6–July 24, dino theme, half- and full-day options).
+- Featured set is now: 305 Mini Chefs + Wise Choice + Frost + TGP — all 4 are launch partners.
+- Deering Eco + Miami Children's Museum unflagged from featured (still in directory, just not featured).
+- Religious affiliation precedent: TGP Summer Camp tagged `religious` even though programming is secular, because Mom should see the venue affiliation upfront on the card. May want to revisit Camp Klurman, Posnack JCC, and the Cross Bridge Church camp through the same lens (those were Section B strikes that may need re-adding).
+- Migration `053_tgp_summer_camp_and_featured_swap.sql` — committed but NOT auto-applied; operator runs `pnpm exec supabase db push --include-all` after review.
+
+### ✅ Phase 3.5.X — Settings password UI (shipped 2026-04-27)
+
+The `/api/auth/set-password` and `/api/auth/sign-in-with-password` endpoints existed since password sign-in shipped earlier this week, but no UI surface let logged-in users set or change their password. Settings page now has a password section with set/change form. First-time users see "Set a password" copy; returning users with an existing password see "Change your password." Server-side detection via `auth.admin.getUserById`. Magic links keep working either way.
+
+### 📋 Phase 3.5.X — Desktop nav follow-up (audit shipped 2026-04-27)
+
+`docs/plans/desktop-nav-audit-2026-04-27.md` documents the asymmetry Rasheid flagged. Real gap: desktop has no path to notifications (the 🔔 bell on `AppHeader` has no SideNav counterpart). Smaller gap: mobile has no language toggle in `UserMenuItems` (only in Settings). Implementation deferred to a follow-up commit; recommendations at the bottom of the audit doc.
+
 ### 📋 Phase 3.2 — Per-Kid Plans
 Right now if you save a "Memorial Day plan," it's for the whole family. But what if Noah goes to one camp and his sister goes somewhere else? This makes plans work per-kid, with a dashboard grid showing who's covered when.
 
