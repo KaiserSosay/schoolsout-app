@@ -109,6 +109,16 @@ Sub-tasks (all ✅):
 - **3.5.4** Renamed pill labels for honesty: "Camp requests" → "Camp applications" (matches DB), "Calendar reviews" → "Calendar drafts", "Integrity warnings" → "Integrity issues"
 - **3.5.5** Fixture-based `tests/lib/admin-pill-counts.test.ts` proves each pill matches the loader query for its tab and the helper is schema-defensive against missing migrations
 
+### ✅ Phase 3.5.X — UI unification (shipped 2026-04-27)
+Browse-pattern parity across `/camps`, `/app/camps`, `/schools`, `/app/saved`, and the dashboard wishlist tile. Audited at `docs/plans/ui-consistency-audit-2026-04-27.md`; locked-in design decisions in `docs/plans/ui-consistency-audit-2026-04-27.md` Q1–Q7.
+
+Sub-tasks (all ✅):
+- **chip-classes + EntitySearchBar** — extracted shared chip styling tokens and the debounced search input out of `CampsFilterBar` so both camps and schools consume the same primitives
+- **Schools search + empty-state parity** — `/schools` now has a search bar that matches name + neighborhood + city + district; same empty-state recovery hint pattern as camps via the new generic `<EntityEmptyHint>`
+- **`<UnifiedCampCard>`** — three card components collapsed into one mode-aware component (`public` / `app` / `wishlist-tile`); all four camp-listing surfaces now share the same 1/2/3-column grid; logged-out users see a disabled save star with "Sign in to save" tooltip (ghost UI, not a lock icon)
+- **`<UnifiedCampDetail>` + dashboard data parity** — fixed Q6 data-shape divergence so the logged-in detail no longer drops hours, address, registration deadline, or price range; both detail surfaces share one component; regression test at `tests/app/camps-detail-data-shape.test.tsx` locks parity
+- **Public sort with locked Distance** — `/camps` gets the same sort toggle as `/app/camps`, with Distance disabled + 🔒 + tooltip so logged-out parents can SEE that signing in unlocks distance-from-home sorting
+
 ### 📋 Phase 3.2 — Per-Kid Plans
 Right now if you save a "Memorial Day plan," it's for the whole family. But what if Noah goes to one camp and his sister goes somewhere else? This makes plans work per-kid, with a dashboard grid showing who's covered when.
 
