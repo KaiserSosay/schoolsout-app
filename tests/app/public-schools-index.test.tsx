@@ -12,7 +12,11 @@ describe('public.schoolsIndex i18n keys', () => {
   const required = [
     'title',
     'subtitle',
-    'empty',
+    'empty.title',
+    'empty.body',
+    'search.label',
+    'search.placeholder',
+    'search.clear',
     'mdcpsBadge',
     'count.total',
     'count.filtered',

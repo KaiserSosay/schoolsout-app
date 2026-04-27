@@ -30,10 +30,17 @@ const HOODS = [
   'South Miami',
 ];
 
-function wrap(props: Parameters<typeof SchoolsIndexFilters>[0]) {
+function wrap(props: Partial<Parameters<typeof SchoolsIndexFilters>[0]>) {
+  const merged = {
+    hoods: [],
+    activeTypes: [],
+    activeHoods: [],
+    activeQuery: '',
+    ...props,
+  } as Parameters<typeof SchoolsIndexFilters>[0];
   return render(
     <NextIntlClientProvider locale="en" messages={enMessages}>
-      <SchoolsIndexFilters {...props} />
+      <SchoolsIndexFilters {...merged} />
     </NextIntlClientProvider>,
   );
 }
@@ -91,5 +98,22 @@ describe('SchoolsIndexFilters — neighborhoods accordion', () => {
     const acc = screen.getByTestId('schools-hood-accordion') as HTMLDetailsElement;
     const summary = acc.querySelector('summary');
     expect(summary).not.toBeNull();
+  });
+});
+
+describe('SchoolsIndexFilters — search bar', () => {
+  it('renders the search input with the schools-specific placeholder', () => {
+    wrap({ hoods: [], activeTypes: [], activeHoods: [], activeQuery: '' });
+    const input = screen.getByPlaceholderText(/Search by name, neighborhood, city/i);
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute(
+      'aria-label',
+      expect.stringMatching(/Search schools by name/i),
+    );
+  });
+
+  it('hydrates the search input from activeQuery', () => {
+    wrap({ hoods: [], activeTypes: [], activeHoods: [], activeQuery: 'coral' });
+    expect(screen.getByPlaceholderText(/Search by name/i)).toHaveValue('coral');
   });
 });

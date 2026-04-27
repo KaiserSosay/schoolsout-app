@@ -6,7 +6,7 @@ import { CampSortControl, type FromOption } from '@/components/app/CampSortContr
 import { AppPageHeader } from '@/components/app/AppPageHeader';
 import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
-import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
+import { EntityEmptyHint } from '@/components/shared/EntityEmptyHint';
 import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { sortByDistanceWithFeatured } from '@/lib/camps/sort';
 import { haversineMiles } from '@/lib/distance';
@@ -245,7 +245,11 @@ export default async function CampsPage({
       </div>
 
       {sorted.length === 0 ? (
-        <CampsEmptyHint hasSearchTerm={Boolean(filters.q)} />
+        <EntityEmptyHint
+          hasSearchTerm={Boolean(filters.q)}
+          i18nNamespace="camps.filters.empty"
+          testId="camps-empty-hint"
+        />
       ) : (
         <ul className="space-y-3">
           {sorted.map((camp) => (

@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { SchoolsIndexFilters } from '@/components/public/SchoolsIndexFilters';
+import { EntityEmptyHint } from '@/components/shared/EntityEmptyHint';
 import { publicPageMetadata, breadcrumbListJsonLd, JsonLdScripts } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
@@ -19,6 +20,7 @@ type SchoolRow = {
   type: string | null;
   neighborhood: string | null;
   city: string | null;
+  district: string | null;
   is_mdcps: boolean | null;
 };
 
@@ -56,6 +58,8 @@ export default async function PublicSchoolsIndexPage({
 
   const activeTypes = csv(sp.type);
   const activeHoods = csv(sp.hood);
+  const activeQuery = (typeof sp.q === 'string' ? sp.q : '').trim();
+  const queryLower = activeQuery.toLowerCase();
   const pageNum = Math.max(1, parseInt(typeof sp.page === 'string' ? sp.page : '1', 10) || 1);
 
   const svc = createServiceSupabase();
@@ -69,13 +73,13 @@ export default async function PublicSchoolsIndexPage({
   let allRows: SchoolRow[] = [];
   const richResp = await svc
     .from('schools')
-    .select('id, slug, name, type, neighborhood, city, is_mdcps')
+    .select('id, slug, name, type, neighborhood, city, district, is_mdcps')
     .eq('closed_permanently', false)
     .order('name');
   if (richResp.error) {
     const lean = await svc
       .from('schools')
-      .select('id, slug, name, type, city')
+      .select('id, slug, name, type, city, district')
       .order('name');
     allRows = ((lean.data ?? []) as Array<Omit<SchoolRow, 'neighborhood' | 'is_mdcps'>>).map((r) => ({
       ...r,
@@ -94,6 +98,13 @@ export default async function PublicSchoolsIndexPage({
     if (activeTypes.length && (!r.type || !activeTypes.includes(r.type))) return false;
     if (activeHoods.length && (!r.neighborhood || !activeHoods.includes(r.neighborhood))) {
       return false;
+    }
+    if (queryLower) {
+      const haystack = [r.name, r.neighborhood, r.city, r.district]
+        .filter((v): v is string => Boolean(v))
+        .join(' ')
+        .toLowerCase();
+      if (!haystack.includes(queryLower)) return false;
     }
     return true;
   });
@@ -132,11 +143,12 @@ export default async function PublicSchoolsIndexPage({
             hoods={hoods}
             activeTypes={activeTypes}
             activeHoods={activeHoods}
+            activeQuery={activeQuery}
           />
         </div>
 
         <p className="mb-3 text-sm text-muted" data-testid="schools-count">
-          {activeTypes.length === 0 && activeHoods.length === 0
+          {activeTypes.length === 0 && activeHoods.length === 0 && !activeQuery
             ? t('count.total', { n: filtered.length })
             : t('count.filtered', {
                 filtered: filtered.length,
@@ -145,9 +157,11 @@ export default async function PublicSchoolsIndexPage({
         </p>
 
         {slice.length === 0 ? (
-          <p className="rounded-2xl border border-cream-border bg-white p-6 text-center text-sm text-muted">
-            {t('empty')}
-          </p>
+          <EntityEmptyHint
+            hasSearchTerm={Boolean(activeQuery)}
+            i18nNamespace="public.schoolsIndex.empty"
+            testId="schools-empty-hint"
+          />
         ) : (
           <ul
             data-testid="schools-list"

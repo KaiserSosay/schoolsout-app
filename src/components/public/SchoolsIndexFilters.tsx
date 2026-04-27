@@ -4,9 +4,11 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
+import { EntitySearchBar } from '@/components/shared/EntitySearchBar';
 
-// Type chips + neighborhood multi-select for /schools.
+// Type chips + neighborhood multi-select + free-text search for /schools.
 // URL state shape:
+//   ?q=coral
 //   ?type=public,charter
 //   ?hood=Coral+Gables,Pinecrest
 //   ?page=2  (kept intact when toggling filters; reset on filter change)
@@ -27,10 +29,12 @@ export function SchoolsIndexFilters({
   hoods,
   activeTypes,
   activeHoods,
+  activeQuery,
 }: {
   hoods: string[];
   activeTypes: string[];
   activeHoods: string[];
+  activeQuery: string;
 }) {
   const t = useTranslations('public.schoolsIndex');
   const router = useRouter();
@@ -38,7 +42,7 @@ export function SchoolsIndexFilters({
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
 
-  function push(next: { types: string[]; hoods: string[] }) {
+  function push(next: { types: string[]; hoods: string[]; query?: string }) {
     const params = new URLSearchParams(searchParams?.toString() ?? '');
     // Filter changes always reset pagination — otherwise the user lands
     // on page 4 of 1, which is a dead view.
@@ -47,10 +51,18 @@ export function SchoolsIndexFilters({
     else params.delete('type');
     if (next.hoods.length) params.set('hood', next.hoods.join(','));
     else params.delete('hood');
+    if (next.query !== undefined) {
+      if (next.query) params.set('q', next.query);
+      else params.delete('q');
+    }
     const qs = params.toString();
     startTransition(() => {
       router.push(qs ? `${pathname}?${qs}` : pathname);
     });
+  }
+
+  function pushQuery(query: string) {
+    push({ types: activeTypes, hoods: activeHoods, query });
   }
 
   function toggle(arr: string[], v: string): string[] {
@@ -59,6 +71,13 @@ export function SchoolsIndexFilters({
 
   return (
     <div className="space-y-3">
+      <EntitySearchBar
+        value={activeQuery}
+        onChange={pushQuery}
+        ariaLabel={t('search.label')}
+        placeholder={t('search.placeholder')}
+        clearLabel={t('search.clear')}
+      />
       <div role="group" aria-label={t('filters.typeLabel')} className="flex flex-wrap gap-2" data-testid="schools-type-filters">
         {TYPE_KEYS.map((key) => {
           const isActive = activeTypes.includes(key);

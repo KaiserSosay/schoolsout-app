@@ -10,7 +10,7 @@ import {
 } from '@/components/public/PublicCampCard';
 import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
-import { CampsEmptyHint } from '@/components/camps/CampsEmptyHint';
+import { EntityEmptyHint } from '@/components/shared/EntityEmptyHint';
 import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { publicPageMetadata } from '@/lib/seo';
 
@@ -126,7 +126,11 @@ export default async function PublicCampsPage({
         </div>
 
         {filtered.length === 0 ? (
-          <CampsEmptyHint hasSearchTerm={Boolean(filters.q)} />
+          <EntityEmptyHint
+            hasSearchTerm={Boolean(filters.q)}
+            i18nNamespace="camps.filters.empty"
+            testId="camps-empty-hint"
+          />
         ) : (
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((camp) => (

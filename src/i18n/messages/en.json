@@ -1525,11 +1525,19 @@
     "schoolsIndex": {
       "title": "Miami schools we track",
       "subtitle": "Every school we have a calendar (or are working on one) for. Tap a school to see breaks, holidays, and teacher workdays.",
-      "empty": "No schools match those filters.",
       "mdcpsBadge": "MDCPS calendar",
       "count": {
         "total": "{n, plural, one {# school} other {# schools}}",
         "filtered": "{filtered} of {total} schools"
+      },
+      "search": {
+        "label": "Search schools by name, neighborhood, city, or district",
+        "placeholder": "Search by name, neighborhood, city…",
+        "clear": "Clear search"
+      },
+      "empty": {
+        "title": "No schools match those filters.",
+        "body": "Try <clear>clearing filters</clear> or <search>searching by name instead</search>."
       },
       "filters": {
         "typeLabel": "Filter by school type",

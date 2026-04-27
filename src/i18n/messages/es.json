@@ -1525,11 +1525,19 @@
     "schoolsIndex": {
       "title": "Escuelas de Miami que rastreamos",
       "subtitle": "Cada escuela para la que tenemos (o estamos consiguiendo) un calendario. Toca una escuela para ver recesos, feriados y días de planificación docente.",
-      "empty": "Ninguna escuela coincide con esos filtros.",
       "mdcpsBadge": "Calendario MDCPS",
       "count": {
         "total": "{n, plural, one {# escuela} other {# escuelas}}",
         "filtered": "{filtered} de {total} escuelas"
+      },
+      "search": {
+        "label": "Buscar escuelas por nombre, vecindario, ciudad o distrito",
+        "placeholder": "Buscar por nombre, vecindario, ciudad…",
+        "clear": "Limpiar búsqueda"
+      },
+      "empty": {
+        "title": "Ninguna escuela coincide con esos filtros.",
+        "body": "Prueba a <clear>limpiar los filtros</clear> o <search>buscar por nombre</search>."
       },
       "filters": {
         "typeLabel": "Filtrar por tipo de escuela",

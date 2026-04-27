@@ -4,14 +4,30 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 
-// Helpful empty-state — when filters return zero camps, teach the parent
-// how to recover instead of just saying "no camps." The two recovery paths:
-//   • Clear all filters (reset URL to bare path)
-//   • Clear just the search term (preserve other filters)
-// Both render as inline tappable links and live in the same component so
-// /camps and /app/camps share one source of truth.
-export function CampsEmptyHint({ hasSearchTerm }: { hasSearchTerm: boolean }) {
-  const t = useTranslations('camps.filters.empty');
+// Generic empty-state recovery hint, shared by /camps, /app/camps, and
+// /schools. The body string is expected to use <clear> and <search> rich-text
+// placeholders — the component wires them to URL handlers (clear all params
+// vs clear only ?q=) so each surface gets identical UX with one source of
+// truth.
+//
+// `i18nNamespace` points at the parent of {title, body} keys in the active
+// locale file:
+//   camps:   `camps.filters.empty`
+//   schools: `public.schoolsIndex.empty`
+//
+// `testId` lets each surface keep its existing `data-testid` for tests that
+// were written before the rename.
+
+export function EntityEmptyHint({
+  hasSearchTerm,
+  i18nNamespace,
+  testId = 'entity-empty-hint',
+}: {
+  hasSearchTerm: boolean;
+  i18nNamespace: string;
+  testId?: string;
+}) {
+  const t = useTranslations(i18nNamespace);
   const router = useRouter();
   const pathname = usePathname() ?? '/';
   const searchParams = useSearchParams();
@@ -31,7 +47,7 @@ export function CampsEmptyHint({ hasSearchTerm }: { hasSearchTerm: boolean }) {
   return (
     <div
       role="status"
-      data-testid="camps-empty-hint"
+      data-testid={testId}
       className="rounded-2xl border border-cream-border bg-white p-6 text-center text-sm text-ink"
     >
       <p className="font-bold">{t('title')}</p>
