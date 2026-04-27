@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { UnifiedCampCard } from '@/components/camps/UnifiedCampCard';
 
 // DECISION: "saves" is the server row shape from supabase: { id, camp: {...} }.
 // We optional-chain everything because the camp join may return null if a row
@@ -52,22 +53,12 @@ export function WishlistSection({
             if (!camp) return null;
             return (
               <li key={s.id}>
-                <Link
-                  href={`/${locale}/app/camps/${camp.slug}`}
-                  className="flex items-center justify-between rounded-2xl border border-cream-border bg-white px-4 py-3 transition-colors hover:border-brand-purple/40"
-                >
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-black text-ink">
-                      {camp.name}
-                    </p>
-                    <p className="mt-0.5 truncate text-xs text-muted">
-                      Ages {camp.ages_min}–{camp.ages_max} · {camp.price_tier}
-                    </p>
-                  </div>
-                  <span aria-hidden className="ml-3 text-muted">
-                    →
-                  </span>
-                </Link>
+                <UnifiedCampCard
+                  camp={camp}
+                  mode="wishlist-tile"
+                  isSaved={true}
+                  locale={locale}
+                />
               </li>
             );
           })}

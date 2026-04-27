@@ -1,6 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import { createServerSupabase } from '@/lib/supabase/server';
-import { CampCard, type CampCardCamp } from '@/components/app/CampCard';
+import {
+  UnifiedCampCard,
+  type UnifiedCampCardCamp,
+} from '@/components/camps/UnifiedCampCard';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
 import { SavedEmpty } from '@/components/app/SavedEmpty';
 
@@ -9,8 +12,8 @@ export const dynamic = 'force-dynamic';
 type SavedRow = {
   created_at: string;
   camp:
-    | (CampCardCamp & { description: string | null })
-    | Array<CampCardCamp & { description: string | null }>
+    | (UnifiedCampCardCamp & { description: string | null })
+    | Array<UnifiedCampCardCamp & { description: string | null }>
     | null;
 };
 
@@ -27,7 +30,7 @@ export default async function SavedPage({
     data: { user },
   } = await sb.auth.getUser();
 
-  let camps: CampCardCamp[] = [];
+  let camps: UnifiedCampCardCamp[] = [];
   if (user) {
     const { data } = await sb
       .from('saved_camps')
@@ -38,10 +41,10 @@ export default async function SavedPage({
       .order('created_at', { ascending: false });
 
     const rows = (data ?? []) as SavedRow[];
-    const mapped: Array<CampCardCamp | null> = rows.map((r) =>
+    const mapped: Array<UnifiedCampCardCamp | null> = rows.map((r) =>
       Array.isArray(r.camp) ? (r.camp[0] ?? null) : r.camp,
     );
-    camps = mapped.filter((c): c is CampCardCamp => c !== null);
+    camps = mapped.filter((c): c is UnifiedCampCardCamp => c !== null);
   }
 
   return (
@@ -55,10 +58,15 @@ export default async function SavedPage({
           browseHref={`/${locale}/app/camps`}
         />
       ) : (
-        <ul className="space-y-3">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {camps.map((camp) => (
             <li key={camp.id}>
-              <CampCard camp={camp} saved={true} locale={locale} />
+              <UnifiedCampCard
+                camp={camp}
+                mode="app"
+                isSaved={true}
+                locale={locale}
+              />
             </li>
           ))}
         </ul>

@@ -4,7 +4,10 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
-import { PublicCampCard, type PublicCampCard as PublicCampCardShape } from '@/components/public/PublicCampCard';
+import {
+  UnifiedCampCard,
+  type UnifiedCampCardCamp as PublicCampCardShape,
+} from '@/components/camps/UnifiedCampCard';
 import { rankCampsForClosure, type CoverageRow } from '@/lib/closures/coverage-ranking';
 import {
   publicPageMetadata,
@@ -212,7 +215,7 @@ export default async function PublicClosureDetailPage({
               <ul className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
                 {camps.map((camp) => (
                   <li key={camp.id}>
-                    <PublicCampCard camp={camp} locale={locale} />
+                    <UnifiedCampCard camp={camp} mode="public" locale={locale} />
                   </li>
                 ))}
               </ul>

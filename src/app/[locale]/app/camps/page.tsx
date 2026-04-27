@@ -1,7 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
-import { CampCard, type CampCardCamp } from '@/components/app/CampCard';
+import {
+  UnifiedCampCard,
+  type UnifiedCampCardCamp,
+} from '@/components/camps/UnifiedCampCard';
 import { CampSortControl, type FromOption } from '@/components/app/CampSortControl';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
 import { CampCount } from '@/components/camps/CampCount';
@@ -14,7 +17,7 @@ import { neighborhoodCentroid } from '@/lib/neighborhoods';
 
 export const dynamic = 'force-dynamic';
 
-type CampRow = CampCardCamp & {
+type CampRow = UnifiedCampCardCamp & {
   description: string | null;
   address?: string | null;
   latitude?: number | string | null;
@@ -208,7 +211,10 @@ export default async function CampsPage({
     sorted = sortByDistanceWithFeatured(annotated);
   } else if (activeSort === 'price') {
     const rank: Record<string, number> = { $: 1, $$: 2, $$$: 3 };
-    sorted = [...annotated].sort((a, b) => rank[a.price_tier] - rank[b.price_tier]);
+    sorted = [...annotated].sort(
+      (a, b) =>
+        (rank[a.price_tier ?? ''] ?? 99) - (rank[b.price_tier ?? ''] ?? 99),
+    );
   }
 
   const hoods = Array.from(
@@ -251,12 +257,13 @@ export default async function CampsPage({
           testId="camps-empty-hint"
         />
       ) : (
-        <ul className="space-y-3">
+        <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {sorted.map((camp) => (
             <li key={camp.id}>
-              <CampCard
+              <UnifiedCampCard
                 camp={camp}
-                saved={savedSet.has(camp.id)}
+                mode="app"
+                isSaved={savedSet.has(camp.id)}
                 locale={locale}
               />
             </li>

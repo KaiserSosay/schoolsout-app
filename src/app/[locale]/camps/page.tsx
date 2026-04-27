@@ -5,9 +5,9 @@ import { createServiceSupabase } from '@/lib/supabase/service';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { PageViewLogger } from '@/components/public/PageViewLogger';
 import {
-  PublicCampCard,
-  type PublicCampCard as PublicCampCardShape,
-} from '@/components/public/PublicCampCard';
+  UnifiedCampCard,
+  type UnifiedCampCardCamp,
+} from '@/components/camps/UnifiedCampCard';
 import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
 import { EntityEmptyHint } from '@/components/shared/EntityEmptyHint';
@@ -36,8 +36,8 @@ export async function generateMetadata({
 type SearchParams = Record<string, string | string[] | undefined>;
 
 // Public card shape extended with the care + hours columns the shared filter
-// needs. PublicCampCard ignores the extras — they're only here for filtering.
-type CampRow = PublicCampCardShape & {
+// needs. The card itself ignores the extras — they're only here for filtering.
+type CampRow = UnifiedCampCardCamp & {
   hours_start: string | null;
   hours_end: string | null;
   before_care_offered: boolean | null;
@@ -135,7 +135,7 @@ export default async function PublicCampsPage({
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((camp) => (
               <li key={camp.id}>
-                <PublicCampCard camp={camp} locale={locale} />
+                <UnifiedCampCard camp={camp} mode="public" locale={locale} />
               </li>
             ))}
           </ul>
