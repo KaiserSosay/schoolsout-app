@@ -161,6 +161,26 @@ Mom's biggest frustration: some camps register kids over WhatsApp, others have h
 ### 4.7 — School Operator Dashboard 🏫
 Same shape as Phase 3.1 (camp operator dashboard) but for schools. A school admin logs in, edits their school's calendar directly on our platform, uploads photos, manages their listing. The first 10% of this — a public submission form anyone can fill out to propose calendar updates with email-domain auto-verification — ships earlier (see `docs/plans/sunday-evening-three-buckets.md` Bucket 3).
 
+### ✅ 4.5.1 — Featured launch partner trio (SHIPPED 2026-04-27)
+
+Three camps marked as launch-comped Featured via the existing
+`is_launch_partner` column (added in migration 006, already wired into
+admin metrics, the toggle action, and `CampsAdminClient`). No new
+schema — the column was already there; we just hadn't pointed all
+three trio members at it yet.
+
+- **Frost Science Summer Camp** (existing `frost-science-summer`) — UPDATE flips `is_launch_partner=true`, leaves `featured_until=2026-07-24` alone (R5).
+- **305 Mini Chefs** (new) — mobile culinary education, Coral Gables base, no fixed address. Pricing/ages NULL because not published.
+- **Wise Choice Summer Camp** (new) — UM is the anchor address; the other 4 locations live in the description (multi-row split deferred).
+
+Migration `051_featured_launch_trio.sql`. When Stripe billing ships
+(Phase 4.1), the billing logic must respect `is_launch_partner=true` —
+those rows are comped and should never get charged.
+
+**Tech debt surfaced during this work:** prod has two Frost rows —
+`frost-science-summer` (live, featured) and `frost-science-summer-camp`
+(unfeatured dupe). Out of scope tonight; track as Phase 3.5.X cleanup.
+
 ### ✅ 4.7.1 — Public Calendar Submission Form (SHIPPED 2026-04-26)
 First slice of Phase 4.7. Every school detail page now carries a collapsed "Update this school's calendar →" CTA that expands inline into a form open to anyone — parent, teacher, principal, or anonymous. Submissions land in a new `school_calendar_submissions` table (migration 043), trigger an ack email to the submitter and a notify to admin, and surface in `/admin?tab=calendar-submissions`. Email-domain auto-verification compares the submitter's email host to the school's website host — matches bubble to the top of the admin queue. **No row ever auto-writes to `closures`** — admin marks `approved` then later `incorporated` once the dates land via a normal migration. Same R6 trust posture as the iCal pipeline.
 

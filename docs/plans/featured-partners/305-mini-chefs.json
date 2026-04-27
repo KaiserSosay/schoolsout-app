@@ -1,0 +1,80 @@
+{
+  "name": "305 Mini Chefs",
+  "slug_suggestion": "305-mini-chefs",
+  "primary_url": "https://www.305minichefs.com/copy-of-private-lessons",
+  "registration_url": "https://www.305minichefs.com/book-online",
+  "operator_name": "305 Mini Chefs",
+  "phone": "(786) 509-7509",
+  "email": "305minichefs@gmail.com",
+  "address": null,
+  "neighborhood": "Coral Gables (serves all Miami-Dade County)",
+
+  "categories": ["culinary"],
+  "age_range": null,
+
+  "description_short": "Kids cooking classes, camps, and after-school programs teaching culinary skills across Miami-Dade County.",
+  "description_long": "305 Mini Chefs brings professional cooking instruction to children throughout Miami-Dade County. Based in Coral Gables, they offer after-school programs at local schools including George Washington Carver Elementary and I-Prep Academy, summer camps, private lessons, and birthday parties. Their mission is to teach children how to cook while having fun and building confidence in the kitchen. The tagline 'Savor the Flavor of 305 Mini Chefs' captures their approach to making culinary education enjoyable and accessible for young chefs.",
+
+  "what_kids_do": [
+    "Learn cooking techniques from professional chefs",
+    "Prepare real recipes and meals",
+    "Build kitchen confidence and safety skills",
+    "Participate in hands-on culinary activities"
+  ],
+  "what_makes_unique": "Mobile culinary education program that brings professional cooking instruction directly to schools and communities across Miami-Dade County, making it convenient for parents.",
+
+  "pricing": {
+    "structure": "Quote on request",
+    "rates": [],
+    "what_included": null,
+    "additional_fees": null,
+    "scholarships_or_discounts": null,
+    "raw_pricing_text": "Pricing not displayed on public website. Contact via phone or book online for rates."
+  },
+
+  "schedule": {
+    "session_dates": ["Summer Camp 2026 enrollment open - see BOOK ONLINE"],
+    "weekly_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "hours_start": "08:00",
+    "hours_end": "20:00",
+    "before_care_offered": null,
+    "after_care_offered": null
+  },
+
+  "logistics": {
+    "lunch_included": null,
+    "snacks_included": null,
+    "what_to_bring": null,
+    "transportation": "Programs held at partner schools (George Washington Carver Elementary, I-Prep Academy) and private locations",
+    "minimum_age": null,
+    "maximum_age": null,
+    "max_capacity": null
+  },
+
+  "credentials": {
+    "instructor_quals": null,
+    "accreditations": null,
+    "background_checks_mentioned": false,
+    "insurance_mentioned": false,
+    "ratio": null
+  },
+
+  "social_proof": {
+    "years_running": null,
+    "testimonials_on_site": [],
+    "press_mentions": [],
+    "instagram": "@305minichefs",
+    "facebook": "https://www.facebook.com/profile.php?id=100089482266716",
+    "tiktok": null
+  },
+
+  "raw_extracted_text": "Savor the Flavor of 305 Mini Chefs. Enroll in our Afterschool and Summer Camp Cooking Classes 2026! Contact Us. Please don't hesitate to contact us at 786-509-7509 if you have any questions or concerns. Contact us via email at 305minichefs@gmail.com, or follow us on social media @305minichefs for updates and news. Our Current Locations: George Washington Carver Elementary, I-Prep Academy. Let us teach your children how to cook! We are proud to be located in the beautiful city of Coral Gables, and we are dedicated to serving all of Miami-Dade County. Opening Hours: Mon-Fri 8:00am-8:00pm, Saturday 9:00am-7:00pm, Sunday 9:00am-9:00pm.",
+
+  "extraction_notes": {
+    "captured_at": "2026-04-26T23:10:00-04:00",
+    "primary_page_loaded_successfully": true,
+    "pages_visited": ["/", "/copy-of-private-lessons", "/contact-10"],
+    "anything_missing": ["Age range not specified on site", "Pricing not displayed publicly", "Physical address not found (operates at partner school locations)", "Instructor credentials not listed"],
+    "anything_weird": "Site uses Wix. Menu structure shows CAMPS under CLASSES dropdown. The '/copy-of-private-lessons' URL is actually the camps page despite the name. Business operates primarily at partner school locations rather than a dedicated facility."
+  }
+}

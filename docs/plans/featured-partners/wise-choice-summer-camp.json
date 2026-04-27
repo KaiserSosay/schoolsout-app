@@ -1,0 +1,118 @@
+{
+  "name": "Wise Choice Summer Camp",
+  "slug_suggestion": "wise-choice-summer-camp",
+  "primary_url": "https://www.wisechoicesummercamp.com/",
+  "registration_url": "https://wisechoice.campium.com/login.php",
+  "operator_name": "Wise Choice Summer Camp",
+  "phone": "(305) 630-3600",
+  "email": "info@wisechoicesummercamp.com",
+  "address": "Multiple locations (see locations array)",
+  "neighborhood": "Multiple: Coral Gables, Westchester, Doral, West Kendall, Homestead",
+
+  "locations": [
+    {
+      "name": "Coral Gables - University of Miami",
+      "address": "University of Miami Hillel, 1100 Stanford Dr., Coral Gables, FL 33146",
+      "neighborhood": "Coral Gables"
+    },
+    {
+      "name": "Westchester - FIU",
+      "address": "FIU Stadium Club, 11310 SW 17 St, Miami, FL 33199",
+      "neighborhood": "Westchester"
+    },
+    {
+      "name": "Doral - Albizu University",
+      "address": "Albizu University, 2173 NW 99th Ave, Doral, FL 33172",
+      "neighborhood": "Doral"
+    },
+    {
+      "name": "West Kendall - BridgePrep Academy",
+      "address": "BridgePrep Academy of Village Green, 13300 SW 120 ST, Miami, FL 33186",
+      "neighborhood": "West Kendall"
+    },
+    {
+      "name": "Homestead - Keys Gate Charter",
+      "address": "Keys Gate Charter School, 2000 SE 28th Ave., Homestead, FL 33035",
+      "neighborhood": "Homestead"
+    }
+  ],
+
+  "categories": ["sports", "arts", "stem", "outdoor", "swimming"],
+  "age_range": "5-14 (4-year-olds accepted if turning 5 before August)",
+
+  "description_short": "Miami's trusted summer camp with 22+ years of experience at university campuses including UM and FIU. Swimming, field trips, and electives included.",
+  "description_long": "Wise Choice Summer Camp has been serving Miami-Dade families for over 22 years, offering a comprehensive summer experience at five convenient locations including the University of Miami and Florida International University. The camp provides a balanced mix of structured activities and free play, with weekly swimming, field trips, and a variety of electives. Campers are grouped by age (5-14) to ensure age-appropriate programming. The camp emphasizes building self-confidence through fun learning experiences. Activities include art, chess, dance, fitness, music, STEM, video games, outdoor activities, and presentations. All locations offer a consistent high-quality experience with trained staff.",
+
+  "what_kids_do": [
+    "Weekly swimming at each location",
+    "Weekly field trips to local attractions",
+    "Art and crafts activities",
+    "Chess instruction",
+    "Dance classes",
+    "Fitness and sports",
+    "Music activities",
+    "STEM/STEAM electives",
+    "Video gaming sessions",
+    "Outdoor activities and sports",
+    "Presentations and public speaking"
+  ],
+  "what_makes_unique": "22+ years serving Miami-Dade families. Multi-campus model at prestigious university locations (UM, FIU) plus community sites. Weekly swimming and field trips included in tuition with no hidden fees. Age-grouped programming for 5-14 year olds.",
+
+  "pricing": {
+    "structure": "Per week (varies by location)",
+    "rates": [],
+    "what_included": ["Weekly field trips", "Weekly swimming", "All activities", "Mini-electives", "Camp supplies"],
+    "additional_fees": ["$79 non-refundable registration fee", "$100 deposit per week (applied to tuition, non-refundable)"],
+    "scholarships_or_discounts": "Early Bird Special advertised on website",
+    "raw_pricing_text": "Camp tuition includes weekly field trips, weekly swimming, all activities, mini-electives, and camp supplies. There are no hidden fees for standard camp activities. A deposit of $100 per week selected is required at registration, along with a $79 non-refundable registration fee."
+  },
+
+  "schedule": {
+    "session_dates": ["Summer 2026 - 9 weeks available"],
+    "weekly_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "hours_start": null,
+    "hours_end": null,
+    "before_care_offered": null,
+    "after_care_offered": null
+  },
+
+  "logistics": {
+    "lunch_included": false,
+    "lunch_note": "Optional lunch program through Our Lunches app (Roasters 'N Toasters). Families can also send lunch from home.",
+    "snacks_included": false,
+    "snacks_note": "Snacks and drinks available for purchase at camp, $1-$2",
+    "what_to_bring": null,
+    "transportation": "Drop-off and pick-up at each location",
+    "minimum_age": 5,
+    "minimum_age_note": "4-year-olds accepted if turning 5 before August",
+    "maximum_age": 14,
+    "max_capacity": null
+  },
+
+  "credentials": {
+    "instructor_quals": null,
+    "accreditations": null,
+    "background_checks_mentioned": false,
+    "insurance_mentioned": false,
+    "ratio": null
+  },
+
+  "social_proof": {
+    "years_running": 22,
+    "testimonials_on_site": [],
+    "press_mentions": [],
+    "instagram": "@wisechoicesummercamp",
+    "facebook": "https://www.facebook.com/wisechoicesummercamp",
+    "tiktok": null
+  },
+
+  "raw_extracted_text": "Discover why Wise Choice Summer Camp is rated one of the best summer camps in Miami. Serving Miami-Dade families for over 22 years. Locations: UM, FIU, Doral & West Kendall. Our summer camp is designed for children ages 5 to 14. We also accept children who are 4 at the start of camp if they turn 5 before August. Campers are grouped by age to ensure a fun, safe, and engaging experience for everyone. Camp tuition includes weekly field trips, weekly swimming, all activities, mini-electives, and camp supplies. There are no hidden fees for standard camp activities. A deposit of $100 per week selected is required at registration, along with a $79 non-refundable registration fee.",
+
+  "extraction_notes": {
+    "captured_at": "2026-04-27T06:15:00-04:00",
+    "primary_page_loaded_successfully": true,
+    "pages_visited": ["/", "/university-of-miami", "/contact", "/faq", "/lunch-and-snack", "/prices"],
+    "anything_missing": ["Specific weekly rates not extracted (prices page requires further scraping)", "Exact camp hours not found", "Staff credentials not listed", "Camp dates for 2026 not specified"],
+    "anything_weird": "Website uses custom CMS (not Wix). Very comprehensive site with detailed FAQ. Registration through Campium platform."
+  }
+}
