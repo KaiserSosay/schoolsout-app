@@ -10,6 +10,7 @@ import {
 } from '@/components/camps/UnifiedCampCard';
 import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
+import { CampSortControl, type CampSortValue } from '@/components/camps/CampSortControl';
 import { EntityEmptyHint } from '@/components/shared/EntityEmptyHint';
 import { applyFilters, hasActiveFilters, parseFiltersFromRecord } from '@/lib/camps/filters';
 import { publicPageMetadata } from '@/lib/seo';
@@ -58,6 +59,13 @@ export default async function PublicCampsPage({
   const t = await getTranslations({ locale, namespace: 'public.camps' });
 
   const filters = parseFiltersFromRecord(sp);
+  // Public sort: same URL param shape as /app/camps. Distance is locked
+  // (no user origin available logged-out) — silently coerce sort=distance to
+  // sort=name on the public page so a stale share link doesn't render the
+  // empty distance-sorted view.
+  const sortRaw = typeof sp.sort === 'string' ? sp.sort : null;
+  const activeSort: CampSortValue =
+    sortRaw === 'price' || sortRaw === 'name' ? sortRaw : 'name';
 
   const svc = createServiceSupabase();
   const { data } = await svc
@@ -73,6 +81,16 @@ export default async function PublicCampsPage({
   const rows = (data ?? []) as CampRow[];
   const filtered = applyFilters(rows, filters);
   const active = hasActiveFilters(filters);
+  // Apply user-chosen sort. Default ('name') already matches the SQL ORDER BY
+  // — only price needs an in-memory pass.
+  let sorted = filtered;
+  if (activeSort === 'price') {
+    const rank: Record<string, number> = { $: 1, $$: 2, $$$: 3 };
+    sorted = [...filtered].sort(
+      (a, b) =>
+        (rank[a.price_tier ?? ''] ?? 99) - (rank[b.price_tier ?? ''] ?? 99),
+    );
+  }
   const hoods = Array.from(
     new Set(rows.map((r) => r.neighborhood).filter((h): h is string => Boolean(h))),
   ).sort();
@@ -109,6 +127,13 @@ export default async function PublicCampsPage({
           </div>
         </section>
 
+        {/* Sort toggle — same three options as /app/camps. Distance is
+            disabled+locked here per Q3 (ghost UI: parents can SEE that
+            signing in unlocks distance-sort from their saved location). */}
+        <div className="mb-5">
+          <CampSortControl mode="public" activeSort={activeSort} />
+        </div>
+
         {/* Shared filter bar — same component the signed-in /app/camps page
             uses, minus the "Match my kids" toggle. */}
         <div className="mb-5">
@@ -119,13 +144,13 @@ export default async function PublicCampsPage({
             parents see "X of N" framing as they narrow filters. */}
         <div className="mb-3">
           <CampCount
-            filtered={filtered.length}
+            filtered={sorted.length}
             total={rows.length}
             hasFilters={active}
           />
         </div>
 
-        {filtered.length === 0 ? (
+        {sorted.length === 0 ? (
           <EntityEmptyHint
             hasSearchTerm={Boolean(filters.q)}
             i18nNamespace="camps.filters.empty"
@@ -133,7 +158,7 @@ export default async function PublicCampsPage({
           />
         ) : (
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((camp) => (
+            {sorted.map((camp) => (
               <li key={camp.id}>
                 <UnifiedCampCard camp={camp} mode="public" locale={locale} />
               </li>

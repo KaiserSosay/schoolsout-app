@@ -953,7 +953,8 @@
         "label": "Sort",
         "distance": "Distance",
         "price": "Price",
-        "name": "Name"
+        "name": "Name",
+        "distanceSignInTooltip": "Sign in to sort by distance from your home"
       },
       "mustHave": {
         "label": "Must have",

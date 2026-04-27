@@ -5,7 +5,7 @@ import {
   UnifiedCampCard,
   type UnifiedCampCardCamp,
 } from '@/components/camps/UnifiedCampCard';
-import { CampSortControl, type FromOption } from '@/components/app/CampSortControl';
+import { CampSortControl, type FromOption } from '@/components/camps/CampSortControl';
 import { AppPageHeader } from '@/components/app/AppPageHeader';
 import { CampCount } from '@/components/camps/CampCount';
 import { CampsFilterBar } from '@/components/camps/CampsFilterBar';
@@ -231,6 +231,7 @@ export default async function CampsPage({
 
       <div className="mb-5">
         <CampSortControl
+          mode="app"
           fromOptions={fromOptions}
           activeSort={activeSort}
           activeFromId={activeFromId}
