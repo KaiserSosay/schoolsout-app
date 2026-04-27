@@ -66,7 +66,7 @@ describe('CampsFilterBar', () => {
     wrap({ mode: 'public', hoods: [] });
     fireEvent.click(screen.getByRole('button', { name: /STEM/i }));
     await waitFor(() => expect(pushMock).toHaveBeenCalled());
-    expect(pushMock).toHaveBeenCalledWith('/en/camps?cats=STEM');
+    expect(pushMock).toHaveBeenCalledWith('/en/camps?cats=stem');
   });
 
   it('care toggles push the matching boolean URL params', async () => {
@@ -106,5 +106,51 @@ describe('CampsFilterBar', () => {
     currentSearch = 'q=frost';
     wrap({ mode: 'public', hoods: [] });
     expect(screen.getByPlaceholderText(/Search by name/i)).toHaveValue('frost');
+  });
+});
+
+describe('CampsFilterBar — Stage 2 canonical pill list', () => {
+  it('renders all 18 canonical UI pills with translated labels', () => {
+    wrap({ mode: 'public', hoods: [] });
+    // Core breadth
+    expect(screen.getByRole('button', { name: /^Sports$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^All-around$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Arts$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Outdoor$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^STEM$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Nature$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Swim$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Academic$/ })).toBeInTheDocument();
+    // Cultural + lifestyle
+    expect(screen.getByRole('button', { name: /^Cultural$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Preschool$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Religious$/ })).toBeInTheDocument();
+    // Performing arts
+    expect(screen.getByRole('button', { name: /^Music$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Theater$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Dance$/ })).toBeInTheDocument();
+    // Sub-genres
+    expect(screen.getByRole('button', { name: /^Tennis$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Sailing$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Culinary$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Golf$/ })).toBeInTheDocument();
+  });
+
+  it('does NOT render the dropped Soccer + Basketball pills (below threshold)', () => {
+    wrap({ mode: 'public', hoods: [] });
+    expect(screen.queryByRole('button', { name: /^Soccer$/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Basketball$/ })).toBeNull();
+  });
+
+  it('the Religious pill exists (not just the badge — Q3 dual treatment)', () => {
+    wrap({ mode: 'public', hoods: [] });
+    expect(screen.getByRole('button', { name: /^Religious$/ })).toBeInTheDocument();
+  });
+
+  it('chip click pushes lowercase category to URL', async () => {
+    wrap({ mode: 'public', hoods: [] });
+    fireEvent.click(screen.getByRole('button', { name: /^Outdoor$/ }));
+    await waitFor(() => expect(pushMock).toHaveBeenCalled());
+    expect(pushMock.mock.calls[0][0]).toContain('cats=outdoor');
   });
 });

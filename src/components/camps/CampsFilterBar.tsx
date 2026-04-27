@@ -15,21 +15,12 @@ import {
 import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
 import { EntitySearchBar } from '@/components/shared/EntitySearchBar';
 
-// 11 seeded categories — same set CampFilters used pre-Goal-3. Living here so
-// the public + app pages can both render the chip strip from one source.
-export const CATEGORY_KEYS = [
-  'Sports',
-  'Soccer',
-  'Swim',
-  'Tennis',
-  'Basketball',
-  'Art',
-  'Theater',
-  'Music',
-  'Dance',
-  'STEM',
-  'Nature',
-] as const;
+// Canonical UI pill set — sourced from `src/lib/camps/categories.ts`. Stage 2
+// (2026-04-27) collapsed PascalCase + dropped sub-genres with <3 camps and
+// added 9 previously-missing pills. The order matches the visual order in the
+// filter row: core breadth → cultural/lifestyle → performing arts → sub-genres.
+import { UI_PILL_CATEGORIES } from '@/lib/camps/categories';
+export const CATEGORY_KEYS = UI_PILL_CATEGORIES;
 
 type Mode = 'public' | 'app';
 

@@ -117,6 +117,31 @@ describe('applyFilters', () => {
     expect(out[0]?.categories).toEqual(['Soccer']);
   });
 
+  it('cats filter is case-insensitive — lowercase pill matches uppercase legacy data', () => {
+    // Stage 2 deploy-window guard: filter UI ships lowercase pills before
+    // migration 052 finishes lowercasing prod data. Match must work for
+    // both cases.
+    const out = applyFilters(
+      [
+        { ...baseCamp, categories: ['STEM'] },
+        { ...baseCamp, categories: ['Sports'] },
+      ],
+      { ...empty, cats: ['stem'] },
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]?.categories).toEqual(['STEM']);
+  });
+
+  it('cats filter is case-insensitive — uppercase URL matches lowercase post-migration data', () => {
+    // Mirror: someone shares a stale URL with ?cats=STEM after the
+    // migration ran. Should still match.
+    const out = applyFilters(
+      [{ ...baseCamp, categories: ['stem'] }],
+      { ...empty, cats: ['STEM'] },
+    );
+    expect(out).toHaveLength(1);
+  });
+
   it('full_workday excludes camps without enough extended care', () => {
     const tightHours: FilterableCamp = {
       ...baseCamp,

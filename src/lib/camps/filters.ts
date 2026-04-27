@@ -138,7 +138,14 @@ export function applyFilters<T extends FilterableCamp>(
     out = out.filter((c) => c.name.toLowerCase().includes(needle));
   }
   if (f.cats.length) {
-    out = out.filter((c) => (c.categories ?? []).some((cat) => f.cats.includes(cat)));
+    // Case-insensitive overlap. After migration 052, prod data is all
+    // lowercase + matches the lowercase pill keys exactly. Before that
+    // migration applies, prod still has 'STEM' / 'Sports' — the lower()
+    // on both sides keeps the filter working through the deploy window.
+    const wanted = new Set(f.cats.map((c) => c.toLowerCase()));
+    out = out.filter((c) =>
+      (c.categories ?? []).some((cat) => wanted.has(cat.toLowerCase())),
+    );
   }
   if (f.fullWorkday) {
     out = out.filter(hasFullWorkday);
