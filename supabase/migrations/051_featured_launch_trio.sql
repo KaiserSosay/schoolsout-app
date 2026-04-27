@@ -32,7 +32,11 @@
 -- set to 2026-07-24 in prod) — R5 spirit, don't overwrite intentional
 -- non-null state.
 
-DO $$
+-- The outer DO block uses a tagged dollar-quote ($migration$) instead
+-- of plain $$ because the price_tier literals below ('$$', '$$$')
+-- would otherwise terminate the DO block early — Postgres greedy-
+-- matches the next $$ as the closing marker. A tagged quote disambiguates.
+DO $migration$
 DECLARE
   launch_partner_count INT;
 BEGIN
@@ -140,4 +144,4 @@ BEGIN
   IF launch_partner_count <> 3 THEN
     RAISE WARNING 'Expected exactly 3 launch partners, got %. Investigate before deploying any code that depends on this set.', launch_partner_count;
   END IF;
-END $$;
+END $migration$;

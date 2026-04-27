@@ -119,6 +119,17 @@ describe('migration 051 — Featured launch partner trio', () => {
     expect(validTiers.length).toBeGreaterThanOrEqual(2);
   });
 
+  it('uses a tagged dollar-quote on the outer DO block (avoids $$ collision with price_tier literals)', () => {
+    // Postgres greedy-matches $$, so an outer `DO $$ ... END $$` block
+    // that contains '$$' or '$$$' literals will terminate early. Use
+    // a tagged dollar-quote like $migration$ to disambiguate.
+    expect(SQL).toMatch(/DO \$migration\$/);
+    expect(SQL).toMatch(/END \$migration\$;/);
+    // The bare DO $$ form must not appear (whitespace allowed).
+    expect(SQL).not.toMatch(/DO \$\$\s/);
+    expect(SQL).not.toMatch(/END \$\$;/);
+  });
+
   it('305 Mini Chefs uses ages_min=5, ages_max=12 (elementary range)', () => {
     const block = SQL.match(/'305-mini-chefs'[\s\S]*?ON CONFLICT/);
     expect(block).not.toBeNull();
