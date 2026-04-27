@@ -43,9 +43,15 @@ const OUT_OF_PRIMARY_ZIPS = new Set(['33009', '33321', '33351']);
 // Camp-Matecumbe flag — hurricane recovery per research note.
 const NEEDS_REVIEW_NAMES = new Set(['Camp Matecumbe']);
 
-// Existing public.camp_category enum is authoritative. Rather than query
-// live (which slows every run), we keep a curated allowlist; anything
-// not in it gets dropped with a warn. Extend as needed.
+// Source-of-truth allowlist. Combined with the canonical-vocabulary lib
+// at `src/lib/camps/categories.ts` — research JSON tags must either be in
+// this allowlist (legacy raw forms accepted from older datasets) OR map
+// through `LEGACY_TO_CANONICAL` to a canonical category.
+//
+// Stage 2 (2026-04-27) note: the prior `CATEGORY_CANONICAL: { stem: 'STEM' }`
+// map that uppercased `stem` on import was REMOVED — it was the source of
+// the prod casing-duplicate bug. Future imports go through the lib's
+// `normalizeCategories()` which is lowercase-only.
 const VALID_CATEGORIES_LOWER = new Set([
   'sports',
   'soccer',
@@ -79,10 +85,6 @@ const VALID_CATEGORIES_LOWER = new Set([
   'religious',
   'preschool',
 ]);
-// Preserve original casing for common canonical forms used elsewhere.
-const CATEGORY_CANONICAL: Record<string, string> = {
-  stem: 'STEM',
-};
 
 type ResearchCamp = {
   name: string;
@@ -152,25 +154,48 @@ function zipFromAddress(addr: string | null | undefined): string | null {
   return m ? m[1] : null;
 }
 
+// Validate against the local allowlist, then route through the canonical
+// lib so the output is fold-applied (animals→nature, water→swim+outdoor,
+// etc.) and lowercase-only.
+import {
+  CANONICAL_CATEGORIES,
+  LEGACY_TO_CANONICAL,
+  applyFolds,
+} from '@/lib/camps/categories';
+
 function normalizeCategories(cats: string[] | null | undefined): {
   kept: string[];
   dropped: string[];
 } {
-  const kept: string[] = [];
   const dropped: string[] = [];
-  const seen = new Set<string>();
+  const stage1: string[] = [];
   for (const raw of cats ?? []) {
-    const lower = raw.trim().toLowerCase().replace(/\s+/g, '_');
-    if (!VALID_CATEGORIES_LOWER.has(lower)) {
-      dropped.push(raw);
+    const trimmed = raw.trim();
+    // Try the legacy synonym map first (handles STEM→stem, Art→arts,
+    // History→cultural, etc.)
+    const mapped = LEGACY_TO_CANONICAL[trimmed];
+    if (mapped !== undefined) {
+      stage1.push(mapped);
       continue;
     }
-    const canonical = CATEGORY_CANONICAL[lower] ?? lower;
-    if (seen.has(canonical)) continue;
-    seen.add(canonical);
-    kept.push(canonical);
+    // Then try a canonical match (lowercase + underscored whitespace).
+    const lower = trimmed.toLowerCase().replace(/\s+/g, '_');
+    if (CANONICAL_CATEGORIES.has(lower)) {
+      stage1.push(lower);
+      continue;
+    }
+    // Reject anything we don't recognize (R6 spirit — allowlist, not
+    // blocklist). Legacy raw forms still in the allowlist for back-compat
+    // with older research datasets:
+    if (VALID_CATEGORIES_LOWER.has(lower)) {
+      // Folds catch the deprecated tags (animals/water/active/etc.) below.
+      stage1.push(lower);
+      continue;
+    }
+    dropped.push(raw);
   }
-  return { kept, dropped };
+  // Apply Q1 folds + dedup + sort via the lib.
+  return { kept: applyFolds(stage1), dropped };
 }
 
 // camps.price_tier is NOT NULL in the schema. Derive from the per-week
