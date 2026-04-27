@@ -11,8 +11,13 @@
 // looping over a variable-length list.
 
 const SCHOOL_YEAR_RE = /^\d{4}-\d{4}$/;
-// 5+ closures = "verified" (covers the major federal holidays + breaks).
-// 1-4 = "partial" (something's there but the calendar's incomplete).
+// 5+ school-confirmed closures = "verified" (covers the major federal
+// holidays + breaks). Federal-holiday-derived rows (source='federal_
+// holiday_calendar') are deliberately NOT counted toward this threshold
+// since they aren't school-confirmed — counting them would let 5
+// derived rows alone promote a year to "verified," exactly the false-
+// positive class R6 was written to prevent.
+// 1-4 school-confirmed rows OR any federal-holiday rows = "partial".
 const VERIFIED_THRESHOLD = 5;
 
 export type YearCoverageStatus = 'verified' | 'partial' | 'unavailable';
@@ -21,6 +26,14 @@ export type YearCoverage = {
   year: string;
   status: YearCoverageStatus;
   closureCount: number;
+  // Subset of closureCount that is school-confirmed (NOT
+  // federal-holiday-derived). This is the count that drives the
+  // 'verified' threshold.
+  schoolConfirmedCount: number;
+  // Subset of closureCount sourced from the federal holiday calendar.
+  // The CoverageBanner uses this to render the "we have federal
+  // holidays for this year" variant when there's no real calendar.
+  federalHolidayCount: number;
   position: 'current' | 'next';
   // True when this year's school year is functionally over (June or July).
   // The renderer uses this to flip a "{year} school year has ended" copy
@@ -29,7 +42,11 @@ export type YearCoverage = {
 };
 
 export function computeYearCoverage(
-  closures: Array<{ school_year?: string | null }>,
+  closures: Array<{
+    school_year?: string | null;
+    status?: string | null;
+    source?: string | null;
+  }>,
   today: Date,
 ): [YearCoverage, YearCoverage] {
   const month = today.getUTCMonth() + 1; // 1-12
@@ -51,29 +68,46 @@ export function computeYearCoverage(
   // Jan-Jul rule) has ended; nothing to attend until August.
   const currentEnded = month === 6 || month === 7;
 
-  const counts = new Map<string, number>();
+  type Tally = {
+    closureCount: number;
+    federalHolidayCount: number;
+  };
+  const tallies = new Map<string, Tally>();
   for (const c of closures) {
     const sy = c.school_year;
     if (!sy || typeof sy !== 'string') continue;
     if (!SCHOOL_YEAR_RE.test(sy)) continue;
-    counts.set(sy, (counts.get(sy) ?? 0) + 1);
+    const t = tallies.get(sy) ?? { closureCount: 0, federalHolidayCount: 0 };
+    t.closureCount += 1;
+    if (c.source === 'federal_holiday_calendar') t.federalHolidayCount += 1;
+    tallies.set(sy, t);
   }
+  const empty: Tally = { closureCount: 0, federalHolidayCount: 0 };
 
   return [
-    coverageFor(currentYear, counts.get(currentYear) ?? 0, 'current', currentEnded),
-    coverageFor(nextYear, counts.get(nextYear) ?? 0, 'next', false),
+    coverageFor(currentYear, tallies.get(currentYear) ?? empty, 'current', currentEnded),
+    coverageFor(nextYear, tallies.get(nextYear) ?? empty, 'next', false),
   ];
 }
 
 function coverageFor(
   year: string,
-  closureCount: number,
+  tally: { closureCount: number; federalHolidayCount: number },
   position: 'current' | 'next',
   isEnded: boolean,
 ): YearCoverage {
+  const schoolConfirmedCount = tally.closureCount - tally.federalHolidayCount;
   let status: YearCoverageStatus;
-  if (closureCount >= VERIFIED_THRESHOLD) status = 'verified';
-  else if (closureCount > 0) status = 'partial';
+  if (schoolConfirmedCount >= VERIFIED_THRESHOLD) status = 'verified';
+  else if (tally.closureCount > 0) status = 'partial';
   else status = 'unavailable';
-  return { year, status, closureCount, position, isEnded };
+  return {
+    year,
+    status,
+    closureCount: tally.closureCount,
+    schoolConfirmedCount,
+    federalHolidayCount: tally.federalHolidayCount,
+    position,
+    isEnded,
+  };
 }

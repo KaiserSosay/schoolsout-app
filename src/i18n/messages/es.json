@@ -1435,6 +1435,8 @@
         "currentVerifiedNextMissingBody": "La mayoría de las escuelas publican el calendario del próximo año en mayo o junio. Vuelve pronto, o avísanos cuando esté listo.",
         "currentMissingNextVerifiedHeadline": "Tenemos {nextYear} verificado, pero las fechas de {currentYear} no están publicadas en un lugar que podamos leer.",
         "currentMissingNextVerifiedBody": "Si tienes el calendario del año escolar actual, envíalo por correo — lo verificaremos y lo agregaremos en 2 días hábiles.",
+        "currentFederalHolidaysHeadline": "Tenemos {nextYear} verificado para {schoolName}, además de los feriados federales para {currentYear}.",
+        "currentFederalHolidaysBody": "El calendario completo de {currentYear} de {schoolName} no está publicado en un lugar que podamos leer — si lo tienes, envíanoslo por correo.",
         "partialCurrentHeadline": "{count, plural, one {Tenemos # fecha verificada} other {Tenemos # fechas verificadas}} para {currentYear}, pero el calendario puede estar incompleto.",
         "partialCurrentBody": "Si ves una fecha faltante, avísanos y la agregaremos.",
         "partialNextHeadline": "{count, plural, one {Tenemos # fecha verificada} other {Tenemos # fechas verificadas}} para {nextYear}, pero el calendario puede estar incompleto.",

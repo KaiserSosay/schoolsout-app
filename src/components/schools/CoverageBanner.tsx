@@ -25,13 +25,27 @@ export type CoverageBannerVariant =
   | 'current-missing'
   | 'next-missing'
   | 'partial-current'
-  | 'partial-next';
+  | 'partial-next'
+  // Phase 4.7.x — current school year has ZERO school-confirmed
+  // closures but ≥1 derived federal-holiday rows. Honest framing:
+  // "we have next year + federal holidays for this year."
+  | 'current-federal-holidays';
 
 export function pickCoverageVariant(
   current: YearCoverage,
   next: YearCoverage,
 ): CoverageBannerVariant | null {
-  // Mom's TGP case takes priority — current missing, next verified.
+  // Federal-holidays-only beats current-missing because it carries
+  // useful bridge data. The "current-missing" copy promises an empty
+  // current year — wrong when the user is about to see 5 holiday rows.
+  if (
+    current.schoolConfirmedCount === 0 &&
+    current.federalHolidayCount > 0 &&
+    next.status === 'verified'
+  ) {
+    return 'current-federal-holidays';
+  }
+  // Mom's TGP case (pre-mig-044) — current missing, next verified.
   if (current.status === 'unavailable' && next.status === 'verified') {
     return 'current-missing';
   }
@@ -120,6 +134,37 @@ export function CoverageBanner({
         <p className="mt-1 text-sm text-amber-900/85">
           {t('currentVerifiedNextMissingBody')}
         </p>
+      </section>
+    );
+  }
+
+  if (variant === 'current-federal-holidays') {
+    return (
+      <section
+        data-testid="coverage-banner-current-federal-holidays"
+        className="rounded-3xl border-2 border-amber-300 bg-amber-50 p-5"
+      >
+        <p className="text-sm font-bold text-amber-900">
+          ⚠ {t('currentFederalHolidaysHeadline', {
+            currentYear: current.year,
+            nextYear: next.year,
+            schoolName,
+          })}
+        </p>
+        <p className="mt-1 text-sm text-amber-900/85">
+          {t('currentFederalHolidaysBody', { currentYear: current.year })}
+        </p>
+        <button
+          type="button"
+          onClick={() =>
+            openFeatureRequest(
+              `${current.year} calendar PDF for ${schoolName}: I have it / can share these dates / `,
+            )
+          }
+          className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-black text-cream hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          {t('emailPdfButton')}
+        </button>
       </section>
     );
   }

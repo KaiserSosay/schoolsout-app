@@ -144,6 +144,40 @@ describe('computeYearCoverage', () => {
     expect(result[0].closureCount).toBe(1);
   });
 
+  it('federal-holiday rows do NOT promote a year to verified (R6 protection)', () => {
+    // 5 federal-holiday-derived rows alone shouldn't flip the year to
+    // 'verified' — they're not school-confirmed. Status stays 'partial'.
+    const result = computeYearCoverage(
+      Array.from({ length: 5 }, () => ({
+        school_year: '2025-2026',
+        source: 'federal_holiday_calendar',
+      })),
+      APRIL_26_2026,
+    );
+    expect(result[0].status).toBe('partial');
+    expect(result[0].closureCount).toBe(5);
+    expect(result[0].schoolConfirmedCount).toBe(0);
+    expect(result[0].federalHolidayCount).toBe(5);
+  });
+
+  it('mixed school-confirmed + derived rows: only school-confirmed count drives the threshold', () => {
+    const result = computeYearCoverage(
+      [
+        ...Array.from({ length: 5 }, () => ({
+          school_year: '2025-2026',
+          source: 'federal_holiday_calendar',
+        })),
+        // 4 school-confirmed (no source override) → schoolConfirmed=4 < threshold
+        ...many('2025-2026', 4),
+      ],
+      APRIL_26_2026,
+    );
+    expect(result[0].closureCount).toBe(9);
+    expect(result[0].schoolConfirmedCount).toBe(4);
+    expect(result[0].federalHolidayCount).toBe(5);
+    expect(result[0].status).toBe('partial');
+  });
+
   it('Aug 1 transition — goes to the new school year on the dot', () => {
     const jul31 = computeYearCoverage([], new Date('2026-07-31T23:00:00Z'));
     const aug1 = computeYearCoverage([], new Date('2026-08-01T01:00:00Z'));

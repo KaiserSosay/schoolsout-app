@@ -1435,6 +1435,8 @@
         "currentVerifiedNextMissingBody": "Most schools publish next year's calendar in May or June. Check back, or tell us when it's ready.",
         "currentMissingNextVerifiedHeadline": "We have {nextYear} verified, but {currentYear} dates aren't published in a place we can read.",
         "currentMissingNextVerifiedBody": "If you have the current school year's calendar, please email it to us — we'll verify and add it within 2 business days.",
+        "currentFederalHolidaysHeadline": "We have {nextYear} verified for {schoolName}, plus federal holidays for {currentYear}.",
+        "currentFederalHolidaysBody": "{schoolName}'s full {currentYear} calendar isn't published in a place we can read — if you have it, email it to us.",
         "partialCurrentHeadline": "{count, plural, one {We have # verified date} other {We have # verified dates}} for {currentYear}, but the calendar may be incomplete.",
         "partialCurrentBody": "If you spot a missing closure, tell us and we'll add it.",
         "partialNextHeadline": "{count, plural, one {We have # verified date} other {We have # verified dates}} for {nextYear}, but the calendar may be incomplete.",
