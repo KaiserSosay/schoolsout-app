@@ -720,6 +720,29 @@
       "privacy": {
         "title": "La privacidad de tus hijos es lo primero",
         "body": "Nunca enviamos los nombres ni edades de tus hijos a nuestros servidores. Viven solo en este dispositivo — ni siquiera nosotros podemos verlos. Si cambias de teléfono, los volverás a ingresar aquí (tarda 30 segundos)."
+      },
+      "password": {
+        "setTitle": "Crear una contraseña",
+        "setBody": "Ahora mismo entras con enlaces mágicos. Agregar una contraseña te deja saltarte el paso del correo. Los enlaces mágicos siguen funcionando.",
+        "changeTitle": "Cambiar tu contraseña",
+        "changeBody": "Actualiza la contraseña que usas para entrar. Puedes seguir usando enlaces mágicos cuando quieras.",
+        "newPasswordLabel": "Nueva contraseña",
+        "newPasswordPlaceholder": "Al menos 8 caracteres",
+        "confirmLabel": "Confirmar contraseña",
+        "confirmPlaceholder": "Escríbela otra vez",
+        "requirements": "8 caracteres o más. No permitimos contraseñas comunes como 'password' o '12345678'.",
+        "setButton": "Crear contraseña",
+        "changeButton": "Actualizar contraseña",
+        "submitting": "Guardando…",
+        "successSet": "¡Contraseña creada! La próxima vez puedes entrar con ella.",
+        "successChanged": "Contraseña actualizada.",
+        "errors": {
+          "tooShort": "Usa al menos 8 caracteres.",
+          "mismatch": "Las dos contraseñas no coinciden.",
+          "commonPassword": "Esa contraseña es muy común. Prueba con algo menos predecible.",
+          "generic": "Algo salió mal. Intenta de nuevo o contáctanos.",
+          "network": "No pudimos conectar con el servidor. Revisa tu conexión e intenta de nuevo."
+        }
       }
     },
     "dashboard": {

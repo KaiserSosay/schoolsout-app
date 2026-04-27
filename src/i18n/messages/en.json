@@ -720,6 +720,29 @@
       "privacy": {
         "title": "Your kids' privacy comes first",
         "body": "We never send your kids' names or ages to our servers. They live only on this device — so even we can't see them. If you switch phones, you'll re-enter them here (takes 30 seconds)."
+      },
+      "password": {
+        "setTitle": "Set a password",
+        "setBody": "You currently sign in with magic links. Adding a password lets you skip the email step. Magic links keep working either way.",
+        "changeTitle": "Change your password",
+        "changeBody": "Update the password you use to sign in. You can still use magic links anytime.",
+        "newPasswordLabel": "New password",
+        "newPasswordPlaceholder": "At least 8 characters",
+        "confirmLabel": "Confirm new password",
+        "confirmPlaceholder": "Type it again",
+        "requirements": "8 characters or more. We don't allow common passwords like 'password' or '12345678'.",
+        "setButton": "Set password",
+        "changeButton": "Update password",
+        "submitting": "Saving…",
+        "successSet": "Password set! You can sign in with it next time.",
+        "successChanged": "Password updated.",
+        "errors": {
+          "tooShort": "Use at least 8 characters.",
+          "mismatch": "The two passwords don't match.",
+          "commonPassword": "That password is too common. Try something less guessable.",
+          "generic": "Something went wrong. Try again or contact support.",
+          "network": "Couldn't reach the server. Check your connection and try again."
+        }
       }
     },
     "dashboard": {

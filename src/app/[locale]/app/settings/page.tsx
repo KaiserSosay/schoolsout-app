@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { createServerSupabase } from '@/lib/supabase/server';
+import { createServiceSupabase } from '@/lib/supabase/service';
 import { SettingsClient } from '@/components/app/SettingsClient';
+import { SetPasswordForm } from '@/components/app/SetPasswordForm';
 import type { School } from '@/components/app/KidForm';
 
 export const dynamic = 'force-dynamic';
@@ -37,6 +39,18 @@ export default async function SettingsPage({
       .order('ordinal', { ascending: true }),
   ]);
 
+  // Detect whether the user already has a password. The supabase-js public
+  // session API doesn't expose encrypted_password; the service-role admin API
+  // does. Best-effort: if the call fails, fall back to "set" mode (worst case
+  // a returning user sees "Set" instead of "Change" — both flows hit the same
+  // endpoint with the same effect).
+  const admin = createServiceSupabase();
+  const { data: adminUser } = await admin.auth.admin.getUserById(user.id);
+  const hasPasswordRaw = (
+    adminUser?.user as { encrypted_password?: string | null } | undefined
+  )?.encrypted_password;
+  const currentlyHasPassword = Boolean(hasPasswordRaw);
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 md:px-6 md:py-10">
       <header className="mb-6">
@@ -56,6 +70,9 @@ export default async function SettingsPage({
         schools={(schools ?? []) as School[]}
         profiles={(profiles ?? []) as ProfileRow[]}
       />
+      <div className="mt-6">
+        <SetPasswordForm currentlyHasPassword={currentlyHasPassword} />
+      </div>
     </div>
   );
 }
