@@ -54,11 +54,6 @@ function rateLimitOk(ip: string, now: number = Date.now()): boolean {
   return true;
 }
 
-// @internal — exported for test reset between cases
-export function _resetRateLimit() {
-  ipHits.clear();
-}
-
 type SchoolRow = {
   id: string;
   name: string;
