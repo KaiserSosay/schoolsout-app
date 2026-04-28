@@ -185,7 +185,7 @@ function PublicCard({
         </div>
         {camp.tagline ? (
           <p
-            className="line-clamp-2 text-sm text-muted"
+            className="mt-1 mb-3 line-clamp-2 text-sm text-muted"
             data-testid="camp-card-tagline"
           >
             {camp.tagline}
@@ -435,7 +435,7 @@ function AppCard({
 
         {camp.tagline ? (
           <p
-            className={'line-clamp-2 text-sm ' + mutedCls}
+            className={'mt-1 mb-3 line-clamp-2 text-sm ' + mutedCls}
             data-testid="camp-card-tagline"
           >
             {camp.tagline}
