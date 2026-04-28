@@ -2,6 +2,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import messages from '@/i18n/messages/en.json';
+
+vi.mock('@/lib/confetti', () => ({ celebrate: vi.fn() }));
+import { celebrate } from '@/lib/confetti';
+
 import { SchoolCalendarSubmissionForm } from '@/components/public/SchoolCalendarSubmissionForm';
 
 vi.mock('next/navigation', () => ({
@@ -61,6 +65,21 @@ describe('SchoolCalendarSubmissionForm', () => {
       '/api/schools/the-growing-place/calendar-submissions',
       expect.objectContaining({ method: 'POST' }),
     );
+  });
+
+  it('fires celebrate() when the submission succeeds', async () => {
+    vi.mocked(celebrate).mockClear();
+    wrap();
+    fireEvent.click(screen.getByTestId('calendar-submission-cta'));
+    fireEvent.change(screen.getByTestId('submission-email'), {
+      target: { value: 'mom@example.com' },
+    });
+    fireEvent.click(screen.getByTestId('submission-role-parent'));
+    fireEvent.change(screen.getByTestId('submission-updates'), {
+      target: { value: 'Spring break is March 23-27, 2026.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /send to school's out!/i }));
+    await waitFor(() => expect(celebrate).toHaveBeenCalled());
   });
 
   it('shows the domain-verified note in the success state when API returns true', async () => {

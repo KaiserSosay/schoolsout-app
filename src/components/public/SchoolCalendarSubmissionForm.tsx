@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { celebrate } from '@/lib/confetti';
 
 // Phase 4.7.1 — public submission form on every school detail page.
 // Collapsed-by-default link "Update this school's calendar →"; tap to
@@ -32,6 +33,10 @@ export function SchoolCalendarSubmissionForm({
   const [updates, setUpdates] = useState('');
   const [notes, setNotes] = useState('');
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
+
+  useEffect(() => {
+    if (state.kind === 'success') celebrate();
+  }, [state.kind]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

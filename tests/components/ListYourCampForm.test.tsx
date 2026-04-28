@@ -1,6 +1,10 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+vi.mock('@/lib/confetti', () => ({ celebrate: vi.fn() }));
+import { celebrate } from '@/lib/confetti';
+
 import { ListYourCampForm } from '@/components/ListYourCampForm';
 import messages from '@/i18n/messages/en.json';
 
@@ -184,6 +188,22 @@ describe('ListYourCampForm — quality accordion', () => {
     const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(payload.website).toBe('https://example.com');
     expect(payload.registration_url).toBe('http://example.com/r');
+  });
+
+  it('fires celebrate() when the submission succeeds', async () => {
+    vi.mocked(celebrate).mockClear();
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'Sunshine Camp Co.' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Summer Adventure' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+    await waitFor(() => expect(celebrate).toHaveBeenCalled());
   });
 
   it('drops empty session rows from the submitted payload', async () => {

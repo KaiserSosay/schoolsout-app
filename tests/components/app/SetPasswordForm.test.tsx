@@ -3,6 +3,9 @@ import { NextIntlClientProvider } from 'next-intl';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import messages from '@/i18n/messages/en.json';
 
+vi.mock('@/lib/confetti', () => ({ celebrate: vi.fn() }));
+import { celebrate } from '@/lib/confetti';
+
 import { SetPasswordForm } from '@/components/app/SetPasswordForm';
 
 beforeEach(() => {
@@ -93,6 +96,19 @@ describe('SetPasswordForm', () => {
     expect(url).toBe('/api/auth/set-password');
     const body = JSON.parse((init as RequestInit).body as string);
     expect(body).toEqual({ password: 'a-good-password' });
+  });
+
+  it('fires celebrate() when the password set succeeds', async () => {
+    vi.mocked(celebrate).mockClear();
+    wrap();
+    fireEvent.change(screen.getByLabelText(/^New password$/i), {
+      target: { value: 'a-good-password' },
+    });
+    fireEvent.change(screen.getByLabelText(/^Confirm new password$/i), {
+      target: { value: 'a-good-password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /^Set password$/i }));
+    await waitFor(() => expect(celebrate).toHaveBeenCalled());
   });
 
   it('shows commonPassword error when API responds 400 with too_common', async () => {

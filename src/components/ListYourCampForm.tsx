@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
+import { celebrate } from '@/lib/confetti';
 
 // Phase 2.7 Goal 5: rich camp application form with live completeness
 // meter. Same endpoint (/api/camp-requests) — schema extended with the
@@ -132,6 +133,10 @@ export function ListYourCampForm() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (success) celebrate();
+  }, [success]);
 
   const update = <K extends keyof Form>(k: K, v: Form[K]) =>
     setForm((f) => ({ ...f, [k]: v }));

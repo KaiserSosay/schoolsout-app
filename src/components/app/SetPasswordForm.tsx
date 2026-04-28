@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { celebrate } from '@/lib/confetti';
 
 type Mode = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -15,6 +16,10 @@ export function SetPasswordForm({
   const [confirm, setConfirm] = useState('');
   const [mode, setMode] = useState<Mode>('idle');
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mode === 'success') celebrate();
+  }, [mode]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
