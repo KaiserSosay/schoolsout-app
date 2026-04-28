@@ -118,6 +118,74 @@ describe('ListYourCampForm — quality accordion', () => {
     ]);
   });
 
+  it('does not block submit when URL inputs hold a bare-domain value (HTML5 validation regression)', async () => {
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'Sunshine Camp Co.' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Summer Adventure' },
+    });
+    // Operator types domain without a protocol — the bug was that the
+    // browser blocked submit here, so the fetch never fired.
+    fireEvent.change(screen.getByLabelText(/^Website$/), {
+      target: { value: 'mycamp.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Direct registration URL/), {
+      target: { value: 'mycamp.com/signup' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+
+    await waitFor(() => {
+      const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+      expect(fn.mock.calls.length).toBe(1);
+    });
+    const fetchMock = global.fetch as unknown as {
+      mock: { calls: [string, { body: string }][] };
+    };
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    // normalizeUrl prepends https:// so the server's strict zod .url()
+    // accepts the value.
+    expect(payload.website).toBe('https://mycamp.com');
+    expect(payload.registration_url).toBe('https://mycamp.com/signup');
+  });
+
+  it('preserves http:// and https:// URLs without double-prefixing', async () => {
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'X' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Y' },
+    });
+    fireEvent.change(screen.getByLabelText(/^Website$/), {
+      target: { value: 'https://example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Direct registration URL/), {
+      target: { value: 'http://example.com/r' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+
+    await waitFor(() => {
+      const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+      expect(fn.mock.calls.length).toBe(1);
+    });
+    const fetchMock = global.fetch as unknown as {
+      mock: { calls: [string, { body: string }][] };
+    };
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(payload.website).toBe('https://example.com');
+    expect(payload.registration_url).toBe('http://example.com/r');
+  });
+
   it('drops empty session rows from the submitted payload', async () => {
     wrap();
     fireEvent.change(screen.getByLabelText('Your email'), {

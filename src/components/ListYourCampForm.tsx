@@ -15,6 +15,26 @@ import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 
 const MAX_SESSIONS = 8;
 
+// Operators commonly type bare domains ("mycamp.com/signup",
+// "www.thegrowingplace.school") into the URL fields. With <input
+// type="url"> the browser blocks submit with "Please enter a URL" and
+// the form silently fails — there is no POST, so they see whatever
+// generic error tooltip the browser renders.
+//
+// Two coordinated changes work around this without weakening the data:
+//   1. The three URL inputs render as type="text" + inputMode="url" so
+//      the browser doesn't reject the bare domain at submit time. The
+//      mobile URL keyboard still shows because of inputMode.
+//   2. normalizeUrl prepends https:// before we POST, so the server's
+//      strict zod .url() check still passes when the input is just a
+//      domain. Empty stays empty (becomes null on the server side).
+function normalizeUrl(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 type SessionEntry = {
   name: string;
   start_date: string;
@@ -186,7 +206,7 @@ export function ListYourCampForm() {
         business_name: form.business_name.trim(),
         camp_name: form.camp_name.trim(),
         tagline: form.tagline.trim() || null,
-        website: form.website.trim() || null,
+        website: normalizeUrl(form.website) || null,
         phone: form.phone.trim() || null,
         address: form.address.trim() || null,
         neighborhood: form.neighborhood.trim() || null,
@@ -213,10 +233,10 @@ export function ListYourCampForm() {
         scholarships_available: form.scholarships_available,
         scholarships_notes: form.scholarships_notes.trim() || null,
         accommodations: form.accommodations.trim() || null,
-        registration_url: form.registration_url.trim() || null,
+        registration_url: normalizeUrl(form.registration_url) || null,
         registration_deadline: form.registration_deadline || null,
         instagram_handle: form.instagram_handle.trim() || null,
-        facebook_url: form.facebook_url.trim() || null,
+        facebook_url: normalizeUrl(form.facebook_url) || null,
         tiktok_handle: form.tiktok_handle.trim() || null,
         testimonials: form.testimonials.trim() || null,
         sessions: cleanSessions,
@@ -362,7 +382,11 @@ export function ListYourCampForm() {
           </label>
           <input
             id="website"
-            type="url"
+            type="text"
+            inputMode="url"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="https://"
             value={form.website}
             onChange={(e) => update('website', e.target.value)}
@@ -582,7 +606,11 @@ export function ListYourCampForm() {
           </label>
           <input
             id="registration_url"
-            type="url"
+            type="text"
+            inputMode="url"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="https://"
             value={form.registration_url}
             onChange={(e) => update('registration_url', e.target.value)}
@@ -701,7 +729,11 @@ export function ListYourCampForm() {
               </label>
               <input
                 id="facebook_url"
-                type="url"
+                type="text"
+                inputMode="url"
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck={false}
                 placeholder="https://facebook.com/…"
                 value={form.facebook_url}
                 onChange={(e) => update('facebook_url', e.target.value)}
