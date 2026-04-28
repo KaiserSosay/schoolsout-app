@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListYourCampForm } from '@/components/ListYourCampForm';
+import { PublicTopBar } from '@/components/public/PublicTopBar';
 import { publicPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-static';
@@ -32,8 +33,10 @@ export default async function ListYourCampPage({
   const t = await getTranslations({ locale, namespace: 'listYourCamp' });
   const bulletKeys = ['now', 'price', 'verify', 'direct'] as const;
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12 md:py-16">
-      <header className="mb-10 text-center">
+    <>
+      <PublicTopBar locale={locale} />
+      <main className="mx-auto max-w-3xl px-4 py-12 md:py-16">
+        <header className="mb-10 text-center">
         <p className="text-xs font-black uppercase tracking-wider text-brand-purple">
           {t('eyebrow')}
         </p>
@@ -75,6 +78,7 @@ export default async function ListYourCampPage({
           {t('whySection.kicker')}
         </p>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
