@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
+import { UI_PILL_CATEGORIES } from '@/lib/camps/categories';
+import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
 import { celebrate } from '@/lib/confetti';
 
 // Phase 2.7 Goal 5: rich camp application form with live completeness
@@ -67,7 +69,7 @@ type Form = {
   age_min: string;
   age_max: string;
   description: string;
-  categories: string;
+  categories: string[];
   price_min_dollars: string;
   price_max_dollars: string;
   // Goal 5 extensions
@@ -104,7 +106,7 @@ const EMPTY: Form = {
   age_min: '',
   age_max: '',
   description: '',
-  categories: '',
+  categories: [],
   price_min_dollars: '',
   price_max_dollars: '',
   hours_start: '',
@@ -128,6 +130,7 @@ const EMPTY: Form = {
 
 export function ListYourCampForm() {
   const t = useTranslations('listYourCamp.form');
+  const tCat = useTranslations('app.camps.categories');
   const locale = useLocale();
   const [form, setForm] = useState<Form>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
@@ -157,10 +160,7 @@ export function ListYourCampForm() {
         ? Math.round(Number(form.price_max_dollars) * 100)
         : null,
       description: form.description || null,
-      categories: form.categories
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      categories: form.categories,
       registration_url: form.registration_url || null,
       registration_deadline: form.registration_deadline || null,
     });
@@ -218,10 +218,7 @@ export function ListYourCampForm() {
         age_min: form.age_min ? Number(form.age_min) : null,
         age_max: form.age_max ? Number(form.age_max) : null,
         description: form.description.trim() || null,
-        categories: form.categories
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean),
+        categories: form.categories,
         price_min_cents: form.price_min_dollars
           ? Math.round(Number(form.price_min_dollars) * 100)
           : null,
@@ -642,16 +639,37 @@ export function ListYourCampForm() {
 
       <Section title={t('sections.extras')}>
         <div>
-          <label className={labelCls} htmlFor="categories">
-            {t('categories')}
-          </label>
-          <input
-            id="categories"
-            value={form.categories}
-            onChange={(e) => update('categories', e.target.value)}
-            className={inputCls + ' mt-1'}
-            placeholder="sports, arts, STEM"
-          />
+          <p className={labelCls}>{t('categories')}</p>
+          <p className={helpCls}>{t('categoriesHelp')}</p>
+          <div
+            role="group"
+            aria-label={t('categories')}
+            className="mt-2 flex flex-wrap gap-2"
+            data-testid="categories-chips"
+          >
+            {UI_PILL_CATEGORIES.map((cat) => {
+              const isActive = form.categories.includes(cat);
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  aria-pressed={isActive}
+                  data-category={cat}
+                  onClick={() =>
+                    update(
+                      'categories',
+                      isActive
+                        ? form.categories.filter((c) => c !== cat)
+                        : [...form.categories, cat],
+                    )
+                  }
+                  className={chipBase + ' ' + (isActive ? chipActive : chipInactive)}
+                >
+                  {tCat(cat)}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </Section>
 

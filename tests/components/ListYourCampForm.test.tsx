@@ -309,6 +309,36 @@ describe('ListYourCampForm — quality accordion', () => {
     });
   });
 
+  it('submits selected categories as an array (chip multi-select)', async () => {
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'Sunshine Camp Co.' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Summer Adventure' },
+    });
+    // Toggle three chips: Sports, Arts, STEM
+    fireEvent.click(screen.getByRole('button', { name: 'Sports', pressed: false }));
+    fireEvent.click(screen.getByRole('button', { name: 'Arts', pressed: false }));
+    fireEvent.click(screen.getByRole('button', { name: 'STEM', pressed: false }));
+    // De-select Arts
+    fireEvent.click(screen.getByRole('button', { name: 'Arts', pressed: true }));
+
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+    await waitFor(() => {
+      const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+      expect(fn.mock.calls.length).toBe(1);
+    });
+    const fetchMock = global.fetch as unknown as {
+      mock: { calls: [string, { body: string }][] };
+    };
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(payload.categories).toEqual(['sports', 'stem']);
+  });
+
   it('drops empty session rows from the submitted payload', async () => {
     wrap();
     fireEvent.change(screen.getByLabelText('Your email'), {
