@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ListYourCampForm } from '@/components/ListYourCampForm';
 import { publicPageMetadata } from '@/lib/seo';
 
@@ -25,6 +25,10 @@ export default async function ListYourCampPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  // Required for next-intl under force-static — the page's own getTranslations
+  // calls pass `locale` explicitly so they're fine, but the parent layout's
+  // getMessages() relies on requestLocale and would otherwise fall back to EN.
+  setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'listYourCamp' });
   const bulletKeys = ['now', 'price', 'verify', 'direct'] as const;
   return (

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales, type Locale } from '@/i18n/config';
 import { createServerSupabase } from '@/lib/supabase/server';
@@ -151,6 +151,11 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   if (!locales.includes(locale as Locale)) notFound();
+  // next-intl + force-static: without this, the static prerender of /es/* falls
+  // back to defaultLocale ('en') because requestLocale is undefined at build
+  // time, baking EN messages into NextIntlClientProvider for the ES route.
+  // See docs/plans/list-your-camp-es-runtime-bug-2026-04-28.md.
+  setRequestLocale(locale);
   const messages = await getMessages();
   const t = await getTranslations({ locale, namespace: 'landing.meta' });
   const jsonLd = buildJsonLd(locale, t('title'), t('description'));
