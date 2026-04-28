@@ -181,6 +181,10 @@
     "religiousBadge": {
       "label": "Religious",
       "tooltip": "Religious program — see camp description for details"
+    },
+    "actions": {
+      "edit": "Edit",
+      "editAdmin": "Admin: edit {name}"
     }
   },
   "errors": {
@@ -1117,7 +1121,8 @@
       "switchToParentMode": "Switch to Parent Mode",
       "openUserMenu": "Open menu",
       "notificationsEmpty": "No notifications yet. Reminder emails you get will show up here.",
-      "notificationsTitle": "Recent activity"
+      "notificationsTitle": "Recent activity",
+      "admin": "Admin"
     },
     "userMenu": {
       "adminLink": "Admin",

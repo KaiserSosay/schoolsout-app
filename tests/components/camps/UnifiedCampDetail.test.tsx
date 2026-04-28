@@ -166,3 +166,87 @@ describe('UnifiedCampDetail — app mode', () => {
     expect(screen.getByText(/Pending verification/i)).toBeInTheDocument();
   });
 });
+
+describe('UnifiedCampDetail — Edit pill (admin only)', () => {
+  it('renders Edit pill in public mode when isAdmin=true', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="public"
+        locale="en"
+        isAdmin
+      />,
+      { withModeProvider: false },
+    );
+    expect(screen.getByTestId('camp-detail-admin-edit')).toBeInTheDocument();
+  });
+
+  it('renders Edit pill in app mode when isAdmin=true', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="app"
+        locale="en"
+        isSaved={false}
+        isAdmin
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.getByTestId('camp-detail-admin-edit')).toBeInTheDocument();
+  });
+
+  it('does NOT render Edit pill in public mode for non-admin viewers', () => {
+    withProviders(
+      <UnifiedCampDetail camp={baseCamp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-detail-admin-edit')).toBeNull();
+  });
+
+  it('does NOT render Edit pill in app mode for non-admin viewers', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="app"
+        locale="en"
+        isSaved={false}
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.queryByTestId('camp-detail-admin-edit')).toBeNull();
+  });
+
+  it('Edit pill links to /{locale}/admin/camps/{slug}/edit', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="public"
+        locale="es"
+        isAdmin
+      />,
+      { withModeProvider: false },
+    );
+    const link = screen.getByTestId('camp-detail-admin-edit');
+    expect(link).toHaveAttribute(
+      'href',
+      '/es/admin/camps/frost-science-summer-camp/edit',
+    );
+  });
+
+  it('Edit pill exposes an aria-label with the camp name', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="public"
+        locale="en"
+        isAdmin
+      />,
+      { withModeProvider: false },
+    );
+    const link = screen.getByTestId('camp-detail-admin-edit');
+    expect(link).toHaveAttribute(
+      'aria-label',
+      'Admin: edit Frost Science Summer Camp',
+    );
+  });
+});

@@ -181,6 +181,10 @@
     "religiousBadge": {
       "label": "Religioso",
       "tooltip": "Programa religioso — ver descripción del campamento para más detalles"
+    },
+    "actions": {
+      "edit": "Editar",
+      "editAdmin": "Admin: editar {name}"
     }
   },
   "errors": {
@@ -1117,7 +1121,8 @@
       "switchToParentMode": "Cambiar a Modo Padres",
       "openUserMenu": "Abrir menú",
       "notificationsEmpty": "Sin notificaciones aún. Los recordatorios por correo aparecerán aquí.",
-      "notificationsTitle": "Actividad reciente"
+      "notificationsTitle": "Actividad reciente",
+      "admin": "Admin"
     },
     "userMenu": {
       "adminLink": "Admin",

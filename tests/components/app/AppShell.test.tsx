@@ -139,8 +139,51 @@ describe('app/SideNav', () => {
     await act(async () => {
       userTrigger!.click();
     });
-    const link = screen.getByRole('link', { name: /^admin$/i });
+    // With the primary-nav admin link AND the popover admin link both
+    // rendering when isAdmin=true, scope to the popover's role="menu" so
+    // we're testing the popover entry specifically.
+    const menu = screen.getByRole('menu');
+    const links = menu.querySelectorAll('a[href="/en/admin"]');
+    expect(links.length).toBeGreaterThan(0);
+  });
+
+  it('does NOT render the primary-nav Admin link when isAdmin is false', () => {
+    mockPathname = '/en/app';
+    renderWithIntl(
+      <SideNav locale="en" email="parent@example.com" displayName="Ada" />,
+    );
+    expect(screen.queryByTestId('sidenav-admin-link')).toBeNull();
+  });
+
+  it('renders the primary-nav Admin link when isAdmin is true', () => {
+    mockPathname = '/en/app';
+    renderWithIntl(
+      <SideNav
+        locale="en"
+        email="rasheid@example.com"
+        displayName="Rasheid"
+        isAdmin
+      />,
+    );
+    const link = screen.getByTestId('sidenav-admin-link');
+    expect(link).toBeInTheDocument();
     expect(link.getAttribute('href')).toBe('/en/admin');
+    expect(link.textContent).toContain('Admin');
+  });
+
+  it('primary-nav Admin link respects the active locale', () => {
+    mockPathname = '/es/app';
+    renderWithIntl(
+      <SideNav
+        locale="es"
+        email="rasheid@example.com"
+        displayName="Rasheid"
+        isAdmin
+      />,
+    );
+    expect(
+      screen.getByTestId('sidenav-admin-link').getAttribute('href'),
+    ).toBe('/es/admin');
   });
 
   it('opens the user menu popover on avatar-block click', async () => {

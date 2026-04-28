@@ -78,16 +78,55 @@ export function UnifiedCampDetail(props: {
   mode: UnifiedCampDetailMode;
   locale: string;
   isSaved?: boolean;
+  isAdmin?: boolean;
 }) {
   if (props.mode === 'public') {
-    return <PublicDetail camp={props.camp} locale={props.locale} />;
+    return (
+      <PublicDetail
+        camp={props.camp}
+        locale={props.locale}
+        isAdmin={props.isAdmin ?? false}
+      />
+    );
   }
   return (
     <AppDetail
       camp={props.camp}
       locale={props.locale}
       isSaved={props.isSaved ?? false}
+      isAdmin={props.isAdmin ?? false}
     />
+  );
+}
+
+// Pill that links admins from a camp detail page to the wired edit form.
+// Same shape across public + app modes so admin muscle memory is identical
+// regardless of which surface they land on.
+function AdminEditPill({
+  campSlug,
+  campName,
+  locale,
+  className,
+}: {
+  campSlug: string;
+  campName: string;
+  locale: string;
+  className: string;
+}) {
+  const t = useTranslations('camps.actions');
+  return (
+    <Link
+      href={`/${locale}/admin/camps/${campSlug}/edit`}
+      data-testid="camp-detail-admin-edit"
+      aria-label={t('editAdmin', { name: campName })}
+      className={
+        'inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900 shadow-sm hover:bg-amber-200 ' +
+        className
+      }
+    >
+      <span aria-hidden>🛡️</span>
+      <span>{t('edit')}</span>
+    </Link>
   );
 }
 
@@ -183,9 +222,11 @@ function Fact({
 function PublicDetail({
   camp,
   locale,
+  isAdmin,
 }: {
   camp: UnifiedCampDetailCamp;
   locale: string;
+  isAdmin: boolean;
 }) {
   const t = useTranslations('public.campDetail');
   const tApp = useTranslations('public.camps');
@@ -243,6 +284,15 @@ function PublicDetail({
         >
           <span aria-hidden>☆</span>
         </button>
+
+        {isAdmin ? (
+          <AdminEditPill
+            campSlug={camp.slug}
+            campName={camp.name}
+            locale={locale}
+            className="absolute right-20 top-7"
+          />
+        ) : null}
 
         <div className="space-y-5 p-5 md:p-7">
           <header className="space-y-1">
@@ -340,10 +390,12 @@ function AppDetail({
   camp,
   locale,
   isSaved,
+  isAdmin,
 }: {
   camp: UnifiedCampDetailCamp;
   locale: string;
   isSaved: boolean;
+  isAdmin: boolean;
 }) {
   const t = useTranslations('public.campDetail');
   const tCamps = useTranslations('app.camps');
@@ -376,7 +428,7 @@ function AppDetail({
       <AppBreadcrumb href={`/${locale}/app/camps`} where={tNav('camps')} />
 
       <div
-        className={'mt-4 overflow-hidden rounded-3xl ' + cardCls}
+        className={'relative mt-4 overflow-hidden rounded-3xl ' + cardCls}
         data-testid="unified-camp-detail-app"
       >
         {camp.image_url ? (
@@ -390,6 +442,15 @@ function AppDetail({
         ) : (
           <div className="aspect-[16/9] w-full bg-gradient-to-br from-brand-purple via-purple-600 to-blue-600" />
         )}
+
+        {isAdmin ? (
+          <AdminEditPill
+            campSlug={camp.slug}
+            campName={camp.name}
+            locale={locale}
+            className="absolute right-4 top-4"
+          />
+        ) : null}
 
         <div className="space-y-5 p-5 md:p-7">
           <div>

@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
+import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
+import { getAdminRole } from '@/lib/auth/requireAdmin';
 import { PublicTopBar } from '@/components/public/PublicTopBar';
 import {
   UnifiedCampDetail,
@@ -78,6 +80,22 @@ export default async function PublicCampDetailPage({
   if (!data) notFound();
   const camp = data as UnifiedCampDetailCamp;
 
+  // Public surface so we don't gate the page on auth, but if a signed-in
+  // admin lands here we want the Edit pill to appear so they can jump
+  // straight to the wired edit form.
+  let isAdmin = false;
+  try {
+    const sb = createServerSupabase();
+    const {
+      data: { user },
+    } = await sb.auth.getUser();
+    if (user) {
+      isAdmin = (await getAdminRole(user.id, user.email ?? null)) !== null;
+    }
+  } catch {
+    // Cookie/auth failures here must never break public render.
+  }
+
   const ldItems = [
     campJsonLd({
       name: camp.name,
@@ -104,7 +122,7 @@ export default async function PublicCampDetailPage({
       <JsonLdScripts items={ldItems} />
       <PublicTopBar locale={locale} />
       <main className="mx-auto max-w-3xl px-4 py-6 md:px-6 md:py-10">
-        <UnifiedCampDetail camp={camp} mode="public" locale={locale} />
+        <UnifiedCampDetail camp={camp} mode="public" locale={locale} isAdmin={isAdmin} />
 
         <section className="mt-8 rounded-3xl border border-cream-border bg-ink p-6 text-white md:p-8">
           <h2 className="text-lg font-black md:text-xl">

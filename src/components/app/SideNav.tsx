@@ -155,6 +155,26 @@ export function SideNav({
             <span>{tNav('idea')}</span>
           </button>
 
+          {/* Admin entry — only renders when isAdmin. Lives next to the idea
+              button so admins reach /admin in one click instead of opening
+              the avatar popover. UserMenuItems still has its admin link for
+              the avatar route. */}
+          {isAdmin ? (
+            <Link
+              href={`/${locale}/admin`}
+              data-testid="sidenav-admin-link"
+              className={
+                'mt-1 flex min-h-11 w-full items-center gap-2 rounded-xl border-2 border-amber-400 px-3 py-2 text-sm font-bold transition-colors ' +
+                (mode === 'parents'
+                  ? 'text-ink hover:bg-amber-100'
+                  : 'text-white hover:bg-amber-400/20')
+              }
+            >
+              <span aria-hidden>🛡️</span>
+              <span>{tNav('admin')}</span>
+            </Link>
+          ) : null}
+
           <div className="mt-3 flex items-center gap-2">
             <LanguageToggleMobile
               currentLocale={locale as Locale}

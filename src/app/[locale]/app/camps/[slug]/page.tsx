@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { createServiceSupabase } from '@/lib/supabase/service';
+import { getAdminRole } from '@/lib/auth/requireAdmin';
 import {
   UnifiedCampDetail,
   type UnifiedCampDetailCamp,
@@ -35,6 +36,7 @@ export default async function CampDetailPage({
   } = await sb.auth.getUser();
 
   let saved = false;
+  let isAdmin = false;
   if (user) {
     const { data: row } = await sb
       .from('saved_camps')
@@ -43,6 +45,8 @@ export default async function CampDetailPage({
       .eq('camp_id', c.id)
       .maybeSingle();
     saved = Boolean(row);
+
+    isAdmin = (await getAdminRole(user.id, user.email ?? null)) !== null;
 
     // Fire-and-forget activity log; never block render.
     sb.from('kid_activity')
@@ -56,5 +60,13 @@ export default async function CampDetailPage({
       .then(() => undefined, () => undefined);
   }
 
-  return <UnifiedCampDetail camp={c} mode="app" locale={locale} isSaved={saved} />;
+  return (
+    <UnifiedCampDetail
+      camp={c}
+      mode="app"
+      locale={locale}
+      isSaved={saved}
+      isAdmin={isAdmin}
+    />
+  );
 }
