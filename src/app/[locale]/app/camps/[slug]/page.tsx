@@ -23,7 +23,7 @@ export default async function CampDetailPage({
   const { data: camp } = await svc
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
+      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
     )
     .eq('slug', slug)
     .maybeSingle();

@@ -297,3 +297,89 @@ describe('UnifiedCampCard — wishlist-tile mode', () => {
     expect(screen.queryByTestId('camp-distance')).toBeNull();
   });
 });
+
+describe('UnifiedCampCard — tagline rendering', () => {
+  const TAGLINE = 'Hands-on STEM, every weekday.';
+
+  it('renders tagline below the name in public mode when present', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: TAGLINE }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    const el = screen.getByTestId('camp-card-tagline');
+    expect(el).toHaveTextContent(TAGLINE);
+    expect(el.className).toContain('line-clamp-2');
+  });
+
+  it('renders tagline in app mode when present', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: TAGLINE }}
+        mode="app"
+        isSaved={false}
+        locale="en"
+      />,
+      { withModeProvider: true },
+    );
+    const el = screen.getByTestId('camp-card-tagline');
+    expect(el).toHaveTextContent(TAGLINE);
+    expect(el.className).toContain('line-clamp-2');
+  });
+
+  it('does NOT render tagline in wishlist-tile mode (intentionally minimal)', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: TAGLINE }}
+        mode="wishlist-tile"
+        locale="en"
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.queryByTestId('camp-card-tagline')).toBeNull();
+    expect(screen.queryByText(TAGLINE)).toBeNull();
+  });
+
+  it('does NOT render tagline element when tagline is null (public)', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: null }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-card-tagline')).toBeNull();
+  });
+
+  it('does NOT render tagline element when tagline is null (app)', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: null }}
+        mode="app"
+        isSaved={false}
+        locale="en"
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.queryByTestId('camp-card-tagline')).toBeNull();
+  });
+
+  it('renders the full tagline text even when long (line-clamp handles truncation visually)', () => {
+    const long = 'A'.repeat(250);
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, tagline: long }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    const el = screen.getByTestId('camp-card-tagline');
+    expect(el.textContent).toBe(long);
+    expect(el.className).toContain('line-clamp-2');
+  });
+});

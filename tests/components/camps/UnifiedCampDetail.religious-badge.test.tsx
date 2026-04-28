@@ -26,6 +26,7 @@ const baseCamp: UnifiedCampDetailCamp = {
   id: 'c1',
   slug: 'machane-miami',
   name: 'Machane Miami',
+  tagline: null,
   description: 'Jewish day camp at Yeshiva Toras Chaim Toras Emes.',
   ages_min: 5,
   ages_max: 13,

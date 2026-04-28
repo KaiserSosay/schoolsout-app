@@ -26,6 +26,7 @@ const baseCamp: UnifiedCampDetailCamp = {
   id: 'c1',
   slug: 'frost-science-summer-camp',
   name: 'Frost Science Summer Camp',
+  tagline: null,
   description: 'Hands-on STEM summer programming for Miami kids.',
   ages_min: 6,
   ages_max: 12,
@@ -164,6 +165,57 @@ describe('UnifiedCampDetail — app mode', () => {
       { withModeProvider: true },
     );
     expect(screen.getByText(/Pending verification/i)).toBeInTheDocument();
+  });
+});
+
+describe('UnifiedCampDetail — tagline rendering', () => {
+  it('renders tagline below the name in public hero when present', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, tagline: 'Hands-on STEM, every weekday.' }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    const tagline = screen.getByTestId('camp-detail-tagline');
+    expect(tagline).toHaveTextContent('Hands-on STEM, every weekday.');
+  });
+
+  it('renders tagline in app hero when present', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, tagline: 'Hands-on STEM, every weekday.' }}
+        mode="app"
+        locale="en"
+        isSaved={false}
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.getByTestId('camp-detail-tagline')).toHaveTextContent(
+      'Hands-on STEM, every weekday.',
+    );
+  });
+
+  it('does NOT render tagline element when tagline is null (public mode)', () => {
+    withProviders(
+      <UnifiedCampDetail camp={baseCamp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-detail-tagline')).toBeNull();
+  });
+
+  it('does NOT render tagline element when tagline is null (app mode)', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={baseCamp}
+        mode="app"
+        locale="en"
+        isSaved={false}
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.queryByTestId('camp-detail-tagline')).toBeNull();
   });
 });
 

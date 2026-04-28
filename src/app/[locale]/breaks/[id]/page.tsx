@@ -98,7 +98,7 @@ export default async function PublicClosureDetailPage({
       svc
         .from('camps')
         .select(
-          'id, slug, name, description, ages_min, ages_max, price_tier, categories, neighborhood, verified, is_featured, phone, address, website_url, hours_start, hours_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
+          'id, slug, name, tagline, description, ages_min, ages_max, price_tier, categories, neighborhood, verified, is_featured, phone, address, website_url, hours_start, hours_end, price_min_cents, price_max_cents, registration_url, registration_deadline',
         )
         .eq('verified', true)
         .neq('website_status', 'broken')

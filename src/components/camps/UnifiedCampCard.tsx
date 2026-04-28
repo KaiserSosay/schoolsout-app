@@ -44,6 +44,7 @@ export type UnifiedCampCardCamp = CompletenessCampShape & {
   is_featured?: boolean;
   featured_until?: string | null;
   is_open_this_closure?: boolean;
+  tagline?: string | null;
   // App-mode enrichment (ignored elsewhere)
   description?: string | null;
   distance_miles?: number | null;
@@ -182,6 +183,14 @@ function PublicCard({
             ☆
           </span>
         </div>
+        {camp.tagline ? (
+          <p
+            className="line-clamp-2 text-sm text-muted"
+            data-testid="camp-card-tagline"
+          >
+            {camp.tagline}
+          </p>
+        ) : null}
         <p className="text-xs text-muted">
           {camp.ages_min != null && camp.ages_max != null
             ? t('ages', {
@@ -422,6 +431,15 @@ function AppCard({
               </span>
             ) : null}
           </div>
+        ) : null}
+
+        {camp.tagline ? (
+          <p
+            className={'line-clamp-2 text-sm ' + mutedCls}
+            data-testid="camp-card-tagline"
+          >
+            {camp.tagline}
+          </p>
         ) : null}
 
         <p className={'text-xs ' + mutedCls}>

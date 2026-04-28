@@ -28,6 +28,7 @@ export type UnifiedCampDetailCamp = {
   id: string;
   slug: string;
   name: string;
+  tagline: string | null;
   description: string | null;
   ages_min: number | null;
   ages_max: number | null;
@@ -302,6 +303,14 @@ function PublicDetail({
             >
               {camp.name}
             </h1>
+            {camp.tagline ? (
+              <p
+                className="text-base font-semibold leading-snug text-ink/80 md:text-lg"
+                data-testid="camp-detail-tagline"
+              >
+                {camp.tagline}
+              </p>
+            ) : null}
             {camp.neighborhood ? (
               <p className="text-sm text-muted">{camp.neighborhood}</p>
             ) : null}
@@ -460,6 +469,17 @@ function AppDetail({
             >
               {camp.name}
             </h1>
+            {camp.tagline ? (
+              <p
+                className={
+                  'mt-1 text-base font-semibold leading-snug md:text-lg ' +
+                  (isParents ? 'text-ink/80' : 'text-white/85')
+                }
+                data-testid="camp-detail-tagline"
+              >
+                {camp.tagline}
+              </p>
+            ) : null}
             {camp.neighborhood ? (
               <p className={'mt-1 text-sm ' + mutedCls}>📍 {camp.neighborhood}</p>
             ) : null}

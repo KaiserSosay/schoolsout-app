@@ -33,11 +33,12 @@ export async function generateMetadata({
   const svc = createServiceSupabase();
   const { data } = await svc
     .from('camps')
-    .select('name, description, neighborhood, ages_min, ages_max, image_url')
+    .select('name, tagline, description, neighborhood, ages_min, ages_max, image_url')
     .eq('slug', slug)
     .maybeSingle();
   const camp = data as {
     name: string;
+    tagline: string | null;
     description: string | null;
     neighborhood: string | null;
     ages_min: number | null;
@@ -45,14 +46,23 @@ export async function generateMetadata({
     image_url: string | null;
   } | null;
   if (!camp) return publicPageMetadata({ locale, path: `/camps/${slug}`, title: "Camp | School's Out!", description: '' });
-  const agePart =
-    camp.ages_min != null && camp.ages_max != null
-      ? ` Ages ${camp.ages_min}–${camp.ages_max}.`
-      : '';
-  const neighborhoodPart = camp.neighborhood ? ` ${camp.neighborhood}, Miami.` : ' Miami.';
-  const desc =
-    (camp.description ?? camp.name) + `.${agePart}${neighborhoodPart} Human-reviewed by School's Out!`;
-  const trimmed = desc.length > 160 ? desc.slice(0, 157) + '…' : desc;
+  // Tagline is the curated, human-written one-liner — when present it's
+  // the most accurate meta description we have. The composed
+  // description+ages+neighborhood string stays as the fallback so camps
+  // without a tagline keep the descriptive SEO blurb that's been live.
+  const composed = (() => {
+    const agePart =
+      camp.ages_min != null && camp.ages_max != null
+        ? ` Ages ${camp.ages_min}–${camp.ages_max}.`
+        : '';
+    const neighborhoodPart = camp.neighborhood
+      ? ` ${camp.neighborhood}, Miami.`
+      : ' Miami.';
+    const base = camp.description ?? camp.name;
+    return base + `.${agePart}${neighborhoodPart} Human-reviewed by School's Out!`;
+  })();
+  const raw = camp.tagline?.trim() ? camp.tagline.trim() : composed;
+  const trimmed = raw.length > 160 ? raw.slice(0, 157) + '…' : raw;
   return publicPageMetadata({
     locale,
     path: `/camps/${slug}`,
@@ -73,7 +83,7 @@ export default async function PublicCampDetailPage({
   const { data } = await svc
     .from('camps')
     .select(
-      'id, slug, name, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
+      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
     )
     .eq('slug', slug)
     .maybeSingle();

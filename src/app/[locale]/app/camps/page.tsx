@@ -66,7 +66,7 @@ export default async function CampsPage({
     svc
       .from('camps')
       .select(
-        'id, slug, name, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, featured_until, last_verified_at, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at, price_min_cents, price_max_cents, registration_url, registration_deadline',
+        'id, slug, name, tagline, description, ages_min, ages_max, price_tier, categories, website_url, image_url, neighborhood, is_featured, featured_until, last_verified_at, verified, address, latitude, longitude, hours_start, hours_end, before_care_offered, before_care_start, before_care_price_cents, after_care_offered, after_care_end, after_care_price_cents, closed_on_holidays, phone, logistics_verified, website_status, website_last_verified_at, price_min_cents, price_max_cents, registration_url, registration_deadline',
       )
       .eq('verified', true)
       .neq('website_status', 'broken')
