@@ -2,6 +2,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import path from 'node:path';
+import { publicPageMetadata } from '@/lib/seo';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'about.meta' });
+  return publicPageMetadata({
+    locale,
+    path: '/about',
+    title: t('title'),
+    description: t('description'),
+  });
+}
 
 // DECISION: The photo file is optional — `public/images/noah.jpg` may or may
 // not exist. At render time (server component) we probe the filesystem and

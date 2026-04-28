@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { ListYourCampForm } from '@/components/ListYourCampForm';
+import { publicPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-static';
 
@@ -10,7 +11,12 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'listYourCamp' });
-  return { title: t('meta.title'), description: t('meta.description') };
+  return publicPageMetadata({
+    locale,
+    path: '/list-your-camp',
+    title: t('meta.title'),
+    description: t('meta.description'),
+  });
 }
 
 export default async function ListYourCampPage({

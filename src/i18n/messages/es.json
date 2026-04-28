@@ -1142,6 +1142,10 @@
     "back": "← Volver al inicio"
   },
   "about": {
+    "meta": {
+      "title": "Acerca de — School's Out!",
+      "description": "School's Out! fue creado por Noah, un niño de 8 años en Coral Gables, junto a su papá. Por qué existimos."
+    },
     "noah": {
       "title": "Conoce a Noah, nuestro fundador de 8 años",
       "back": "← Volver al inicio",
@@ -1304,8 +1308,8 @@
       "p2": "Cuando necesitan un campamento, ya están aquí. Sé el primero que encuentren.",
       "bullets": {
         "now": "Aparece frente a los papás que buscan campamentos ESTA semana, no el año que viene",
-        "price": "Listado gratis para siempre — paga $29/mes sólo cuando quieras ser Destacado",
-        "verify": "Reverificamos tus horarios y fechas cada 90 días, gratis, para que tu listado se mantenga al día",
+        "price": "Listado gratis para siempre — paga $29/mes solo cuando quieras estar Destacado",
+        "verify": "Reverificamos tus horarios y fechas cada 90 días, gratis, para que tu listado se mantenga preciso",
         "direct": "Tu enlace de inscripción directo, tu teléfono — sin intermediarios"
       },
       "kicker": "O estás aquí, o no estás."
@@ -1429,7 +1433,10 @@
       "breaks": "Vacaciones",
       "listYourCamp": "Lista tu campamento",
       "about": "Acerca de",
-      "signIn": "Ingresar"
+      "signIn": "Ingresar",
+      "languageSwitchToEs": "Español",
+      "languageSwitchToEn": "English",
+      "languageSwitchAria": "Cambiar a {target}"
     },
     "camps": {
       "title": "Campamentos de Miami y programas para días escolares libres",

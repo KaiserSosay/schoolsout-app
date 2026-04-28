@@ -23,9 +23,13 @@ export function publicPageMetadata({
     description,
     alternates: {
       canonical,
+      // hreflang: regional codes (en-US / es-US) since the content is
+      // Miami-Dade-specific. x-default points at the EN page so Google falls
+      // back to English when a search isn't a confident regional match.
       languages: {
-        en: `${SITE_URL}/en${path}`,
-        es: `${SITE_URL}/es${path}`,
+        'en-US': `${SITE_URL}/en${path}`,
+        'es-US': `${SITE_URL}/es${path}`,
+        'x-default': `${SITE_URL}/en${path}`,
       },
     },
     openGraph: {

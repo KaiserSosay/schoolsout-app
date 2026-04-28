@@ -1142,6 +1142,10 @@
     "back": "← Back to home"
   },
   "about": {
+    "meta": {
+      "title": "About — School's Out!",
+      "description": "School's Out! was built by Noah, an 8-year-old in Coral Gables, with his dad. Why we exist."
+    },
     "noah": {
       "title": "Meet Noah, our 8-year-old founder",
       "back": "← Back to home",
@@ -1429,7 +1433,10 @@
       "breaks": "Breaks",
       "listYourCamp": "List your camp",
       "about": "About",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "languageSwitchToEs": "Español",
+      "languageSwitchToEn": "English",
+      "languageSwitchAria": "Switch to {target}"
     },
     "camps": {
       "title": "Miami Summer Camps & School-Break Programs",

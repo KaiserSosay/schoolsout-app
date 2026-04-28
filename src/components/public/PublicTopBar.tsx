@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
+import { LanguageToggle } from '@/components/public/LanguageToggle';
+import { locales, type Locale } from '@/i18n/config';
 
 // Lightweight header for public (non-app) pages. The app shell in
 // /src/app/[locale]/app/layout.tsx has bottom tabs + sidebar for
 // signed-in users; anonymous browsers see this instead.
 export async function PublicTopBar({ locale }: { locale: string }) {
+  const safeLocale: Locale = (locales as readonly string[]).includes(locale)
+    ? (locale as Locale)
+    : 'en';
   const t = await getTranslations({ locale, namespace: 'public.topBar' });
   const links: Array<{ label: string; href: string }> = [
     { label: t('camps'), href: `/${locale}/camps` },
@@ -36,13 +41,18 @@ export async function PublicTopBar({ locale }: { locale: string }) {
         {/* DECISION: Sign-in routes to the dedicated /sign-in page so
             returning parents see the email field immediately. Outline style
             so it doesn't compete with gold "Create account" CTAs elsewhere
-            on the public pages. */}
-        <Link
-          href={`/${locale}/sign-in`}
-          className="inline-flex min-h-9 items-center rounded-full border border-ink/30 px-4 py-1.5 text-xs font-black text-ink hover:bg-ink hover:text-white"
-        >
-          {t('signIn')}
-        </Link>
+            on the public pages. The language toggle sits to its left so a
+            Spanish-speaking operator landing on an EN URL can flip without
+            digging — visible at all sizes since this row is always shown. */}
+        <div className="flex items-center gap-2">
+          <LanguageToggle currentLocale={safeLocale} />
+          <Link
+            href={`/${locale}/sign-in`}
+            className="inline-flex min-h-9 items-center rounded-full border border-ink/30 px-4 py-1.5 text-xs font-black text-ink hover:bg-ink hover:text-white"
+          >
+            {t('signIn')}
+          </Link>
+        </div>
       </div>
       {/* Mobile nav row */}
       <nav
