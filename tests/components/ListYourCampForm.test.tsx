@@ -387,6 +387,66 @@ describe('ListYourCampForm — quality accordion', () => {
     expect(payload.categories.length).toBe(5);
   });
 
+  it('AddressPicker fills the address field when operator picks a geocode result', async () => {
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (url.startsWith('/api/geocode')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            results: [
+              {
+                display_name: '536 Coral Way, Coral Gables, FL 33134, USA',
+                latitude: 25.7501,
+                longitude: -80.2643,
+              },
+            ],
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ ok: true }) });
+    });
+    global.fetch = fetchMock as typeof fetch;
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'X' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Y' },
+    });
+
+    // Operator types in the AddressPicker search input + clicks Find.
+    const searchInput = screen.getByPlaceholderText(
+      '1234 Main St, Coral Gables, FL',
+    );
+    fireEvent.change(searchInput, {
+      target: { value: '536 Coral Way Coral Gables' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Find' }));
+    // Pick the first (and only) result.
+    const pick = await screen.findByRole('button', { name: 'Pick this' });
+    fireEvent.click(pick);
+
+    // The manual address input should now hold the geocoded display_name,
+    // and the operator could still edit it. Assert via submit payload.
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+    await waitFor(() => {
+      const camp = fetchMock.mock.calls.find(
+        (c) => typeof c[0] === 'string' && c[0].startsWith('/api/camp-requests'),
+      );
+      expect(camp).toBeDefined();
+    });
+    const campCall = fetchMock.mock.calls.find(
+      (c) => typeof c[0] === 'string' && c[0].startsWith('/api/camp-requests'),
+    );
+    const payload = JSON.parse(campCall![1].body);
+    expect(payload.address).toBe(
+      '536 Coral Way, Coral Gables, FL 33134, USA',
+    );
+  });
+
   it('merges "Other categories" comma-list into payload + dedupes against chip selections', async () => {
     wrap();
     fireEvent.change(screen.getByLabelText('Your email'), {

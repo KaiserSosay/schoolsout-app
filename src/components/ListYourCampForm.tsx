@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 import { UI_PILL_CATEGORIES } from '@/lib/camps/categories';
 import { chipBase, chipActive, chipInactive } from '@/components/shared/chip-classes';
+import { AddressPicker } from '@/components/app/AddressPicker';
 import { celebrate } from '@/lib/confetti';
 
 // Phase 2.7 Goal 5: rich camp application form with live completeness
@@ -133,6 +134,7 @@ const EMPTY: Form = {
 export function ListYourCampForm() {
   const t = useTranslations('listYourCamp.form');
   const tCat = useTranslations('app.camps.categories');
+  const tFinder = useTranslations('listYourCamp.form.addressFinder');
   const locale = useLocale();
   const [form, setForm] = useState<Form>(EMPTY);
   const [submitting, setSubmitting] = useState(false);
@@ -452,6 +454,25 @@ export function ListYourCampForm() {
             />
           </div>
         </div>
+        <div>
+          <p className={labelCls}>{tFinder('intro')}</p>
+          <p className={helpCls}>{tFinder('introHelp')}</p>
+          <div className="mt-2">
+            <AddressPicker
+              labels={{
+                addressLabel: tFinder('addressLabel'),
+                addressPlaceholder: tFinder('addressPlaceholder'),
+                findButton: tFinder('findButton'),
+                finding: tFinder('finding'),
+                pickResult: tFinder('pickResult'),
+                findError: tFinder('findError'),
+                noResults: tFinder('noResults'),
+              }}
+              onPick={(r) => update('address', r.display_name)}
+            />
+          </div>
+        </div>
+
         <div>
           <label className={labelCls} htmlFor="address">
             {t('address')}

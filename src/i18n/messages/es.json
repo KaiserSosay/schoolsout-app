@@ -1230,6 +1230,17 @@
       "categoriesOtherLabel": "Otras categorías",
       "categoriesOtherPlaceholder": "robótica, BJJ, equitación",
       "categoriesOtherHelp": "Separadas por comas. Úsalas para algo que no esté en las opciones de arriba.",
+      "addressFinder": {
+        "intro": "Busca tu dirección",
+        "introHelp": "Escribe la calle y la ciudad, presiona Buscar y elige la opción correcta. Llenamos el campo de dirección abajo — aún puedes editarlo.",
+        "addressLabel": "Búsqueda de dirección",
+        "addressPlaceholder": "1234 Calle Principal, Coral Gables, FL",
+        "findButton": "Buscar",
+        "finding": "Buscando…",
+        "pickResult": "Elegir",
+        "findError": "No encontramos esa dirección. Agrega la ciudad y el estado.",
+        "noResults": "Sin resultados. Prueba con una dirección más específica."
+      },
       "description": "Cuéntanos sobre tu programa",
       "submit": "Enviar solicitud",
       "submitting": "Enviando…",

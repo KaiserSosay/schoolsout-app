@@ -34,8 +34,7 @@ export function AddressPicker({
   const [results, setResults] = useState<GeoResult[]>([]);
   const [status, setStatus] = useState<'idle' | 'searching' | 'error' | 'empty' | 'ok'>('idle');
 
-  const search = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const search = async () => {
     if (q.trim().length < 3 || status === 'searching') return;
     setStatus('searching');
     setResults([]);
@@ -59,26 +58,36 @@ export function AddressPicker({
 
   return (
     <div className="space-y-2">
-      <form onSubmit={search} className="flex gap-2">
+      {/* Plain div — not a <form> — so this component nests safely inside
+          another <form> (e.g. /list-your-camp). Enter inside the input still
+          triggers search via the onKeyDown handler. */}
+      <div className="flex gap-2">
         <label className="flex-1">
           <span className="sr-only">{labels.addressLabel}</span>
           <input
             type="text"
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                void search();
+              }
+            }}
             placeholder={labels.addressPlaceholder}
             autoFocus={autoFocus}
             className="w-full rounded-xl border border-cream-border bg-white px-3 py-2 text-sm text-ink focus:border-brand-purple focus:outline-none"
           />
         </label>
         <button
-          type="submit"
+          type="button"
+          onClick={() => void search()}
           disabled={q.trim().length < 3 || status === 'searching'}
           className="rounded-full bg-ink px-4 py-2 text-xs font-black text-cream hover:opacity-90 disabled:opacity-50"
         >
           {status === 'searching' ? labels.finding : labels.findButton}
         </button>
-      </form>
+      </div>
 
       {status === 'error' ? (
         <p role="alert" className="text-xs font-bold text-red-600">

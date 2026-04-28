@@ -1230,6 +1230,17 @@
       "categoriesOtherLabel": "Other categories",
       "categoriesOtherPlaceholder": "robotics, BJJ, equestrian",
       "categoriesOtherHelp": "Comma-separated. Use this for anything not in the chips above.",
+      "addressFinder": {
+        "intro": "Find your address",
+        "introHelp": "Type a street + city, hit Find, and pick the match. We'll fill the address field below — you can still edit it.",
+        "addressLabel": "Address search",
+        "addressPlaceholder": "1234 Main St, Coral Gables, FL",
+        "findButton": "Find",
+        "finding": "Finding…",
+        "pickResult": "Pick this",
+        "findError": "Couldn't find that address. Try adding the city and state.",
+        "noResults": "No matches found. Try a more specific address."
+      },
       "description": "Tell us about your program",
       "submit": "Send application",
       "submitting": "Sending…",
