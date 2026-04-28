@@ -1,17 +1,21 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '@/i18n/messages/en.json';
 import { CampEditForm } from '@/components/admin/CampEditForm';
 
-// Phase B prep: scaffold-form tests. The component itself is a flat
-// list of placeholder inputs with NO working submit; these tests lock
-// in the contract that:
-//
-//   1. Every editable column from migration 054's schema is rendered
-//      somewhere in the form.
-//   2. The submit button is disabled.
-//   3. The form's onSubmit calls preventDefault even if the disabled
-//      attribute is removed by a stray morning patch.
-//   4. The slug field is read-only (R4 immutability invariant).
+// Mock the server action — vi.mock is hoisted so the import in
+// CampEditForm picks up the mock before the component renders.
+vi.mock(
+  '@/app/[locale]/admin/camps/[slug]/edit/actions',
+  () => ({
+    updateCampSimpleFields: vi.fn(),
+  }),
+);
+
+import { updateCampSimpleFields } from '@/app/[locale]/admin/camps/[slug]/edit/actions';
+
+const updateMock = vi.mocked(updateCampSimpleFields);
 
 const baseCamp = {
   id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
@@ -47,16 +51,136 @@ const baseCamp = {
   extended_care_policy: null,
 };
 
-describe('CampEditForm scaffold', () => {
+function wrap(camp = baseCamp) {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <CampEditForm camp={camp} />
+    </NextIntlClientProvider>,
+  );
+}
+
+beforeEach(() => {
+  updateMock.mockReset();
+});
+
+describe('CampEditForm — wired Quick edit form', () => {
+  it('renders the mixed-mode banner above the wired form', () => {
+    wrap();
+    expect(screen.getByTestId('mixed-mode-banner')).toHaveTextContent(
+      /Mixed-mode form/i,
+    );
+  });
+
+  it('renders the Quick edit title and body', () => {
+    wrap();
+    expect(screen.getByText('Quick edit')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Tagline, contact, registration link, and featured toggle\./i,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('pre-fills the 5 wired fields with current camp values', () => {
+    wrap();
+    expect(
+      (screen.getByTestId('quick-edit-tagline') as HTMLInputElement).value,
+    ).toBe('');
+    expect((screen.getByTestId('quick-edit-phone') as HTMLInputElement).value).toBe(
+      '(305) 446-0846',
+    );
+    expect((screen.getByTestId('quick-edit-email') as HTMLInputElement).value).toBe(
+      'mwilburn@firstcoralgables.org',
+    );
+    expect(
+      (screen.getByTestId('quick-edit-registration-url') as HTMLInputElement)
+        .value,
+    ).toBe('https://www.thegrowingplace.school/summer-camp');
+    expect(
+      (screen.getByTestId('quick-edit-is-featured') as HTMLInputElement).checked,
+    ).toBe(true);
+  });
+
+  it('respects the 200-char tagline maxLength', () => {
+    wrap();
+    const tagline = screen.getByTestId('quick-edit-tagline') as HTMLInputElement;
+    expect(tagline.maxLength).toBe(200);
+  });
+
+  it('calls updateCampSimpleFields on submit with trimmed values', async () => {
+    updateMock.mockResolvedValue({ ok: true });
+    wrap();
+
+    fireEvent.change(screen.getByTestId('quick-edit-tagline'), {
+      target: { value: '  Stomp, chomp, and ROAR!  ' },
+    });
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    expect(updateMock).toHaveBeenCalledWith({
+      slug: 'the-growing-place-summer-camp',
+      tagline: 'Stomp, chomp, and ROAR!',
+      phone: '(305) 446-0846',
+      email: 'mwilburn@firstcoralgables.org',
+      registration_url: 'https://www.thegrowingplace.school/summer-camp',
+      is_featured: true,
+    });
+  });
+
+  it('shows the success indicator after a successful save', async () => {
+    updateMock.mockResolvedValue({ ok: true });
+    wrap();
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() =>
+      expect(screen.getByTestId('quick-edit-saved')).toBeInTheDocument(),
+    );
+  });
+
+  it('renders inline error returned from the server action', async () => {
+    updateMock.mockResolvedValue({
+      ok: false,
+      errors: { email: 'Invalid email format' },
+    });
+    wrap();
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() =>
+      expect(screen.getByText('Invalid email format')).toBeInTheDocument(),
+    );
+    expect(screen.queryByTestId('quick-edit-saved')).not.toBeInTheDocument();
+  });
+
+  it('renders form-level _form error from the server action', async () => {
+    updateMock.mockResolvedValue({
+      ok: false,
+      errors: { _form: 'Camp not found' },
+    });
+    wrap();
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() =>
+      expect(screen.getByText('Camp not found')).toBeInTheDocument(),
+    );
+  });
+
+  it('passes is_featured=false when the toggle is unchecked before submit', async () => {
+    updateMock.mockResolvedValue({ ok: true });
+    wrap();
+    fireEvent.click(screen.getByTestId('quick-edit-is-featured'));
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    expect(updateMock.mock.calls[0][0].is_featured).toBe(false);
+  });
+});
+
+describe('CampEditForm — scaffold form (still placeholder)', () => {
   it('renders the scaffold-mode banner', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     expect(screen.getByTestId('scaffold-banner')).toHaveTextContent(
-      /Scaffold mode — fields not yet wired/i,
+      /Scaffold mode/i,
     );
   });
 
   it('pre-fills the name field with the current camp name', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     const input = screen.getByDisplayValue(
       'The Growing Place Summer Camp 2026',
     ) as HTMLInputElement;
@@ -64,19 +188,10 @@ describe('CampEditForm scaffold', () => {
     expect(input.tagName).toBe('INPUT');
   });
 
-  it('pre-fills phone, email, website_url, registration_url, address', () => {
-    render(<CampEditForm camp={baseCamp} />);
-    expect(screen.getByDisplayValue('(305) 446-0846')).toBeInTheDocument();
-    expect(
-      screen.getByDisplayValue('mwilburn@firstcoralgables.org'),
-    ).toBeInTheDocument();
+  it('pre-fills website_url + address (still scaffold)', () => {
+    wrap();
     expect(
       screen.getByDisplayValue('https://www.thegrowingplace.school'),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByDisplayValue(
-        'https://www.thegrowingplace.school/summer-camp',
-      ),
     ).toBeInTheDocument();
     expect(
       screen.getByDisplayValue('536 Coral Way, Coral Gables, FL 33134'),
@@ -84,34 +199,31 @@ describe('CampEditForm scaffold', () => {
   });
 
   it('pre-fills ages_min, ages_max, price_tier', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     expect(screen.getByDisplayValue('3')).toBeInTheDocument();
     expect(screen.getByDisplayValue('10')).toBeInTheDocument();
-    // price_tier is a select; assert its value.
     const selects = screen.getAllByRole('combobox') as HTMLSelectElement[];
     const priceSelect = selects.find((s) => s.value === '$$');
     expect(priceSelect).toBeDefined();
   });
 
   it('pre-fills categories as comma-separated text', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     expect(
       screen.getByDisplayValue('arts, stem, general, religious, preschool'),
     ).toBeInTheDocument();
   });
 
-  it('pre-fills the verified / featured / launch-partner checkboxes', () => {
-    render(<CampEditForm camp={baseCamp} />);
+  it('pre-fills the verified + launch-partner checkboxes (is_featured moved to wired form)', () => {
+    wrap();
     const verified = screen.getByLabelText('verified') as HTMLInputElement;
-    const featured = screen.getByLabelText('is_featured') as HTMLInputElement;
     const lp = screen.getByLabelText('is_launch_partner') as HTMLInputElement;
     expect(verified.checked).toBe(true);
-    expect(featured.checked).toBe(true);
     expect(lp.checked).toBe(true);
   });
 
   it('renders the slug field as read-only (R4 immutability)', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     const slug = screen.getByDisplayValue(
       'the-growing-place-summer-camp',
     ) as HTMLInputElement;
@@ -119,25 +231,23 @@ describe('CampEditForm scaffold', () => {
     expect(slug.disabled).toBe(true);
   });
 
-  it('disables the submit button', () => {
-    render(<CampEditForm camp={baseCamp} />);
+  it('disables the scaffold submit button', () => {
+    wrap();
     const submit = screen.getByTestId('camp-edit-submit') as HTMLButtonElement;
     expect(submit.disabled).toBe(true);
     expect(submit).toHaveAttribute('title', 'Form not yet wired');
   });
 
-  it('preventDefaults submit even if the disabled attribute is bypassed', () => {
-    render(<CampEditForm camp={baseCamp} />);
+  it('preventDefaults scaffold submit even if the disabled attribute is bypassed', () => {
+    wrap();
     const form = screen.getByTestId('camp-edit-form') as HTMLFormElement;
-    // Fire a submit event directly; assert no navigation/default occurs by
-    // checking the event was prevented.
     const evt = new Event('submit', { cancelable: true, bubbles: true });
     fireEvent(form, evt);
     expect(evt.defaultPrevented).toBe(true);
   });
 
   it('renders all 4 JSON-editor placeholders (sessions, pricing_tiers, fees, enrollment_window)', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     const placeholders = screen.getAllByPlaceholderText(
       /JSON editor coming in morning/i,
     );
@@ -148,7 +258,7 @@ describe('CampEditForm scaffold', () => {
   });
 
   it('renders array-field placeholders for activities + what_to_bring', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     const placeholders = screen.getAllByPlaceholderText(
       /comma-separated for now/i,
     );
@@ -156,7 +266,7 @@ describe('CampEditForm scaffold', () => {
   });
 
   it('renders Phase B image-upload placeholders for logo + hero', () => {
-    render(<CampEditForm camp={baseCamp} />);
+    wrap();
     const uploadButtons = screen.getAllByText('Upload');
     expect(uploadButtons.length).toBe(2);
     for (const b of uploadButtons) {
@@ -165,10 +275,7 @@ describe('CampEditForm scaffold', () => {
   });
 
   it('renders lunch_policy + extended_care_policy as live (not placeholder) textareas', () => {
-    // These are plain text — no JSON editor needed; the morning's wiring
-    // can take them straight from the controlled state. Confirm both
-    // labels exist + a textarea sits below each (live, not disabled).
-    const { container } = render(<CampEditForm camp={baseCamp} />);
+    const { container } = wrap();
     expect(screen.getByText(/^Lunch policy$/i)).toBeInTheDocument();
     expect(screen.getByText(/^Extended care policy$/i)).toBeInTheDocument();
     // Textarea count: description (1) + 4 JSON placeholders + lunch + extended

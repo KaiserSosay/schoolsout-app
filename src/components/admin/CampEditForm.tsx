@@ -1,26 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
+import { updateCampSimpleFields } from '@/app/[locale]/admin/camps/[slug]/edit/actions';
 
-// Phase B prep — admin camp edit form SCAFFOLD.
+// Phase B Step 2 — admin camp edit form.
 //
-// Renders every editable column on the camps table as a placeholder
-// labeled input. Submit is intentionally disabled with a tooltip; the
-// morning's work picks the highest-impact 6-10 fields and replaces
-// those placeholders with real components + a working form action.
+// The form is now MIXED-MODE:
+//   1. A small "Quick edit" form on top wires 5 fields (tagline,
+//      phone, email, registration_url, is_featured) to a real server
+//      action with inline validation + success feedback.
+//   2. The remaining columns stay as the scaffold from the overnight
+//      commit (87ba11e) — placeholders with a disabled submit. The
+//      morning's next steps wire those, one section at a time.
 //
-// Why a flat list instead of grouped sections: Code makes ZERO design
-// decisions tonight. Rasheid groups + reorders in the morning once
-// he picks which fields go where. Spec for that decision lives in
-// docs/plans/camp-data-surfaces-audit-2026-04-27.md.
+// We keep both surfaces in this single component so the page route
+// doesn't need to change and so it's obvious to a reviewer where the
+// "wired" boundary lives.
 
 type Camp = {
   id: string;
   slug: string;
   name: string;
   description: string | null;
-  // Phase B columns may not exist yet (migration 054 is committed but
-  // not applied — typeof undefined when reading a fresh prod row).
   tagline?: string | null;
   phone: string | null;
   email?: string | null;
@@ -58,6 +60,8 @@ const labelCls =
 
 const sectionLabelCls =
   'mt-6 mb-2 text-xs font-black uppercase tracking-wider text-brand-purple';
+
+const TAGLINE_MAX = 200;
 
 function Field({
   label,
@@ -103,18 +107,172 @@ function PlaceholderArrayField({ label, hint }: { label: string; hint: string })
   );
 }
 
-export function CampEditForm({ camp }: { camp: Camp }) {
-  // Form state lives in useState so admins can tweak placeholders
-  // visually before Rasheid wires the real submit. Nothing persists.
-  const [name, setName] = useState(camp.name ?? '');
+function QuickEditForm({ camp }: { camp: Camp }) {
+  const t = useTranslations('admin.camps.edit');
+
   const [tagline, setTagline] = useState(camp.tagline ?? '');
-  const [description, setDescription] = useState(camp.description ?? '');
   const [phone, setPhone] = useState(camp.phone ?? '');
   const [email, setEmail] = useState(camp.email ?? '');
-  const [websiteUrl, setWebsiteUrl] = useState(camp.website_url ?? '');
   const [registrationUrl, setRegistrationUrl] = useState(
     camp.registration_url ?? '',
   );
+  const [isFeatured, setIsFeatured] = useState(camp.is_featured ?? false);
+
+  const [isPending, startTransition] = useTransition();
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setErrors({});
+    setSavedAt(null);
+
+    startTransition(async () => {
+      const result = await updateCampSimpleFields({
+        slug: camp.slug,
+        tagline: tagline.trim() || null,
+        phone: phone.trim() || null,
+        email: email.trim() || null,
+        registration_url: registrationUrl.trim() || null,
+        is_featured: isFeatured,
+      });
+
+      if (result.ok) {
+        setSavedAt(new Date());
+      } else {
+        setErrors(result.errors);
+      }
+    });
+  }
+
+  return (
+    <form
+      data-testid="camp-quick-edit-form"
+      onSubmit={handleSubmit}
+      className="space-y-4 rounded-2xl border border-cream-border bg-white p-5"
+    >
+      <div>
+        <h3 className="text-base font-black text-ink">{t('quickEditTitle')}</h3>
+        <p className="text-sm text-muted">{t('quickEditBody')}</p>
+      </div>
+
+      <Field
+        label={t('fields.tagline')}
+        hint={`${tagline.length}/${TAGLINE_MAX}`}
+      >
+        <input
+          data-testid="quick-edit-tagline"
+          type="text"
+          value={tagline}
+          onChange={(e) => setTagline(e.target.value)}
+          maxLength={TAGLINE_MAX}
+          placeholder={t('fields.taglinePlaceholder')}
+          className={inputCls}
+        />
+        {errors.tagline ? (
+          <p className="mt-1 text-sm font-semibold text-red-700">
+            {errors.tagline}
+          </p>
+        ) : null}
+      </Field>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <Field label={t('fields.phone')}>
+          <input
+            data-testid="quick-edit-phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="(305) 446-0846"
+            className={inputCls}
+          />
+        </Field>
+        <Field label={t('fields.email')}>
+          <input
+            data-testid="quick-edit-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="info@example.com"
+            className={inputCls}
+          />
+          {errors.email ? (
+            <p className="mt-1 text-sm font-semibold text-red-700">
+              {errors.email}
+            </p>
+          ) : null}
+        </Field>
+      </div>
+
+      <Field label={t('fields.registrationUrl')}>
+        <input
+          data-testid="quick-edit-registration-url"
+          type="url"
+          value={registrationUrl}
+          onChange={(e) => setRegistrationUrl(e.target.value)}
+          placeholder="https://…"
+          className={inputCls}
+        />
+        {errors.registration_url ? (
+          <p className="mt-1 text-sm font-semibold text-red-700">
+            {errors.registration_url}
+          </p>
+        ) : null}
+      </Field>
+
+      <div className="flex items-center gap-3 rounded-xl border border-cream-border bg-cream/40 p-3">
+        <input
+          data-testid="quick-edit-is-featured"
+          id="quick-edit-is-featured"
+          type="checkbox"
+          checked={isFeatured}
+          onChange={(e) => setIsFeatured(e.target.checked)}
+          className="h-5 w-5"
+        />
+        <label
+          htmlFor="quick-edit-is-featured"
+          className="flex-1 cursor-pointer text-sm font-bold text-ink"
+        >
+          {t('fields.isFeatured')}
+        </label>
+        <p className="text-xs text-muted">{t('fields.isFeaturedHelp')}</p>
+      </div>
+
+      {errors._form ? (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+          {errors._form}
+        </p>
+      ) : null}
+
+      {savedAt && Object.keys(errors).length === 0 ? (
+        <p
+          data-testid="quick-edit-saved"
+          className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700"
+        >
+          {t('saved', { time: savedAt.toLocaleTimeString() })}
+        </p>
+      ) : null}
+
+      <div className="flex justify-end pt-1">
+        <button
+          type="submit"
+          data-testid="quick-edit-submit"
+          disabled={isPending}
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2 text-sm font-black text-cream disabled:opacity-60"
+        >
+          {isPending ? t('actions.saving') : t('actions.save')}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+function ScaffoldForm({ camp }: { camp: Camp }) {
+  // Form state lives in useState so admins can tweak placeholders
+  // visually before each section is wired. Nothing here persists.
+  const [name, setName] = useState(camp.name ?? '');
+  const [description, setDescription] = useState(camp.description ?? '');
+  const [websiteUrl, setWebsiteUrl] = useState(camp.website_url ?? '');
   const [address, setAddress] = useState(camp.address ?? '');
   const [neighborhood, setNeighborhood] = useState(camp.neighborhood ?? '');
   const [city, setCity] = useState(camp.city ?? '');
@@ -125,7 +283,6 @@ export function CampEditForm({ camp }: { camp: Camp }) {
     (camp.categories ?? []).join(', '),
   );
   const [verified, setVerified] = useState(camp.verified);
-  const [isFeatured, setIsFeatured] = useState(camp.is_featured);
   const [isLaunchPartner, setIsLaunchPartner] = useState(camp.is_launch_partner);
   const [featuredUntil, setFeaturedUntil] = useState(camp.featured_until ?? '');
   const [launchPartnerUntil, setLaunchPartnerUntil] = useState(
@@ -144,7 +301,7 @@ export function CampEditForm({ camp }: { camp: Camp }) {
       className="space-y-5 rounded-2xl border border-cream-border bg-white p-5"
       onSubmit={(e) => {
         // Belt-and-suspenders: the submit button is disabled, but if a
-        // morning patch enables it before wiring a real handler, this
+        // patch enables it before wiring a real handler, this
         // preventDefault keeps the form from POSTing to nowhere.
         e.preventDefault();
       }}
@@ -154,8 +311,8 @@ export function CampEditForm({ camp }: { camp: Camp }) {
         className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-900"
         data-testid="scaffold-banner"
       >
-        ⚠ Scaffold mode — fields not yet wired. Submit is disabled. Rasheid wires
-        real components in the morning. Spec:{' '}
+        ⚠ Scaffold mode — fields below not yet wired. Submit is disabled.
+        Sections wire one at a time. Spec:{' '}
         <code className="font-mono">
           docs/plans/camp-data-surfaces-audit-2026-04-27.md
         </code>
@@ -178,18 +335,6 @@ export function CampEditForm({ camp }: { camp: Camp }) {
         </Field>
       </div>
 
-      <Field
-        label="Tagline (Phase B)"
-        hint="Short one-line description — shows on cards and search results."
-      >
-        <input
-          value={tagline}
-          onChange={(e) => setTagline(e.target.value)}
-          className={inputCls}
-          placeholder="e.g. 22+ years across 5 Miami campuses — swimming, field trips, electives."
-        />
-      </Field>
-
       <Field label="Description (markdown)" hint="Long-form description. Markdown supported.">
         <textarea
           value={description}
@@ -201,34 +346,11 @@ export function CampEditForm({ camp }: { camp: Camp }) {
 
       <p className={sectionLabelCls}>Contact</p>
       <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Phone">
-          <input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className={inputCls}
-          />
-        </Field>
-        <Field label="Email">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={inputCls}
-          />
-        </Field>
         <Field label="Website URL">
           <input
             type="url"
             value={websiteUrl}
             onChange={(e) => setWebsiteUrl(e.target.value)}
-            className={inputCls}
-          />
-        </Field>
-        <Field label="Registration URL">
-          <input
-            type="url"
-            value={registrationUrl}
-            onChange={(e) => setRegistrationUrl(e.target.value)}
             className={inputCls}
           />
         </Field>
@@ -305,7 +427,7 @@ export function CampEditForm({ camp }: { camp: Camp }) {
       </Field>
 
       <p className={sectionLabelCls}>Trust + Visibility flags</p>
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-2">
         <label className="flex items-center gap-2 text-sm font-bold text-ink">
           <input
             type="checkbox"
@@ -313,14 +435,6 @@ export function CampEditForm({ camp }: { camp: Camp }) {
             onChange={(e) => setVerified(e.target.checked)}
           />
           verified
-        </label>
-        <label className="flex items-center gap-2 text-sm font-bold text-ink">
-          <input
-            type="checkbox"
-            checked={isFeatured}
-            onChange={(e) => setIsFeatured(e.target.checked)}
-          />
-          is_featured
         </label>
         <label className="flex items-center gap-2 text-sm font-bold text-ink">
           <input
@@ -452,5 +566,25 @@ export function CampEditForm({ camp }: { camp: Camp }) {
         </button>
       </div>
     </form>
+  );
+}
+
+export function CampEditForm({ camp }: { camp: Camp }) {
+  const t = useTranslations('admin.camps.edit');
+
+  return (
+    <div className="space-y-6">
+      <div
+        role="status"
+        data-testid="mixed-mode-banner"
+        className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900"
+      >
+        {t('bannerMixed')}
+      </div>
+
+      <QuickEditForm camp={camp} />
+
+      <ScaffoldForm camp={camp} />
+    </div>
   );
 }

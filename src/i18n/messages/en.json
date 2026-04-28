@@ -1362,6 +1362,32 @@
         "paid": "Paid",
         "active": "Active"
       }
+    },
+    "camps": {
+      "edit": {
+        "bannerMixed": "Mixed-mode form: 5 fields below are wired and editable. Other fields are still scaffold-mode (placeholders only).",
+        "quickEditTitle": "Quick edit",
+        "quickEditBody": "Tagline, contact, registration link, and featured toggle.",
+        "saved": "✓ Saved at {time}",
+        "fields": {
+          "tagline": "Tagline",
+          "taglinePlaceholder": "One-sentence camp summary for cards and search",
+          "phone": "Phone",
+          "email": "Email",
+          "registrationUrl": "Registration URL",
+          "isFeatured": "Featured camp",
+          "isFeaturedHelp": "Sets featured_until to 90 days if not already future-dated"
+        },
+        "actions": {
+          "save": "Save",
+          "saving": "Saving…"
+        },
+        "errors": {
+          "taglineTooLong": "Tagline must be 200 characters or fewer",
+          "invalidEmail": "Invalid email format",
+          "invalidUrl": "Registration URL must start with http:// or https://"
+        }
+      }
     }
   },
   "public": {

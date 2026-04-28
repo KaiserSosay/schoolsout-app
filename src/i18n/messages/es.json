@@ -1362,6 +1362,32 @@
         "paid": "Paid",
         "active": "Active"
       }
+    },
+    "camps": {
+      "edit": {
+        "bannerMixed": "Formulario mixto: los 5 campos de abajo están conectados y son editables. Los demás siguen en modo borrador (solo marcadores).",
+        "quickEditTitle": "Edición rápida",
+        "quickEditBody": "Lema, contacto, enlace de inscripción y toggle de destacado.",
+        "saved": "✓ Guardado a las {time}",
+        "fields": {
+          "tagline": "Lema",
+          "taglinePlaceholder": "Resumen del campamento en una frase, para tarjetas y búsqueda",
+          "phone": "Teléfono",
+          "email": "Correo electrónico",
+          "registrationUrl": "URL de inscripción",
+          "isFeatured": "Campamento destacado",
+          "isFeaturedHelp": "Fija featured_until a 90 días si aún no tiene fecha futura"
+        },
+        "actions": {
+          "save": "Guardar",
+          "saving": "Guardando…"
+        },
+        "errors": {
+          "taglineTooLong": "El lema debe tener 200 caracteres o menos",
+          "invalidEmail": "Formato de correo no válido",
+          "invalidUrl": "La URL de inscripción debe empezar por http:// o https://"
+        }
+      }
     }
   },
   "public": {
