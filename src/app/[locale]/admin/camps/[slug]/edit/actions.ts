@@ -25,6 +25,8 @@ export type UpdateCampSimpleFieldsInput = {
   email: string | null;
   registration_url: string | null;
   is_featured: boolean;
+  logo_url: string | null;
+  hero_url: string | null;
 };
 
 export type UpdateCampSimpleFieldsResult =
@@ -43,6 +45,8 @@ export async function updateCampSimpleFields(
   const phone = input.phone?.trim() || null;
   const email = input.email?.trim() || null;
   const registrationUrl = input.registration_url?.trim() || null;
+  const logoUrl = input.logo_url?.trim() || null;
+  const heroUrl = input.hero_url?.trim() || null;
 
   if (tagline && tagline.length > TAGLINE_MAX) {
     errors.tagline = `Tagline must be ${TAGLINE_MAX} characters or fewer`;
@@ -53,6 +57,12 @@ export async function updateCampSimpleFields(
   if (registrationUrl && !URL_RE.test(registrationUrl)) {
     errors.registration_url =
       'Registration URL must start with http:// or https://';
+  }
+  if (logoUrl && !URL_RE.test(logoUrl)) {
+    errors.logo_url = 'Logo URL must start with http:// or https://';
+  }
+  if (heroUrl && !URL_RE.test(heroUrl)) {
+    errors.hero_url = 'Hero URL must start with http:// or https://';
   }
   if (Object.keys(errors).length > 0) {
     return { ok: false, errors };
@@ -81,6 +91,8 @@ export async function updateCampSimpleFields(
     email,
     registration_url: registrationUrl,
     is_featured: input.is_featured,
+    logo_url: logoUrl,
+    hero_url: heroUrl,
   };
 
   if (input.is_featured) {

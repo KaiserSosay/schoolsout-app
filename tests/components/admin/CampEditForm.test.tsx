@@ -124,6 +124,8 @@ describe('CampEditForm — wired Quick edit form', () => {
       email: 'mwilburn@firstcoralgables.org',
       registration_url: 'https://www.thegrowingplace.school/summer-camp',
       is_featured: true,
+      logo_url: null,
+      hero_url: null,
     });
   });
 
@@ -168,6 +170,157 @@ describe('CampEditForm — wired Quick edit form', () => {
     fireEvent.click(screen.getByTestId('quick-edit-submit'));
     await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     expect(updateMock.mock.calls[0][0].is_featured).toBe(false);
+  });
+});
+
+describe('CampEditForm — image upload fields (logo + hero)', () => {
+  it('renders both logo and hero sections', () => {
+    wrap();
+    expect(screen.getByTestId('quick-edit-logo-section')).toBeInTheDocument();
+    expect(screen.getByTestId('quick-edit-hero-section')).toBeInTheDocument();
+  });
+
+  it('logo URL input updates state and shows preview', () => {
+    wrap();
+    const url = 'https://example.com/logo.png';
+    fireEvent.change(screen.getByTestId('quick-edit-logo-url'), {
+      target: { value: url },
+    });
+    const preview = screen.getByTestId(
+      'quick-edit-logo-preview',
+    ) as HTMLImageElement;
+    expect(preview.src).toBe(url);
+  });
+
+  it('hero URL input updates state and shows preview', () => {
+    wrap();
+    const url = 'https://example.com/hero.jpg';
+    fireEvent.change(screen.getByTestId('quick-edit-hero-url'), {
+      target: { value: url },
+    });
+    const preview = screen.getByTestId(
+      'quick-edit-hero-preview',
+    ) as HTMLImageElement;
+    expect(preview.src).toBe(url);
+  });
+
+  it('Remove button clears the URL without triggering save', () => {
+    wrap();
+    fireEvent.change(screen.getByTestId('quick-edit-logo-url'), {
+      target: { value: 'https://example.com/logo.png' },
+    });
+    fireEvent.click(screen.getByTestId('quick-edit-logo-remove'));
+    expect(
+      (screen.getByTestId('quick-edit-logo-url') as HTMLInputElement).value,
+    ).toBe('');
+    expect(screen.queryByTestId('quick-edit-logo-preview')).toBeNull();
+    expect(updateMock).not.toHaveBeenCalled();
+  });
+
+  it('submits the typed-in logo + hero URLs to the action', async () => {
+    updateMock.mockResolvedValue({ ok: true });
+    wrap();
+    fireEvent.change(screen.getByTestId('quick-edit-logo-url'), {
+      target: { value: 'https://example.com/logo.png' },
+    });
+    fireEvent.change(screen.getByTestId('quick-edit-hero-url'), {
+      target: { value: 'https://example.com/hero.jpg' },
+    });
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    const call = updateMock.mock.calls[0][0];
+    expect(call.logo_url).toBe('https://example.com/logo.png');
+    expect(call.hero_url).toBe('https://example.com/hero.jpg');
+  });
+
+  it('renders the server-side logo_url validation error when returned', async () => {
+    updateMock.mockResolvedValue({
+      ok: false,
+      errors: { logo_url: 'Logo URL must start with http:// or https://' },
+    });
+    wrap();
+    fireEvent.click(screen.getByTestId('quick-edit-submit'));
+    await waitFor(() =>
+      expect(
+        screen.getByText('Logo URL must start with http:// or https://'),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('blocks oversized logo uploads client-side before fetch', async () => {
+    const fetchSpy = vi
+      .spyOn(global, 'fetch')
+      .mockResolvedValue(new Response(null, { status: 200 }));
+    wrap();
+    const big = new File([new Uint8Array(700 * 1024)], 'big.png', {
+      type: 'image/png',
+    });
+    const input = screen.getByTestId(
+      'quick-edit-logo-file-input',
+    ) as HTMLInputElement;
+    Object.defineProperty(input, 'files', { value: [big], configurable: true });
+    fireEvent.change(input);
+    await waitFor(() =>
+      expect(screen.getByTestId('quick-edit-logo-upload-error')).toHaveTextContent(
+        /512 KB or smaller/i,
+      ),
+    );
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
+  });
+
+  it('writes the returned URL into state after a successful upload', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          ok: true,
+          url: 'https://supabase.example/storage/v1/object/public/camp-logos/the-growing-place-summer-camp/123.png',
+        }),
+        { status: 200 },
+      ),
+    );
+    wrap();
+    const tinyPng = new File([new Uint8Array(100)], 'logo.png', {
+      type: 'image/png',
+    });
+    const input = screen.getByTestId(
+      'quick-edit-logo-file-input',
+    ) as HTMLInputElement;
+    Object.defineProperty(input, 'files', {
+      value: [tinyPng],
+      configurable: true,
+    });
+    fireEvent.change(input);
+    await waitFor(() =>
+      expect(
+        (screen.getByTestId('quick-edit-logo-url') as HTMLInputElement).value,
+      ).toContain('camp-logos/the-growing-place-summer-camp/'),
+    );
+    fetchSpy.mockRestore();
+  });
+
+  it('renders a localized error when the upload route returns a known error code', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ error: 'too_large' }), { status: 400 }),
+    );
+    wrap();
+    const tinyPng = new File([new Uint8Array(100)], 'logo.png', {
+      type: 'image/png',
+    });
+    const input = screen.getByTestId(
+      'quick-edit-logo-file-input',
+    ) as HTMLInputElement;
+    Object.defineProperty(input, 'files', {
+      value: [tinyPng],
+      configurable: true,
+    });
+    fireEvent.change(input);
+    await waitFor(() =>
+      expect(screen.getByTestId('quick-edit-logo-upload-error')).toHaveTextContent(
+        /too large/i,
+      ),
+    );
+    fetchSpy.mockRestore();
   });
 });
 
@@ -265,13 +418,9 @@ describe('CampEditForm — scaffold form (still placeholder)', () => {
     expect(placeholders.length).toBe(2);
   });
 
-  it('renders Phase B image-upload placeholders for logo + hero', () => {
+  it('no longer renders the disabled "Upload" scaffold buttons (image fields are now wired in Quick Edit)', () => {
     wrap();
-    const uploadButtons = screen.getAllByText('Upload');
-    expect(uploadButtons.length).toBe(2);
-    for (const b of uploadButtons) {
-      expect(b).toBeDisabled();
-    }
+    expect(screen.queryByText('Upload')).toBeNull();
   });
 
   it('renders lunch_policy + extended_care_policy as live (not placeholder) textareas', () => {

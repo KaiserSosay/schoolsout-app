@@ -45,6 +45,7 @@ export type UnifiedCampCardCamp = CompletenessCampShape & {
   featured_until?: string | null;
   is_open_this_closure?: boolean;
   tagline?: string | null;
+  logo_url?: string | null;
   // App-mode enrichment (ignored elsewhere)
   description?: string | null;
   distance_miles?: number | null;
@@ -171,12 +172,25 @@ function PublicCard({
         aria-label={t('viewCamp', { name: camp.name })}
       >
         <div className="flex items-start justify-between gap-2">
-          <h3
-            className="truncate text-base font-black text-ink"
-            style={{ letterSpacing: '-0.01em' }}
-          >
-            {camp.name}
-          </h3>
+          <div className="flex min-w-0 items-center gap-2">
+            {camp.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={camp.logo_url}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="h-8 w-8 shrink-0 rounded-lg border border-cream-border bg-white object-cover"
+                data-testid="camp-card-logo"
+              />
+            ) : null}
+            <h3
+              className="truncate text-base font-black text-ink"
+              style={{ letterSpacing: '-0.01em' }}
+            >
+              {camp.name}
+            </h3>
+          </div>
           {/* Spacer reserved for the absolute-positioned save star below.
               Keeps the title from running under the disabled control. */}
           <span aria-hidden className="invisible shrink-0 text-xl">
@@ -360,6 +374,22 @@ function AppCard({
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
+            {camp.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={camp.logo_url}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className={
+                  'h-8 w-8 shrink-0 rounded-lg object-cover ' +
+                  (mode === 'parents'
+                    ? 'border border-cream-border bg-white'
+                    : 'border border-white/20 bg-white/10')
+                }
+                data-testid="camp-card-logo"
+              />
+            ) : null}
             <h3
               className={'truncate text-base font-black ' + titleCls}
               style={{ letterSpacing: '-0.01em' }}

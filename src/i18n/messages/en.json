@@ -1374,6 +1374,7 @@
         "quickEditTitle": "Quick edit",
         "quickEditBody": "Tagline, contact, registration link, and featured toggle.",
         "saved": "✓ Saved at {time}",
+        "orSeparator": "or",
         "fields": {
           "tagline": "Tagline",
           "taglinePlaceholder": "One-sentence camp summary for cards and search",
@@ -1381,16 +1382,38 @@
           "email": "Email",
           "registrationUrl": "Registration URL",
           "isFeatured": "Featured camp",
-          "isFeaturedHelp": "Sets featured_until to 90 days if not already future-dated"
+          "isFeaturedHelp": "Sets featured_until to 90 days if not already future-dated",
+          "logo": "Logo",
+          "logoHelp": "Square image, ~512 KB max. PNG, JPEG, WebP, or SVG.",
+          "logoPasteUrl": "Paste logo URL",
+          "hero": "Hero photo",
+          "heroHelp": "16:9 aspect ratio works best, ~2 MB max. PNG, JPEG, or WebP.",
+          "heroPasteUrl": "Paste hero photo URL"
         },
         "actions": {
           "save": "Save",
-          "saving": "Saving…"
+          "saving": "Saving…",
+          "uploadLogoFile": "Upload a logo file",
+          "uploadHeroFile": "Upload a hero photo",
+          "uploading": "Uploading…",
+          "removeLogo": "Remove",
+          "removeHero": "Remove"
         },
         "errors": {
           "taglineTooLong": "Tagline must be 200 characters or fewer",
           "invalidEmail": "Invalid email format",
-          "invalidUrl": "Registration URL must start with http:// or https://"
+          "invalidUrl": "Registration URL must start with http:// or https://",
+          "logoTooLarge": "Logo must be 512 KB or smaller",
+          "heroTooLarge": "Hero photo must be 2 MB or smaller",
+          "upload": {
+            "unsupported_type": "File type not supported",
+            "too_large": "File is too large",
+            "invalid_bucket": "Invalid image kind",
+            "invalid_slug": "Invalid camp slug",
+            "no_file": "Choose a file before uploading",
+            "expected_multipart": "Upload format error",
+            "generic": "Upload failed. Try again or paste a URL instead."
+          }
         }
       }
     }

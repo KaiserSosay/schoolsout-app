@@ -219,6 +219,78 @@ describe('UnifiedCampDetail — tagline rendering', () => {
   });
 });
 
+describe('UnifiedCampDetail — hero image', () => {
+  const HERO = 'https://example.com/hero.jpg';
+
+  it('renders hero_url when present (public mode)', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, hero_url: HERO }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    const img = screen.getByTestId('camp-detail-hero-image') as HTMLImageElement;
+    expect(img.src).toBe(HERO);
+  });
+
+  it('renders hero_url when present (app mode)', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, hero_url: HERO }}
+        mode="app"
+        locale="en"
+        isSaved={false}
+      />,
+      { withModeProvider: true },
+    );
+    const img = screen.getByTestId('camp-detail-hero-image') as HTMLImageElement;
+    expect(img.src).toBe(HERO);
+  });
+
+  it('falls back to image_url when hero_url is null but image_url is set', () => {
+    const IMG = 'https://example.com/legacy.jpg';
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, hero_url: null, image_url: IMG }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    expect(
+      (screen.getByTestId('camp-detail-hero-image') as HTMLImageElement).src,
+    ).toBe(IMG);
+  });
+
+  it('renders the gradient when both hero_url and image_url are null', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, hero_url: null, image_url: null }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-detail-hero-image')).toBeNull();
+  });
+
+  it('admin Edit pill still renders on top of the hero image', () => {
+    withProviders(
+      <UnifiedCampDetail
+        camp={{ ...baseCamp, hero_url: HERO }}
+        mode="public"
+        locale="en"
+        isAdmin
+      />,
+      { withModeProvider: false },
+    );
+    expect(screen.getByTestId('camp-detail-admin-edit')).toBeInTheDocument();
+    expect(screen.getByTestId('camp-detail-hero-image')).toBeInTheDocument();
+  });
+});
+
 describe('UnifiedCampDetail — Edit pill (admin only)', () => {
   it('renders Edit pill in public mode when isAdmin=true', () => {
     withProviders(

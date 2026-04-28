@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { updateCampSimpleFields } from '@/app/[locale]/admin/camps/[slug]/edit/actions';
 
@@ -107,6 +107,183 @@ function PlaceholderArrayField({ label, hint }: { label: string; hint: string })
   );
 }
 
+type ImageKind = 'logo' | 'hero';
+
+const IMAGE_BUCKETS: Record<ImageKind, 'camp-logos' | 'camp-heroes'> = {
+  logo: 'camp-logos',
+  hero: 'camp-heroes',
+};
+
+const IMAGE_LIMITS: Record<ImageKind, number> = {
+  logo: 512 * 1024,
+  hero: 2 * 1024 * 1024,
+};
+
+const IMAGE_ACCEPT: Record<ImageKind, string> = {
+  logo: 'image/png,image/jpeg,image/webp,image/svg+xml',
+  hero: 'image/png,image/jpeg,image/webp',
+};
+
+// Picks a translation key for an upload error returned by the route
+// handler. Falls back to a generic key when we don't recognize the code
+// — keeps the UI friendly even if the server adds new error names.
+function uploadErrorKey(code: string): string {
+  const known = new Set([
+    'unsupported_type',
+    'too_large',
+    'invalid_bucket',
+    'invalid_slug',
+    'no_file',
+    'expected_multipart',
+  ]);
+  return known.has(code) ? `errors.upload.${code}` : 'errors.upload.generic';
+}
+
+function ImageUploadField({
+  kind,
+  slug,
+  campName,
+  value,
+  onChange,
+  urlError,
+}: {
+  kind: ImageKind;
+  slug: string;
+  campName: string;
+  value: string;
+  onChange: (next: string) => void;
+  urlError?: string;
+}) {
+  const t = useTranslations('admin.camps.edit');
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const previewCls =
+    kind === 'logo'
+      ? 'h-16 w-16 rounded-xl border border-cream-border bg-white object-cover'
+      : 'aspect-video w-full max-w-md rounded-xl border border-cream-border bg-white object-cover';
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-upload of the same file
+    if (!file) return;
+
+    setUploadError(null);
+    if (file.size > IMAGE_LIMITS[kind]) {
+      setUploadError(t(`errors.${kind}TooLarge`));
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.set('bucket', IMAGE_BUCKETS[kind]);
+      form.set('image', file);
+      const res = await fetch(`/api/admin/camps/${slug}/upload-image`, {
+        method: 'POST',
+        body: form,
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        url?: string;
+        error?: string;
+      };
+      if (!res.ok || !data.ok || !data.url) {
+        const code = data.error ?? 'generic';
+        setUploadError(t(uploadErrorKey(code)));
+        return;
+      }
+      onChange(data.url);
+    } catch {
+      setUploadError(t('errors.upload.generic'));
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div
+      data-testid={`quick-edit-${kind}-section`}
+      className="space-y-3 rounded-2xl border border-cream-border bg-cream/30 p-4"
+    >
+      <div>
+        <h4 className="text-sm font-black text-ink">{t(`fields.${kind}`)}</h4>
+        <p className="mt-1 text-xs text-muted">{t(`fields.${kind}Help`)}</p>
+      </div>
+
+      {value ? (
+        <div className="flex items-start gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={value}
+            alt={`${campName} ${kind}`}
+            className={previewCls}
+            data-testid={`quick-edit-${kind}-preview`}
+          />
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            data-testid={`quick-edit-${kind}-remove`}
+            className="text-xs font-bold text-red-700 hover:underline"
+          >
+            {t(`actions.remove${kind === 'logo' ? 'Logo' : 'Hero'}`)}
+          </button>
+        </div>
+      ) : null}
+
+      <div>
+        <label className="mb-1 block text-xs font-bold text-ink">
+          {t(`fields.${kind}PasteUrl`)}
+        </label>
+        <input
+          data-testid={`quick-edit-${kind}-url`}
+          type="url"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="https://…"
+          className="block min-h-10 w-full rounded-xl border border-cream-border bg-white px-3 py-2 text-sm text-ink"
+        />
+        {urlError ? (
+          <p className="mt-1 text-sm font-semibold text-red-700">{urlError}</p>
+        ) : null}
+      </div>
+
+      <p className="text-center text-xs text-muted">— {t('orSeparator')} —</p>
+
+      <div>
+        <input
+          ref={fileRef}
+          type="file"
+          accept={IMAGE_ACCEPT[kind]}
+          onChange={handleFile}
+          className="hidden"
+          data-testid={`quick-edit-${kind}-file-input`}
+        />
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          data-testid={`quick-edit-${kind}-file-trigger`}
+          className="inline-flex min-h-10 w-full items-center justify-center rounded-xl border-2 border-dashed border-cream-border bg-white px-3 py-2 text-sm font-bold text-ink hover:bg-cream disabled:opacity-60"
+        >
+          {uploading
+            ? t('actions.uploading')
+            : t(`actions.upload${kind === 'logo' ? 'Logo' : 'Hero'}File`)}
+        </button>
+        {uploadError ? (
+          <p
+            className="mt-1 text-sm font-semibold text-red-700"
+            data-testid={`quick-edit-${kind}-upload-error`}
+          >
+            {uploadError}
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function QuickEditForm({ camp }: { camp: Camp }) {
   const t = useTranslations('admin.camps.edit');
 
@@ -117,6 +294,8 @@ function QuickEditForm({ camp }: { camp: Camp }) {
     camp.registration_url ?? '',
   );
   const [isFeatured, setIsFeatured] = useState(camp.is_featured ?? false);
+  const [logoUrl, setLogoUrl] = useState(camp.logo_url ?? '');
+  const [heroUrl, setHeroUrl] = useState(camp.hero_url ?? '');
 
   const [isPending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -135,6 +314,8 @@ function QuickEditForm({ camp }: { camp: Camp }) {
         email: email.trim() || null,
         registration_url: registrationUrl.trim() || null,
         is_featured: isFeatured,
+        logo_url: logoUrl.trim() || null,
+        hero_url: heroUrl.trim() || null,
       });
 
       if (result.ok) {
@@ -155,6 +336,23 @@ function QuickEditForm({ camp }: { camp: Camp }) {
         <h3 className="text-base font-black text-ink">{t('quickEditTitle')}</h3>
         <p className="text-sm text-muted">{t('quickEditBody')}</p>
       </div>
+
+      <ImageUploadField
+        kind="logo"
+        slug={camp.slug}
+        campName={camp.name}
+        value={logoUrl}
+        onChange={setLogoUrl}
+        urlError={errors.logo_url}
+      />
+      <ImageUploadField
+        kind="hero"
+        slug={camp.slug}
+        campName={camp.name}
+        value={heroUrl}
+        onChange={setHeroUrl}
+        urlError={errors.hero_url}
+      />
 
       <Field
         label={t('fields.tagline')}
@@ -288,8 +486,6 @@ function ScaffoldForm({ camp }: { camp: Camp }) {
   const [launchPartnerUntil, setLaunchPartnerUntil] = useState(
     camp.launch_partner_until ?? '',
   );
-  const [logoUrl, setLogoUrl] = useState(camp.logo_url ?? '');
-  const [heroUrl, setHeroUrl] = useState(camp.hero_url ?? '');
   const [lunchPolicy, setLunchPolicy] = useState(camp.lunch_policy ?? '');
   const [extendedCarePolicy, setExtendedCarePolicy] = useState(
     camp.extended_care_policy ?? '',
@@ -461,48 +657,6 @@ function ScaffoldForm({ camp }: { camp: Camp }) {
             onChange={(e) => setLaunchPartnerUntil(e.target.value)}
             className={inputCls}
           />
-        </Field>
-      </div>
-
-      <p className={sectionLabelCls}>Images (Phase B)</p>
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Logo URL" hint="Square (~256x256). Storage bucket: camp-logos.">
-          <div className="flex gap-2">
-            <input
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              className={inputCls}
-              placeholder="https://… or upload"
-            />
-            <button
-              type="button"
-              disabled
-              className="shrink-0 rounded-full bg-ink/30 px-4 py-2 text-xs font-black text-cream"
-              title="Upload UI coming in morning"
-            >
-              Upload
-            </button>
-          </div>
-        </Field>
-        <Field label="Hero URL" hint="16:9 (~1200x675). Storage bucket: camp-heroes.">
-          <div className="flex gap-2">
-            <input
-              type="url"
-              value={heroUrl}
-              onChange={(e) => setHeroUrl(e.target.value)}
-              className={inputCls}
-              placeholder="https://… or upload"
-            />
-            <button
-              type="button"
-              disabled
-              className="shrink-0 rounded-full bg-ink/30 px-4 py-2 text-xs font-black text-cream"
-              title="Upload UI coming in morning"
-            >
-              Upload
-            </button>
-          </div>
         </Field>
       </div>
 

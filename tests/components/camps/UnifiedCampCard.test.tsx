@@ -383,3 +383,60 @@ describe('UnifiedCampCard — tagline rendering', () => {
     expect(el.className).toContain('line-clamp-2');
   });
 });
+
+describe('UnifiedCampCard — logo avatar', () => {
+  const LOGO = 'https://example.com/logo.png';
+
+  it('renders the logo avatar in public mode when logo_url is set', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, logo_url: LOGO }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    const img = screen.getByTestId('camp-card-logo') as HTMLImageElement;
+    expect(img.src).toBe(LOGO);
+    // Decorative — name is right next to it.
+    expect(img.getAttribute('alt')).toBe('');
+    expect(img.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('renders the logo avatar in app mode when logo_url is set', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, logo_url: LOGO }}
+        mode="app"
+        isSaved={false}
+        locale="en"
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.getByTestId('camp-card-logo')).toBeInTheDocument();
+  });
+
+  it('omits the logo avatar when logo_url is null (public)', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, logo_url: null }}
+        mode="public"
+        locale="en"
+      />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-card-logo')).toBeNull();
+  });
+
+  it('omits the logo avatar in wishlist-tile mode regardless', () => {
+    withProviders(
+      <UnifiedCampCard
+        camp={{ ...baseCamp, logo_url: LOGO }}
+        mode="wishlist-tile"
+        locale="en"
+      />,
+      { withModeProvider: true },
+    );
+    expect(screen.queryByTestId('camp-card-logo')).toBeNull();
+  });
+});

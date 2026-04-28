@@ -1374,6 +1374,7 @@
         "quickEditTitle": "Edición rápida",
         "quickEditBody": "Lema, contacto, enlace de inscripción y toggle de destacado.",
         "saved": "✓ Guardado a las {time}",
+        "orSeparator": "o",
         "fields": {
           "tagline": "Lema",
           "taglinePlaceholder": "Resumen del campamento en una frase, para tarjetas y búsqueda",
@@ -1381,16 +1382,38 @@
           "email": "Correo electrónico",
           "registrationUrl": "URL de inscripción",
           "isFeatured": "Campamento destacado",
-          "isFeaturedHelp": "Fija featured_until a 90 días si aún no tiene fecha futura"
+          "isFeaturedHelp": "Fija featured_until a 90 días si aún no tiene fecha futura",
+          "logo": "Logo",
+          "logoHelp": "Imagen cuadrada, ~512 KB máx. PNG, JPEG, WebP o SVG.",
+          "logoPasteUrl": "Pega la URL del logo",
+          "hero": "Foto principal",
+          "heroHelp": "Proporción 16:9 recomendada, ~2 MB máx. PNG, JPEG o WebP.",
+          "heroPasteUrl": "Pega la URL de la foto principal"
         },
         "actions": {
           "save": "Guardar",
-          "saving": "Guardando…"
+          "saving": "Guardando…",
+          "uploadLogoFile": "Subir un archivo de logo",
+          "uploadHeroFile": "Subir una foto principal",
+          "uploading": "Subiendo…",
+          "removeLogo": "Quitar",
+          "removeHero": "Quitar"
         },
         "errors": {
           "taglineTooLong": "El lema debe tener 200 caracteres o menos",
           "invalidEmail": "Formato de correo no válido",
-          "invalidUrl": "La URL de inscripción debe empezar por http:// o https://"
+          "invalidUrl": "La URL de inscripción debe empezar por http:// o https://",
+          "logoTooLarge": "El logo debe pesar 512 KB o menos",
+          "heroTooLarge": "La foto principal debe pesar 2 MB o menos",
+          "upload": {
+            "unsupported_type": "Tipo de archivo no admitido",
+            "too_large": "El archivo es demasiado grande",
+            "invalid_bucket": "Tipo de imagen no válido",
+            "invalid_slug": "Slug de campamento no válido",
+            "no_file": "Elige un archivo antes de subir",
+            "expected_multipart": "Error de formato en la subida",
+            "generic": "La subida falló. Intenta otra vez o pega una URL."
+          }
         }
       }
     }

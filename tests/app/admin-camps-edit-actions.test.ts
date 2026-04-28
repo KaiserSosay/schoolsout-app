@@ -57,6 +57,8 @@ const validInput = {
   email: 'mwilburn@firstcoralgables.org',
   registration_url: 'https://www.thegrowingplace.school/summer-camp',
   is_featured: false,
+  logo_url: null,
+  hero_url: null,
 };
 
 beforeEach(() => {
@@ -229,5 +231,69 @@ describe('updateCampSimpleFields', () => {
     expect(patch.phone).toBeNull();
     expect(patch.email).toBeNull();
     expect(patch.registration_url).toBeNull();
+  });
+
+  it('persists logo_url and hero_url when both are valid http(s) URLs', async () => {
+    const { client, updateSpy } = buildMockClient({
+      current: { featured_until: null },
+    });
+    createServiceMock.mockReturnValue(client as never);
+
+    await updateCampSimpleFields({
+      ...validInput,
+      logo_url: 'https://cdn.example.com/logo.png',
+      hero_url: 'https://cdn.example.com/hero.jpg',
+    });
+
+    const patch = updateSpy.mock.calls[0][0];
+    expect(patch.logo_url).toBe('https://cdn.example.com/logo.png');
+    expect(patch.hero_url).toBe('https://cdn.example.com/hero.jpg');
+  });
+
+  it('coerces empty/blank logo_url and hero_url to null', async () => {
+    const { client, updateSpy } = buildMockClient({
+      current: { featured_until: null },
+    });
+    createServiceMock.mockReturnValue(client as never);
+
+    await updateCampSimpleFields({
+      ...validInput,
+      logo_url: '   ',
+      hero_url: '',
+    });
+
+    const patch = updateSpy.mock.calls[0][0];
+    expect(patch.logo_url).toBeNull();
+    expect(patch.hero_url).toBeNull();
+  });
+
+  it('returns logo_url validation error for non-http URL', async () => {
+    const { client } = buildMockClient({ current: { featured_until: null } });
+    createServiceMock.mockReturnValue(client as never);
+
+    const result = await updateCampSimpleFields({
+      ...validInput,
+      logo_url: 'data:image/png;base64,AAAA',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.logo_url).toBeDefined();
+    }
+  });
+
+  it('returns hero_url validation error for non-http URL', async () => {
+    const { client } = buildMockClient({ current: { featured_until: null } });
+    createServiceMock.mockReturnValue(client as never);
+
+    const result = await updateCampSimpleFields({
+      ...validInput,
+      hero_url: 'cdn.example.com/hero.jpg',
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.hero_url).toBeDefined();
+    }
   });
 });

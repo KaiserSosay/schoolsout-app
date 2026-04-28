@@ -30,6 +30,7 @@ export type UnifiedCampDetailCamp = {
   name: string;
   tagline: string | null;
   description: string | null;
+  hero_url?: string | null;
   ages_min: number | null;
   ages_max: number | null;
   price_tier: '$' | '$$' | '$$$' | null;
@@ -260,17 +261,28 @@ function PublicDetail({
         className="relative overflow-hidden rounded-3xl border border-cream-border bg-white"
         data-testid="unified-camp-detail-public"
       >
-        {camp.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={camp.image_url}
-            alt={camp.name}
-            loading="lazy"
-            className="aspect-[16/9] w-full object-cover"
-          />
-        ) : (
-          <div className="aspect-[16/9] w-full bg-gradient-to-br from-brand-purple via-purple-600 to-blue-600" />
-        )}
+        {(() => {
+          // hero_url is the Phase B admin-uploaded hero. Fall back to the
+          // older image_url column for any camp that already has one (none
+          // today, but the cascade keeps us safe for future imports), then
+          // to the gradient.
+          const hero = camp.hero_url ?? camp.image_url ?? null;
+          if (hero) {
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={hero}
+                alt={camp.name}
+                loading="lazy"
+                className="aspect-[16/9] w-full object-cover"
+                data-testid="camp-detail-hero-image"
+              />
+            );
+          }
+          return (
+            <div className="aspect-[16/9] w-full bg-gradient-to-br from-brand-purple via-purple-600 to-blue-600" />
+          );
+        })()}
 
         {/* Disabled save star — same shape as the logged-in functional
             button, in the same top-right corner. Per Q1 ghost-UI consistency
@@ -440,17 +452,24 @@ function AppDetail({
         className={'relative mt-4 overflow-hidden rounded-3xl ' + cardCls}
         data-testid="unified-camp-detail-app"
       >
-        {camp.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={camp.image_url}
-            alt={camp.name}
-            loading="lazy"
-            className="aspect-[16/9] w-full object-cover"
-          />
-        ) : (
-          <div className="aspect-[16/9] w-full bg-gradient-to-br from-brand-purple via-purple-600 to-blue-600" />
-        )}
+        {(() => {
+          const hero = camp.hero_url ?? camp.image_url ?? null;
+          if (hero) {
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={hero}
+                alt={camp.name}
+                loading="lazy"
+                className="aspect-[16/9] w-full object-cover"
+                data-testid="camp-detail-hero-image"
+              />
+            );
+          }
+          return (
+            <div className="aspect-[16/9] w-full bg-gradient-to-br from-brand-purple via-purple-600 to-blue-600" />
+          );
+        })()}
 
         {isAdmin ? (
           <AdminEditPill

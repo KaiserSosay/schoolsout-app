@@ -33,7 +33,7 @@ export async function generateMetadata({
   const svc = createServiceSupabase();
   const { data } = await svc
     .from('camps')
-    .select('name, tagline, description, neighborhood, ages_min, ages_max, image_url')
+    .select('name, tagline, description, neighborhood, ages_min, ages_max, image_url, hero_url')
     .eq('slug', slug)
     .maybeSingle();
   const camp = data as {
@@ -44,6 +44,7 @@ export async function generateMetadata({
     ages_min: number | null;
     ages_max: number | null;
     image_url: string | null;
+    hero_url: string | null;
   } | null;
   if (!camp) return publicPageMetadata({ locale, path: `/camps/${slug}`, title: "Camp | School's Out!", description: '' });
   // Tagline is the curated, human-written one-liner — when present it's
@@ -68,7 +69,7 @@ export async function generateMetadata({
     path: `/camps/${slug}`,
     title: `${camp.name} — Miami Summer Camps 2026 | School's Out!`,
     description: trimmed,
-    image: camp.image_url ?? `${SITE_URL}/og/camp/${slug}`,
+    image: camp.hero_url ?? camp.image_url ?? `${SITE_URL}/og/camp/${slug}`,
   });
 }
 
@@ -83,7 +84,7 @@ export default async function PublicCampDetailPage({
   const { data } = await svc
     .from('camps')
     .select(
-      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at',
+      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at, logo_url, hero_url',
     )
     .eq('slug', slug)
     .maybeSingle();
