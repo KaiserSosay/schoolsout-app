@@ -38,6 +38,7 @@ type Form = {
   submitted_by_name: string;
   business_name: string;
   camp_name: string;
+  tagline: string;
   website: string;
   phone: string;
   address: string;
@@ -74,6 +75,7 @@ const EMPTY: Form = {
   submitted_by_name: '',
   business_name: '',
   camp_name: '',
+  tagline: '',
   website: '',
   phone: '',
   address: '',
@@ -183,6 +185,7 @@ export function ListYourCampForm() {
         submitted_by_name: form.submitted_by_name.trim() || null,
         business_name: form.business_name.trim(),
         camp_name: form.camp_name.trim(),
+        tagline: form.tagline.trim() || null,
         website: form.website.trim() || null,
         phone: form.phone.trim() || null,
         address: form.address.trim() || null,
@@ -338,6 +341,20 @@ export function ListYourCampForm() {
               className={inputCls + ' mt-1'}
             />
           </div>
+        </div>
+        <div>
+          <label className={labelCls} htmlFor="tagline">
+            {t('tagline')}
+          </label>
+          <input
+            id="tagline"
+            maxLength={200}
+            placeholder={t('taglinePlaceholder')}
+            value={form.tagline}
+            onChange={(e) => update('tagline', e.target.value)}
+            className={inputCls + ' mt-1'}
+          />
+          <p className={helpCls}>{t('why.tagline')}</p>
         </div>
         <div>
           <label className={labelCls} htmlFor="website">

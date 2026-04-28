@@ -1211,6 +1211,8 @@
       "yourName": "Your name (optional)",
       "businessName": "Business name",
       "campName": "Camp / program name",
+      "tagline": "One-line tagline (optional)",
+      "taglinePlaceholder": "What makes your camp special in one sentence",
       "website": "Website",
       "phone": "Phone",
       "address": "Street address",
@@ -1258,6 +1260,7 @@
       "registrationDeadline": "Registration deadline",
       "accommodations": "Special accommodations (allergies, therapy, etc.)",
       "why": {
+        "tagline": "Up to 200 characters. Mom-readable, not marketing-speak.",
         "description": "A clear 2-3 sentence pitch helps parents pick you over a competitor.",
         "phone": "Parents will call to confirm details — listings with a phone get significantly more engagement.",
         "ages": "Parents filter by their kid's age. Missing this hides you from searches that don't match.",

@@ -24,6 +24,10 @@ const schema = z.object({
   submitted_by_name: z.string().trim().max(120).optional().nullable(),
   business_name: z.string().trim().min(1).max(200),
   camp_name: z.string().trim().min(1).max(200),
+  // Optional one-line tagline for the camp listing. Persisted on
+  // camp_applications.tagline (added by migration 057) so it survives
+  // the application → camps promotion path.
+  tagline: z.string().trim().max(200).optional().nullable(),
   website: z.string().trim().url().optional().nullable(),
   phone: z.string().trim().max(40).optional().nullable(),
   address: z.string().trim().max(400).optional().nullable(),
@@ -125,6 +129,7 @@ export async function POST(req: Request) {
       submitted_by_email: d.submitted_by_email,
       submitted_by_name: d.submitted_by_name ?? null,
       business_name: d.business_name,
+      tagline: d.tagline ?? null,
       phone: d.phone ?? null,
       address: d.address ?? null,
       age_min: d.age_min ?? null,

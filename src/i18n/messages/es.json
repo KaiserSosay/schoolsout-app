@@ -1211,6 +1211,8 @@
       "yourName": "Tu nombre (opcional)",
       "businessName": "Nombre del negocio",
       "campName": "Campamento / programa",
+      "tagline": "Lema de una línea (opcional)",
+      "taglinePlaceholder": "Lo que hace especial a tu campamento en una frase",
       "website": "Sitio web",
       "phone": "Teléfono",
       "address": "Dirección",
@@ -1258,6 +1260,7 @@
       "registrationDeadline": "Fecha límite de inscripción",
       "accommodations": "Acomodaciones especiales (alergias, terapia, etc.)",
       "why": {
+        "tagline": "Hasta 200 caracteres. Lenguaje natural, no marketing.",
         "description": "Una descripción clara de 2-3 frases ayuda a los padres a elegirte.",
         "phone": "Los padres llaman para confirmar — listados con teléfono reciben mucho más interés.",
         "ages": "Los padres filtran por edad. Sin esto, no apareces en sus búsquedas.",
