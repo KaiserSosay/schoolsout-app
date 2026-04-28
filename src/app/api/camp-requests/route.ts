@@ -172,10 +172,11 @@ export async function POST(req: Request) {
   if (process.env.RESEND_API_KEY) {
     try {
       const resend = new Resend(env.RESEND_API_KEY);
+      const subjectPrefix = d.locale === 'es' ? 'New camp request [ES]' : 'New camp request';
       await resend.emails.send({
         from: "School's Out! <hello@schoolsout.net>",
         to: env.ADMIN_NOTIFY_EMAIL,
-        subject: `New camp request: ${d.camp_name}`,
+        subject: `${subjectPrefix}: ${d.camp_name}`,
         html: `
 <!doctype html>
 <html>

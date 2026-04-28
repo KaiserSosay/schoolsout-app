@@ -7,6 +7,7 @@ import { celebrate } from '@/lib/confetti';
 
 import { ListYourCampForm } from '@/components/ListYourCampForm';
 import messages from '@/i18n/messages/en.json';
+import esMessages from '@/i18n/messages/es.json';
 
 beforeEach(() => {
   global.fetch = vi
@@ -17,6 +18,14 @@ beforeEach(() => {
 function wrap() {
   return render(
     <NextIntlClientProvider locale="en" messages={messages}>
+      <ListYourCampForm />
+    </NextIntlClientProvider>,
+  );
+}
+
+function wrapEs() {
+  return render(
+    <NextIntlClientProvider locale="es" messages={esMessages}>
       <ListYourCampForm />
     </NextIntlClientProvider>,
   );
@@ -204,6 +213,100 @@ describe('ListYourCampForm — quality accordion', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
     await waitFor(() => expect(celebrate).toHaveBeenCalled());
+  });
+
+  // ES locale coverage — Mom's wife is sending the link to a Spanish-
+  // speaking taekwondo instructor, so /es/list-your-camp must be a
+  // first-class native form (Spanish labels, Spanish success / error,
+  // and Spanish operator content saved character-for-character).
+  describe('ES locale', () => {
+    it('renders core field labels and section headings in Spanish', () => {
+      wrapEs();
+      expect(screen.getByLabelText(/Cuéntanos sobre tu programa/)).toBeInTheDocument();
+      expect(screen.getByLabelText('Nombre del negocio')).toBeInTheDocument();
+      expect(screen.getByLabelText('Campamento / programa')).toBeInTheDocument();
+      expect(screen.getByText('Sobre el campamento')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Enviar solicitud/ }),
+      ).toBeInTheDocument();
+    });
+
+    it('shows the Spanish success card after a 201 submission', async () => {
+      wrapEs();
+      fireEvent.change(screen.getByLabelText('Tu correo'), {
+        target: { value: 'op@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText('Nombre del negocio'), {
+        target: { value: 'Taekwondo Miami' },
+      });
+      fireEvent.change(screen.getByLabelText('Campamento / programa'), {
+        target: { value: 'Campamento de verano' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: /Enviar solicitud/ }));
+      await waitFor(() =>
+        expect(screen.getByText('¡Lo recibimos!')).toBeInTheDocument(),
+      );
+    });
+
+    it('shows the Spanish error message when the server returns 500', async () => {
+      global.fetch = vi
+        .fn()
+        .mockResolvedValue({ ok: false, json: async () => ({ ok: false }) }) as typeof fetch;
+      wrapEs();
+      fireEvent.change(screen.getByLabelText('Tu correo'), {
+        target: { value: 'op@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText('Nombre del negocio'), {
+        target: { value: 'X' },
+      });
+      fireEvent.change(screen.getByLabelText('Campamento / programa'), {
+        target: { value: 'Y' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: /Enviar solicitud/ }));
+      await waitFor(() =>
+        expect(
+          screen.getByText('Algo salió mal. ¿Intentar de nuevo?'),
+        ).toBeInTheDocument(),
+      );
+    });
+
+    it('preserves Spanish content character-for-character in the submitted payload', async () => {
+      wrapEs();
+      const description =
+        'Programa bilingüe de taekwondo para niños de 5 a 12 años. ¡Disciplina, respeto y diversión!';
+      const tagline = 'Taekwondo para niños — disciplina y diversión';
+      fireEvent.change(screen.getByLabelText('Tu correo'), {
+        target: { value: 'sensei@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText('Nombre del negocio'), {
+        target: { value: 'Academia Taekwondo Miami' },
+      });
+      fireEvent.change(screen.getByLabelText('Campamento / programa'), {
+        target: { value: 'Campamento de verano bilingüe' },
+      });
+      fireEvent.change(screen.getByLabelText('Lema de una línea (opcional)'), {
+        target: { value: tagline },
+      });
+      fireEvent.change(screen.getByLabelText('Cuéntanos sobre tu programa'), {
+        target: { value: description },
+      });
+      fireEvent.click(screen.getByRole('button', { name: /Enviar solicitud/ }));
+
+      await waitFor(() => {
+        const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+        expect(fn.mock.calls.length).toBe(1);
+      });
+      const fetchMock = global.fetch as unknown as {
+        mock: { calls: [string, { body: string }][] };
+      };
+      const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+      expect(payload.description).toBe(description);
+      expect(payload.tagline).toBe(tagline);
+      expect(payload.business_name).toBe('Academia Taekwondo Miami');
+      expect(payload.camp_name).toBe('Campamento de verano bilingüe');
+      // Locale flag rides the payload so the API can flag admin email [ES].
+      expect(payload.locale).toBe('es');
+    });
   });
 
   it('drops empty session rows from the submitted payload', async () => {

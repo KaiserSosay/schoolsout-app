@@ -1201,11 +1201,11 @@
   "listYourCamp": {
     "meta": {
       "title": "Registra tu campamento — School's Out!",
-      "description": "¿Tienes un campamento? Agrega tu ficha y padres de Miami te van a encontrar."
+      "description": "¿Tienes un campamento? Agrega tu ficha y los papás de Miami te van a encontrar."
     },
     "eyebrow": "PARA OPERADORES",
     "title": "Registra tu campamento.",
-    "subtitle": "Un formulario. Revisamos en dos días hábiles y te avisamos.",
+    "subtitle": "Un formulario. Revisamos en dos días hábiles y te avisamos sea como sea.",
     "form": {
       "email": "Tu correo",
       "yourName": "Tu nombre (opcional)",
@@ -1225,17 +1225,17 @@
       "description": "Cuéntanos sobre tu programa",
       "submit": "Enviar solicitud",
       "submitting": "Enviando…",
-      "responseTime": "Revisamos en dos días hábiles.",
+      "responseTime": "Revisamos dentro de dos días hábiles.",
       "error": "Algo salió mal. ¿Intentar de nuevo?",
       "success": {
-        "title": "Recibimos tu solicitud.",
-        "subtitle": "Revisamos en dos días hábiles y te escribimos.",
-        "quality": "Calidad del listado al enviar: {pct}%. Puedes enviarnos actualizaciones por correo."
+        "title": "¡Lo recibimos!",
+        "subtitle": "Revisamos dentro de dos días hábiles y te avisamos sea como sea.",
+        "quality": "Calidad de tu listado al enviar: {pct}%. Puedes enviarnos actualizaciones por correo cuando quieras."
       },
       "meter": {
-        "label": "Calidad del listado: {pct}%",
-        "perfect": "Todos los campos completos — lista lista para destacar.",
-        "missing": "Falta aún: {fields}"
+        "label": "Calidad de tu listado: {pct}%",
+        "perfect": "Todos los campos completos — listo para destacar.",
+        "missing": "Aún falta: {fields}"
       },
       "sections": {
         "contact": "Tu información de contacto",
@@ -1261,12 +1261,12 @@
       "accommodations": "Acomodaciones especiales (alergias, terapia, etc.)",
       "why": {
         "tagline": "Hasta 200 caracteres. Lenguaje natural, no marketing.",
-        "description": "Una descripción clara de 2-3 frases ayuda a los padres a elegirte.",
-        "phone": "Los padres llaman para confirmar — listados con teléfono reciben mucho más interés.",
-        "ages": "Los padres filtran por edad. Sin esto, no apareces en sus búsquedas.",
-        "hours": "Los padres necesitan saber la hora de salida para planear su día.",
-        "beforeCare": "Los padres que trabajan buscan específicamente cuidado extendido.",
-        "registrationDeadline": "Recordaremos a los padres suscritos 7 días antes de esta fecha."
+        "description": "Un mensaje claro de 2 a 3 oraciones ayuda a los papás a elegirte sobre la competencia.",
+        "phone": "Los papás llaman para confirmar detalles — los listados con teléfono reciben mucho más interés.",
+        "ages": "Los papás filtran por la edad de su hijo. Sin esto, no apareces en sus búsquedas.",
+        "hours": "Los papás que trabajan necesitan saber la hora de salida para planear el día. Sin esto, siguen buscando.",
+        "beforeCare": "Los papás que trabajan buscan específicamente cuidado extendido.",
+        "registrationDeadline": "Le recordaremos a los papás suscritos 7 días antes de esta fecha."
       },
       "quality": {
         "title": "Mejora la calidad de tu listado (opcional)",
@@ -1274,7 +1274,7 @@
         "photosDeferred": "📷 La carga de fotos llega la próxima semana — estamos finalizando el almacenamiento. Envía tus fotos a hi@schoolsout.net y las añadimos a tu listado.",
         "sessions": {
           "title": "Sesiones",
-          "help": "Lista las semanas o sesiones individuales en las que los padres pueden inscribirse. Las mostramos cuando coinciden con un cierre escolar.",
+          "help": "Lista las semanas o sesiones individuales en las que los papás pueden inscribirse. Las mostramos cuando coinciden con un cierre escolar.",
           "itemTitle": "Sesión {n}",
           "name": "Nombre de la sesión",
           "namePlaceholder": "Semana 1 de verano",
@@ -1293,22 +1293,22 @@
         },
         "testimonials": {
           "label": "Reseñas o testimonios",
-          "placeholder": "Cita uno o dos padres — mostraremos la atribución como 'Madre de campista, 2025'.",
+          "placeholder": "Cita a uno o dos papás — mostraremos la atribución como 'Mamá de campista, 2025'.",
           "counter": "{used} / {max}"
         }
       }
     },
     "whySection": {
-      "title": "Por qué listar tu campamento en School's Out!",
-      "p1": "Los padres de Miami vienen aquí cuando hay cierre — cada vacación, cada receso, cada día de planificación. Nos estamos convirtiendo en el primer lugar que revisan antes de planear.",
+      "title": "¿Por qué publicar tu campamento en School's Out!?",
+      "p1": "Los papás de Miami vienen aquí cuando no hay clases — cada cierre, cada receso, cada día de planificación de los maestros. Nos estamos convirtiendo en el primer lugar que revisan antes de planear.",
       "p2": "Cuando necesitan un campamento, ya están aquí. Sé el primero que encuentren.",
       "bullets": {
-        "now": "Aparece frente a los padres que buscan campamentos ESTA semana, no el año que viene",
+        "now": "Aparece frente a los papás que buscan campamentos ESTA semana, no el año que viene",
         "price": "Listado gratis para siempre — paga $29/mes sólo cuando quieras ser Destacado",
         "verify": "Reverificamos tus horarios y fechas cada 90 días, gratis, para que tu listado se mantenga al día",
         "direct": "Tu enlace de inscripción directo, tu teléfono — sin intermediarios"
       },
-      "kicker": "\"Be here or be square.\" (Estés aquí o quédate fuera.)"
+      "kicker": "O estás aquí, o no estás."
     }
   },
   "admin": {
