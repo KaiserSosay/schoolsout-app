@@ -1239,7 +1239,19 @@
       "meter": {
         "label": "Listing quality: {pct}%",
         "perfect": "Every field filled — top-ranking territory.",
-        "missing": "Still missing: {fields}"
+        "missing": "Still missing: {fields}",
+        "fieldNames": {
+          "phone": "phone",
+          "address": "address",
+          "website_url": "website",
+          "ages": "ages",
+          "hours": "hours",
+          "price": "price",
+          "description": "description",
+          "categories": "categories",
+          "registration_url": "registration link",
+          "registration_deadline": "registration deadline"
+        }
       },
       "sections": {
         "contact": "Your contact info",

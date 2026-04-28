@@ -1239,7 +1239,19 @@
       "meter": {
         "label": "Calidad de tu listado: {pct}%",
         "perfect": "Todos los campos completos — listo para destacar.",
-        "missing": "Aún falta: {fields}"
+        "missing": "Aún falta: {fields}",
+        "fieldNames": {
+          "phone": "teléfono",
+          "address": "dirección",
+          "website_url": "sitio web",
+          "ages": "edades",
+          "hours": "horario",
+          "price": "precio",
+          "description": "descripción",
+          "categories": "categorías",
+          "registration_url": "enlace de inscripción",
+          "registration_deadline": "fecha de inscripción"
+        }
       },
       "sections": {
         "contact": "Tu información de contacto",

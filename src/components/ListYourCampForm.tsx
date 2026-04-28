@@ -300,7 +300,10 @@ export function ListYourCampForm() {
             {completeness.missing.length === 0
               ? t('meter.perfect')
               : t('meter.missing', {
-                  fields: completeness.missing.slice(0, 3).join(', '),
+                  fields: completeness.missing
+                    .slice(0, 3)
+                    .map((k) => t(`meter.fieldNames.${k}` as Parameters<typeof t>[0]))
+                    .join(', '),
                 })}
           </span>
         </div>
