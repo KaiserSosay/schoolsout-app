@@ -70,6 +70,7 @@ type Form = {
   age_max: string;
   description: string;
   categories: string[];
+  categories_other: string;
   price_min_dollars: string;
   price_max_dollars: string;
   // Goal 5 extensions
@@ -107,6 +108,7 @@ const EMPTY: Form = {
   age_max: '',
   description: '',
   categories: [],
+  categories_other: '',
   price_min_dollars: '',
   price_max_dollars: '',
   hours_start: '',
@@ -144,6 +146,17 @@ export function ListYourCampForm() {
   const update = <K extends keyof Form>(k: K, v: Form[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
+  // Chips + parsed "Other" comma list, lowercased + deduped. The API
+  // schema accepts arbitrary strings; we lowercase Other entries to
+  // match the canonical convention from migration 052.
+  const mergedCategories = useMemo(() => {
+    const otherParsed = form.categories_other
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    return Array.from(new Set([...form.categories, ...otherParsed]));
+  }, [form.categories, form.categories_other]);
+
   const completeness = useMemo(() => {
     return computeCompleteness({
       phone: form.phone || null,
@@ -160,7 +173,7 @@ export function ListYourCampForm() {
         ? Math.round(Number(form.price_max_dollars) * 100)
         : null,
       description: form.description || null,
-      categories: form.categories,
+      categories: mergedCategories,
       registration_url: form.registration_url || null,
       registration_deadline: form.registration_deadline || null,
     });
@@ -218,7 +231,7 @@ export function ListYourCampForm() {
         age_min: form.age_min ? Number(form.age_min) : null,
         age_max: form.age_max ? Number(form.age_max) : null,
         description: form.description.trim() || null,
-        categories: form.categories,
+        categories: mergedCategories,
         price_min_cents: form.price_min_dollars
           ? Math.round(Number(form.price_min_dollars) * 100)
           : null,
@@ -655,13 +668,20 @@ export function ListYourCampForm() {
                   type="button"
                   aria-pressed={isActive}
                   data-category={cat}
+                  // Functional setState: two fast clicks must each read the
+                  // latest categories array, not a stale closure value.
+                  // (Earlier shape used `[...form.categories, cat]` and lost
+                  // the first click when operators tapped quickly.)
                   onClick={() =>
-                    update(
-                      'categories',
-                      isActive
-                        ? form.categories.filter((c) => c !== cat)
-                        : [...form.categories, cat],
-                    )
+                    setForm((f) => {
+                      const cur = f.categories;
+                      return {
+                        ...f,
+                        categories: cur.includes(cat)
+                          ? cur.filter((c) => c !== cat)
+                          : [...cur, cat],
+                      };
+                    })
                   }
                   className={chipBase + ' ' + (isActive ? chipActive : chipInactive)}
                 >
@@ -669,6 +689,20 @@ export function ListYourCampForm() {
                 </button>
               );
             })}
+          </div>
+          <div className="mt-3">
+            <label className={labelCls} htmlFor="categories_other">
+              {t('categoriesOtherLabel')}
+            </label>
+            <input
+              id="categories_other"
+              value={form.categories_other}
+              onChange={(e) => update('categories_other', e.target.value)}
+              className={inputCls + ' mt-1'}
+              placeholder={t('categoriesOtherPlaceholder')}
+              data-testid="categories-other-input"
+            />
+            <p className={helpCls}>{t('categoriesOtherHelp')}</p>
           </div>
         </div>
       </Section>

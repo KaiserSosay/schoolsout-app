@@ -309,6 +309,20 @@ describe('ListYourCampForm — quality accordion', () => {
     });
   });
 
+  it('renders all 18 canonical category chips', () => {
+    wrap();
+    const chips = screen
+      .getByTestId('categories-chips')
+      .querySelectorAll('[data-category]');
+    expect(chips.length).toBe(18);
+    // Spot-check core breadth + sub-genres are all present.
+    expect(screen.getByRole('button', { name: 'Sports' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'STEM' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'All-around' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sailing' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Religious' })).toBeInTheDocument();
+  });
+
   it('submits selected categories as an array (chip multi-select)', async () => {
     wrap();
     fireEvent.change(screen.getByLabelText('Your email'), {
@@ -337,6 +351,69 @@ describe('ListYourCampForm — quality accordion', () => {
     };
     const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(payload.categories).toEqual(['sports', 'stem']);
+  });
+
+  it('preserves all chip clicks even when fired in the same tick (race regression)', async () => {
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'X' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Y' },
+    });
+    // Functional setState must read the latest categories on each click —
+    // the prior shape captured a stale `form.categories` closure and only
+    // the last write stuck when an operator tapped chips quickly.
+    const chips = ['Sports', 'Arts', 'STEM', 'Outdoor', 'Nature'];
+    for (const c of chips) {
+      fireEvent.click(screen.getByRole('button', { name: c, pressed: false }));
+    }
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+    await waitFor(() => {
+      const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+      expect(fn.mock.calls.length).toBe(1);
+    });
+    const fetchMock = global.fetch as unknown as {
+      mock: { calls: [string, { body: string }][] };
+    };
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    // All 5 chips must ride the payload.
+    expect(payload.categories).toEqual(
+      expect.arrayContaining(['sports', 'arts', 'stem', 'outdoor', 'nature']),
+    );
+    expect(payload.categories.length).toBe(5);
+  });
+
+  it('merges "Other categories" comma-list into payload + dedupes against chip selections', async () => {
+    wrap();
+    fireEvent.change(screen.getByLabelText('Your email'), {
+      target: { value: 'op@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/Business name/), {
+      target: { value: 'X' },
+    });
+    fireEvent.change(screen.getByLabelText(/Camp \/ program name/), {
+      target: { value: 'Y' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Sports', pressed: false }));
+    fireEvent.change(screen.getByTestId('categories-other-input'), {
+      // "Sports" duplicates the chip; should dedupe. "Robotics" + "BJJ"
+      // are unusual values that wouldn't fit the canonical 18.
+      target: { value: 'Robotics, BJJ, sports' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Send application/ }));
+    await waitFor(() => {
+      const fn = global.fetch as unknown as { mock: { calls: unknown[][] } };
+      expect(fn.mock.calls.length).toBe(1);
+    });
+    const fetchMock = global.fetch as unknown as {
+      mock: { calls: [string, { body: string }][] };
+    };
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(payload.categories).toEqual(['sports', 'robotics', 'bjj']);
   });
 
   it('drops empty session rows from the submitted payload', async () => {
