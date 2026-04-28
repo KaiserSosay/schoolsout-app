@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from '@/components/app/ModeProvider';
 import { SaveCampButton } from '@/components/app/SaveCampButton';
 import { AppBreadcrumb } from '@/components/app/AppBreadcrumb';
+import { CampDescription } from '@/components/camps/CampDescription';
 import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 
 // One detail view shared by /{locale}/camps/{slug} and
@@ -285,9 +286,7 @@ function PublicDetail({
 
           {camp.description ? (
             <section>
-              <p className="text-sm text-ink/80 md:text-base">
-                {camp.description}
-              </p>
+              <CampDescription description={camp.description} />
             </section>
           ) : null}
 
@@ -365,7 +364,6 @@ function AppDetail({
   const warnCls = isParents
     ? 'border border-cream-border bg-white text-muted'
     : 'border border-white/20 bg-white/10 text-white/70';
-  const descCls = isParents ? 'text-ink/80' : 'text-white/80';
   const lastVerifiedDate = camp.last_verified_at
     ? new Date(camp.last_verified_at).toLocaleDateString(
         locale === 'es' ? 'es-US' : 'en-US',
@@ -452,9 +450,7 @@ function AppDetail({
           <FactGrid camp={camp} locale={locale} mode="app" />
 
           {camp.description ? (
-            <p className={'text-sm leading-relaxed ' + descCls}>
-              {camp.description}
-            </p>
+            <CampDescription description={camp.description} darkMode={!isParents} />
           ) : null}
 
           <div className="grid gap-3 md:grid-cols-2">
