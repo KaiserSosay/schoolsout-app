@@ -76,7 +76,7 @@ export function CampsAdminClient({ camps }: { camps: AdminCamp[] }) {
   }, [camps, filterVerified, filterLP, category, search]);
 
   const toggleLaunchPartner = async (camp: AdminCamp) => {
-    const res = await fetch(`/api/admin/camps/${camp.id}/toggle-launch-partner`, {
+    const res = await fetch(`/api/admin/camps/${camp.slug}/toggle-launch-partner`, {
       method: 'POST',
     });
     if (!res.ok) {
@@ -87,7 +87,7 @@ export function CampsAdminClient({ camps }: { camps: AdminCamp[] }) {
   };
 
   const quickFlip = async (camp: AdminCamp, key: 'verified' | 'logistics_verified' | 'is_featured') => {
-    const res = await fetch(`/api/admin/camps/${camp.id}/edit`, {
+    const res = await fetch(`/api/admin/camps/${camp.slug}/edit`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ [key]: !camp[key] }),
@@ -101,7 +101,7 @@ export function CampsAdminClient({ camps }: { camps: AdminCamp[] }) {
 
   const deleteCamp = async (camp: AdminCamp) => {
     if (!window.confirm(`Delete ${camp.name}? Cascades saves & clicks. Cannot be undone.`)) return;
-    const res = await fetch(`/api/admin/camps/${camp.id}/edit`, { method: 'DELETE' });
+    const res = await fetch(`/api/admin/camps/${camp.slug}/edit`, { method: 'DELETE' });
     if (!res.ok) {
       alert(`Delete failed: ${res.status}`);
       return;
@@ -370,7 +370,7 @@ function CampEditor({ camp, onSaved }: { camp: AdminCamp; onSaved: () => void })
     if (lat !== '' && Number.isFinite(latN)) body.latitude = latN;
     if (lng !== '' && Number.isFinite(lngN)) body.longitude = lngN;
 
-    const res = await fetch(`/api/admin/camps/${camp.id}/edit`, {
+    const res = await fetch(`/api/admin/camps/${camp.slug}/edit`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body),

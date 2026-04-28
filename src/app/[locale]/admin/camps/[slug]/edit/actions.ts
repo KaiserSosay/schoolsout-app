@@ -8,7 +8,7 @@ import { requireAdminPage } from '@/lib/auth/requireAdmin';
 // /admin/camps/[slug]/edit. Everything else on that form is still
 // scaffold-mode and submits through other paths.
 //
-// Why a separate action instead of extending /api/admin/camps/[id]/edit:
+// Why a separate action instead of extending /api/admin/camps/[slug]/edit:
 // the existing route patches a long list of legacy fields. Wiring a
 // surgical action here keeps validation tight (R5: don't let unrelated
 // fields ride along) and makes the morning's vertical slice obvious.

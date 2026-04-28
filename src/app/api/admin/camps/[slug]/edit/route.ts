@@ -3,8 +3,13 @@ import { z } from 'zod';
 import { createServiceSupabase } from '@/lib/supabase/service';
 import { requireAdminApi } from '@/lib/auth/requireAdmin';
 
-// PATCH /api/admin/camps/[id]/edit
+// PATCH /api/admin/camps/[slug]/edit
 // Partial update of any camp field. Zod-validated. Returns the updated row.
+//
+// Keyed by slug — the canonical camp identifier across the app's URLs,
+// server actions, storage paths, and public detail surfaces. The old [id]
+// directory was migrated to [slug] in a 2026-04-28 build-fix commit
+// because it collided with the new [slug]/upload-image route.
 //
 // DECISION: We accept undefined = don't touch. Clients send only the fields
 // they want to change (mirrors the existing /api/admin/camps/update pattern).
@@ -14,7 +19,10 @@ const timeStr = z
   .regex(/^\d{2}:\d{2}(:\d{2})?$/)
   .transform((s) => (s.length === 5 ? `${s}:00` : s));
 
-const paramSchema = z.object({ id: z.string().guid() });
+// Slug shape: lowercase alphanumerics + hyphens; alphanumeric start/end. Same
+// pattern enforced by the upload-image route in this directory.
+const SLUG_RE = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+const paramSchema = z.object({ slug: z.string().regex(SLUG_RE) });
 
 const bodySchema = z.object({
   name: z.string().trim().min(1).max(200).optional(),
@@ -53,13 +61,13 @@ const bodySchema = z.object({
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: { slug: string } },
 ) {
   const gate = await requireAdminApi();
   if (!gate.ok) return gate.response;
 
-  const p = paramSchema.safeParse({ id: params.id });
-  if (!p.success) return NextResponse.json({ error: 'invalid_id' }, { status: 400 });
+  const p = paramSchema.safeParse({ slug: params.slug });
+  if (!p.success) return NextResponse.json({ error: 'invalid_slug' }, { status: 400 });
 
   const json = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(json);
@@ -91,7 +99,7 @@ export async function PATCH(
   const { data, error } = await db
     .from('camps')
     .update(patch)
-    .eq('id', p.data.id)
+    .eq('slug', p.data.slug)
     .select(
       'id, slug, name, verified, logistics_verified, is_featured, is_launch_partner',
     )
@@ -107,19 +115,19 @@ export async function PATCH(
   return NextResponse.json({ ok: true, camp: data });
 }
 
-// DELETE /api/admin/camps/[id]/edit — remove the camp entirely. Cascades saves
-// and clicks via FK.
+// DELETE /api/admin/camps/[slug]/edit — remove the camp entirely. Cascades
+// saves and clicks via FK.
 export async function DELETE(
   _req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: { slug: string } },
 ) {
   const gate = await requireAdminApi();
   if (!gate.ok) return gate.response;
-  const p = paramSchema.safeParse({ id: params.id });
-  if (!p.success) return NextResponse.json({ error: 'invalid_id' }, { status: 400 });
+  const p = paramSchema.safeParse({ slug: params.slug });
+  if (!p.success) return NextResponse.json({ error: 'invalid_slug' }, { status: 400 });
 
   const db = createServiceSupabase();
-  const { error } = await db.from('camps').delete().eq('id', p.data.id);
+  const { error } = await db.from('camps').delete().eq('slug', p.data.slug);
   if (error) return NextResponse.json({ error: 'db_error', detail: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }
