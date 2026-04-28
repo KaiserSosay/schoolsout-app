@@ -1751,6 +1751,43 @@
       "verifiedSource": "✓ Manually verified — {date}",
       "verifiedUnknown": "Pending verification — call to confirm",
       "limitedDisclaimer": "We're still verifying this listing. Tap \"List your camp\" if you're the operator or know the owner — we review updates within 2 business days.",
+      "structured": {
+        "sessions": {
+          "heading": "Sessions",
+          "weekly": "Weekly themes"
+        },
+        "pricing": {
+          "heading": "Pricing",
+          "option": "Option",
+          "hours": "Hours",
+          "session": "Session",
+          "both": "Both sessions",
+          "weekly": "Per week"
+        },
+        "activities": {
+          "heading": "Activities"
+        },
+        "whatToBring": {
+          "heading": "What to bring"
+        },
+        "lunch": {
+          "heading": "Lunch"
+        },
+        "extendedCare": {
+          "heading": "Extended care"
+        },
+        "fees": {
+          "heading": "Required fees",
+          "refundable": "refundable",
+          "nonRefundable": "non-refundable"
+        },
+        "enrollment": {
+          "open": "Enrollment open",
+          "untilFull": "Open until full",
+          "closed": "Enrollment closed",
+          "opens": "Opens {date}"
+        }
+      },
       "ctaSignup": {
         "heading": "Get reminded before every closure this camp could fill.",
         "sub": "Free account. One email before every Miami school break.",

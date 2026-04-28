@@ -24,6 +24,40 @@ import { computeCompleteness, bandFor } from '@/lib/camps/completeness';
 
 export type UnifiedCampDetailMode = 'public' | 'app';
 
+// Structured-field shapes mirror the JSONB contracts in
+// supabase/migrations/054_camps_structured_fields.sql. All optional —
+// silent-skip on the render side when null/empty (R6 trust posture: no
+// "TBD" placeholders, no empty section headers).
+export type CampSession = {
+  label: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  weekly_themes: string[] | null;
+  notes: string | null;
+};
+
+export type CampPricingTier = {
+  label: string | null;
+  hours: string | null;
+  session_price_cents: number | null;
+  both_sessions_price_cents: number | null;
+  weekly_price_cents: number | null;
+  notes: string | null;
+};
+
+export type CampFee = {
+  label: string | null;
+  amount_cents: number | null;
+  refundable: boolean | null;
+  notes: string | null;
+};
+
+export type CampEnrollmentWindow = {
+  opens_at: string | null;
+  closes_at: string | null;
+  status: 'open' | 'closed' | 'until_full' | null;
+};
+
 export type UnifiedCampDetailCamp = {
   id: string;
   slug: string;
@@ -48,6 +82,16 @@ export type UnifiedCampDetailCamp = {
   registration_deadline: string | null;
   verified: boolean;
   last_verified_at: string | null;
+  // Structured fields (mig054). Optional on the type so existing call
+  // sites that haven't extended their SELECT compile cleanly.
+  sessions?: CampSession[] | null;
+  pricing_tiers?: CampPricingTier[] | null;
+  activities?: string[] | null;
+  fees?: CampFee[] | null;
+  enrollment_window?: CampEnrollmentWindow | null;
+  what_to_bring?: string[] | null;
+  lunch_policy?: string | null;
+  extended_care_policy?: string | null;
 };
 
 function formatTime(hhmm: string | null): string | null {
@@ -326,8 +370,12 @@ function PublicDetail({
             {camp.neighborhood ? (
               <p className="text-sm text-muted">{camp.neighborhood}</p>
             ) : null}
-            {isReligious ? (
-              <p className="mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <EnrollmentStatusPill
+                window={camp.enrollment_window}
+                locale={locale}
+              />
+              {isReligious ? (
                 <span
                   className="inline-flex items-center gap-1 rounded-full border border-cream-border bg-white px-2 py-0.5 text-[11px] font-bold text-ink"
                   title={tBadge('tooltip')}
@@ -337,8 +385,8 @@ function PublicDetail({
                   <span aria-hidden="true">🙏</span>
                   {tBadge('label')}
                 </span>
-              </p>
-            ) : null}
+              ) : null}
+            </div>
             {camp.categories && camp.categories.length ? (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {camp.categories.map((c) => (
@@ -360,6 +408,8 @@ function PublicDetail({
               <CampDescription description={camp.description} />
             </section>
           ) : null}
+
+          <StructuredFieldsSection camp={camp} locale={locale} />
 
           <section className="flex flex-wrap gap-2">
             {camp.website_url ? (
@@ -502,8 +552,13 @@ function AppDetail({
             {camp.neighborhood ? (
               <p className={'mt-1 text-sm ' + mutedCls}>📍 {camp.neighborhood}</p>
             ) : null}
-            {isReligious ? (
-              <p className="mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <EnrollmentStatusPill
+                window={camp.enrollment_window}
+                locale={locale}
+                darkMode={!isParents}
+              />
+              {isReligious ? (
                 <span
                   className={
                     'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ' +
@@ -518,8 +573,8 @@ function AppDetail({
                   <span aria-hidden="true">🙏</span>
                   {tBadge('label')}
                 </span>
-              </p>
-            ) : null}
+              ) : null}
+            </div>
             {camp.categories && camp.categories.length ? (
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {camp.categories.map((c) => (
@@ -552,6 +607,12 @@ function AppDetail({
           {camp.description ? (
             <CampDescription description={camp.description} darkMode={!isParents} />
           ) : null}
+
+          <StructuredFieldsSection
+            camp={camp}
+            locale={locale}
+            darkMode={!isParents}
+          />
 
           <div className="grid gap-3 md:grid-cols-2">
             <SaveCampButton
@@ -617,5 +678,326 @@ function AppDetail({
         </div>
       </div>
     </div>
+  );
+}
+
+// ----- structured fields ----------------------------------------------------
+
+// Per R6 trust posture: every block is silent-skip on null/empty data.
+// No "TBD" placeholders, no empty section headers, no "Pricing not
+// published" filler — those would erode parent trust on camps where the
+// operator hasn't filled in this surface yet.
+function StructuredFieldsSection({
+  camp,
+  locale,
+  darkMode = false,
+}: {
+  camp: UnifiedCampDetailCamp;
+  locale: string;
+  darkMode?: boolean;
+}) {
+  const t = useTranslations('public.campDetail.structured');
+
+  const sessions = (camp.sessions ?? []).filter(
+    (s) => s.label || s.start_date || s.end_date,
+  );
+  const pricingTiers = (camp.pricing_tiers ?? []).filter(
+    (p) =>
+      p.label ||
+      p.session_price_cents != null ||
+      p.weekly_price_cents != null ||
+      p.both_sessions_price_cents != null,
+  );
+  const activities = (camp.activities ?? []).filter(Boolean);
+  const fees = (camp.fees ?? []).filter((f) => f.label || f.amount_cents != null);
+  const whatToBring = (camp.what_to_bring ?? []).filter(Boolean);
+  const lunchPolicy = camp.lunch_policy?.trim();
+  const extendedCarePolicy = camp.extended_care_policy?.trim();
+
+  const anyVisible =
+    sessions.length > 0 ||
+    pricingTiers.length > 0 ||
+    activities.length > 0 ||
+    fees.length > 0 ||
+    whatToBring.length > 0 ||
+    !!lunchPolicy ||
+    !!extendedCarePolicy;
+  if (!anyVisible) return null;
+
+  const headingCls = darkMode
+    ? 'text-sm font-black text-white'
+    : 'text-sm font-black text-ink';
+  const bodyCls = darkMode ? 'text-sm text-white/85' : 'text-sm text-ink/85';
+  const subtleCls = darkMode ? 'text-xs text-white/60' : 'text-xs text-muted';
+  const cardCls = darkMode
+    ? 'rounded-2xl border border-white/10 bg-white/5 p-3'
+    : 'rounded-2xl border border-cream-border bg-cream/40 p-3';
+  const tablePillCls = darkMode
+    ? 'bg-white/15 text-white'
+    : 'bg-purple-soft text-brand-purple';
+  const dateLocale = locale === 'es' ? 'es-US' : 'en-US';
+
+  function fmtDateRange(start: string | null, end: string | null): string | null {
+    const fmt = (iso: string) => {
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString(dateLocale, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    };
+    if (start && end) return `${fmt(start)} – ${fmt(end)}`;
+    if (start) return fmt(start);
+    if (end) return fmt(end);
+    return null;
+  }
+
+  function fmtPrice(cents: number | null): string | null {
+    if (cents == null) return null;
+    return `$${Math.round(cents / 100)}`;
+  }
+
+  return (
+    <div
+      className="space-y-5"
+      data-testid="camp-detail-structured"
+    >
+      {sessions.length > 0 ? (
+        <section data-testid="camp-detail-sessions">
+          <h3 className={headingCls}>{t('sessions.heading')}</h3>
+          <div className="mt-2 grid gap-2 md:grid-cols-2">
+            {sessions.map((s, i) => {
+              const range = fmtDateRange(s.start_date, s.end_date);
+              const themes = (s.weekly_themes ?? []).filter(Boolean);
+              return (
+                <div key={i} className={cardCls}>
+                  <p className={'font-bold ' + (darkMode ? 'text-white' : 'text-ink')}>
+                    {s.label ?? `#${i + 1}`}
+                  </p>
+                  {range ? <p className={subtleCls}>{range}</p> : null}
+                  {themes.length > 0 ? (
+                    <>
+                      <p className={'mt-2 ' + subtleCls}>{t('sessions.weekly')}</p>
+                      <ul className={'mt-1 list-disc pl-4 ' + bodyCls}>
+                        {themes.map((th, j) => (
+                          <li key={j}>{th}</li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+                  {s.notes ? (
+                    <p className={'mt-2 italic ' + subtleCls}>{s.notes}</p>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {pricingTiers.length > 0 ? (
+        <section data-testid="camp-detail-pricing">
+          <h3 className={headingCls}>{t('pricing.heading')}</h3>
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className={subtleCls + ' text-left'}>
+                  <th className="py-1.5 pr-3 font-bold">{t('pricing.option')}</th>
+                  <th className="py-1.5 pr-3 font-bold">{t('pricing.hours')}</th>
+                  <th className="py-1.5 pr-3 font-bold">{t('pricing.session')}</th>
+                  <th className="py-1.5 pr-3 font-bold">{t('pricing.both')}</th>
+                  <th className="py-1.5 font-bold">{t('pricing.weekly')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pricingTiers.map((p, i) => (
+                  <tr
+                    key={i}
+                    className={
+                      'border-t ' +
+                      (darkMode ? 'border-white/10' : 'border-cream-border')
+                    }
+                  >
+                    <td className={'py-1.5 pr-3 font-bold ' + (darkMode ? 'text-white' : 'text-ink')}>
+                      {p.label ?? `#${i + 1}`}
+                    </td>
+                    <td className={'py-1.5 pr-3 ' + bodyCls}>{p.hours ?? '—'}</td>
+                    <td className={'py-1.5 pr-3 ' + bodyCls}>
+                      {fmtPrice(p.session_price_cents) ?? '—'}
+                    </td>
+                    <td className={'py-1.5 pr-3 ' + bodyCls}>
+                      {fmtPrice(p.both_sessions_price_cents) ?? '—'}
+                    </td>
+                    <td className={'py-1.5 ' + bodyCls}>
+                      {fmtPrice(p.weekly_price_cents) ?? '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
+
+      {activities.length > 0 ? (
+        <section data-testid="camp-detail-activities">
+          <h3 className={headingCls}>{t('activities.heading')}</h3>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {activities.map((a) => (
+              <span
+                key={a}
+                className={
+                  'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+                  tablePillCls
+                }
+              >
+                {a}
+              </span>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {whatToBring.length > 0 ? (
+        <section data-testid="camp-detail-what-to-bring">
+          <h3 className={headingCls}>{t('whatToBring.heading')}</h3>
+          <ul className={'mt-1 list-disc pl-5 ' + bodyCls}>
+            {whatToBring.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {lunchPolicy ? (
+        <section data-testid="camp-detail-lunch">
+          <h3 className={headingCls}>{t('lunch.heading')}</h3>
+          <p className={'mt-1 ' + bodyCls}>{lunchPolicy}</p>
+        </section>
+      ) : null}
+
+      {extendedCarePolicy ? (
+        <section data-testid="camp-detail-extended-care">
+          <h3 className={headingCls}>{t('extendedCare.heading')}</h3>
+          <p className={'mt-1 ' + bodyCls}>{extendedCarePolicy}</p>
+        </section>
+      ) : null}
+
+      {fees.length > 0 ? (
+        <details
+          className={
+            'rounded-2xl border p-3 ' +
+            (darkMode
+              ? 'border-white/10 bg-white/5'
+              : 'border-cream-border bg-cream/40')
+          }
+          data-testid="camp-detail-fees"
+        >
+          <summary
+            className={'cursor-pointer ' + headingCls}
+            style={{ listStyle: 'none' }}
+          >
+            {t('fees.heading')}
+          </summary>
+          <ul className={'mt-2 space-y-1 ' + bodyCls}>
+            {fees.map((f, i) => (
+              <li key={i} className="flex flex-wrap items-baseline justify-between gap-2">
+                <span>
+                  <span className={'font-bold ' + (darkMode ? 'text-white' : 'text-ink')}>
+                    {f.label ?? '—'}
+                  </span>
+                  {f.refundable === false ? (
+                    <span className={'ml-2 ' + subtleCls}>({t('fees.nonRefundable')})</span>
+                  ) : f.refundable === true ? (
+                    <span className={'ml-2 ' + subtleCls}>({t('fees.refundable')})</span>
+                  ) : null}
+                  {f.notes ? <span className={'ml-2 italic ' + subtleCls}>{f.notes}</span> : null}
+                </span>
+                <span className={darkMode ? 'text-white' : 'text-ink'}>
+                  {fmtPrice(f.amount_cents) ?? '—'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+    </div>
+  );
+}
+
+// Small status pill rendered near the top of the detail header. Silent
+// when the camp has no enrollment_window data (R6).
+function EnrollmentStatusPill({
+  window,
+  locale,
+  darkMode = false,
+}: {
+  window: CampEnrollmentWindow | null | undefined;
+  locale: string;
+  darkMode?: boolean;
+}) {
+  const t = useTranslations('public.campDetail.structured.enrollment');
+  if (!window) return null;
+  const dateLocale = locale === 'es' ? 'es-US' : 'en-US';
+  const now = new Date();
+  const opensAt = window.opens_at ? new Date(window.opens_at) : null;
+  const closesAt = window.closes_at ? new Date(window.closes_at) : null;
+
+  // Pre-open: show "Opens {date}" with the future opens_at.
+  if (opensAt && opensAt.getTime() > now.getTime()) {
+    const fmt = opensAt.toLocaleDateString(dateLocale, {
+      month: 'short',
+      day: 'numeric',
+    });
+    return (
+      <span
+        className={
+          'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+          (darkMode
+            ? 'border border-white/20 bg-white/10 text-white'
+            : 'border border-amber-200 bg-amber-50 text-amber-900')
+        }
+        data-testid="camp-detail-enrollment-pill"
+      >
+        ⏳ {t('opens', { date: fmt })}
+      </span>
+    );
+  }
+
+  // Explicitly closed (status='closed' or closes_at is past).
+  const isClosed =
+    window.status === 'closed' ||
+    (closesAt && closesAt.getTime() < now.getTime());
+  if (isClosed) {
+    return (
+      <span
+        className={
+          'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+          (darkMode
+            ? 'border border-white/20 bg-white/10 text-white/70'
+            : 'border border-cream-border bg-white text-muted')
+        }
+        data-testid="camp-detail-enrollment-pill"
+      >
+        ✗ {t('closed')}
+      </span>
+    );
+  }
+
+  // Open. "Until full" if status says so, else plain "Open".
+  const isUntilFull = window.status === 'until_full';
+  return (
+    <span
+      className={
+        'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ' +
+        (darkMode
+          ? 'border border-emerald-300/40 bg-emerald-400/15 text-emerald-100'
+          : 'border border-emerald-200 bg-emerald-50 text-emerald-900')
+      }
+      data-testid="camp-detail-enrollment-pill"
+    >
+      ✓ {isUntilFull ? t('untilFull') : t('open')}
+    </span>
   );
 }

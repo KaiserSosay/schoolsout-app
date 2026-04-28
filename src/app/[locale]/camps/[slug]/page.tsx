@@ -84,7 +84,7 @@ export default async function PublicCampDetailPage({
   const { data } = await svc
     .from('camps')
     .select(
-      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at, logo_url, hero_url',
+      'id, slug, name, tagline, description, ages_min, ages_max, price_tier, price_min_cents, price_max_cents, categories, website_url, image_url, neighborhood, phone, address, hours_start, hours_end, registration_url, registration_deadline, verified, last_verified_at, logo_url, hero_url, sessions, pricing_tiers, activities, fees, enrollment_window, what_to_bring, lunch_policy, extended_care_policy',
     )
     .eq('slug', slug)
     .maybeSingle();

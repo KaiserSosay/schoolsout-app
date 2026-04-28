@@ -374,3 +374,160 @@ describe('UnifiedCampDetail — Edit pill (admin only)', () => {
     );
   });
 });
+
+describe('UnifiedCampDetail — structured fields (R6 silent-skip on null)', () => {
+  it('omits the entire section when no structured fields are populated', () => {
+    withProviders(
+      <UnifiedCampDetail camp={baseCamp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    expect(screen.queryByTestId('camp-detail-structured')).toBeNull();
+    expect(screen.queryByTestId('camp-detail-sessions')).toBeNull();
+    expect(screen.queryByTestId('camp-detail-pricing')).toBeNull();
+    expect(screen.queryByTestId('camp-detail-activities')).toBeNull();
+    expect(screen.queryByTestId('camp-detail-fees')).toBeNull();
+    expect(screen.queryByTestId('camp-detail-enrollment-pill')).toBeNull();
+  });
+
+  it('renders sessions cards with date range and weekly themes when present', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      sessions: [
+        {
+          label: 'Session One',
+          start_date: '2026-06-15',
+          end_date: '2026-07-02',
+          weekly_themes: ['Friendship', 'Family'],
+          notes: 'No camp June 19',
+        },
+      ],
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const section = screen.getByTestId('camp-detail-sessions');
+    expect(section).toHaveTextContent('Session One');
+    expect(section).toHaveTextContent('Friendship');
+    expect(section).toHaveTextContent('No camp June 19');
+    expect(section).toHaveTextContent(/Jun 14|Jun 15/);
+  });
+
+  it('renders pricing tiers as a table with formatted dollar amounts', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      pricing_tiers: [
+        {
+          label: 'Half-day',
+          hours: '9am–12:30pm',
+          session_price_cents: 70000,
+          both_sessions_price_cents: 130000,
+          weekly_price_cents: 28500,
+          notes: null,
+        },
+      ],
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const section = screen.getByTestId('camp-detail-pricing');
+    expect(section).toHaveTextContent('Half-day');
+    expect(section).toHaveTextContent('$700');
+    expect(section).toHaveTextContent('$1300');
+    expect(section).toHaveTextContent('$285');
+  });
+
+  it('renders activities as chips and what-to-bring as bullets', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      activities: ['Arts & Crafts', 'STEM Lab'],
+      what_to_bring: ['lunch', 'water bottle'],
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const acts = screen.getByTestId('camp-detail-activities');
+    expect(acts).toHaveTextContent('Arts & Crafts');
+    expect(acts).toHaveTextContent('STEM Lab');
+    const bring = screen.getByTestId('camp-detail-what-to-bring');
+    expect(bring).toHaveTextContent('lunch');
+    expect(bring).toHaveTextContent('water bottle');
+  });
+
+  it('renders fees disclosure with refundable / non-refundable annotation', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      fees: [
+        {
+          label: 'Registration fee',
+          amount_cents: 15000,
+          refundable: false,
+          notes: null,
+        },
+      ],
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const fees = screen.getByTestId('camp-detail-fees');
+    expect(fees).toHaveTextContent('Registration fee');
+    expect(fees).toHaveTextContent('$150');
+    expect(fees).toHaveTextContent('non-refundable');
+  });
+
+  it('renders enrollment pill "Open until full" when status is until_full', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      enrollment_window: {
+        opens_at: '2025-12-01T00:00:00Z',
+        closes_at: null,
+        status: 'until_full',
+      },
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const pill = screen.getByTestId('camp-detail-enrollment-pill');
+    expect(pill).toHaveTextContent('Open until full');
+  });
+
+  it('renders enrollment pill "Opens {date}" when opens_at is in the future', () => {
+    const futureIso = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      enrollment_window: {
+        opens_at: futureIso,
+        closes_at: null,
+        status: 'open',
+      },
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    const pill = screen.getByTestId('camp-detail-enrollment-pill');
+    expect(pill).toHaveTextContent(/Opens/);
+  });
+
+  it('renders lunch_policy and extended_care_policy as their own sections', () => {
+    const camp: UnifiedCampDetailCamp = {
+      ...baseCamp,
+      lunch_policy: 'Lunch from home or order via Our Lunches.',
+      extended_care_policy: 'Early Morning Care 8:00–8:45 AM, $40/week.',
+    };
+    withProviders(
+      <UnifiedCampDetail camp={camp} mode="public" locale="en" />,
+      { withModeProvider: false },
+    );
+    expect(screen.getByTestId('camp-detail-lunch')).toHaveTextContent(
+      'Our Lunches',
+    );
+    expect(screen.getByTestId('camp-detail-extended-care')).toHaveTextContent(
+      'Early Morning Care',
+    );
+  });
+});

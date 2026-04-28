@@ -1751,6 +1751,43 @@
       "verifiedSource": "✓ Verificado a mano — {date}",
       "verifiedUnknown": "Verificación pendiente — llama para confirmar",
       "limitedDisclaimer": "Aún estamos verificando este listado. Toca \"Lista tu campamento\" si eres el operador — revisamos actualizaciones en 2 días hábiles.",
+      "structured": {
+        "sessions": {
+          "heading": "Sesiones",
+          "weekly": "Temas semanales"
+        },
+        "pricing": {
+          "heading": "Precios",
+          "option": "Opción",
+          "hours": "Horario",
+          "session": "Sesión",
+          "both": "Ambas sesiones",
+          "weekly": "Por semana"
+        },
+        "activities": {
+          "heading": "Actividades"
+        },
+        "whatToBring": {
+          "heading": "Qué traer"
+        },
+        "lunch": {
+          "heading": "Almuerzo"
+        },
+        "extendedCare": {
+          "heading": "Cuidado extendido"
+        },
+        "fees": {
+          "heading": "Cargos requeridos",
+          "refundable": "reembolsable",
+          "nonRefundable": "no reembolsable"
+        },
+        "enrollment": {
+          "open": "Inscripción abierta",
+          "untilFull": "Abierto hasta llenarse",
+          "closed": "Inscripción cerrada",
+          "opens": "Abre el {date}"
+        }
+      },
       "ctaSignup": {
         "heading": "Recibe un aviso antes de cada cierre que este campamento podría cubrir.",
         "sub": "Cuenta gratis. Un correo antes de cada receso escolar en Miami.",
