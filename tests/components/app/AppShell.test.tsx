@@ -170,6 +170,56 @@ describe('app/SideNav', () => {
     expect(screen.getByText('Log out')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
   });
+
+  it('renders the notifications bell button', () => {
+    mockPathname = '/en/app';
+    renderWithIntl(
+      <SideNav locale="en" email="parent@example.com" displayName="Ada" />,
+    );
+    const bell = screen.getByRole('button', { name: /open notifications/i });
+    expect(bell).toBeInTheDocument();
+    expect(bell.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(bell.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('opens the NotificationsDrawer when the bell is clicked', async () => {
+    mockPathname = '/en/app';
+    renderWithIntl(
+      <SideNav locale="en" email="parent@example.com" displayName="Ada" />,
+    );
+
+    // Drawer dialog is not mounted until the bell is clicked.
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    const bell = screen.getByRole('button', { name: /open notifications/i });
+    await act(async () => {
+      bell.click();
+    });
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(bell.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('closes the NotificationsDrawer when the close button is clicked', async () => {
+    mockPathname = '/en/app';
+    renderWithIntl(
+      <SideNav locale="en" email="parent@example.com" displayName="Ada" />,
+    );
+
+    const bell = screen.getByRole('button', { name: /open notifications/i });
+    await act(async () => {
+      bell.click();
+    });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    const close = screen.getByRole('button', { name: /^close$/i });
+    await act(async () => {
+      fireEvent.click(close);
+    });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(bell.getAttribute('aria-expanded')).toBe('false');
+  });
+
 });
 
 describe('app/AppHeader', () => {

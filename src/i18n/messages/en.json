@@ -1111,6 +1111,7 @@
       "logout": "Log out",
       "idea": "Got an idea?",
       "notifications": "Notifications",
+      "openNotifications": "Open notifications",
       "backTo": "Back to {where}",
       "switchToKidMode": "Switch to Kid Mode",
       "switchToParentMode": "Switch to Parent Mode",

@@ -95,4 +95,24 @@ describe('UserMenuItems', () => {
     const link = screen.getByRole('link', { name: /admin/i });
     expect(link.getAttribute('href')).toBe('/en/admin');
   });
+
+  it('renders the language toggle (closes the desktop/mobile parity gap)', () => {
+    renderMenu();
+    const wrapper = screen.getByTestId('user-menu-language-toggle');
+    expect(wrapper).toBeInTheDocument();
+    // LanguageToggleMobile renders a "Change language" globe button.
+    expect(
+      screen.getByRole('button', { name: /change language/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('language toggle exposes EN and ES options when opened', () => {
+    renderMenu();
+    fireEvent.click(
+      screen.getByRole('button', { name: /change language/i }),
+    );
+    // Both locale labels should appear as menuitem links.
+    expect(screen.getByRole('menuitem', { name: /english/i })).toBeInTheDocument();
+    expect(screen.getByRole('menuitem', { name: /español/i })).toBeInTheDocument();
+  });
 });

@@ -1111,6 +1111,7 @@
       "logout": "Cerrar sesión",
       "idea": "¿Tienes una idea?",
       "notifications": "Notificaciones",
+      "openNotifications": "Abrir notificaciones",
       "backTo": "Volver a {where}",
       "switchToKidMode": "Cambiar a Modo Niño",
       "switchToParentMode": "Cambiar a Modo Padres",

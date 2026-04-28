@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
 import { NAV_TABS, isTabActive } from './nav-config';
 import { UserMenuItems } from './UserMenu';
+import { NotificationsDrawer } from './NotificationsDrawer';
 import { LanguageToggleMobile } from '@/components/LanguageToggleMobile';
 import type { Locale } from '@/i18n/config';
 
@@ -28,10 +29,12 @@ export function SideNav({
   const { mode, isKidLocked } = useMode();
   const pathname = usePathname() ?? '';
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bellOpen, setBellOpen] = useState(false);
   const userBlockRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMenuOpen(false);
+    setBellOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -113,13 +116,36 @@ export function SideNav({
 
           <div className="my-4 border-t border-cream-border/50" />
 
+          {/* Notifications bell — closes the desktop gap from the
+              2026-04-27 nav audit. Same NotificationsDrawer the mobile
+              AppHeader uses; same useState open/close pattern. Shaped
+              like a primary nav-tab row so it anchors with the
+              primary-nav rhythm rather than feeling like an icon-button
+              afterthought. */}
+          <button
+            type="button"
+            onClick={() => setBellOpen(true)}
+            aria-label={tNav('openNotifications')}
+            aria-haspopup="dialog"
+            aria-expanded={bellOpen}
+            className={
+              'flex min-h-12 w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-bold transition-colors ' +
+              textCls +
+              ' ' +
+              hoverCls
+            }
+          >
+            <span aria-hidden className="text-xl leading-none">🔔</span>
+            <span>{tNav('notifications')}</span>
+          </button>
+
           {/* Idea trigger — standalone, gold-outline per spec. Opens the
               FeatureRequestModal (wired in Goal 2). */}
           <button
             type="button"
             onClick={onIdeaClick}
             className={
-              'flex min-h-11 w-full items-center gap-2 rounded-xl border-2 border-gold px-3 py-2 text-sm font-bold transition-colors ' +
+              'mt-1 flex min-h-11 w-full items-center gap-2 rounded-xl border-2 border-gold px-3 py-2 text-sm font-bold transition-colors ' +
               (mode === 'parents'
                 ? 'text-ink hover:bg-gold/10'
                 : 'text-white hover:bg-gold/20')
@@ -185,6 +211,8 @@ export function SideNav({
           </div>
         ) : null}
       </div>
+
+      <NotificationsDrawer open={bellOpen} onClose={() => setBellOpen(false)} />
     </aside>
   );
 }

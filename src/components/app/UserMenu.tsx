@@ -7,6 +7,8 @@ import { useTranslations } from 'next-intl';
 import { useMode } from './ModeProvider';
 import { createBrowserSupabase } from '@/lib/supabase/browser';
 import { PwaInstallButton } from './PwaInstallButton';
+import { LanguageToggleMobile } from '@/components/LanguageToggleMobile';
+import type { Locale } from '@/i18n/config';
 
 // Shared menu body — mobile renders inside a full-width sheet, desktop inside
 // a popover. The only difference is the outer container; the items are the
@@ -146,6 +148,17 @@ export function UserMenuItems({
 
       <div className="px-4 py-2">
         <PwaInstallButton label={tHeader('installApp')} />
+      </div>
+
+      {/* Language toggle — closes the desktop/mobile parity gap from the
+          2026-04-27 nav audit. Mobile users used to have to navigate to
+          Settings to change language; now it lives in the shared user
+          menu so both surfaces expose it. */}
+      <div
+        className="border-t border-cream-border px-4 py-3"
+        data-testid="user-menu-language-toggle"
+      >
+        <LanguageToggleMobile currentLocale={locale as Locale} />
       </div>
 
       <button
