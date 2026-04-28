@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "camp-nova-at-nsu-university-school",
+    "name": "Camp Nova at NSU University School",
+    "primary_url": "https://www.uschool.nova.edu/summer",
+    "tagline": "NSU University School summer program in Davie with academics, athletics, and enrichment for PreK-Grade 12.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "NSU University School is a well-known private school. Summer programs confirmed.",
+    "logo_url": "https://resources.finalsite.net/images/v1690458102/uschoolnovaedu/v4mwanh2gahwpfomd3mk/sharkLogoWatwrmark.svg",
+    "logo_source": "official-site",
+    "logo_notes": "Shark logo SVG from Finalsite CDN.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/summer"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-palmetto-bay-at-coral-reef-park",
+    "name": "Camp Palmetto Bay at Coral Reef Park",
+    "primary_url": "https://www.palmettobay-fl.gov/",
+    "tagline": "Village of Palmetto Bay municipal day camp at Coral Reef Park with sports, arts, and outdoor activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal park program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal gov site, no camp-specific logo extracted.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "specific camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-shemesh",
+    "name": "Camp Shemesh",
+    "primary_url": "https://www.campshemesh.org/",
+    "tagline": "Jewish day camp in Miami with Hebrew immersion, swimming, arts, and Judaic programming.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Wix site confirms Hebrew camp with Jewish values.",
+    "logo_url": "https://static.wixstatic.com/media/d8fa3c_8641393f2114453f8822759b60c37155~mv2.png",
+    "logo_source": "official-site",
+    "logo_notes": "Wix-hosted logo from campshemesh.org.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": "Wix site - limited SEO metadata"
+    }
+  },
+  {
+    "slug": "camp-steamology-at-museum-of-discovery-and-science",
+    "name": "Camp STEAMology at Museum of Discovery and Science",
+    "primary_url": "https://mods.org/series/summer-camp-steamology/",
+    "tagline": "STEAM summer camp at Fort Lauderdale's Museum of Discovery and Science with hands-on science, IMAX experiences, and themed weekly sessions.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Meta description confirms 'Where Learning Meets Fun' and STEAM focus.",
+    "logo_url": "https://mods.org/wp-content/uploads/2023/04/MODS-Logo-Vert-Black.png",
+    "logo_source": "official-site",
+    "logo_notes": "MODS vertical logo from schema.org data.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/series/summer-camp-steamology/"],
+      "anything_missing": [],
+      "anything_weird": "Broward County, not Miami-Dade"
+    }
+  },
+  {
+    "slug": "camp-tamarac",
+    "name": "Camp Tamarac",
+    "primary_url": "https://www.tamarac.org/1086/Summer-Camp",
+    "tagline": "City of Tamarac municipal summer camp with sports, arts, and field trips for ages 5-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "CivicPlus gov site confirms summer camp program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo. City seal only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/1086/Summer-Camp"],
+      "anything_missing": ["logo"],
+      "anything_weird": "Broward County, not Miami-Dade"
+    }
+  },
+  {
+    "slug": "camp-victory-at-vista-view-park",
+    "name": "Camp Victory at Vista View Park",
+    "primary_url": "https://www.broward.org/Parks/Pages/Park.aspx?=143",
+    "tagline": "Broward Parks nature day camp at Vista View Park with sports, nature programs, and outdoor activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Broward Parks program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Broward County Parks site, no camp logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "specific camp page"],
+      "anything_weird": "Broward County, not Miami-Dade"
+    }
+  },
+  {
+    "slug": "city-of-aventura-art-camp",
+    "name": "City of Aventura Art Camp",
+    "primary_url": "https://www.cityofaventura.com/469/Summer-Camps",
+    "tagline": "Municipal art camp at the Aventura Arts and Cultural Center with painting, sculpture, and creative projects for ages 5-12.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Part of Aventura's summer camp program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/469/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-aventura-general-camp",
+    "name": "City of Aventura General Camp",
+    "primary_url": "https://www.cityofaventura.com/469/Summer-Camps",
+    "tagline": "General day camp at Aventura Community Recreation Center with sports, games, swimming, and field trips for ages 5-14.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Multi-activity municipal camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/469/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-aventura-sports-camp",
+    "name": "City of Aventura Sports Camp",
+    "primary_url": "https://www.cityofaventura.com/469/Summer-Camps",
+    "tagline": "Municipal sports camp in Aventura with basketball, soccer, flag football, and multi-sport programming for ages 6-14.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Sports-focused municipal camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/469/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-aventura-stem-camp",
+    "name": "City of Aventura STEM Camp",
+    "primary_url": "https://www.cityofaventura.com/469/Summer-Camps",
+    "tagline": "Municipal STEM camp at the AACC in Aventura with robotics, coding, and engineering challenges for ages 8-13.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. STEM-focused municipal camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/469/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-doral-camp-unbeatables",
+    "name": "City of Doral Camp Unbeatables",
+    "primary_url": "https://www.cityofdoral.com/residents/parks-and-recreation/summer-camps/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by WAF (Access Denied).",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Akamai WAF blocking curl requests"
+    }
+  },
+  {
+    "slug": "city-of-hialeah-creative-learning-play-summer-camp",
+    "name": "City of Hialeah Creative Learning Play Summer Camp",
+    "primary_url": "https://www.hialeahfl.gov/1271/Summer-Camps",
+    "tagline": "City of Hialeah municipal day camp with creative learning, arts, sports, and educational activities for ages 5-12.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "CivicPlus gov site confirms summer camp exists.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/1271/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-homestead-summer-camp-2026",
+    "name": "City of Homestead Summer Camp 2026",
+    "primary_url": "https://www.cityofhomestead.com/1197/Parks-Recreation-Summer-Camp",
+    "tagline": "City of Homestead Parks and Recreation municipal summer camp with sports, arts, and field trips.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "CivicPlus gov site confirms Parks & Recreation summer camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/1197/Parks-Recreation-Summer-Camp"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "city-of-sunny-isles-beach-summer-camps",
+    "name": "City of Sunny Isles Beach Summer Camps",
+    "primary_url": "https://www.sibfl.net/summer-camp/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by WAF (Access Denied).",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Akamai WAF blocking curl requests"
+    }
+  },
+  {
+    "slug": "club-p-l-a-y-summer-camp",
+    "name": "Club P.L.A.Y. Summer Camp",
+    "primary_url": "https://clubplay.org/",
+    "tagline": "Community youth program with summer day camp activities, sports, and mentorship.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Based on DB description. Need to verify specific program details.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site not verified via curl.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "site content"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "coconut-grove-montessori-summer-camp",
+    "name": "Coconut Grove Montessori Summer Camp",
+    "primary_url": "https://www.cgms.org/",
+    "tagline": "Montessori summer program in Coconut Grove with nature-based learning and enrichment.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Site did not return content via curl.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site not responding.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site"],
+      "anything_weird": "Site unreachable"
+    }
+  },
+  {
+    "slug": "code-ninjas-aventura-summer-camp",
+    "name": "Code Ninjas Aventura Summer Camp",
+    "primary_url": "https://www.codeninjas.com/aventura-fl",
+    "tagline": "Coding summer camp at Code Ninjas Aventura with game development, robotics, and programming for ages 7-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Code Ninjas is a national franchise with consistent programming. 404 on location page but brand is verified.",
+    "logo_url": "https://www.codeninjas.com/hubfs/favicon.png",
+    "logo_source": "official-site",
+    "logo_notes": "Code Ninjas favicon/logo from HubSpot CMS.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": ["/aventura-fl"],
+      "anything_missing": ["location-specific page (404)"],
+      "anything_weird": "Location page 404 but main franchise site works. May need URL update."
+    }
+  },
+  {
+    "slug": "crandon-golf-academy",
+    "name": "Crandon Golf Academy",
+    "primary_url": "https://www.golfcrandon.com/",
+    "tagline": "Junior golf camp at Crandon Golf on Key Biscayne with instruction, course play, and PGA-certified coaching.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms championship golf course at Key Biscayne with junior programs.",
+    "logo_url": "https://www.golfcrandon.com/wp-content/uploads/sites/9314/2023/12/miami-dade-golf-logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "Miami-Dade Golf logo from schema.org data.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["specific junior camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "crandon-tennis",
+    "name": "Crandon Tennis",
+    "primary_url": "https://tenniscrandon.com/",
+    "tagline": "Junior tennis camp at Crandon Park Tennis Center on Key Biscayne with professional instruction and match play.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Site did not respond via curl but Crandon Tennis is a known facility.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site unreachable.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "site content"],
+      "anything_weird": "Site unreachable via curl"
+    }
+  },
+  {
+    "slug": "cushman-school-summer",
+    "name": "Cushman School Summer",
+    "primary_url": "https://www.cushmanschool.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site requires browser - likely Cloudflare protected. Marked BLOCKED in prior context.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:35:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Cloudflare WAF blocking curl"
+    }
+  }
+]

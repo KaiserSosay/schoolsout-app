@@ -1,0 +1,254 @@
+[
+  {
+    "slug": "school-of-rock-coconut-grove-summer-music-camps",
+    "name": "School of Rock Coconut Grove Summer Music Camps",
+    "primary_url": "https://www.schoolofrock.com/locations/coconut-grove",
+    "tagline": "Rock band summer camp at School of Rock Coconut Grove with instrument instruction, songwriting, and live performance training.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "School of Rock is a national music franchise. Location page confirmed.",
+    "logo_url": "https://cdn.schoolofrock.com/af156a2ac1bdda6c375076494a8427c8f00c62ea/assets/img/ogimage.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "OG image from CDN.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/locations/coconut-grove"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "scott-rakow-youth-center-kayaking-summer-camp",
+    "name": "Scott Rakow Youth Center Kayaking Summer Camp",
+    "primary_url": "https://www.miamibeachfl.gov/",
+    "tagline": "City of Miami Beach kayaking camp at Scott Rakow Youth Center with paddling instruction and water safety.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal youth center program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "shake-a-leg-miami-summer-camp",
+    "name": "Shake-a-Leg Miami Summer Camp",
+    "primary_url": "https://www.shakealegmiami.org/",
+    "tagline": "Adaptive water sports camp at Shake-a-Leg Miami in Coconut Grove with sailing, kayaking, and marine education for all abilities.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms 'nonprofit dedicated to empowering individuals with disabilities through adaptive water sports, sailing, and outdoor adventures'.",
+    "logo_url": "https://cdn.prod.website-files.com/66a407875661cf81e04572fb/66b0d4e7f44108b771062d16_shake-a-leg-logo.avif",
+    "logo_source": "official-site",
+    "logo_notes": "Logo from schema.org data.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": "Inclusive camp - serves individuals with disabilities"
+    }
+  },
+  {
+    "slug": "snapology-of-miami-beach-summer-camp",
+    "name": "Snapology of Miami Beach Summer Camp",
+    "primary_url": "https://www.snapology.com/",
+    "tagline": "LEGO, robotics, and STEAM summer camp at Snapology Miami Beach with hands-on building and coding activities.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Snapology is a national STEAM franchise. Brand verified.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Franchise site, location page not verified.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "location page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "south-miami-city",
+    "name": "South Miami Summer Camp",
+    "primary_url": "https://www.southmiamifl.gov/",
+    "tagline": "City of South Miami municipal summer camp with sports, arts, and recreational activities at Murray Park.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "CivicPlus gov site confirmed.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "south-miami-one-day",
+    "name": "South Miami One-Day Camp",
+    "primary_url": "https://www.southmiamifl.gov/",
+    "tagline": "City of South Miami single-day camp for school holidays and teacher planning days.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. School break variant.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": ["logo"],
+      "anything_weird": "Single-day camp, not week-long"
+    }
+  },
+  {
+    "slug": "south-miami-spring",
+    "name": "South Miami Spring Camp",
+    "primary_url": "https://www.southmiamifl.gov/",
+    "tagline": "City of South Miami spring break camp with recreational activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Spring break variant.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": ["logo"],
+      "anything_weird": "Spring break camp, not summer"
+    }
+  },
+  {
+    "slug": "south-miami-winter",
+    "name": "South Miami Winter Camp",
+    "primary_url": "https://www.southmiamifl.gov/",
+    "tagline": "City of South Miami winter break camp with recreational activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Winter break variant.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": ["logo"],
+      "anything_weird": "Winter break camp, not summer"
+    }
+  },
+  {
+    "slug": "stars-summer-camp-at-evelyn-greer-park",
+    "name": "STARS Summer Camp at Evelyn Greer Park",
+    "primary_url": "https://www.miamidade.gov/parks/",
+    "tagline": "Miami-Dade Parks STARS summer camp at Evelyn Greer Park with sports, arts, and academic enrichment.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. County parks program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "steam-summer-camp-with-discovery-lab-at-pinecrest-gardens",
+    "name": "STEAM Summer Camp with Discovery Lab at Pinecrest Gardens",
+    "primary_url": "https://www.pinecrestgardens.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by WAF (Access Denied).",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Akamai WAF blocking curl requests"
+    }
+  },
+  {
+    "slug": "toddler-summer-camp-with-pinecrest-dance-project",
+    "name": "Toddler Summer Camp with Pinecrest Dance Project",
+    "primary_url": "https://www.pinecrestgardens.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by WAF (Access Denied).",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Akamai WAF blocking curl requests"
+    }
+  },
+  {
+    "slug": "wise-choice-fiu",
+    "name": "Wise Choice Summer Camp at FIU",
+    "primary_url": "https://www.wisechoicesummercamp.com/",
+    "tagline": "Miami's longest-running summer camp at FIU campus with weekly swimming, field trips, and diverse activities for ages 5-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "From prior featured partner data. 22+ year established camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Launch partner - logo captured separately.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": "Campus variant of Wise Choice - shares main site"
+    }
+  },
+  {
+    "slug": "wise-choice-um",
+    "name": "Wise Choice Summer Camp at UM",
+    "primary_url": "https://www.wisechoicesummercamp.com/",
+    "tagline": "Miami's longest-running summer camp at University of Miami campus with weekly swimming, field trips, and diverse activities for ages 5-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "From prior featured partner data. 22+ year established camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Launch partner - logo captured separately.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": "Campus variant of Wise Choice - shares main site"
+    }
+  },
+  {
+    "slug": "ymca-sfl-day-off",
+    "name": "YMCA South Florida Day Off Camp",
+    "primary_url": "https://ymcasouthflorida.org/",
+    "tagline": "YMCA South Florida day-off camp for school holidays and teacher planning days with sports, swimming, and youth development activities.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms 'fitness, swim lessons, summer camp, youth sports' and 'non-profit serving families for over 100 years'.",
+    "logo_url": "https://ymcasouthflorida.org/wp-content/uploads/2023/10/Icon-logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "YMCA logo from schema.org data.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T11:05:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": "Day-off camp, not week-long summer camp"
+    }
+  }
+]

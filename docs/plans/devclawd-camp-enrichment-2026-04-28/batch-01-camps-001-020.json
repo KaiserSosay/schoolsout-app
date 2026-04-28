@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "ale-tennis-academy-summer-camp-doral",
+    "name": "ALE Tennis Academy Summer Camp - Doral",
+    "primary_url": "https://aletennis.com/activities/summer-tennis-camp/",
+    "tagline": "Year-round tennis academy in Doral with summer camps for all skill levels, ages 3-16.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms summer tennis camp, age range, skill-based grouping in Doral.",
+    "logo_url": "https://aletennis.com/wp-content/uploads/2024/08/ALETA-Borde-Blanco.png",
+    "logo_source": "official-site",
+    "logo_notes": "PNG with white border from schema.org JSON-LD",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/", "/activities/summer-tennis-camp/"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "alexander-montessori-ludlam",
+    "name": "Alexander Montessori — Ludlam Road",
+    "primary_url": "https://www.alexandermontessori.com/",
+    "tagline": "Montessori summer program on Ludlam Road with sports and STEAM activities for ages 6-12.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Multi-campus network, same logo for all 4 locations.",
+    "logo_url": "https://www.alexandermontessori.com/uploaded/images/logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "Shared logo across all Alexander Montessori campuses.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": "4 separate DB slugs for same org"
+    }
+  },
+  {
+    "slug": "alexander-montessori-old-cutler",
+    "name": "Alexander Montessori — Old Cutler",
+    "primary_url": "https://www.alexandermontessori.com/",
+    "tagline": "Montessori summer program on Old Cutler Road for preschoolers ages 2-6 in Palmetto Bay.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description.",
+    "logo_url": "https://www.alexandermontessori.com/uploaded/images/logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "Same as other Alexander locations.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "alexander-montessori-palmetto-bay",
+    "name": "Alexander Montessori — Palmetto Bay",
+    "primary_url": "https://www.alexandermontessori.com/",
+    "tagline": "Montessori summer program in Palmetto Bay for toddlers and preschoolers ages 2-6.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description.",
+    "logo_url": "https://www.alexandermontessori.com/uploaded/images/logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "Same as other Alexander locations.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "alexander-montessori-red-road",
+    "name": "Alexander Montessori — Red Road",
+    "primary_url": "https://www.alexandermontessori.com/",
+    "tagline": "Montessori summer program on Red Road in South Miami for preschoolers ages 3-6.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description.",
+    "logo_url": "https://www.alexandermontessori.com/uploaded/images/logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "Same as other Alexander locations.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "all-kids-included-youth-arts-creative-arts-summer-camp",
+    "name": "All Kids Included Youth Arts Creative Arts Summer Camp",
+    "primary_url": "https://miamidadearts.org/education/youth-arts-parks-0",
+    "tagline": "Inclusive creative arts summer camp for children with and without disabilities, in partnership with Miami-Dade County parks.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Page title confirms 'Youth Arts in the Parks' and inclusion focus.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Miami-Dade Arts logo not easily extractable from gov site.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/education/youth-arts-parks-0"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "belen-jesuit-summer-camp",
+    "name": "Belen Jesuit Summer Camp",
+    "primary_url": "https://www.belenjesuit.org/athletics/summer-camp",
+    "tagline": "Multi-discipline summer day camp at Belen Jesuit with athletics, arts, and enrichment for boys and girls ages 4-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Page confirms Summer Camp 2026, multi-discipline activities.",
+    "logo_url": "https://bbk12e1-cdn.myschoolcdn.com/ftpimages/836/logo/logoHeaderMLAthletics_143x185.png",
+    "logo_source": "official-site",
+    "logo_notes": "Athletics logo variant from Belen Jesuit CDN.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/athletics/summer-camp"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-black-bear-at-a-d-barnes-park-nature-center",
+    "name": "Camp Black Bear at A.D. Barnes Park Nature Center",
+    "primary_url": "https://www.miamidade.gov/global/product.page?Mduid_product=prod1529070824541392",
+    "tagline": "Miami-Dade Parks nature day camp with scientific experiments, environmental field trips, and pool days for ages 6-14.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Meta description confirms experiments, field trips, pool, athletics.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Miami-Dade County gov site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/global/product.page"],
+      "anything_missing": ["logo"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-carrollton",
+    "name": "Camp Carrollton",
+    "primary_url": "https://www.carrollton.org/student-life/camp-carrollton",
+    "tagline": "Traditional day camp at Carrollton School in Coconut Grove with sailing, lacrosse, tennis, art, culinary, and theater for PK3-Grade 8.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "DB description matches school program offerings.",
+    "logo_url": "https://resources.finalsite.net/images/v1681840788/carrolltonorg/mabf4cndmhbl9eelsyyo/logo-footer.svg",
+    "logo_source": "official-site",
+    "logo_notes": "SVG footer logo from Finalsite CDN.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/student-life/camp-carrollton"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-chameleon-at-markham-park",
+    "name": "Camp Chameleon at Markham Park",
+    "primary_url": "https://www.campchameleon.com/",
+    "tagline": "Nature-based summer day camp at Markham Park in Sunrise since 2009, for ages 5-15.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms 'Awesome Summer Camp Fun at Markham Park Since 2009', registration open for 2026.",
+    "logo_url": "https://www.campchameleon.com/images/logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "PNG logo from site images folder.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-curiosity-ehmann",
+    "name": "Camp Curiosity (Frost + MDC Parks)",
+    "primary_url": "https://www.frostscience.org/",
+    "tagline": "Frost Science partnership with Miami-Dade Parks at Ron Ehmann Park, nature-focused summer camp for ages 5-9.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Partnership program.",
+    "logo_url": "https://www.frostscience.org/wp-content/themes/frost-science/images/logo_frost.png",
+    "logo_source": "official-site",
+    "logo_notes": "Frost Science main logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["specific camp page"],
+      "anything_weird": "Joint program with MDC Parks"
+    }
+  },
+  {
+    "slug": "camp-discover-at-fiu",
+    "name": "Camp Discover at FIU",
+    "primary_url": "https://www.frostscience.org/",
+    "tagline": "Frost Science STEM camp hosted at FIU campus for summer exploration and discovery.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Based on DB description. Need to verify FIU partnership details.",
+    "logo_url": "https://www.frostscience.org/wp-content/themes/frost-science/images/logo_frost.png",
+    "logo_source": "official-site",
+    "logo_notes": "Using Frost Science logo as primary partner.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["specific camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-explore-at-fiu",
+    "name": "Camp Explore at FIU",
+    "primary_url": "https://www.frostscience.org/",
+    "tagline": "Frost Science exploration camp at FIU with hands-on STEM activities.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Based on DB description. Likely similar to Camp Discover.",
+    "logo_url": "https://www.frostscience.org/wp-content/themes/frost-science/images/logo_frost.png",
+    "logo_source": "official-site",
+    "logo_notes": "Using Frost Science logo as primary partner.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["specific camp page"],
+      "anything_weird": "May be duplicate or variant of Camp Discover"
+    }
+  },
+  {
+    "slug": "camp-gulliver",
+    "name": "Camp Gulliver",
+    "primary_url": "https://www.gulliverschools.org/",
+    "tagline": "Summer camp program at Gulliver Schools with academics, athletics, and enrichment.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Site did not return content on /summer or /camps. Need browser to access.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site requires JavaScript rendering.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page content"],
+      "anything_weird": "JS-heavy site, curl returned empty"
+    }
+  },
+  {
+    "slug": "camp-j-miami-at-alper-jcc",
+    "name": "Camp J Miami at Alper JCC",
+    "primary_url": "https://www.alperjcc.org/youth-and-teen/camp-j-miami",
+    "tagline": "Jewish community center day camp in Miami with swimming, sports, arts, and Shabbat celebrations.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms Camp J Miami with variety camp programming.",
+    "logo_url": "https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1739872046/alperjccorg/dhr6syyxthxkmemzbgst/alperjcc-light.png",
+    "logo_source": "official-site",
+    "logo_notes": "Alper JCC light logo from Finalsite CDN.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/youth-and-teen/camp-j-miami"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-kadima-at-david-posnack-jcc",
+    "name": "Camp Kadima at David Posnack JCC",
+    "primary_url": "https://www.dpjcc.org/camp",
+    "tagline": "Award-winning Jewish day camp in Davie with sports, swimming, special needs services, and color war traditions.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site meta confirms award-winning fitness center, preschool, after-school, camps.",
+    "logo_url": "https://www.dpjcc.org/graphics/design/2014_logo.png",
+    "logo_source": "official-site",
+    "logo_notes": "David Posnack JCC 2014 logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/camp"],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-live-oak",
+    "name": "Camp Live Oak",
+    "primary_url": "https://campliveoak.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site unreachable via curl.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site did not respond.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site"],
+      "anything_weird": "Site unreachable"
+    }
+  },
+  {
+    "slug": "camp-manatee-at-greynolds-park",
+    "name": "Camp Manatee at Greynolds Park",
+    "primary_url": "https://www.miamidade.gov/summercamps/",
+    "tagline": "Miami-Dade Parks nature day camp at Greynolds Park with outdoor activities and environmental education.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Part of MDC Parks summer camp network.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "MDC Parks, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "specific camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "camp-maritime-fl",
+    "name": "Camp Maritime FL",
+    "primary_url": "https://www.campmaritime.com/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site is NYC-based ('NYC's First And Only All Water Adventure Camp'). Not a Miami camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Wrong location - this is a NYC camp.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": [],
+      "anything_weird": "DATABASE ERROR: campmaritime.com is NYC-based, not Florida. Slug says 'fl' but site is New York. Flag for removal or URL correction."
+    }
+  },
+  {
+    "slug": "camp-matecumbe",
+    "name": "Camp Matecumbe",
+    "primary_url": "https://campmatecumbe.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site unreachable via curl.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site did not respond.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:20:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site"],
+      "anything_weird": "Site unreachable"
+    }
+  }
+]

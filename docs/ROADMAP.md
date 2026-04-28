@@ -207,6 +207,20 @@ those rows are comped and should never get charged.
 `frost-science-summer` (live, featured) and `frost-science-summer-camp`
 (unfeatured dupe). Out of scope tonight; track as Phase 3.5.X cleanup.
 
+### ✅ 4.x — Camp enrichment Section A applied (shipped 2026-04-28)
+
+Migration 060 applies DevClawd's high-confidence enrichment data: 28
+taglines + 13 logo URLs across the camps directory. R5 gap-fill — never
+overwrites existing data.
+
+Section B (52 medium-confidence camps) and Section C (3 low-confidence)
+remain queued for future review. Audit tracking in
+`docs/plans/devclawd-camp-enrichment-2026-04-28/REPORT.md`.
+
+DevClawd flagged 8 WAF-blocked sites (Pinecrest Gardens x3, Cushman, iD
+Tech, Beth David, Doral, Sunny Isles) — would need browser-based capture
+for those.
+
 ### ✅ 4.7.1 — Public Calendar Submission Form (SHIPPED 2026-04-26)
 First slice of Phase 4.7. Every school detail page now carries a collapsed "Update this school's calendar →" CTA that expands inline into a form open to anyone — parent, teacher, principal, or anonymous. Submissions land in a new `school_calendar_submissions` table (migration 043), trigger an ack email to the submitter and a notify to admin, and surface in `/admin?tab=calendar-submissions`. Email-domain auto-verification compares the submitter's email host to the school's website host — matches bubble to the top of the admin queue. **No row ever auto-writes to `closures`** — admin marks `approved` then later `incorporated` once the dates land via a normal migration. Same R6 trust posture as the iCal pipeline.
 

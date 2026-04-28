@@ -1,0 +1,362 @@
+[
+  {
+    "slug": "cutler-bay-careers-in-stem-summer-camp",
+    "name": "Cutler Bay Careers in STEM Summer Camp",
+    "primary_url": "https://www.cutlerbay-fl.gov/",
+    "tagline": "Town of Cutler Bay municipal STEM camp exploring careers in science, technology, engineering, and math.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "cutler-bay-summer-camp",
+    "name": "Cutler Bay Summer Camp",
+    "primary_url": "https://www.cutlerbay-fl.gov/",
+    "tagline": "Town of Cutler Bay municipal summer camp with sports, arts, and recreational activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "dance-and-crafts-summer-camp-at-pinecrest-gardens",
+    "name": "Dance and Crafts Summer Camp at Pinecrest Gardens",
+    "primary_url": "https://www.pinecrestgardens.org/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by WAF (Access Denied).",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Akamai WAF blocking curl requests"
+    }
+  },
+  {
+    "slug": "davis-fencing",
+    "name": "Davis Fencing Summer Camp",
+    "primary_url": "https://www.davisfencing.com/",
+    "tagline": "Fencing summer camp with instruction in foil, epee, and saber techniques for all skill levels.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Specialty sports camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site not verified.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "site verification"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "deering-estate-eco",
+    "name": "Deering Estate Eco Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Environmental day camp at Deering Estate exploring Florida's coastal ecosystems, archaeology, and natural history.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Schema.org confirms 'environmental, archaeological and historic preserve' with education programs.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Deering Estate logo from schema.org.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/education/"],
+      "anything_missing": [],
+      "anything_weird": "Multiple camp slugs (eco, expedition, mini, fall, spring, winter) for same venue"
+    }
+  },
+  {
+    "slug": "deering-estate-expedition",
+    "name": "Deering Estate Expedition Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Adventure expedition camp at Deering Estate with kayaking, hiking, and environmental exploration.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Same venue as Eco camp.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Same as Deering Estate Eco.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "deering-fall",
+    "name": "Deering Estate Fall Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Fall break camp at Deering Estate with nature activities and environmental education.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Seasonal variant.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Same as Deering Estate Eco.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": "School break camp, not summer"
+    }
+  },
+  {
+    "slug": "deering-mini",
+    "name": "Deering Estate Mini Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Mini explorers camp at Deering Estate for younger children with age-appropriate nature activities.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Younger age variant.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Same as Deering Estate Eco.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "deering-spring",
+    "name": "Deering Estate Spring Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Spring break camp at Deering Estate with nature activities and environmental education.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Seasonal variant.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Same as Deering Estate Eco.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": "School break camp, not summer"
+    }
+  },
+  {
+    "slug": "deering-winter",
+    "name": "Deering Estate Winter Camp",
+    "primary_url": "https://deeringestate.org/education/",
+    "tagline": "Winter break camp at Deering Estate with nature activities and environmental education.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Seasonal variant.",
+    "logo_url": "https://dev.deeringestate.org/wp-content/uploads/2017/04/placeholder-logo-e1632763444406.jpg",
+    "logo_source": "official-site",
+    "logo_notes": "Same as Deering Estate Eco.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": [],
+      "anything_missing": [],
+      "anything_weird": "School break camp, not summer"
+    }
+  },
+  {
+    "slug": "epiphany-lutheran-nursery-school-summer-camp",
+    "name": "Epiphany Lutheran Nursery School Summer Camp",
+    "primary_url": "https://www.epiphanylutherannurseryschool.com/",
+    "tagline": "Faith-based summer camp at Epiphany Lutheran Nursery School for preschool-age children.",
+    "tagline_confidence": "low",
+    "tagline_reasoning": "Based on DB description. Preschool camp.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site not verified.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "site verification"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "fairchild-gardens-camp",
+    "name": "Fairchild Gardens Camp",
+    "primary_url": "https://fairchildgarden.org/",
+    "tagline": "Nature and botanic science camp at Fairchild Tropical Botanic Garden with plant exploration, wildlife encounters, and hands-on science.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "Site confirms 'Miami's most natural attraction' with classes, school programs, and camps.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Logo not in first 60 lines of response. Using brand verification instead.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/"],
+      "anything_missing": ["logo extraction"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "fiu-theatre-summer-camp",
+    "name": "FIU Theatre Summer Camp",
+    "primary_url": "https://carta.fiu.edu/theatre/summer-camp/",
+    "tagline": "Performing arts summer camp at FIU Theatre with acting, improv, and stage production for aspiring young actors.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "FIU CARTA Theatre program confirmed.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Page returned binary image data instead of HTML.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": ["/theatre/summer-camp/"],
+      "anything_missing": ["logo"],
+      "anything_weird": "curl returned JPEG binary instead of HTML"
+    }
+  },
+  {
+    "slug": "flamingo-park-multi-sport-camp",
+    "name": "Flamingo Park Multi-Sport Camp",
+    "primary_url": "https://www.miamibeachfl.gov/",
+    "tagline": "City of Miami Beach multi-sport summer camp at Flamingo Park with basketball, soccer, tennis, and swimming.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal park program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "flamingo-park-tennis-center-summer-camp",
+    "name": "Flamingo Park Tennis Center Summer Camp",
+    "primary_url": "https://www.miamibeachfl.gov/",
+    "tagline": "Tennis summer camp at Flamingo Park Tennis Center in Miami Beach with professional instruction and match play.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal tennis program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, no camp-specific logo.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "camp page"],
+      "anything_weird": null
+    }
+  },
+  {
+    "slug": "golf-academy-of-south-florida-half-day-summer-camp",
+    "name": "Golf Academy of South Florida Half-Day Summer Camp",
+    "primary_url": "https://golfacademyfl.com/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site unreachable via curl.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site did not respond.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site"],
+      "anything_weird": "Site unreachable"
+    }
+  },
+  {
+    "slug": "harmony-camp-at-beth-david",
+    "name": "Harmony Camp at Beth David",
+    "primary_url": "https://www.templebethdavid.com/",
+    "tagline": null,
+    "tagline_confidence": "none",
+    "tagline_reasoning": "Site blocked by Cloudflare WAF.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["entire site - WAF blocked"],
+      "anything_weird": "Cloudflare WAF blocking curl"
+    }
+  },
+  {
+    "slug": "hollywood-jr-beach-lifeguard-program",
+    "name": "Hollywood Jr. Beach Lifeguard Program",
+    "primary_url": "https://www.hollywoodfl.org/1131/Summer-Camps",
+    "tagline": "City of Hollywood junior lifeguard program with ocean safety, rescue techniques, and beach training for teens.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "CivicPlus gov site confirms summer camps.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/1131/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": "Broward County, not Miami-Dade"
+    }
+  },
+  {
+    "slug": "hollywood-m-o-s-t-camp",
+    "name": "Hollywood M.O.S.T. Camp",
+    "primary_url": "https://www.hollywoodfl.org/1131/Summer-Camps",
+    "tagline": "City of Hollywood M.O.S.T. (Making Outstanding Students Today) summer enrichment program.",
+    "tagline_confidence": "medium",
+    "tagline_reasoning": "Based on DB description. Municipal program.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Municipal site, city logo only.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": true,
+      "pages_visited": ["/1131/Summer-Camps"],
+      "anything_missing": ["logo"],
+      "anything_weird": "Broward County, not Miami-Dade"
+    }
+  },
+  {
+    "slug": "id-tech-camps-at-university-of-miami",
+    "name": "iD Tech Camps at University of Miami",
+    "primary_url": "https://www.idtech.com/locations/florida-summer-camps/university-of-miami",
+    "tagline": "Coding, robotics, and game design summer camp at University of Miami campus, hosted by iD Tech for ages 7-17.",
+    "tagline_confidence": "high",
+    "tagline_reasoning": "iD Tech is a national tech camp franchise. Location page blocked but brand is verified.",
+    "logo_url": null,
+    "logo_source": "none",
+    "logo_notes": "Site blocked by Cloudflare.",
+    "extraction_notes": {
+      "captured_at": "2026-04-28T10:45:00-04:00",
+      "primary_page_loaded_successfully": false,
+      "pages_visited": [],
+      "anything_missing": ["logo", "location page"],
+      "anything_weird": "Cloudflare WAF blocking curl"
+    }
+  }
+]
