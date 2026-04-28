@@ -34,7 +34,7 @@ _Generated overnight by `scripts/parse-camps-structured-fields.ts` as Goal 2 of 
 
 **Proposed structured fields:**
 
-- 🟢 **tagline:** "Nature-based summer day camp at A.D."
+- 🟢 **tagline:** "Nature-based summer day camp at A.D. Barnes Park Nature Center where campers perform scientific experiments, go on environmental field trips…"
 - 🟡 **sessions:** `[{"label":"Summer 2026","start_date":"2026-06-08","end_date":"2026-08-07","weekly_themes":[],"notes":null}]`
 - 🟢 **pricing_tiers:** `[{"label":"Weekly","hours":null,"session_price_cents":null,"both_sessions_price_cents":null,"weekly_price_cents":10000,"notes":"$100 per week with $15 one-time membership registration. Before/after care included at no extra charge."}]`
 - 🟢 **activities:** `Nature`, `Environmental`, `Field Trips`
@@ -1511,7 +1511,7 @@ _Generated overnight by `scripts/parse-camps-structured-fields.ts` as Goal 2 of 
 
 **Proposed structured fields:**
 
-- 🟢 **tagline:** "Maximize Out of School Time summer camp at Dr."
+- 🟢 **tagline:** "Maximize Out of School Time summer camp at Dr. MLK Jr., Washington Park, McNicol, and Kay Gaither Community Centers with reading, math, scie…"
 - 🟡 **sessions:** `[{"label":"M.O.S.T. Camp 2026","start_date":"2026-06-09","end_date":"2026-08-08","weekly_themes":[],"notes":null}]`
 - ⚪ **pricing_tiers:** _empty_
 - 🟢 **activities:** `Arts`, `Sports`, `Swim`, `Swimming`, `Science`, `Field Trips`, `Reading`
@@ -1571,7 +1571,7 @@ _Generated overnight by `scripts/parse-camps-structured-fields.ts` as Goal 2 of 
 
 **Proposed structured fields:**
 
-- 🟢 **tagline:** "Free summer day camp at O.B."
+- 🟢 **tagline:** "Free summer day camp at O.B. Johnson Park for Hallandale Beach residents ages 6-12 with indoor/outdoor games, movies, crafts, swimming, special events, and field trips."
 - 🟡 **sessions:** `[{"label":"Mini Camp A","start_date":"2026-06-07","end_date":"2026-06-18","weekly_themes":[],"notes":null},{"label":"Summer Camp","start_date":"2026-06-21","end_date":"2026-07-30","weekly_themes":[],"notes":null},{"label":"Mini Camp B","start_date":"2026-08-02","end_date":"2026-08-20","weekly_themes":[],"notes":null}]`
 - 🟡 **pricing_tiers:** `[{"label":"Weekly","hours":null,"session_price_cents":null,"both_sessions_price_cents":null,"weekly_price_cents":0,"notes":"No camp fee; small fees for some special events and field trips."}]`
 - 🟢 **activities:** `Swim`, `Swimming`, `Field Trips`

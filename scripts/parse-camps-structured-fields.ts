@@ -85,18 +85,36 @@ function toSlug(name: string): string {
 }
 
 // ---------- Heuristic extractors ----------
-function extractTagline(description: string | null, name: string): string | null {
+
+// Common abbreviations whose internal periods should NOT be treated as
+// sentence boundaries. Camp Black Bear's tagline was being truncated at
+// "A.D." before this list existed.
+const ABBREVIATIONS = [
+  'A.D.', 'St.', 'U.S.', 'Mr.', 'Dr.', 'Mrs.', 'Jr.', 'Sr.',
+  'P.M.', 'A.M.', 'i.e.', 'e.g.', 'vs.',
+];
+const ABBREV_PLACEHOLDER = '';
+
+export function extractFirstSentence(text: string): string {
+  let working = text;
+  for (const abbr of ABBREVIATIONS) {
+    working = working.split(abbr).join(abbr.replace(/\./g, ABBREV_PLACEHOLDER));
+  }
+  const match = working.match(/^([^.!?]+[.!?])(\s|$)/);
+  const placeholderRe = new RegExp(ABBREV_PLACEHOLDER, 'g');
+  if (!match) return working.replace(placeholderRe, '.').trim();
+  return match[1].replace(placeholderRe, '.').trim();
+}
+
+export function extractTagline(description: string | null, name: string): string | null {
   if (!description) return null;
-  // First sentence — split on the first period followed by space + capital,
-  // or the first newline. Cap at 160 chars.
   const trimmed = description.trim();
   if (trimmed.length === 0) return null;
-  const firstSentenceMatch = trimmed.match(/^([^\n]{20,180}?[.!?])(?:\s|$)/);
-  if (firstSentenceMatch) {
-    const tag = firstSentenceMatch[1].trim();
-    // If it just repeats the camp name, skip.
-    if (tag.toLowerCase() === name.toLowerCase()) return null;
-    return tag;
+  const firstLine = trimmed.split('\n')[0];
+  const sentence = extractFirstSentence(firstLine);
+  if (sentence.length >= 20 && sentence.length <= 180) {
+    if (sentence.toLowerCase() === name.toLowerCase()) return null;
+    return sentence;
   }
   // Fallback: first 140 chars + ellipsis if longer.
   return trimmed.length > 140 ? trimmed.slice(0, 140).trim() + '…' : trimmed;
@@ -656,4 +674,8 @@ function main(): void {
   console.log(`Sections: A=${sectionA.length} B=${sectionB.length} C=${sectionC.length} D=${sectionD.length}`);
 }
 
-main();
+// Run main() only when invoked directly (not when imported by tests).
+const isDirectRun =
+  typeof require !== 'undefined' && require.main === module ||
+  process.argv[1]?.endsWith('parse-camps-structured-fields.ts');
+if (isDirectRun) main();
