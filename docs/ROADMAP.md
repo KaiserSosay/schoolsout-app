@@ -221,6 +221,33 @@ DevClawd flagged 8 WAF-blocked sites (Pinecrest Gardens x3, Cushman, iD
 Tech, Beth David, Doral, Sunny Isles) — would need browser-based capture
 for those.
 
+### 4.x — Camp enrichment Section B + C applied (shipped 2026-04-28)
+
+Migration 061 applies DevClawd's medium- and low-confidence enrichment
+data: 53 taglines (47 medium-confidence + 6 low-confidence) + 8 curated
+logos across the camps directory. R5 gap-fill — never overwrites existing
+data.
+
+Trade-off acknowledged: many municipal camp taglines have similar generic
+voice ("City of X municipal summer camp..."). Section A's higher-confidence
+taglines have richer variation. Mom-test discipline says we may revisit
+specific taglines via the admin form if any read poorly.
+
+Skipped 5 Deering Estate variants' suggested logo URLs (dev subdomain +
+filename literally "placeholder-logo.jpg"). They get taglines only.
+
+Audit + source data preserved at
+`docs/plans/devclawd-camp-enrichment-2026-04-28/`.
+
+Outstanding after migration 061:
+- 8 WAF-blocked sites still need browser-based capture for taglines
+- 5 Deering Estate variants need real logos (placeholder URL skipped)
+- 3 Section A camps (Miami Country Day, Miami Children's Museum, Deering
+  Eco) still need real logos (favicons excluded)
+- Multi-slug venue consolidation deferred (Deering Estate has 6 slugs,
+  City of Aventura has 4, South Miami has 4)
+- Code Ninjas Aventura URL flagged as 404 by DevClawd, may need update
+
 ### ✅ 4.7.1 — Public Calendar Submission Form (SHIPPED 2026-04-26)
 First slice of Phase 4.7. Every school detail page now carries a collapsed "Update this school's calendar →" CTA that expands inline into a form open to anyone — parent, teacher, principal, or anonymous. Submissions land in a new `school_calendar_submissions` table (migration 043), trigger an ack email to the submitter and a notify to admin, and surface in `/admin?tab=calendar-submissions`. Email-domain auto-verification compares the submitter's email host to the school's website host — matches bubble to the top of the admin queue. **No row ever auto-writes to `closures`** — admin marks `approved` then later `incorporated` once the dates land via a normal migration. Same R6 trust posture as the iCal pipeline.
 
