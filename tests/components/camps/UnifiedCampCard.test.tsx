@@ -244,6 +244,52 @@ describe('UnifiedCampCard — app mode', () => {
     // on state.
     expect(screen.getByRole('button', { name: /^Save$/i })).toBeInTheDocument();
   });
+
+  // Regression: partial-completeness "Missing: …" must render in normal flow
+  // below the Link, NOT inside the absolute right-3 top-3 column. Living
+  // inside the absolute column let the unbounded <p> wrap leftward into the
+  // Featured/Verified/Religious badge row and visually overlap it. (See
+  // docs/plans/app-camps-public-parity-audit-2026-04-28.md.)
+  it('renders the partial-completeness text outside the absolute save container', () => {
+    const recent = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const future = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    // 7/10 filled (score 0.70 → 'partial' band), 3 missing fields, plus all
+    // three pill conditions true so a badge row renders above.
+    const camp: UnifiedCampCardCamp = {
+      ...baseCamp,
+      categories: ['religious'],
+      verified: true,
+      last_verified_at: recent,
+      is_featured: true,
+      featured_until: future,
+      phone: null,
+      address: '123 Main St',
+      website_url: 'https://example.org',
+      hours_start: '09:00',
+      hours_end: '17:00',
+      description: 'A long enough description to count as filled past the 40-character threshold.',
+      price_min_cents: 10000,
+      price_max_cents: 30000,
+      registration_url: null,
+      registration_deadline: null,
+    };
+    withProviders(
+      <UnifiedCampCard camp={camp} mode="app" isSaved={false} locale="en" />,
+      { withModeProvider: true },
+    );
+    const partial = screen.getByTestId('camp-completeness-partial');
+    // Walk ancestors up to the article — none should be the absolute save
+    // container.
+    let cursor: HTMLElement | null = partial.parentElement;
+    while (cursor && cursor.getAttribute('data-testid') !== 'unified-camp-card-app') {
+      expect(cursor.classList.contains('absolute')).toBe(false);
+      cursor = cursor.parentElement;
+    }
+    // And the badge row siblings still rendered.
+    expect(screen.getByTestId('camp-featured-badge')).toBeInTheDocument();
+    expect(screen.getByTestId('camp-verified-badge')).toBeInTheDocument();
+    expect(screen.getByTestId('camp-religious-badge')).toBeInTheDocument();
+  });
 });
 
 describe('UnifiedCampCard — wishlist-tile mode', () => {

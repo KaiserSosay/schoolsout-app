@@ -568,17 +568,19 @@ function AppCard({
         ) : null}
       </Link>
 
-      {/* Save + completeness anchored top-right so they stay accessible inside
-          a grid cell that may be narrower than the old full-width row. */}
-      <div className="absolute right-3 top-3 flex flex-col items-end gap-1.5">
+      {/* Save stays anchored top-right; completeness renders below the Link
+          in normal flow so its text wraps inside the card's content width
+          instead of overlapping the badge row. The h-11 w-11 spacer in the
+          title row above already reserves space for the absolute button. */}
+      <div className="absolute right-3 top-3">
         <SaveCampButton
           campId={camp.id}
           campName={camp.name}
           initiallySaved={isSaved}
           size="md"
         />
-        <CompletenessCorner camp={camp} />
       </div>
+      <CompletenessCorner camp={camp} />
     </article>
   );
 }
