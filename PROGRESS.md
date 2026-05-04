@@ -1190,3 +1190,48 @@ returning clean.
   the email — perfect for testing the dashboard ourselves with a known
   email/camp pair. Also: review the morning report at
   `docs/overnight-2026-04-26-report.md` for the full SHA list.
+
+## Calendar view (Phase 5.0) — 2026-05-04
+
+Calendar view shipped — visual month grid with kid color coding, day
+detail bottom sheet, dedicated `/calendar` URL for sharing. Migration 063
+applied. 1211 tests passing.
+
+Lives on three surfaces:
+- `/[locale]/schools/[slug]` — list view default, toggle adds the new
+  Calendar view; choice persists in localStorage as
+  `so-calendar-default-view`.
+- `/[locale]/schools/[slug]/calendar` — new shareable URL, Cozyla-style
+  month grid, server-rendered `[List | Calendar]` toggle linking back.
+- `/[locale]/app/calendar` — calendar default for the family-wide view;
+  per-kid color dots driven by `kid_profiles.ordinal` so multi-kid
+  families see at a glance which closure affects whom; tap a kid avatar
+  to filter to that kid's school.
+
+Day cells color-code by `closures.closure_type` (federal_holiday /
+long_break / teacher_workday / religious / early_dismissal / weather /
+other). Migration 063 added the column with a name-pattern backfill;
+prod count after apply: 953 federal_holiday + 23 other + 11 long_break
++ 7 teacher_workday + 6 religious. The UI is schema-defensive — every
+closures SELECT tries the rich query and falls back to lean on
+un-migrated DBs, with a client-side deriver classifying by name when
+`closure_type` is null.
+
+Tapping a date opens a bottom sheet with closure detail, "Why is school
+closed?" copy from the existing reasons library, and a link to the full
+`/app/closures/[id]` page. Animations gated by `motion-safe:`. Each
+cell is a `gridcell` button with full ARIA labels; arrow keys navigate
+±1 day / ±7 days, Escape closes the sheet.
+
+Migration applied via `pnpm exec supabase db push --include-all` —
+shipped both 062 (closure_kind, deferred from 2026-04-28) and 063
+(closure_type) in the same push. Prod smoke-tested all three public
+URLs (en list, en + es dedicated calendar) — 200 OK with expected
+testids; `/app/calendar` correctly auth-gates to `/en` for logged-out
+users.
+
+Outstanding manual actions:
+- Screenshots on iPhone Safari + iPad portrait + desktop Chrome to
+  `docs/calendar-view-launch/` — needs physical devices.
+- Text Noah a screenshot of the calendar view live with "Look what we
+  just shipped 🎉".
