@@ -40,10 +40,13 @@ export function ViewToggle({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // Active state pops with a clear ink fill + soft shadow so the chosen
+  // tab reads at a glance. Kid Mode overrides cta-yellow / ink via the
+  // [data-mode='kids'] selector in globals.css — no JS needed.
   const baseBtn =
     'min-h-9 inline-flex items-center justify-center rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-wider transition-colors';
-  const active = 'bg-ink text-cream';
-  const inactive = 'text-muted hover:text-ink';
+  const active = 'view-toggle-active bg-ink text-cream shadow-sm';
+  const inactive = 'view-toggle-inactive text-muted/80 hover:text-ink';
 
   return (
     <div

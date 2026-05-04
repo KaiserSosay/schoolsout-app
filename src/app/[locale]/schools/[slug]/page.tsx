@@ -387,7 +387,7 @@ export default async function PublicSchoolPage({
               </p>
             ) : (
               <ListOrCalendarSwitch
-                defaultView="list"
+                defaultView="calendar"
                 locale={locale}
                 initialToday={today}
                 schoolNameFallback={school.name}

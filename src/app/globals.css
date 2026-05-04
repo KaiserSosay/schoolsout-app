@@ -239,6 +239,22 @@
   }
 }
 
+/* Phase 5.0 Calendar View: Kid Mode override for the [List | Calendar]
+   toggle. Active tab swaps ink/cream → cta-yellow/ink so the chosen
+   view pops in the kid-friendly palette. Targets descendants of the
+   [data-mode='kids'] root that the app shell already sets. */
+[data-mode='kids'] [data-testid='calendar-view-toggle'] .view-toggle-active {
+  background-color: #facc15; /* cta-yellow */
+  color: #1a0b2e;            /* purple-deep — high contrast on yellow */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+[data-mode='kids'] [data-testid='calendar-view-toggle'] .view-toggle-inactive {
+  color: rgba(255, 255, 255, 0.7);
+}
+[data-mode='kids'] [data-testid='calendar-view-toggle'] .view-toggle-inactive:hover {
+  color: #ffffff;
+}
+
 /* Phase 5.0 Calendar View: month-grid + bottom-sheet entrance. */
 @keyframes fadeIn {
   from { opacity: 0; }

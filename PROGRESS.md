@@ -1235,3 +1235,18 @@ Outstanding manual actions:
   `docs/calendar-view-launch/` — needs physical devices.
 - Text Noah a screenshot of the calendar view live with "Look what we
   just shipped 🎉".
+
+### Calendar default everywhere — 2026-05-04
+
+Calendar is now the default view across all school + app routes. List
+remains available via toggle and persists per-user (localStorage key
+`so-calendar-default-view`). Existing users who already chose List
+keep their preference — only the no-stored-value fallback flipped.
+
+Active toggle state pops harder: ink fill + soft shadow in Parent Mode,
+cta-yellow fill + purple-deep text in Kid Mode (CSS-only override via
+the existing `[data-mode='kids']` ancestor — no React change). Inactive
+tab dims to muted/80.
+
+The dedicated `/[locale]/schools/[slug]/calendar` URL is unchanged
+(always calendar — that's the URL's whole point).
