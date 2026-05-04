@@ -1871,5 +1871,48 @@
     "other": {
       "body": "Guarda esta página en favoritos — o ábrela en Chrome o Safari en tu teléfono para instalar."
     }
+  },
+  "calendar": {
+    "viewToggleLabel": "Ver como",
+    "viewList": "Lista",
+    "viewCalendar": "Calendario",
+    "today": "Hoy",
+    "todayEyebrow": "Hoy",
+    "todayClosed": "¡Hoy no hay clases!",
+    "todayHalfDay": "Salida temprana — {name}",
+    "nextBreakIn": "{count, plural, =0 {{name} empieza hoy} one {Próximo descanso en # día · {name}} other {Próximo descanso en # días · {name}}}",
+    "noUpcomingFor": "No tenemos descansos próximos para {name} — vuelve pronto.",
+    "noUpcomingGeneric": "No tenemos descansos próximos — vuelve pronto.",
+    "prevMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente",
+    "weekdayHeaderLabel": "Días de la semana",
+    "gridAriaLabel": "Calendario de cierres escolares. Usa las flechas para navegar entre días.",
+    "cellAriaInSession": "{date}, hay clases",
+    "cellAriaClosure": "{date}, {name}, {type}",
+    "closureType": {
+      "federal_holiday": "Feriado federal",
+      "long_break": "Descanso largo",
+      "teacher_workday": "Día de planificación docente",
+      "religious": "Día religioso",
+      "early_dismissal": "Salida temprana",
+      "weather": "Cierre por clima",
+      "other": "Sin clases"
+    },
+    "inSession": "Hay clases",
+    "schoolInSession": "Hay clases hoy",
+    "inSessionBody": "Día de clases regular. Salida a la hora de costumbre.",
+    "whyClosed": "¿Por qué cierra la escuela?",
+    "viewFullDetails": "Ver detalles completos",
+    "sheetClose": "Cerrar",
+    "affects": "Afecta a:",
+    "kidShort": "Hijo/a {n}",
+    "kidFilterLabel": "Filtrar el calendario por hijo/a",
+    "kidFilterAria": "Mostrar solo la escuela de Hijo/a {n}",
+    "allKids": "Todos",
+    "upcomingHeading": "Próximos cierres",
+    "upcomingEmpty": "No hay cierres próximos.",
+    "happeningNow": "ahora",
+    "inDays": "{count, plural, =0 {hoy} one {en # día} other {en # días}}",
+    "daysAgo": "{count, plural, one {hace # día} other {hace # días}}"
   }
 }

@@ -8,6 +8,8 @@ import { HelpVerifyCalendarCta } from '@/components/public/HelpVerifyCalendarCta
 import { UnverifiedSchoolCalendarPlaceholder } from '@/components/public/UnverifiedSchoolCalendarPlaceholder';
 import { SchoolCalendarSubmissionForm } from '@/components/public/SchoolCalendarSubmissionForm';
 import { SchoolCalendarSections } from '@/components/schools/SchoolCalendarSections';
+import { ListOrCalendarSwitch } from '@/components/calendar/ListOrCalendarSwitch';
+import type { CalendarClosure } from '@/lib/calendar/types';
 import {
   publicPageMetadata,
   breadcrumbListJsonLd,
@@ -49,6 +51,10 @@ type ClosureRow = {
   source: string;
   category: string | null;
   school_year: string | null;
+  // Optional — closures.closure_type lands in migration 063 and may
+  // not be present on un-migrated DBs. The CalendarView falls back to
+  // a name-based deriver when null.
+  closure_type?: string | null;
 };
 
 const RICH_SELECT =
@@ -212,13 +218,32 @@ export default async function PublicSchoolPage({
     return d.toISOString().slice(0, 10);
   })();
   const svc = createServiceSupabase();
-  const { data: closuresData } = await svc
+  // Try the rich select that includes closure_type (migration 063). If
+  // the column doesn't exist yet, Supabase returns an error and we fall
+  // back to the lean select — keeps the page working on un-migrated
+  // dev environments without ceremony.
+  const RICH_CLOSURE_SELECT =
+    'id, name, start_date, end_date, emoji, status, source, category, school_year, closure_type';
+  const LEAN_CLOSURE_SELECT =
+    'id, name, start_date, end_date, emoji, status, source, category, school_year';
+  const richClosures = await svc
     .from('closures')
-    .select('id, name, start_date, end_date, emoji, status, source, category, school_year')
+    .select(RICH_CLOSURE_SELECT)
     .eq('school_id', school.id)
     .gte('end_date', oneYearAgo)
     .order('start_date')
     .limit(80);
+  let closuresData: ClosureRow[] | null = (richClosures.data ?? null) as ClosureRow[] | null;
+  if (richClosures.error) {
+    const lean = await svc
+      .from('closures')
+      .select(LEAN_CLOSURE_SELECT)
+      .eq('school_id', school.id)
+      .gte('end_date', oneYearAgo)
+      .order('start_date')
+      .limit(80);
+    closuresData = (lean.data ?? null) as ClosureRow[] | null;
+  }
   const closures = (closuresData ?? []) as ClosureRow[];
   void tBreaks; // currently unused — kept ready for the district-fan-out section
 
@@ -361,14 +386,37 @@ export default async function PublicSchoolPage({
                 {t('empty')}
               </p>
             ) : (
-              <SchoolCalendarSections
+              <ListOrCalendarSwitch
+                defaultView="list"
                 locale={locale}
-                closures={closures}
-                today={today}
-                schoolName={school.name}
-                schoolSlug={school.slug}
-                schoolYearLabel={yearsLabel}
-                variant="verified"
+                initialToday={today}
+                schoolNameFallback={school.name}
+                closures={
+                  closures.map((c) => ({
+                    id: c.id,
+                    name: c.name,
+                    emoji: c.emoji,
+                    start_date: c.start_date,
+                    end_date: c.end_date,
+                    status: c.status,
+                    closure_type:
+                      (c.closure_type as CalendarClosure['closure_type']) ??
+                      null,
+                    school_id: school.id,
+                    school_name: school.name,
+                  })) as CalendarClosure[]
+                }
+                listChildren={
+                  <SchoolCalendarSections
+                    locale={locale}
+                    closures={closures}
+                    today={today}
+                    schoolName={school.name}
+                    schoolSlug={school.slug}
+                    schoolYearLabel={yearsLabel}
+                    variant="verified"
+                  />
+                }
               />
             )}
           </>

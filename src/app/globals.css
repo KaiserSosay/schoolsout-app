@@ -239,6 +239,23 @@
   }
 }
 
+/* Phase 5.0 Calendar View: month-grid + bottom-sheet entrance. */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes confetti-fall {
   0% {
     transform: translate(0, 0) rotate(0);

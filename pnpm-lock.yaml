@@ -88,8 +88,8 @@ importers:
         specifier: ^8
         version: 8.5.10
       supabase:
-        specifier: ^2.93.0
-        version: 2.93.0
+        specifier: ^2.95.6
+        version: 2.95.6
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.19
@@ -3451,8 +3451,8 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
-  supabase@2.93.0:
-    resolution: {integrity: sha512-2R4nRuOfcSzwjnIGLbGPrsqLnDIUDzg8ozM3xWkwToMkEu0pKfZbhFJz8AaUpKgBnbs4RgQkbcxPA+IESJFypw==}
+  supabase@2.95.6:
+    resolution: {integrity: sha512-gjAT6wYBvmKoS34IjpTp9VDve1sfwcM/s+Q5rJA3OBw8d6nVTdA8edYVz/rfPEMt1V/EY40g63IL6qMBLPvrFw==}
     engines: {npm: '>=8'}
     hasBin: true
 
@@ -7470,7 +7470,7 @@ snapshots:
       tinyglobby: 0.2.16
       ts-interface-checker: 0.1.13
 
-  supabase@2.93.0:
+  supabase@2.95.6:
     dependencies:
       bin-links: 6.0.0
       https-proxy-agent: 9.0.0
