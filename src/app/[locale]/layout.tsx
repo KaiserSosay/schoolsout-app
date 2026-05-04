@@ -7,6 +7,7 @@ import { locales, type Locale } from '@/i18n/config';
 import { createServerSupabase } from '@/lib/supabase/server';
 import { FeatureRequestModal } from '@/components/FeatureRequestModal';
 import { Footer } from '@/components/home/Footer';
+import { VersionUpdateBanner } from '@/components/shared/VersionUpdateBanner';
 import '../globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -195,6 +196,7 @@ export default async function LocaleLayout({
             presetEmail={loggedInEmail}
             isLoggedIn={Boolean(loggedInEmail)}
           />
+          <VersionUpdateBanner />
         </NextIntlClientProvider>
       </body>
     </html>

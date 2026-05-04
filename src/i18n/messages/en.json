@@ -1872,6 +1872,11 @@
       "body": "Bookmark this page — or open it in Chrome or Safari on your phone to install."
     }
   },
+  "versionBanner": {
+    "headline": "New version available",
+    "refresh": "Refresh",
+    "dismissAria": "Dismiss update notice"
+  },
   "calendar": {
     "viewToggleLabel": "View as",
     "viewList": "List",

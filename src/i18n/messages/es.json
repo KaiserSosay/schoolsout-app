@@ -1872,6 +1872,11 @@
       "body": "Guarda esta página en favoritos — o ábrela en Chrome o Safari en tu teléfono para instalar."
     }
   },
+  "versionBanner": {
+    "headline": "Nueva versión disponible",
+    "refresh": "Actualizar",
+    "dismissAria": "Cerrar aviso de actualización"
+  },
   "calendar": {
     "viewToggleLabel": "Ver como",
     "viewList": "Lista",
